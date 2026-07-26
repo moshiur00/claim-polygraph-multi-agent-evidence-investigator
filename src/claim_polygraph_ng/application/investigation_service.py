@@ -1,6 +1,7 @@
 """First executable claim-to-audited-verdict workflow."""
 
 import hashlib
+import re
 from collections.abc import Mapping
 from datetime import UTC, datetime
 from typing import TypeVar
@@ -8,48 +9,116 @@ from uuid import UUID
 
 from pydantic import JsonValue
 
+from claim_polygraph_ng.analysis import analyze_source_independence, verify_claim_context
 from claim_polygraph_ng.config import RuntimePolicy
 from claim_polygraph_ng.domain import (
     ArtifactType,
     AtomicClaim,
+    ContextVerification,
     Evidence,
     ExtractionStatus,
+    IndependenceAnalysis,
     Investigation,
     InvestigationPlan,
     InvestigationReport,
     InvestigationStage,
     InvestigationStatus,
+    ModelCallUsage,
     ModelTask,
     SearchRequest,
     SearchResult,
     SentenceAudit,
     Source,
+    SupportLevel,
     TraceEvent,
     TraceEventType,
     Verdict,
 )
 from claim_polygraph_ng.domain.base import DomainModel
 from claim_polygraph_ng.persistence import InvestigationRepository
-from claim_polygraph_ng.providers import SearchProvider, StructuredModelProvider
+from claim_polygraph_ng.providers import (
+    ModelOutputError,
+    SearchProvider,
+    StructuredModelProvider,
+)
 from claim_polygraph_ng.retrieval import (
     ContentFetcher,
     DocumentChunk,
     FetchError,
     HttpStatusError,
     deduplicate_chunks,
-    extract_readable_text,
+    extract_document_text,
     rank_passages,
     segment_document,
 )
 
 StructuredResult = TypeVar("StructuredResult", bound=DomainModel)
+_TEMPORAL_CUE_PATTERN = re.compile(
+    r"\b(current|currently|today|now|still|as of|no longer)\b",
+    re.IGNORECASE,
+)
+
+
+def _anchor_claim_to_user_text(claim: AtomicClaim, original_text: str) -> AtomicClaim:
+    updates: dict[str, object] = {"text": original_text.strip()}
+    if claim.reference_date is None and _TEMPORAL_CUE_PATTERN.search(original_text):
+        updates["reference_date"] = datetime.now(UTC).date()
+    return AtomicClaim.model_validate({**claim.model_dump(), **updates})
+
+
+def _taxonomy_guidance(verification: ContextVerification) -> tuple[str, ...]:
+    guidance: list[str] = []
+    numerical = verification.numerical
+    if (
+        numerical.exactness_terms
+        and set(numerical.claim_values).intersection(numerical.evidence_values)
+    ):
+        guidance.append(
+            "The packet preserves a claimed numerical value under a credible qualification. "
+            "If the claim fails because absolute wording omits that qualification, use "
+            "misleading rather than contradicted."
+        )
+    if verification.temporal.reference_date is not None:
+        guidance.append(
+            "Evaluate time-sensitive status at the supplied reference date. When the claim "
+            "uses still/currently and the evidence says the earlier status ended, use outdated "
+            "rather than contradicted."
+        )
+    return tuple(guidance)
+
+
+def _enforce_review_safeguards(
+    verdict: Verdict,
+    *,
+    independence_requirement_met: bool,
+    numerical_status: str,
+    temporal_status: str,
+) -> Verdict:
+    reasons: list[str] = []
+    if not independence_requirement_met:
+        reasons.append("Required independent evidence-family count was not met.")
+    if numerical_status == "insufficient":
+        reasons.append("Required numerical context verification was insufficient.")
+    if temporal_status == "insufficient":
+        reasons.append("Required temporal context verification was insufficient.")
+    if not reasons:
+        return verdict
+    if verdict.review_reason:
+        reasons.insert(0, verdict.review_reason)
+    return Verdict.model_validate(
+        {
+            **verdict.model_dump(),
+            "human_review_required": True,
+            "review_reason": " ".join(reasons),
+        }
+    )
 
 
 class BudgetExceededError(RuntimeError):
     """Raised before a provider call would exceed a hard execution budget."""
 
 
-class DocumentRetrievalError(RuntimeError):
+class DocumentRetrievalError(FetchError):
     """Raised when a real search result cannot produce usable page text."""
 
 
@@ -73,13 +142,20 @@ class InvestigationService:
         self._llm_calls = 0
         self._search_calls = 0
         self._pages_fetched = 0
+        self._model_usage: list[ModelCallUsage] = []
         self._active_page_limit = self._policy.budget.maximum_pages_fetched
+
+    @property
+    def model_usage(self) -> tuple[ModelCallUsage, ...]:
+        """Return metered model calls captured during the latest investigation."""
+        return tuple(self._model_usage)
 
     async def investigate(self, claim_text: str) -> InvestigationReport:
         """Run and persist one complete deterministic investigation."""
         self._llm_calls = 0
         self._search_calls = 0
         self._pages_fetched = 0
+        self._model_usage = []
         self._active_page_limit = self._policy.budget.maximum_pages_fetched
         investigation = Investigation(input_claim=claim_text)
         self._repository.initialize()
@@ -103,6 +179,7 @@ class InvestigationService:
                 AtomicClaim,
                 {"claim_text": claim_text},
             )
+            claim = _anchor_claim_to_user_text(claim, claim_text)
             self._save_artifact(
                 investigation,
                 ArtifactType.CLAIM,
@@ -131,7 +208,21 @@ class InvestigationService:
                 investigation,
                 stage=InvestigationStage.RESEARCH,
             )
-            sources, evidence_items = await self._research(investigation, claim, plan)
+            sources, evidence_items, independence = await self._research(
+                investigation, claim, plan
+            )
+            context_verification = verify_claim_context(
+                claim=claim,
+                plan=plan,
+                sources=sources,
+                evidence=evidence_items,
+            )
+            self._save_artifact(
+                investigation,
+                ArtifactType.CONTEXT_VERIFICATION,
+                claim.claim_id,
+                context_verification,
+            )
 
             investigation = self._transition(
                 investigation,
@@ -143,33 +234,65 @@ class InvestigationService:
                 Verdict,
                 {
                     "claim_id": str(claim.claim_id),
+                    "claim": claim.model_dump(mode="json"),
+                    "sources": [source.model_dump(mode="json") for source in sources],
                     "evidence": [item.model_dump(mode="json") for item in evidence_items],
+                    "independence_analysis": independence.model_dump(mode="json"),
+                    "context_verification": context_verification.model_dump(mode="json"),
+                    "taxonomy_guidance": _taxonomy_guidance(context_verification),
                 },
             )
+            verdict = _enforce_review_safeguards(
+                verdict,
+                independence_requirement_met=independence.requirement_met,
+                numerical_status=context_verification.numerical.status.value,
+                temporal_status=context_verification.temporal.status.value,
+            )
+            investigation = self._transition(
+                investigation,
+                stage=InvestigationStage.CITATION_AUDIT,
+            )
+            audit_inputs: dict[str, JsonValue] = {
+                "original_claim": claim.model_dump(mode="json"),
+                "verdict_label": verdict.label.value,
+                "sentence": verdict.concise_explanation,
+                "evidence_ids": [str(item.evidence_id) for item in evidence_items],
+                "evidence": [item.model_dump(mode="json") for item in evidence_items],
+            }
+            audit = await self._generate(
+                investigation,
+                ModelTask.AUDIT_SENTENCE,
+                SentenceAudit,
+                audit_inputs,
+            )
+            revision = (audit.suggested_revision or "").strip()
+            if (
+                audit.support_level is SupportLevel.PARTIAL
+                and 10 <= len(revision) <= 1_000
+                and revision != verdict.concise_explanation
+            ):
+                verdict = Verdict.model_validate(
+                    {
+                        **verdict.model_dump(),
+                        "concise_explanation": revision,
+                    }
+                )
+                audit_inputs = {
+                    **audit_inputs,
+                    "sentence": revision,
+                    "prior_audit": audit.model_dump(mode="json"),
+                }
+                audit = await self._generate(
+                    investigation,
+                    ModelTask.AUDIT_SENTENCE,
+                    SentenceAudit,
+                    audit_inputs,
+                )
             self._save_artifact(
                 investigation,
                 ArtifactType.VERDICT,
                 verdict.verdict_id,
                 verdict,
-            )
-
-            investigation = self._transition(
-                investigation,
-                stage=InvestigationStage.CITATION_AUDIT,
-            )
-            audit = await self._generate(
-                investigation,
-                ModelTask.AUDIT_SENTENCE,
-                SentenceAudit,
-                {
-                    "sentence": verdict.concise_explanation,
-                    "evidence_ids": [
-                        str(identifier)
-                        for identifier in (
-                            verdict.decisive_evidence_ids + verdict.contradictory_evidence_ids
-                        )
-                    ],
-                },
             )
             self._save_artifact(
                 investigation,
@@ -200,6 +323,8 @@ class InvestigationService:
                 plan=plan,
                 sources=sources,
                 evidence=evidence_items,
+                independence_analysis=independence,
+                context_verification=context_verification,
                 verdict=verdict,
                 audits=(audit,),
             )
@@ -227,7 +352,7 @@ class InvestigationService:
         investigation: Investigation,
         claim: AtomicClaim,
         plan: InvestigationPlan,
-    ) -> tuple[tuple[Source, ...], tuple[Evidence, ...]]:
+    ) -> tuple[tuple[Source, ...], tuple[Evidence, ...], IndependenceAnalysis]:
         sources: list[Source] = []
         candidate_chunks: list[DocumentChunk] = []
         evidence_items: list[Evidence] = []
@@ -324,12 +449,6 @@ class InvestigationService:
                 )
                 for chunk in chunks:
                     candidate_chunks.append(chunk)
-                    self._save_artifact(
-                        investigation,
-                        ArtifactType.CHUNK,
-                        chunk.chunk_id,
-                        chunk,
-                    )
                 break
 
             if budget_exhausted:
@@ -354,12 +473,19 @@ class InvestigationService:
                     )
                     continue
                 chunk = ranked.chunk
+                self._save_artifact(
+                    investigation,
+                    ArtifactType.CHUNK,
+                    chunk.chunk_id,
+                    chunk,
+                )
                 evidence = await self._generate(
                     investigation,
                     ModelTask.CLASSIFY_EVIDENCE,
                     Evidence,
                     {
                         "claim_id": str(claim.claim_id),
+                        "claim": claim.model_dump(mode="json"),
                         "source_id": str(chunk.source_id),
                         "chunk_id": str(chunk.chunk_id),
                         "passage": chunk.text,
@@ -370,14 +496,27 @@ class InvestigationService:
                     },
                 )
                 evidence_items.append(evidence)
-                self._save_artifact(
-                    investigation,
-                    ArtifactType.EVIDENCE,
-                    evidence.evidence_id,
-                    evidence,
-                )
 
-        return tuple(sources), tuple(evidence_items)
+        updated_evidence, independence = analyze_source_independence(
+            claim_id=claim.claim_id,
+            sources=tuple(sources),
+            evidence=tuple(evidence_items),
+            required_families=plan.minimum_independent_families,
+        )
+        for evidence in updated_evidence:
+            self._save_artifact(
+                investigation,
+                ArtifactType.EVIDENCE,
+                evidence.evidence_id,
+                evidence,
+            )
+        self._save_artifact(
+            investigation,
+            ArtifactType.INDEPENDENCE,
+            claim.claim_id,
+            independence,
+        )
+        return tuple(sources), updated_evidence, independence
 
     async def _result_content(
         self,
@@ -404,7 +543,7 @@ class InvestigationService:
         )
         document = await self._content_fetcher.fetch(str(result.url))
 
-        content = extract_readable_text(document.text, document.content_type)
+        content = extract_document_text(document)
         if not content:
             raise DocumentRetrievalError("fetched document contains no readable text")
         return content, str(document.final_url), document.retrieved_at
@@ -415,25 +554,75 @@ class InvestigationService:
         task: ModelTask,
         response_model: type[StructuredResult],
         inputs: Mapping[str, JsonValue],
+        *,
+        retry_invalid_output: bool = True,
     ) -> StructuredResult:
         if self._llm_calls >= self._policy.budget.maximum_llm_calls:
             raise BudgetExceededError("maximum LLM calls exceeded")
         self._llm_calls += 1
+        provider_details: dict[str, JsonValue] = {
+            "provider_id": self._model_provider.provider_id,
+            "task": task.value,
+            "call_number": self._llm_calls,
+        }
+        for attribute in ("model", "prompt_version"):
+            value = getattr(self._model_provider, attribute, None)
+            if isinstance(value, str):
+                provider_details[attribute] = value
+        model_for_task = getattr(self._model_provider, "model_for_task", None)
+        if callable(model_for_task):
+            selected_model = model_for_task(task)
+            if isinstance(selected_model, str):
+                provider_details["model"] = selected_model
         self._event(
             investigation,
             TraceEventType.PROVIDER_CALLED,
             f"Structured model provider called for {task.value}.",
-            {
-                "provider_id": self._model_provider.provider_id,
-                "task": task.value,
-                "call_number": self._llm_calls,
-            },
+            provider_details,
         )
-        return await self._model_provider.generate(
-            task=task,
-            response_model=response_model,
-            inputs=inputs,
-        )
+        invalid_output: ModelOutputError | None = None
+        try:
+            result = await self._model_provider.generate(
+                task=task,
+                response_model=response_model,
+                inputs=inputs,
+            )
+        except ModelOutputError as error:
+            invalid_output = error
+        finally:
+            take_last_usage = getattr(self._model_provider, "take_last_usage", None)
+            if callable(take_last_usage):
+                usage = take_last_usage()
+                if isinstance(usage, ModelCallUsage):
+                    self._model_usage.append(usage)
+                    self._event(
+                        investigation,
+                        TraceEventType.MODEL_USAGE_RECORDED,
+                        f"Model usage recorded for {task.value}.",
+                        usage.model_dump(mode="json"),
+                    )
+        if invalid_output is not None:
+            if not retry_invalid_output:
+                raise invalid_output
+            self._event(
+                investigation,
+                TraceEventType.PROVIDER_FAILED,
+                f"Invalid structured output for {task.value}; retrying once.",
+                {
+                    "provider_id": self._model_provider.provider_id,
+                    "task": task.value,
+                    "error_type": type(invalid_output).__name__,
+                    "error": str(invalid_output),
+                },
+            )
+            return await self._generate(
+                investigation,
+                task,
+                response_model,
+                inputs,
+                retry_invalid_output=False,
+            )
+        return result
 
     async def _search(
         self,

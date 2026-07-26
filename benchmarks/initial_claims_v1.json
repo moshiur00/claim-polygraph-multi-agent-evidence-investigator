@@ -1,0 +1,1040 @@
+{
+  "dataset_id": "initial_claims",
+  "version": 3,
+  "title": "Claim Polygraph NG Initial Twenty-Claim Evaluation Set",
+  "description": "A deliberately diverse regression set. Claims are test inputs, not endorsed facts. CPNG-001 through CPNG-005 contain citation-grounded labels approved by two distinct human reviewers; remaining cases are drafts.",
+  "created_at": "2026-07-26",
+  "cases": [
+    {
+      "case_id": "CPNG-001",
+      "claim": "A calendar year is exactly 365.25 days long.",
+      "categories": [
+        "numerical",
+        "scientific_medical",
+        "ambiguous"
+      ],
+      "expected_claim_type": "numerical",
+      "risk_level": "low",
+      "reference_date": null,
+      "geography": null,
+      "annotation_status": "reviewed",
+      "ai_review": {
+        "reviewed_at": "2026-07-26T18:19:03.343991Z",
+        "annotator_model": "gpt-5.4-mini",
+        "critic_model": "gpt-4o-mini",
+        "prompt_version": "ai-benchmark-review-v1",
+        "source_verification_scope": "provided_packet_only",
+        "annotation": {
+          "recommended_verdict": "mixed",
+          "rationale": "The claim is ambiguous because “calendar year” can mean a civil-calendar convention or an astronomical year length. The supplied evidence directly contradicts the idea that Earth’s year is exactly 365.25 days, since it gives an orbital period of about 365.2422 days and explains leap-day adjustments. However, it does not independently establish the formal definition of any specific calendar’s average year, so the packet is enough to reject the claim in its plain/common reading but not enough to fully rule out a calendar-convention interpretation (e.g., a Julian-style average year).",
+          "resolved_interpretation": "Interpreted as a general statement about the length of a year used in calendars or astronomy, the claim is false; the actual solar/tropical year is not exactly 365.25 days. If intended to refer to a specific calendar convention, the claim is underspecified and needs that calendar named.",
+          "evidence_sufficient": false,
+          "evidence_strengths": [
+            "Authoritative official source (NASA JPL)",
+            "Numerical detail is explicit: about 365.2422 days",
+            "The excerpt explains why leap-day corrections are needed, which supports non-equality with 365.25"
+          ],
+          "evidence_gaps": [
+            "No source defining what the claim means by “calendar year”",
+            "No independent calendar authority confirming whether any specific calendar uses exactly 365.25 as its average year",
+            "No check of rounding conventions or whether the claim intends tropical, sidereal, Julian, or Gregorian year"
+          ],
+          "independence_concerns": [
+            "Only one evidence item is supplied",
+            "The evidence is scientific/astronomical, not a calendar-standards authority",
+            "Source independence for the calendar-definition question is missing"
+          ],
+          "temporal_or_numerical_checks": [
+            "Compare 365.2422 vs 365.25: difference is 0.0078 days, about 11.2 minutes",
+            "Check whether the claim uses exact equality versus approximation; it says exactly, so the numerical mismatch is material",
+            "Distinguish orbital/tropical year from calendar convention averages before finalizing a verdict"
+          ],
+          "confidence": 0.77
+        },
+        "critique": {
+          "agrees_with_verdict": false,
+          "recommended_verdict": "unsupported",
+          "critique": "The claim's interpretation of a 'calendar year' as exactly 365.25 days is problematic. The evidence only presents the average length of a solar year (365.2422 days) but fails to clarify what is meant by 'calendar year,' which depends heavily on the specific calendar system in question. As the annotation notes, the distinction between different definitions of year (tropical, sidereal, Julian, or Gregorian) is crucial. The single piece of evidence from NASA—even though it is authoritative—relies on scientific data rather than addressing the broader concept of calendar authority, leading to gaps in sufficient evidence for a definitive ruling. Moreover, the evidence does not sufficiently counter the broader interpretation of the claim that may include various calendar systems.",
+          "unsupported_or_overstated_points": [
+            "Claim interpretation assumes a specific calendar definition without evidence.",
+            "Evidence fails to address specific calendar lengths or conventions explicitly."
+          ],
+          "missing_checks": [
+            "Verify definitions of different calendar systems regarding average year length.",
+            "Clarify whether the claim relies on exact wording or if approximation is acceptable."
+          ],
+          "evidence_sufficient": false,
+          "confidence": 0.65
+        },
+        "provisional_verdict": "unsupported",
+        "disagreements": [
+          "Annotator recommended mixed; critic recommended unsupported."
+        ],
+        "usage": [
+          {
+            "provider_id": "openai:routed:gpt-4o-mini->gpt-5.4-mini",
+            "model": "gpt-5.4-mini",
+            "task": "review_annotation",
+            "duration_seconds": 6.63887,
+            "input_tokens": 714,
+            "cached_input_tokens": 0,
+            "output_tokens": 795,
+            "estimated_cost_usd": 0.004113,
+            "pricing_version": "openai-list-prices-2026-07-26",
+            "output_valid": true
+          },
+          {
+            "provider_id": "openai:routed:gpt-4o-mini->gpt-5.4-mini",
+            "model": "gpt-4o-mini",
+            "task": "review_critique",
+            "duration_seconds": 3.047319,
+            "input_tokens": 1121,
+            "cached_input_tokens": 0,
+            "output_tokens": 239,
+            "estimated_cost_usd": 0.00031155,
+            "pricing_version": "openai-list-prices-2026-07-26",
+            "output_valid": true
+          }
+        ],
+        "requires_human_review": true
+      },
+      "proposed_verdict": "misleading",
+      "proposed_rationale": "The claim presents an approximation as exact and does not identify which kind of year it means. NASA gives Earth's orbital period as about 365.2422 days, while calendar systems use different leap-year rules.",
+      "candidate_evidence": [
+        {
+          "annotation_id": "E1",
+          "source_url": "https://www.jpl.nasa.gov/edu/news/doing-the-math-on-why-we-have-leap-day/",
+          "source_title": "Doing the Math on Why We Have Leap Day",
+          "publisher": "NASA Jet Propulsion Laboratory",
+          "source_type": "official",
+          "stance": "contradicts",
+          "excerpt": "Earth takes about 365.2422 days to make one revolution around the Sun.",
+          "evidence_summary": "The stated orbital approximation differs from exactly 365.25 days and explains why century exceptions are needed.",
+          "publication_date": "2024-01-16",
+          "accessed_at": "2026-07-26",
+          "independence_note": "Authoritative NASA educational source, independently complemented by the U.S. Naval Observatory calendar authority."
+        },
+        {
+          "annotation_id": "E2",
+          "source_url": "https://aa.usno.navy.mil/faq/asa_glossary",
+          "source_title": "Astronomical Almanac Glossary",
+          "publisher": "U.S. Naval Observatory",
+          "source_type": "official",
+          "stance": "qualifies",
+          "excerpt": "year, calendar: ... either 365 or 366 days. year, Julian: a period of 365.25 days.",
+          "evidence_summary": "The official glossary distinguishes an ordinary calendar year from the conventional 365.25-day Julian year.",
+          "publication_date": null,
+          "accessed_at": "2026-07-26",
+          "independence_note": "Independent U.S. government astronomical authority, organizationally separate from NASA JPL."
+        }
+      ],
+      "expected_verdict": "misleading",
+      "annotation_notes": [
+        "Distinguish calendar conventions from the tropical and sidereal year.",
+        "Record the applicable definition and rounding.",
+        "Human annotator Md Moshiur Rahman resolved the calendar-year interpretation and added an independent U.S. Naval Observatory authority.",
+        "Independent approver Md Rashedul Islam approved the misleading verdict on 2026-07-26."
+      ],
+      "reviewed_by": "Md Rashedul Islam",
+      "reviewed_at": "2026-07-26"
+    },
+    {
+      "case_id": "CPNG-002",
+      "claim": "Pure water always boils at 100 degrees Celsius.",
+      "categories": [
+        "scientific_medical",
+        "ambiguous"
+      ],
+      "expected_claim_type": "scientific",
+      "risk_level": "low",
+      "reference_date": null,
+      "geography": null,
+      "annotation_status": "reviewed",
+      "ai_review": {
+        "reviewed_at": "2026-07-26T18:19:10.837695Z",
+        "annotator_model": "gpt-5.4-mini",
+        "critic_model": "gpt-4o-mini",
+        "prompt_version": "ai-benchmark-review-v1",
+        "source_verification_scope": "provided_packet_only",
+        "annotation": {
+          "recommended_verdict": "contradicted",
+          "rationale": "The claim uses the absolute term \"always,\" but the supplied evidence states that water’s boiling point changes with pressure. That directly refutes the universal wording of the claim. Even for pure water, 100°C is only true under a specific pressure regime (standard atmospheric pressure), not in all conditions. The claim is therefore too strong and false as written.",
+          "resolved_interpretation": "If interpreted narrowly as \"pure water boils at 100°C at standard atmospheric pressure,\" the statement is broadly correct. As written, with \"always,\" it claims universality across pressures and conditions, which is not true.",
+          "evidence_sufficient": true,
+          "evidence_strengths": [
+            "Authoritative source (NIST)",
+            "Directly addresses a core physical determinant of boiling point: pressure",
+            "The counterevidence is enough to falsify the universal qualifier \"always\"",
+            "Numerical detail in the excerpt supports the dependence on pressure rather than a fixed boiling temperature"
+          ],
+          "evidence_gaps": [
+            "No second independent authority was supplied, though one direct authoritative source is already strong",
+            "No explicit mention of standard atmospheric pressure in the claim, which matters for interpreting the intended meaning",
+            "Purity is mentioned in the claim but not analyzed in the excerpt; however, purity does not rescue the absolute \"always\" wording"
+          ],
+          "independence_concerns": [
+            "Only one evidence item is provided",
+            "The evidence comes from a single institutional source, so a second thermodynamics reference would improve corroboration"
+          ],
+          "temporal_or_numerical_checks": [
+            "Check the pressure baseline: boiling at 100°C corresponds to approximately 1 atm / standard atmospheric pressure",
+            "The excerpt’s stated pressure effect shows boiling point is pressure-dependent, so the claim cannot be universally true",
+            "Confirm that \"pure\" water does not alter the pressure dependence; it only removes dissolved-solute effects"
+          ],
+          "confidence": 0.92
+        },
+        "critique": {
+          "agrees_with_verdict": true,
+          "recommended_verdict": "contradicted",
+          "critique": "The claim that \"Pure water always boils at 100 degrees Celsius\" is misrepresentative as the word \"always\" implies universality, which is contradicted by NIST findings indicating the boiling point is contingent on pressure. This fundamental discrepancy highlights that the provided evidence is strong enough to refute the claim's absolute wording. The context of boiling point changing with pressure is crucial and should be emphasized in the interpretation of the claim.",
+          "unsupported_or_overstated_points": [],
+          "missing_checks": [
+            "Further corroboration from a second authoritative source on thermodynamics is required for enhanced reliability.",
+            "Explicit confirmation of the maintenance of purity under varying pressures and conditions is missing."
+          ],
+          "evidence_sufficient": true,
+          "confidence": 0.9
+        },
+        "provisional_verdict": "contradicted",
+        "disagreements": [],
+        "usage": [
+          {
+            "provider_id": "openai:routed:gpt-4o-mini->gpt-5.4-mini",
+            "model": "gpt-5.4-mini",
+            "task": "review_annotation",
+            "duration_seconds": 4.897983,
+            "input_tokens": 690,
+            "cached_input_tokens": 0,
+            "output_tokens": 566,
+            "estimated_cost_usd": 0.0030645,
+            "pricing_version": "openai-list-prices-2026-07-26",
+            "output_valid": true
+          },
+          {
+            "provider_id": "openai:routed:gpt-4o-mini->gpt-5.4-mini",
+            "model": "gpt-4o-mini",
+            "task": "review_critique",
+            "duration_seconds": 2.594142,
+            "input_tokens": 1045,
+            "cached_input_tokens": 0,
+            "output_tokens": 164,
+            "estimated_cost_usd": 0.00025515,
+            "pricing_version": "openai-list-prices-2026-07-26",
+            "output_valid": true
+          }
+        ],
+        "requires_human_review": true
+      },
+      "proposed_verdict": "misleading",
+      "proposed_rationale": "One hundred degrees Celsius is the normal boiling point near one standard atmosphere, not an invariant temperature. The absolute word always omits the material pressure dependency.",
+      "candidate_evidence": [
+        {
+          "annotation_id": "E1",
+          "source_url": "https://nvlpubs.nist.gov/nistpubs/Legacy/IR/nbsir85-3133.pdf",
+          "source_title": "Thermometry",
+          "publisher": "National Institute of Standards and Technology",
+          "source_type": "official",
+          "stance": "contradicts",
+          "excerpt": "The boiling point of water increases by about 30 mK if the pressure is increased by 10^-3 atm.",
+          "evidence_summary": "NIST describes boiling temperature as pressure-dependent, directly defeating the unconditional word always.",
+          "publication_date": null,
+          "accessed_at": "2026-07-26",
+          "independence_note": "Authoritative historical measurement reference, independently corroborated by IAPWS and AMS."
+        },
+        {
+          "annotation_id": "E2",
+          "source_url": "https://iapws.org/faq1",
+          "source_title": "FAQs About Water and Steam: Water and the Temperature Scale",
+          "publisher": "International Association for the Properties of Water and Steam",
+          "source_type": "organization",
+          "stance": "qualifies",
+          "excerpt": "On ITS-90, the atmospheric boiling temperature of water turns out to be approximately 373.124 K (99.974 degrees Celsius).",
+          "evidence_summary": "The current practical temperature scale places atmospheric boiling slightly below 100 degrees Celsius.",
+          "publication_date": null,
+          "accessed_at": "2026-07-26",
+          "independence_note": "Independent international scientific association, separate from NIST and using current water-property formulations."
+        },
+        {
+          "annotation_id": "E3",
+          "source_url": "https://glossary.ametsoc.org/wiki/boiling-point/",
+          "source_title": "Glossary of Meteorology: Boiling Point",
+          "publisher": "American Meteorological Society",
+          "source_type": "organization",
+          "stance": "contradicts",
+          "excerpt": "Because of the normal decrease of barometric pressure with height, the nominal boiling point of water decreases.",
+          "evidence_summary": "The meteorological definition independently confirms altitude and pressure dependence and discusses superheating in very pure liquids.",
+          "publication_date": null,
+          "accessed_at": "2026-07-26",
+          "independence_note": "Independent professional scientific society, organizationally separate from NIST and IAPWS."
+        }
+      ],
+      "expected_verdict": "misleading",
+      "annotation_notes": [
+        "Check pressure, altitude, purity, and the meaning of always.",
+        "NIST PDF page 144, internally labelled Chapter III, page 24, was visually verified.",
+        "Pressure, altitude, purity, IPTS-68/ITS-90 convention, and source independence checks were completed.",
+        "Independent approver Md Rashedul Islam approved the misleading verdict on 2026-07-26."
+      ],
+      "reviewed_by": "Md Rashedul Islam",
+      "reviewed_at": "2026-07-26"
+    },
+    {
+      "case_id": "CPNG-003",
+      "claim": "Every adult human has exactly 206 bones.",
+      "categories": [
+        "numerical",
+        "scientific_medical",
+        "ambiguous"
+      ],
+      "expected_claim_type": "scientific",
+      "risk_level": "medium",
+      "reference_date": null,
+      "geography": null,
+      "annotation_status": "reviewed",
+      "ai_review": {
+        "reviewed_at": "2026-07-26T18:19:18.754908Z",
+        "annotator_model": "gpt-5.4-mini",
+        "critic_model": "gpt-4o-mini",
+        "prompt_version": "ai-benchmark-review-v1",
+        "source_verification_scope": "provided_packet_only",
+        "annotation": {
+          "recommended_verdict": "contradicted",
+          "rationale": "The claim is too absolute: it says every adult human has exactly 206 bones. The supplied evidence states that 206 is only an approximate typical adult count and that anatomical variation changes the number. That directly conflicts with the word “every” and the word “exactly.” The packet’s own notes also flag fused or accessory bones as relevant, which further weakens the claim’s universality.",
+          "resolved_interpretation": "In typical adult anatomy, humans are often described as having about 206 bones, but the exact number can vary because of anatomical variation, accessory bones, and fusion patterns.",
+          "evidence_sufficient": true,
+          "evidence_strengths": [
+            "Directly addresses the adult bone count.",
+            "Explicitly states 206 is approximate/typical rather than exact.",
+            "Explicitly notes variability in bone number due to anatomical variation.",
+            "Matches the claim’s key point about universality and exactness."
+          ],
+          "evidence_gaps": [
+            "Only one cited source is provided.",
+            "The underlying anatomy reference was not independently reviewed in the packet.",
+            "No additional source was supplied to quantify how often adult counts differ from 206."
+          ],
+          "independence_concerns": [
+            "Single-source evidence from a medical review hosted by NCBI Bookshelf.",
+            "The independence note says the reviewer should examine the cited anatomy source and add an independent anatomy reference, but that was not done in the packet."
+          ],
+          "temporal_or_numerical_checks": [
+            "The claim uses absolute quantifiers: 'Every' and 'exactly'",
+            "The evidence uses non-absolute language: 'typically' and 'around 206'",
+            "This is an anatomical fact not materially dependent on the reference date, but numerical precision matters because the claim is exact while the evidence is approximate"
+          ],
+          "confidence": 0.95
+        },
+        "critique": {
+          "agrees_with_verdict": true,
+          "recommended_verdict": "contradicted",
+          "critique": "The claim asserting that 'Every adult human has exactly 206 bones' is contradicted by the evidence supplied. The evidence clearly indicates that 206 is an approximate typical count and acknowledges anatomical variation, which directly conflicts with the absoluteness of the claim's wording. There is a notable overstatement in the claim, as anatomical variations and factors like fused or accessory bones are relevant and impact the total bone count. The evidence that was presented, while strong, is limited due to its reliance on a single source––thus, a more rigorous independent examination of the anatomical reference cited is necessary for comprehensive evaluation. Moreover, the assertion lacks quantitative data on variability that could further elucidate how frequently counts may differ from 206.",
+          "unsupported_or_overstated_points": [
+            "The claim uses absolute terms that are not supported by the available evidence, indicating a misrepresentation of anatomical facts."
+          ],
+          "missing_checks": [
+            "An independent review of the anatomical source cited in the evidence is needed.",
+            "More diverse sources should be provided to quantify counts in varied populations."
+          ],
+          "evidence_sufficient": true,
+          "confidence": 0.9
+        },
+        "provisional_verdict": "contradicted",
+        "disagreements": [],
+        "usage": [
+          {
+            "provider_id": "openai:routed:gpt-4o-mini->gpt-5.4-mini",
+            "model": "gpt-5.4-mini",
+            "task": "review_annotation",
+            "duration_seconds": 4.139338,
+            "input_tokens": 703,
+            "cached_input_tokens": 0,
+            "output_tokens": 486,
+            "estimated_cost_usd": 0.00271425,
+            "pricing_version": "openai-list-prices-2026-07-26",
+            "output_valid": true
+          },
+          {
+            "provider_id": "openai:routed:gpt-4o-mini->gpt-5.4-mini",
+            "model": "gpt-4o-mini",
+            "task": "review_critique",
+            "duration_seconds": 3.7756,
+            "input_tokens": 1039,
+            "cached_input_tokens": 0,
+            "output_tokens": 238,
+            "estimated_cost_usd": 0.00029865,
+            "pricing_version": "openai-list-prices-2026-07-26",
+            "output_valid": true
+          }
+        ],
+        "requires_human_review": true
+      },
+      "proposed_verdict": "misleading",
+      "proposed_rationale": "Two hundred six is a typical adult count, but the claim makes it universal and exact. The medical reference explicitly notes both an approximate count and anatomical variation.",
+      "candidate_evidence": [
+        {
+          "annotation_id": "E1",
+          "source_url": "https://www.ncbi.nlm.nih.gov/sites/books/NBK537199/",
+          "source_title": "Anatomy, Bones",
+          "publisher": "NCBI Bookshelf / StatPearls",
+          "source_type": "academic",
+          "stance": "contradicts",
+          "excerpt": "Human infants typically have 270 bones, fusing into around 206 in the human adult. Variability in number arises from some bones' anatomic variations.",
+          "evidence_summary": "The review describes 206 as an approximate typical count and explicitly states that anatomical variation changes the number.",
+          "publication_date": null,
+          "accessed_at": "2026-07-26",
+          "independence_note": "Medical review hosted by NCBI; its immediate supporting citation is another StatPearls chapter, so independent literature was added."
+        },
+        {
+          "annotation_id": "E2",
+          "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6124588/",
+          "source_title": "Small but troublesome: accessory ossicles with clinical significance",
+          "publisher": "Radiologia Brasileira",
+          "source_type": "academic",
+          "stance": "contradicts",
+          "excerpt": "Accessory ossicles are inconstant, independent, and considered well formed bones, not arising from fractures or other diseases.",
+          "evidence_summary": "Peer-reviewed clinical anatomy literature identifies additional well-formed bones as normal developmental variants.",
+          "publication_date": null,
+          "accessed_at": "2026-07-26",
+          "independence_note": "Independent peer-reviewed radiology article, not part of the StatPearls source family."
+        }
+      ],
+      "expected_verdict": "misleading",
+      "annotation_notes": [
+        "Account for anatomical variation and fused or accessory bones.",
+        "The underlying StatPearls citation was not treated as independent; peer-reviewed accessory-ossicle literature was added.",
+        "Independent approver Md Rashedul Islam approved the misleading verdict on 2026-07-26."
+      ],
+      "reviewed_by": "Md Rashedul Islam",
+      "reviewed_at": "2026-07-26"
+    },
+    {
+      "case_id": "CPNG-004",
+      "claim": "The World Health Organization still classifies COVID-19 as a public health emergency of international concern.",
+      "categories": [
+        "scientific_medical",
+        "political_policy",
+        "outdated"
+      ],
+      "expected_claim_type": "temporal",
+      "risk_level": "high",
+      "reference_date": "2026-07-26",
+      "geography": null,
+      "annotation_status": "reviewed",
+      "ai_review": {
+        "reviewed_at": "2026-07-26T18:19:26.254153Z",
+        "annotator_model": "gpt-5.4-mini",
+        "critic_model": "gpt-4o-mini",
+        "prompt_version": "ai-benchmark-review-v1",
+        "source_verification_scope": "provided_packet_only",
+        "annotation": {
+          "recommended_verdict": "contradicted",
+          "rationale": "The claim is false on the supplied reference date. The WHO statement dated 2023-05-05 explicitly says COVID-19 \"no longer constitutes a public health emergency of international concern,\" which directly contradicts the claim that WHO still classifies it as a PHEIC. Because the packet’s reference date is 2026-07-26 and no later evidence is provided showing a re-declaration, the only support in the packet indicates the emergency designation ended and the health issue continued in a non-PHEIC status.",
+          "resolved_interpretation": "Interpret the claim as asserting that, as of the reference date 2026-07-26, WHO continues to designate COVID-19 as a public health emergency of international concern. The supplied WHO primary-source statement says that designation ended on 2023-05-05, while COVID-19 remained an ongoing health issue.",
+          "evidence_sufficient": true,
+          "evidence_strengths": [
+            "Primary authoritative source from the organization that controls the PHEIC designation.",
+            "Direct, unambiguous language stating the PHEIC status ended.",
+            "Temporal alignment is clear: the claim is framed in the present/ongoing tense and the evidence establishes the opposite status before the reference date.",
+            "The evidence distinguishes emergency designation from ongoing health issue, matching the annotation note."
+          ],
+          "evidence_gaps": [
+            "No later confirmation is supplied that WHO re-declared COVID-19 a PHEIC after 2023-05-05.",
+            "Only one evidence item is provided, so corroboration from independent secondary sources is absent.",
+            "The packet does not explicitly list the current WHO status on 2026-07-26, though the supplied statement strongly implies the continuing status is non-PHEIC."
+          ],
+          "independence_concerns": [
+            "The single evidence item is not independent of the policy decision because it is the issuing authority itself; however, for this claim that is the most probative source.",
+            "Independent reporting could corroborate timing, but it would not outweigh the WHO’s own designation statement."
+          ],
+          "temporal_or_numerical_checks": [
+            "Reference date is 2026-07-26, which is well after the 2023-05-05 termination statement.",
+            "No numerical thresholds or counts are involved; the key check is status over time.",
+            "Human confirmation would only be needed if there were evidence of a later re-declaration, which is not present in the packet."
+          ],
+          "confidence": 0.99
+        },
+        "critique": {
+          "agrees_with_verdict": true,
+          "recommended_verdict": "contradicted",
+          "critique": "The annotation effectively summarizes the evidence strengths and the rationale for contradicting the claim based on the WHO designation. However, it could better articulate the absence of additional corroborative evidence and the potential implications of relying solely on self-referential sources for authoritative claims. The confidence level of 0.99 and the recommendation for corroboration imply a need for additional checks, which is somewhat understated.",
+          "unsupported_or_overstated_points": [
+            "The interpretation of the evidence does not thoroughly explore potential future declarations from WHO between the reference date and the claim date; thus, the contradiction assumes permanent status after May 2023 without acknowledging the possibility of later changes.",
+            "The conclusion that the claim is false lacks a clear discussion of why it disregards the 'ongoing health issue' status after the emergency designation ended."
+          ],
+          "missing_checks": [
+            "Confirmation of no later WHO declarations or updates between 2023-05-05 and 2026-07-26, which could impact the ongoing interpretation of COVID-19's status as an emergency."
+          ],
+          "evidence_sufficient": true,
+          "confidence": 0.95
+        },
+        "provisional_verdict": "contradicted",
+        "disagreements": [],
+        "usage": [
+          {
+            "provider_id": "openai:routed:gpt-4o-mini->gpt-5.4-mini",
+            "model": "gpt-5.4-mini",
+            "task": "review_annotation",
+            "duration_seconds": 4.536565,
+            "input_tokens": 776,
+            "cached_input_tokens": 0,
+            "output_tokens": 593,
+            "estimated_cost_usd": 0.0032505,
+            "pricing_version": "openai-list-prices-2026-07-26",
+            "output_valid": true
+          },
+          {
+            "provider_id": "openai:routed:gpt-4o-mini->gpt-5.4-mini",
+            "model": "gpt-4o-mini",
+            "task": "review_critique",
+            "duration_seconds": 2.960749,
+            "input_tokens": 1252,
+            "cached_input_tokens": 0,
+            "output_tokens": 238,
+            "estimated_cost_usd": 0.0003306,
+            "pricing_version": "openai-list-prices-2026-07-26",
+            "output_valid": true
+          }
+        ],
+        "requires_human_review": true
+      },
+      "proposed_verdict": "outdated",
+      "proposed_rationale": "WHO ended the COVID-19 public-health-emergency-of-international-concern designation on 5 May 2023 while emphasizing that COVID-19 remained an ongoing health issue. The word still makes the submitted claim temporally false at its 2026 reference date.",
+      "candidate_evidence": [
+        {
+          "annotation_id": "E1",
+          "source_url": "https://www.who.int/malta/news/item/05-05-2023-statement-on-the-fifteenth-meeting-of-the-international-health-regulations-%282005%29-emergency-committee-regarding-the-coronavirus-disease-%28covid-19%29-pandemic",
+          "source_title": "Statement on the fifteenth IHR Emergency Committee meeting regarding COVID-19",
+          "publisher": "World Health Organization",
+          "source_type": "official",
+          "stance": "contradicts",
+          "excerpt": "COVID-19 is now an established and ongoing health issue which no longer constitutes a public health emergency of international concern.",
+          "evidence_summary": "The responsible international authority states that the PHEIC designation ended while the health issue continued.",
+          "publication_date": "2023-05-05",
+          "accessed_at": "2026-07-26",
+          "independence_note": "Decisive primary policy source because WHO owns the designation; Nature independently corroborates the timing."
+        },
+        {
+          "annotation_id": "E2",
+          "source_url": "https://www.nature.com/articles/d41586-023-01559-z",
+          "source_title": "WHO declares end to COVID-19's emergency phase",
+          "publisher": "Nature",
+          "source_type": "news",
+          "stance": "contradicts",
+          "excerpt": "The World Health Organization announced that COVID-19 is no longer a public health emergency of international concern.",
+          "evidence_summary": "Independent contemporaneous science reporting corroborates WHO's 5 May 2023 formal decision.",
+          "publication_date": "2023-05-05",
+          "accessed_at": "2026-07-26",
+          "independence_note": "Editorially independent reporting; corroborative only because WHO remains the controlling authority for the designation."
+        }
+      ],
+      "expected_verdict": "outdated",
+      "annotation_notes": [
+        "Use the stated reference date and distinguish emergency status from continuing health risk.",
+        "WHO status material was checked through the 2026-07-26 reference date and independent contemporaneous reporting was added.",
+        "Independent approver Md Rashedul Islam approved the outdated verdict on 2026-07-26."
+      ],
+      "reviewed_by": "Md Rashedul Islam",
+      "reviewed_at": "2026-07-26"
+    },
+    {
+      "case_id": "CPNG-005",
+      "claim": "The Great Wall of China is visible from the Moon with the unaided human eye.",
+      "categories": [
+        "historical",
+        "scientific_medical",
+        "derivative_reporting"
+      ],
+      "expected_claim_type": "scientific",
+      "risk_level": "low",
+      "reference_date": null,
+      "geography": null,
+      "annotation_status": "reviewed",
+      "ai_review": {
+        "reviewed_at": "2026-07-26T18:19:31.679668Z",
+        "annotator_model": "gpt-5.4-mini",
+        "critic_model": "gpt-4o-mini",
+        "prompt_version": "ai-benchmark-review-v1",
+        "source_verification_scope": "provided_packet_only",
+        "annotation": {
+          "recommended_verdict": "contradicted",
+          "rationale": "The supplied evidence directly opposes the claim: NASA states that the Great Wall is not visible to the naked eye from orbit and is not visible from the Moon. Since the claim asserts visibility from the Moon with the unaided human eye, the excerpt is a direct contradiction from an authoritative space-agency source. No supplied evidence supports the claim or introduces a meaningful ambiguity that would weaken the contradiction.",
+          "resolved_interpretation": "Claim interpreted literally as asserting that a person on the Moon could see the Great Wall of China unaided by optical aid; this is directly denied by the NASA excerpt.",
+          "evidence_sufficient": true,
+          "evidence_strengths": [
+            "Directly relevant to the exact visibility claim",
+            "Official space-agency source with high authority on astronaut visibility/optics",
+            "Unambiguous wording: 'It is not visible from the Moon'",
+            "No competing evidence supplied"
+          ],
+          "evidence_gaps": [
+            "No independent optics calculation provided in the packet",
+            "Only one source excerpt is supplied, so cross-corroboration is absent",
+            "The packet does not specify viewing conditions, but the claim itself is unaided visibility from the Moon, which the excerpt directly addresses"
+          ],
+          "independence_concerns": [
+            "The packet relies on a single official source; independent optical analysis would strengthen the case",
+            "The note itself flags the need for astronaut or independent optics corroboration"
+          ],
+          "temporal_or_numerical_checks": [
+            "Check whether the claim hinges on unusual conditions such as atmospheric clarity or magnification; the wording here specifies unaided eye, so such conditions do not rescue it",
+            "No numerical threshold is provided in the packet, but the relevant binary condition is visibility from lunar distance without optics"
+          ],
+          "confidence": 0.95
+        },
+        "critique": {
+          "agrees_with_verdict": true,
+          "recommended_verdict": "contradicted",
+          "critique": "The evidence provided clearly refutes the claim that the Great Wall of China is visible from the Moon with the unaided human eye. The NASA source's explicit statement provides a strong basis for contradiction. However, the evaluation could be strengthened by including independent corroborative evidence or analyses, as reliance on a single high-authority source may overlook potential nuances. Missing checks or further evidence exploring the circumstances under which visibility might be discussed (e.g., atmospheric conditions, observer experience) also should have been noted. In summary, while the evidence is compelling, recognizing these additional factors would enhance the thoroughness of the evaluation.",
+          "unsupported_or_overstated_points": [],
+          "missing_checks": [
+            "Comparison with other conditions of visibility (e.g., atmospheric clarity) should be addressed, even within the unaided eye context."
+          ],
+          "evidence_sufficient": true,
+          "confidence": 0.9
+        },
+        "provisional_verdict": "contradicted",
+        "disagreements": [],
+        "usage": [
+          {
+            "provider_id": "openai:routed:gpt-4o-mini->gpt-5.4-mini",
+            "model": "gpt-5.4-mini",
+            "task": "review_annotation",
+            "duration_seconds": 3.346713,
+            "input_tokens": 697,
+            "cached_input_tokens": 0,
+            "output_tokens": 412,
+            "estimated_cost_usd": 0.00237675,
+            "pricing_version": "openai-list-prices-2026-07-26",
+            "output_valid": true
+          },
+          {
+            "provider_id": "openai:routed:gpt-4o-mini->gpt-5.4-mini",
+            "model": "gpt-4o-mini",
+            "task": "review_critique",
+            "duration_seconds": 2.075606,
+            "input_tokens": 1021,
+            "cached_input_tokens": 0,
+            "output_tokens": 192,
+            "estimated_cost_usd": 0.00026835,
+            "pricing_version": "openai-list-prices-2026-07-26",
+            "output_valid": true
+          }
+        ],
+        "requires_human_review": true
+      },
+      "proposed_verdict": "contradicted",
+      "proposed_rationale": "NASA's astronaut-photography program states directly that the Great Wall is not visible from the Moon with unaided vision. Instrument-assisted or long-lens imagery is a different claim.",
+      "candidate_evidence": [
+        {
+          "annotation_id": "E1",
+          "source_url": "https://eol.jsc.nasa.gov/FAQ/",
+          "source_title": "Earth Science and Remote Sensing Unit FAQ",
+          "publisher": "NASA Johnson Space Center",
+          "source_type": "official",
+          "stance": "contradicts",
+          "excerpt": "The Great Wall is not visible to the naked eye from orbit. It is not visible from the Moon.",
+          "evidence_summary": "NASA directly rejects unaided visibility from the Moon and distinguishes it from high-resolution photography.",
+          "publication_date": null,
+          "accessed_at": "2026-07-26",
+          "independence_note": "Authoritative astronaut-observation source, independently corroborated by peer-reviewed optics analysis and ESA material."
+        },
+        {
+          "annotation_id": "E2",
+          "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3972694/",
+          "source_title": "Is it Really Possible to See the Great Wall of China from Space with a Naked Eye?",
+          "publisher": "Journal of Optometry",
+          "source_type": "academic",
+          "stance": "contradicts",
+          "excerpt": "Obviously, it would be even less likely to see the Great Wall from the moon.",
+          "evidence_summary": "Peer-reviewed optics analysis concludes that normal human visual resolution is radically insufficient at lunar distance.",
+          "publication_date": null,
+          "accessed_at": "2026-07-26",
+          "independence_note": "Independent peer-reviewed visual-optics analysis, separate from NASA astronaut observations."
+        },
+        {
+          "annotation_id": "E3",
+          "source_url": "https://www.esa.int/ESA_Multimedia/Images/2021/05/Great_Wall_of_China_from_space",
+          "source_title": "Great Wall of China from space",
+          "publisher": "European Space Agency",
+          "source_type": "official",
+          "stance": "qualifies",
+          "excerpt": "It is impossible to see it in the tiny viewfinder of the camera.",
+          "evidence_summary": "ESA distinguishes unaided orbital viewing from images captured with a 1150 mm lens and processed on the ground.",
+          "publication_date": "2021-05-28",
+          "accessed_at": "2026-07-26",
+          "independence_note": "Independent space-agency source qualifying instrument-assisted photography versus unaided observation."
+        }
+      ],
+      "expected_verdict": "contradicted",
+      "annotation_notes": [
+        "Prefer astronaut or space-agency evidence and trace repeated secondary claims.",
+        "Independent peer-reviewed optics analysis and ESA astronaut-photography qualification were checked.",
+        "Independent approver Md Rashedul Islam approved the contradicted verdict on 2026-07-26."
+      ],
+      "reviewed_by": "Md Rashedul Islam",
+      "reviewed_at": "2026-07-26"
+    },
+    {
+      "case_id": "CPNG-006",
+      "claim": "Germany was the world's third-largest economy by nominal GDP in 2023.",
+      "categories": [
+        "numerical",
+        "comparative",
+        "political_policy",
+        "outdated"
+      ],
+      "expected_claim_type": "comparative",
+      "risk_level": "medium",
+      "reference_date": "2023-12-31",
+      "geography": "Germany",
+      "annotation_status": "draft",
+      "ai_review": null,
+      "proposed_verdict": null,
+      "proposed_rationale": null,
+      "candidate_evidence": [],
+      "expected_verdict": null,
+      "annotation_notes": [
+        "Define nominal GDP, dataset revision, currency basis, and reference year."
+      ],
+      "reviewed_by": null,
+      "reviewed_at": null
+    },
+    {
+      "case_id": "CPNG-007",
+      "claim": "Amazon was founded in 1994.",
+      "categories": [
+        "corporate",
+        "historical"
+      ],
+      "expected_claim_type": "historical",
+      "risk_level": "low",
+      "reference_date": null,
+      "geography": null,
+      "annotation_status": "draft",
+      "ai_review": null,
+      "proposed_verdict": null,
+      "proposed_rationale": null,
+      "candidate_evidence": [],
+      "expected_verdict": null,
+      "annotation_notes": [
+        "Distinguish incorporation, founding, and commercial launch dates."
+      ],
+      "reviewed_by": null,
+      "reviewed_at": null
+    },
+    {
+      "case_id": "CPNG-008",
+      "claim": "The European Union's General Data Protection Regulation began applying on 25 May 2018.",
+      "categories": [
+        "political_policy",
+        "historical"
+      ],
+      "expected_claim_type": "legal",
+      "risk_level": "medium",
+      "reference_date": "2018-05-25",
+      "geography": "European Union",
+      "annotation_status": "draft",
+      "ai_review": null,
+      "proposed_verdict": null,
+      "proposed_rationale": null,
+      "candidate_evidence": [],
+      "expected_verdict": null,
+      "annotation_notes": [
+        "Distinguish entry into force from the date of application."
+      ],
+      "reviewed_by": null,
+      "reviewed_at": null
+    },
+    {
+      "case_id": "CPNG-009",
+      "claim": "Cigarette smoking causes lung cancer.",
+      "categories": [
+        "scientific_medical",
+        "causal"
+      ],
+      "expected_claim_type": "causal",
+      "risk_level": "high",
+      "reference_date": null,
+      "geography": null,
+      "annotation_status": "draft",
+      "ai_review": null,
+      "proposed_verdict": null,
+      "proposed_rationale": null,
+      "candidate_evidence": [],
+      "expected_verdict": null,
+      "annotation_notes": [
+        "Prefer major public-health reviews and explain population risk versus individual certainty."
+      ],
+      "reviewed_by": null,
+      "reviewed_at": null
+    },
+    {
+      "case_id": "CPNG-010",
+      "claim": "Taking vitamin C prevents the common cold.",
+      "categories": [
+        "scientific_medical",
+        "causal",
+        "ambiguous",
+        "derivative_reporting"
+      ],
+      "expected_claim_type": "causal",
+      "risk_level": "high",
+      "reference_date": null,
+      "geography": null,
+      "annotation_status": "draft",
+      "ai_review": null,
+      "proposed_verdict": null,
+      "proposed_rationale": null,
+      "candidate_evidence": [],
+      "expected_verdict": null,
+      "annotation_notes": [
+        "Separate prevention, duration, severity, general population, and subgroup effects."
+      ],
+      "reviewed_by": null,
+      "reviewed_at": null
+    },
+    {
+      "case_id": "CPNG-011",
+      "claim": "Iceland gets 100 percent of all its energy from renewable sources.",
+      "categories": [
+        "numerical",
+        "comparative",
+        "political_policy",
+        "ambiguous"
+      ],
+      "expected_claim_type": "numerical",
+      "risk_level": "medium",
+      "reference_date": null,
+      "geography": "Iceland",
+      "annotation_status": "draft",
+      "ai_review": null,
+      "proposed_verdict": null,
+      "proposed_rationale": null,
+      "candidate_evidence": [],
+      "expected_verdict": null,
+      "annotation_notes": [
+        "Distinguish electricity generation from total primary or final energy use."
+      ],
+      "reviewed_by": null,
+      "reviewed_at": null
+    },
+    {
+      "case_id": "CPNG-012",
+      "claim": "Lightning never strikes the same place twice.",
+      "categories": [
+        "scientific_medical",
+        "derivative_reporting"
+      ],
+      "expected_claim_type": "scientific",
+      "risk_level": "low",
+      "reference_date": null,
+      "geography": null,
+      "annotation_status": "draft",
+      "ai_review": null,
+      "proposed_verdict": null,
+      "proposed_rationale": null,
+      "candidate_evidence": [],
+      "expected_verdict": null,
+      "annotation_notes": [
+        "Use meteorological observations rather than repetitions of the proverb."
+      ],
+      "reviewed_by": null,
+      "reviewed_at": null
+    },
+    {
+      "case_id": "CPNG-013",
+      "claim": "Mount Everest is the tallest mountain on Earth.",
+      "categories": [
+        "comparative",
+        "ambiguous"
+      ],
+      "expected_claim_type": "comparative",
+      "risk_level": "low",
+      "reference_date": null,
+      "geography": null,
+      "annotation_status": "draft",
+      "ai_review": null,
+      "proposed_verdict": null,
+      "proposed_rationale": null,
+      "candidate_evidence": [],
+      "expected_verdict": null,
+      "annotation_notes": [
+        "Resolve tallest above sea level versus base-to-peak and distance from Earth's center."
+      ],
+      "reviewed_by": null,
+      "reviewed_at": null
+    },
+    {
+      "case_id": "CPNG-014",
+      "claim": "The Nile is the longest river in the world.",
+      "categories": [
+        "comparative",
+        "ambiguous",
+        "derivative_reporting"
+      ],
+      "expected_claim_type": "comparative",
+      "risk_level": "low",
+      "reference_date": null,
+      "geography": null,
+      "annotation_status": "draft",
+      "ai_review": null,
+      "proposed_verdict": null,
+      "proposed_rationale": null,
+      "candidate_evidence": [],
+      "expected_verdict": null,
+      "annotation_notes": [
+        "Record measurement methodology and the Nile-Amazon uncertainty."
+      ],
+      "reviewed_by": null,
+      "reviewed_at": null
+    },
+    {
+      "case_id": "CPNG-015",
+      "claim": "Napoleon Bonaparte was unusually short for a French man of his time.",
+      "categories": [
+        "historical",
+        "comparative",
+        "ambiguous",
+        "derivative_reporting"
+      ],
+      "expected_claim_type": "historical",
+      "risk_level": "low",
+      "reference_date": null,
+      "geography": null,
+      "annotation_status": "draft",
+      "ai_review": null,
+      "proposed_verdict": null,
+      "proposed_rationale": null,
+      "candidate_evidence": [],
+      "expected_verdict": null,
+      "annotation_notes": [
+        "Check measurement systems, contemporary averages, and propaganda-derived repetition."
+      ],
+      "reviewed_by": null,
+      "reviewed_at": null
+    },
+    {
+      "case_id": "CPNG-016",
+      "claim": "Exposure to 5G mobile networks causes COVID-19.",
+      "categories": [
+        "scientific_medical",
+        "causal",
+        "derivative_reporting"
+      ],
+      "expected_claim_type": "causal",
+      "risk_level": "high",
+      "reference_date": null,
+      "geography": null,
+      "annotation_status": "draft",
+      "ai_review": null,
+      "proposed_verdict": null,
+      "proposed_rationale": null,
+      "candidate_evidence": [],
+      "expected_verdict": null,
+      "annotation_notes": [
+        "Use biological mechanism and epidemiological evidence; capture misinformation provenance."
+      ],
+      "reviewed_by": null,
+      "reviewed_at": null
+    },
+    {
+      "case_id": "CPNG-017",
+      "claim": "Tesla delivered more than 1.8 million vehicles during 2023.",
+      "categories": [
+        "corporate",
+        "numerical",
+        "outdated"
+      ],
+      "expected_claim_type": "numerical",
+      "risk_level": "medium",
+      "reference_date": "2023-12-31",
+      "geography": null,
+      "annotation_status": "draft",
+      "ai_review": null,
+      "proposed_verdict": null,
+      "proposed_rationale": null,
+      "candidate_evidence": [],
+      "expected_verdict": null,
+      "annotation_notes": [
+        "Prefer audited filings or company delivery releases and preserve the exact reporting period."
+      ],
+      "reviewed_by": null,
+      "reviewed_at": null
+    },
+    {
+      "case_id": "CPNG-018",
+      "claim": "The United States unemployment rate was lower in 2023 than in 2020.",
+      "categories": [
+        "political_policy",
+        "numerical",
+        "comparative",
+        "outdated"
+      ],
+      "expected_claim_type": "comparative",
+      "risk_level": "medium",
+      "reference_date": "2023-12-31",
+      "geography": "United States",
+      "annotation_status": "draft",
+      "ai_review": null,
+      "proposed_verdict": null,
+      "proposed_rationale": null,
+      "candidate_evidence": [],
+      "expected_verdict": null,
+      "annotation_notes": [
+        "Specify annual average versus a particular month and use the same adjusted series."
+      ],
+      "reviewed_by": null,
+      "reviewed_at": null
+    },
+    {
+      "case_id": "CPNG-019",
+      "claim": "Drinking coffee causes dehydration in habitual coffee drinkers.",
+      "categories": [
+        "scientific_medical",
+        "causal",
+        "ambiguous"
+      ],
+      "expected_claim_type": "causal",
+      "risk_level": "medium",
+      "reference_date": null,
+      "geography": null,
+      "annotation_status": "draft",
+      "ai_review": null,
+      "proposed_verdict": null,
+      "proposed_rationale": null,
+      "candidate_evidence": [],
+      "expected_verdict": null,
+      "annotation_notes": [
+        "Define dose, habitual use, hydration outcome, and comparison condition."
+      ],
+      "reviewed_by": null,
+      "reviewed_at": null
+    },
+    {
+      "case_id": "CPNG-020",
+      "claim": "A widely reported university study proves that remote work makes employees more productive.",
+      "categories": [
+        "corporate",
+        "causal",
+        "ambiguous",
+        "derivative_reporting"
+      ],
+      "expected_claim_type": "causal",
+      "risk_level": "medium",
+      "reference_date": null,
+      "geography": null,
+      "annotation_status": "draft",
+      "ai_review": null,
+      "proposed_verdict": null,
+      "proposed_rationale": null,
+      "candidate_evidence": [],
+      "expected_verdict": null,
+      "annotation_notes": [
+        "The claim intentionally lacks a named study, population, intervention, outcome, and period.",
+        "Evaluate ambiguity handling and whether repeated articles resolve to one underlying study."
+      ],
+      "reviewed_by": null,
+      "reviewed_at": null
+    }
+  ]
+}

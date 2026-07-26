@@ -902,6 +902,18 @@ The roadmap is organized by capability and exit criterion. Calendar estimates wi
 
 A validated set of domain contracts, architecture decisions, baseline claims, and a stored baseline result.
 
+### Current execution status — 27 July 2026
+
+The lightweight foundation, provider/retrieval interfaces, and five-claim
+single-agent vertical slice described in roadmap Phases 1–3 have been
+implemented and evaluated together as the first delivery milestone. That
+milestone is formally closed in `docs/PHASE_1_COMPLETION_REPORT.md`.
+
+The active execution phase is benchmark expansion and live-retrieval
+hardening, defined in `docs/PHASE_2_EXECUTION_PLAN.md`. This delivery naming
+does not renumber the long-term architecture roadmap below; it packages the
+next evidence-driven work without prematurely adding target infrastructure.
+
 ### Phase 1 — Lightweight execution foundation
 
 **Work**
@@ -1190,23 +1202,21 @@ API expansion must follow implemented capabilities rather than precede them.
 
 ## 26. Immediate next actions
 
-1. Review and approve this document as the working project charter.
-2. Create Architecture Decision Records for:
-   - lightweight-first architecture;
-   - Python and Pydantic domain contracts;
-   - SQLite-first persistence;
-   - provider abstraction;
-   - evidence-packet-only judgment;
-   - local-first operating mode;
-   - selective claim decomposition.
-3. Scaffold the compact Python repository.
-4. Implement the core enums and Pydantic schemas.
-5. Implement configuration, budgets, and operating-mode policy.
-6. Add mock model and search providers for deterministic tests.
-7. Select the initial twenty evaluation claims.
-8. Record an LLM-only baseline.
-9. Implement one real model adapter and one search adapter.
-10. Build the first end-to-end evidence vertical slice.
+Updated 27 July 2026. The original foundation actions are complete; the active
+sequence is defined in `docs/PHASE_2_EXECUTION_PLAN.md`:
+
+1. Prepare the ambiguity and evidence requirements for CPNG-006.
+2. Build its provisional evidence packet without assigning human-review
+   metadata.
+3. Complete genuine annotation and distinct approval for CPNG-006.
+4. Repeat the bounded process for CPNG-007 through CPNG-010.
+5. Harden and diagnose the local SearXNG engine configuration.
+6. Capture a non-empty, rights-safe live snapshot for the ten reviewed claims.
+7. Run candidate, page, passage, and semantic retrieval evaluations.
+8. Run the ten-claim end-to-end benchmark twice.
+9. Compare every Phase 2 exit gate and publish the exit report.
+10. Decide whether observed recovery requirements justify LangGraph or other
+    durable infrastructure in the following phase.
 
 ---
 

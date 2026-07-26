@@ -32,7 +32,15 @@ class ResponseTooLargeError(FetchError):
 
 
 class UnsupportedContentTypeError(FetchError):
-    """The response is not an allowed textual document."""
+    """The response is not an allowed document type."""
+
+
+class InvalidDocumentContentError(FetchError):
+    """The response bytes do not match the declared document type."""
+
+
+class PdfPermissionRequiredError(FetchError):
+    """PDF retrieval requires an explicitly approved source host."""
 
 
 class HttpStatusError(FetchError):
@@ -100,11 +108,14 @@ class SafeHttpFetcher:
             ) as client:
                 for redirect_number in range(self._policy.maximum_redirects + 1):
                     await self._validate_target(current_url)
+                    self._validate_pdf_permission_for_url(current_url)
                     async with client.stream(
                         "GET",
                         current_url,
                         headers={
-                            "Accept": "text/html, application/xhtml+xml, text/plain",
+                            "Accept": (
+                                "text/html, application/xhtml+xml, text/plain, application/pdf"
+                            ),
                             "User-Agent": self._policy.user_agent,
                         },
                     ) as response:
@@ -125,16 +136,27 @@ class SafeHttpFetcher:
                                 f"unexpected HTTP status {response.status_code} for {current_url}"
                             )
 
-                        content_type = self._validate_content_type(response)
-                        content = await self._read_bounded(response)
-                        encoding = response.encoding or "utf-8"
-                        text = content.decode(encoding, errors="replace")
+                        content_type = self._validate_content_type(response, current_url)
+                        maximum_bytes = self._maximum_bytes_for(content_type)
+                        content = await self._read_bounded(response, maximum_bytes)
+                        if content_type == "application/pdf":
+                            if not content.lstrip()[:5] == b"%PDF-":
+                                raise InvalidDocumentContentError(
+                                    "application/pdf response has no PDF signature"
+                                )
+                            text = ""
+                            raw_content = content
+                        else:
+                            encoding = response.encoding or "utf-8"
+                            text = content.decode(encoding, errors="replace")
+                            raw_content = None
                         return FetchedDocument(
                             requested_url=str(requested_url),
                             final_url=str(current_url),
                             status_code=response.status_code,
                             content_type=content_type,
                             text=text,
+                            raw_content=raw_content,
                             byte_length=len(content),
                             redirect_chain=tuple(redirects),
                         )
@@ -174,12 +196,31 @@ class SafeHttpFetcher:
         if blocked:
             raise UnsafeUrlError("URL resolves to a non-public address: " + ", ".join(blocked))
 
-    def _validate_content_type(self, response: httpx.Response) -> str:
+    def _validate_pdf_permission_for_url(self, url: httpx.URL) -> None:
+        if url.path.casefold().endswith(".pdf") and not self._pdf_host_is_allowed(url):
+            raise PdfPermissionRequiredError(
+                f"PDF host requires explicit approval before retrieval: {url.host}"
+            )
+
+    def _pdf_host_is_allowed(self, url: httpx.URL) -> bool:
+        host = (url.host or "").casefold().rstrip(".")
+        allowed = {value.casefold().rstrip(".") for value in self._policy.allowed_pdf_hosts}
+        return host in allowed
+
+    def _validate_content_type(
+        self,
+        response: httpx.Response,
+        url: httpx.URL,
+    ) -> str:
         raw_content_type = response.headers.get("content-type", "")
         content_type = raw_content_type.split(";", maxsplit=1)[0].strip().lower()
         if content_type not in self._policy.allowed_content_types:
             raise UnsupportedContentTypeError(
                 f"content type is not allowed: {content_type or 'missing'}"
+            )
+        if content_type == "application/pdf" and not self._pdf_host_is_allowed(url):
+            raise PdfPermissionRequiredError(
+                f"PDF host requires explicit approval before retrieval: {url.host}"
             )
 
         content_length = response.headers.get("content-length")
@@ -188,16 +229,25 @@ class SafeHttpFetcher:
                 announced_size = int(content_length)
             except ValueError:
                 announced_size = 0
-            if announced_size > self._policy.maximum_response_bytes:
+            if announced_size > self._maximum_bytes_for(content_type):
                 raise ResponseTooLargeError("announced response size exceeds configured limit")
         return content_type
 
-    async def _read_bounded(self, response: httpx.Response) -> bytes:
+    def _maximum_bytes_for(self, content_type: str) -> int:
+        if content_type == "application/pdf":
+            return self._policy.maximum_pdf_response_bytes
+        return self._policy.maximum_response_bytes
+
+    async def _read_bounded(
+        self,
+        response: httpx.Response,
+        maximum_bytes: int,
+    ) -> bytes:
         chunks: list[bytes] = []
         total = 0
         async for chunk in response.aiter_bytes():
             total += len(chunk)
-            if total > self._policy.maximum_response_bytes:
+            if total > maximum_bytes:
                 raise ResponseTooLargeError("streamed response size exceeds configured limit")
             chunks.append(chunk)
         return b"".join(chunks)

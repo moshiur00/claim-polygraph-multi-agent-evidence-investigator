@@ -9,9 +9,11 @@ from claim_polygraph_ng.domain.base import DomainModel
 from claim_polygraph_ng.domain.enums import (
     AuditIssue,
     ClaimType,
+    ContentRetention,
     EvidenceStance,
     ExtractionStatus,
     ResearchPath,
+    RightsStatus,
     SourceType,
     SupportLevel,
     VerdictLabel,
@@ -82,6 +84,16 @@ class Source(DomainModel):
     retrieved_at: datetime
     content_hash: str | None = Field(default=None, pattern=r"^[a-fA-F0-9]{64}$")
     extraction_status: ExtractionStatus
+    rights_status: RightsStatus = RightsStatus.UNKNOWN
+    rights_basis: str | None = Field(default=None, max_length=2_000)
+    rights_reference_url: AnyHttpUrl | None = None
+    content_retention: ContentRetention = ContentRetention.EVIDENCE_PASSAGES_ONLY
+
+    @model_validator(mode="after")
+    def documented_rights_require_a_basis(self) -> "Source":
+        if self.rights_status is not RightsStatus.UNKNOWN and not self.rights_basis:
+            raise ValueError("documented rights status requires rights_basis")
+        return self
 
 
 class Evidence(DomainModel):

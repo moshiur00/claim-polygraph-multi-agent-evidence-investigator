@@ -1,5 +1,6 @@
 """SearXNG JSON search adapter."""
 
+import re
 from typing import Any
 
 import httpx
@@ -29,6 +30,7 @@ class SearXNGSearchProvider:
         timeout_seconds: float = 10.0,
         language: str = "en",
         safe_search: int = 2,
+        engines: tuple[str, ...] = (),
         transport: httpx.AsyncBaseTransport | None = None,
     ) -> None:
         parsed_url = httpx.URL(base_url)
@@ -40,11 +42,18 @@ class SearXNGSearchProvider:
             raise ValueError("timeout_seconds must be positive")
         if safe_search not in {0, 1, 2}:
             raise ValueError("safe_search must be 0, 1, or 2")
+        if any(
+            not engine.strip()
+            or re.fullmatch(r"[a-zA-Z0-9 _-]+", engine.strip()) is None
+            for engine in engines
+        ):
+            raise ValueError("SearXNG engine names contain unsupported characters")
 
         self._search_url = str(parsed_url).rstrip("/") + "/search"
         self._timeout = httpx.Timeout(timeout_seconds)
         self._language = language
         self._safe_search = safe_search
+        self._engines = tuple(engine.strip() for engine in engines)
         self._transport = transport
 
     async def search(self, request: SearchRequest) -> tuple[SearchResult, ...]:
@@ -59,6 +68,8 @@ class SearXNGSearchProvider:
         category = self._category_for(request.research_path)
         if category:
             params["categories"] = category
+        if self._engines:
+            params["engines"] = ",".join(self._engines)
 
         try:
             async with httpx.AsyncClient(

@@ -15,6 +15,7 @@ from claim_polygraph_ng.domain import (
     ExtractionStatus,
     InvestigationPlan,
     ResearchPath,
+    RightsStatus,
     SentenceAudit,
     Source,
     SourceAssessment,
@@ -72,6 +73,33 @@ def test_source_requires_http_url_and_sha256_hash() -> None:
             content_hash="not-a-sha256-hash",
             extraction_status=ExtractionStatus.EXTRACTED,
         )
+
+
+def test_non_unknown_source_rights_require_a_recorded_basis() -> None:
+    with pytest.raises(ValidationError, match="rights_basis"):
+        Source(
+            url="https://example.org/report",
+            canonical_url="https://example.org/report",
+            title="Example report",
+            source_type=SourceType.OFFICIAL,
+            retrieved_at=datetime.now(UTC),
+            extraction_status=ExtractionStatus.EXTRACTED,
+            rights_status=RightsStatus.LICENSED,
+        )
+
+    source = Source(
+        url="https://example.org/report",
+        canonical_url="https://example.org/report",
+        title="Example report",
+        source_type=SourceType.OFFICIAL,
+        retrieved_at=datetime.now(UTC),
+        extraction_status=ExtractionStatus.EXTRACTED,
+        rights_status=RightsStatus.LICENSED,
+        rights_basis="Publisher identifies the work as CC BY 4.0.",
+        rights_reference_url="https://example.org/license",
+    )
+
+    assert source.rights_status is RightsStatus.LICENSED
 
 
 def test_irrelevant_evidence_cannot_have_high_relevance() -> None:
