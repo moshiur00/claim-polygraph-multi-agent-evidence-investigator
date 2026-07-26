@@ -90,10 +90,14 @@ class Evidence(DomainModel):
     evidence_id: UUID = Field(default_factory=uuid4)
     claim_id: UUID
     source_id: UUID
+    chunk_id: UUID | None = None
     passage: str = Field(min_length=1, max_length=20_000)
+    passage_start_char: int | None = Field(default=None, ge=0)
+    passage_end_char: int | None = Field(default=None, gt=0)
     context: str | None = Field(default=None, max_length=40_000)
     stance: EvidenceStance
     relevance_score: Score = Field(ge=0.0, le=1.0)
+    retrieval_score: Score | None = Field(default=None, ge=0.0)
     entailment_score: Score | None = Field(default=None, ge=0.0, le=1.0)
     extraction_status: ExtractionStatus = ExtractionStatus.EXTRACTED
     temporal_compatibility: Score | None = Field(default=None, ge=0.0, le=1.0)
@@ -104,6 +108,16 @@ class Evidence(DomainModel):
         """An item explicitly marked irrelevant cannot have strong relevance."""
         if self.stance is EvidenceStance.IRRELEVANT and self.relevance_score > 0.5:
             raise ValueError("irrelevant evidence cannot have relevance_score above 0.5")
+        offsets = (self.passage_start_char, self.passage_end_char)
+        if self.chunk_id is None and any(value is not None for value in offsets):
+            raise ValueError("passage offsets require a chunk_id")
+        if self.chunk_id is not None:
+            if any(value is None for value in offsets):
+                raise ValueError("chunk evidence requires passage offsets")
+            assert self.passage_start_char is not None
+            assert self.passage_end_char is not None
+            if self.passage_end_char - self.passage_start_char != len(self.passage):
+                raise ValueError("passage offsets must match passage length")
         return self
 
 

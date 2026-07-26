@@ -1,10 +1,12 @@
 """Contracts and policies for untrusted web retrieval."""
 
 from datetime import datetime
+from uuid import UUID, uuid4
 
-from pydantic import AnyHttpUrl, Field
+from pydantic import AnyHttpUrl, Field, model_validator
 
 from claim_polygraph_ng.domain.base import DomainModel
+from claim_polygraph_ng.domain.enums import ResearchPath
 from claim_polygraph_ng.domain.investigation import utc_now
 
 
@@ -41,3 +43,46 @@ class FetchedDocument(DomainModel):
     byte_length: int = Field(ge=0)
     redirect_chain: tuple[AnyHttpUrl, ...] = ()
     retrieved_at: datetime = Field(default_factory=utc_now)
+
+
+class ChunkingPolicy(DomainModel):
+    """Deterministic boundaries for evidence-sized text chunks."""
+
+    maximum_characters: int = Field(default=1_200, ge=200, le=5_000)
+    minimum_characters: int = Field(default=80, ge=1, le=1_000)
+
+    @model_validator(mode="after")
+    def minimum_must_fit_maximum(self) -> "ChunkingPolicy":
+        if self.minimum_characters > self.maximum_characters:
+            raise ValueError("minimum_characters cannot exceed maximum_characters")
+        return self
+
+
+class DocumentChunk(DomainModel):
+    """An exact source-relative text span available for ranking."""
+
+    chunk_id: UUID = Field(default_factory=uuid4)
+    source_id: UUID
+    research_path: ResearchPath
+    ordinal: int = Field(ge=0)
+    text: str = Field(min_length=1, max_length=5_000)
+    start_char: int = Field(ge=0)
+    end_char: int = Field(gt=0)
+    content_hash: str = Field(pattern=r"^[a-fA-F0-9]{64}$")
+
+    @model_validator(mode="after")
+    def offsets_must_match_text(self) -> "DocumentChunk":
+        if self.end_char <= self.start_char:
+            raise ValueError("end_char must be greater than start_char")
+        if self.end_char - self.start_char != len(self.text):
+            raise ValueError("chunk offsets must match text length")
+        return self
+
+
+class RankedPassage(DomainModel):
+    """A chunk selected by deterministic claim-passage ranking."""
+
+    chunk: DocumentChunk
+    rank: int = Field(ge=1)
+    score: float = Field(ge=0.0)
+    matched_terms: tuple[str, ...] = ()

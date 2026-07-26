@@ -89,6 +89,10 @@ class DeterministicModelProvider:
     @staticmethod
     def _classify_evidence(inputs: Mapping[str, JsonValue]) -> Evidence:
         research_path = ResearchPath(str(inputs["research_path"]))
+        chunk_id = inputs.get("chunk_id")
+        passage_start_char = inputs.get("passage_start_char")
+        passage_end_char = inputs.get("passage_end_char")
+        retrieval_score = inputs.get("retrieval_score")
         stance_by_path = {
             ResearchPath.PRIMARY: EvidenceStance.SUPPORTS,
             ResearchPath.GENERAL: EvidenceStance.QUALIFIES,
@@ -98,9 +102,15 @@ class DeterministicModelProvider:
         return Evidence(
             claim_id=UUID(str(inputs["claim_id"])),
             source_id=UUID(str(inputs["source_id"])),
+            chunk_id=UUID(str(chunk_id)) if chunk_id else None,
             passage=str(inputs["passage"]),
+            passage_start_char=(
+                int(passage_start_char) if passage_start_char is not None else None
+            ),
+            passage_end_char=(int(passage_end_char) if passage_end_char is not None else None),
             stance=stance,
             relevance_score=0.92,
+            retrieval_score=(float(retrieval_score) if retrieval_score is not None else None),
             entailment_score=0.84,
             extraction_status=ExtractionStatus.EXTRACTED,
             temporal_compatibility=0.9,
@@ -176,15 +186,13 @@ class DeterministicSearchProvider:
     provider_id = "deterministic-search"
 
     async def search(self, request: SearchRequest) -> tuple[SearchResult, ...]:
+        claim_text = request.query.split(": ", maxsplit=1)[-1]
         path_results = {
             ResearchPath.PRIMARY: SearchResult(
                 url="https://example.org/official-record",
                 title="Mock official record",
                 snippet="Synthetic supporting result.",
-                inline_content=(
-                    "The mock official record contains information that supports "
-                    "the submitted claim."
-                ),
+                inline_content=f"The mock official record supports: {claim_text}",
                 source_type=SourceType.OFFICIAL,
                 publisher="Example Public Authority",
             ),
@@ -192,10 +200,7 @@ class DeterministicSearchProvider:
                 url="https://example.net/context-report",
                 title="Mock contextual report",
                 snippet="Synthetic qualifying result.",
-                inline_content=(
-                    "The mock independent report supports part of the claim but "
-                    "adds an important qualification."
-                ),
+                inline_content=f"The mock independent report qualifies: {claim_text}",
                 source_type=SourceType.NEWS,
                 publisher="Example Independent Newsroom",
             ),
@@ -203,10 +208,7 @@ class DeterministicSearchProvider:
                 url="https://example.com/contrary-record",
                 title="Mock contrary record",
                 snippet="Synthetic contradictory result.",
-                inline_content=(
-                    "The mock contrary record presents evidence inconsistent with "
-                    "the submitted claim."
-                ),
+                inline_content=f"The mock contrary record contradicts: {claim_text}",
                 source_type=SourceType.PRIMARY_DOCUMENT,
                 publisher="Example Records Office",
             ),
