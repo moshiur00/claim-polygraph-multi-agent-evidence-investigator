@@ -302,7 +302,9 @@ def _evidence_section(
                 f"- **Publisher:** {_inline(source.publisher or 'Unknown')}",
                 f"- **Source type:** {source.source_type.value}",
                 f"- **Relevance:** {item.relevance_score:.2f}",
+                f"- **Retrieval score:** {_confidence(item.retrieval_score)}",
                 f"- **Entailment:** {_confidence(item.entailment_score)}",
+                f"- **Source characters:** {_source_range(item)}",
                 f"- **URL:** <{source.canonical_url}>",
                 "",
             ]
@@ -329,6 +331,12 @@ def _joined(values) -> str:
 
 def _confidence(value: float | None) -> str:
     return "not calibrated" if value is None else f"{value:.2f}"
+
+
+def _source_range(evidence: Evidence) -> str:
+    if evidence.passage_start_char is None or evidence.passage_end_char is None:
+        return "not recorded"
+    return f"{evidence.passage_start_char}-{evidence.passage_end_char}"
 
 
 def _inline(value: object) -> str:

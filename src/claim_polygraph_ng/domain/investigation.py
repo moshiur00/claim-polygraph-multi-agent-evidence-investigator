@@ -66,6 +66,7 @@ class ArtifactType(StrEnum):
     CLAIM = "claim"
     PLAN = "plan"
     SOURCE = "source"
+    CHUNK = "chunk"
     EVIDENCE = "evidence"
     VERDICT = "verdict"
     AUDIT = "audit"

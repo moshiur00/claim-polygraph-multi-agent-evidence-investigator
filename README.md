@@ -22,6 +22,8 @@ lifecycle:
 - SQLite persistence for investigations, artifacts, and trace events;
 - an end-to-end claim-to-audited-verdict application service.
 - a local CLI with JSON, Markdown, and trace exports.
+- bounded document chunks with exact source-relative offsets;
+- deterministic BM25-style claim-passage ranking and top passage selection.
 
 The mock providers deliberately return synthetic evidence. They validate
 orchestration, policy, persistence, and audit contracts; they do not perform

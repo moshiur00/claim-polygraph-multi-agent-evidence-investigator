@@ -24,6 +24,7 @@ from claim_polygraph_ng.providers import (
     DeterministicModelProvider,
     DeterministicSearchProvider,
 )
+from claim_polygraph_ng.retrieval import DocumentChunk
 
 
 def test_complete_investigation_is_persisted_and_reloadable(tmp_path) -> None:
@@ -53,6 +54,12 @@ def test_complete_investigation_is_persisted_and_reloadable(tmp_path) -> None:
     assert (
         repository.list_artifacts(investigation_id, ArtifactType.SOURCE, Source) == report.sources
     )
+    chunks = repository.list_artifacts(
+        investigation_id,
+        ArtifactType.CHUNK,
+        DocumentChunk,
+    )
+    assert len(chunks) == 3
     assert (
         repository.list_artifacts(investigation_id, ArtifactType.EVIDENCE, Evidence)
         == report.evidence
@@ -67,6 +74,7 @@ def test_complete_investigation_is_persisted_and_reloadable(tmp_path) -> None:
 
     assert len(report.sources) == 3
     assert len(report.evidence) == 3
+    assert all(item.chunk_id is not None for item in report.evidence)
     assert report.verdict.label is VerdictLabel.MIXED
     assert report.audits[0].cited_evidence_ids
 

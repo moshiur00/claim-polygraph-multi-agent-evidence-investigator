@@ -33,9 +33,13 @@ from claim_polygraph_ng.persistence import InvestigationRepository
 from claim_polygraph_ng.providers import SearchProvider, StructuredModelProvider
 from claim_polygraph_ng.retrieval import (
     ContentFetcher,
+    DocumentChunk,
     FetchError,
     HttpStatusError,
+    deduplicate_chunks,
     extract_readable_text,
+    rank_passages,
+    segment_document,
 )
 
 StructuredResult = TypeVar("StructuredResult", bound=DomainModel)
@@ -225,7 +229,9 @@ class InvestigationService:
         plan: InvestigationPlan,
     ) -> tuple[tuple[Source, ...], tuple[Evidence, ...]]:
         sources: list[Source] = []
+        candidate_chunks: list[DocumentChunk] = []
         evidence_items: list[Evidence] = []
+        budget_exhausted = False
         self._active_page_limit = min(
             plan.maximum_pages_fetched,
             self._policy.budget.maximum_pages_fetched,
@@ -256,7 +262,8 @@ class InvestigationService:
                             "page_limit": self._active_page_limit,
                         },
                     )
-                    return tuple(sources), tuple(evidence_items)
+                    budget_exhausted = True
+                    break
                 except FetchError as error:
                     blocked_source = Source(
                         url=result.url,
@@ -310,14 +317,55 @@ class InvestigationService:
                     source,
                 )
 
+                chunks = segment_document(
+                    source_id=source.source_id,
+                    research_path=research_path,
+                    text=content,
+                )
+                for chunk in chunks:
+                    candidate_chunks.append(chunk)
+                    self._save_artifact(
+                        investigation,
+                        ArtifactType.CHUNK,
+                        chunk.chunk_id,
+                        chunk,
+                    )
+                break
+
+            if budget_exhausted:
+                break
+
+        for research_path in plan.required_research_paths:
+            path_chunks = deduplicate_chunks(
+                tuple(chunk for chunk in candidate_chunks if chunk.research_path is research_path)
+            )
+            ranked_passages = rank_passages(
+                claim.text,
+                path_chunks,
+                top_k=1,
+            )
+            for ranked in ranked_passages:
+                if ranked.score <= 0:
+                    self._event(
+                        investigation,
+                        TraceEventType.STATUS_CHANGED,
+                        "No lexically relevant passage found for research path.",
+                        {"research_path": research_path.value},
+                    )
+                    continue
+                chunk = ranked.chunk
                 evidence = await self._generate(
                     investigation,
                     ModelTask.CLASSIFY_EVIDENCE,
                     Evidence,
                     {
                         "claim_id": str(claim.claim_id),
-                        "source_id": str(source.source_id),
-                        "passage": content[:20_000],
+                        "source_id": str(chunk.source_id),
+                        "chunk_id": str(chunk.chunk_id),
+                        "passage": chunk.text,
+                        "passage_start_char": chunk.start_char,
+                        "passage_end_char": chunk.end_char,
+                        "retrieval_score": ranked.score,
                         "research_path": research_path.value,
                     },
                 )
@@ -328,7 +376,6 @@ class InvestigationService:
                     evidence.evidence_id,
                     evidence,
                 )
-                break
 
         return tuple(sources), tuple(evidence_items)
 
