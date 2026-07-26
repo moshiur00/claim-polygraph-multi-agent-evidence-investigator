@@ -16,6 +16,8 @@ from claim_polygraph_ng.domain.models import (
     Source,
     Verdict,
 )
+from claim_polygraph_ng.domain.provenance import IndependenceAnalysis
+from claim_polygraph_ng.domain.verification import ContextVerification
 
 
 def utc_now() -> datetime:
@@ -55,6 +57,7 @@ class TraceEventType(StrEnum):
     STAGE_STARTED = "stage_started"
     ARTIFACT_CREATED = "artifact_created"
     PROVIDER_CALLED = "provider_called"
+    MODEL_USAGE_RECORDED = "model_usage_recorded"
     PROVIDER_FAILED = "provider_failed"
     INVESTIGATION_COMPLETED = "investigation_completed"
     INVESTIGATION_FAILED = "investigation_failed"
@@ -68,6 +71,8 @@ class ArtifactType(StrEnum):
     SOURCE = "source"
     CHUNK = "chunk"
     EVIDENCE = "evidence"
+    INDEPENDENCE = "independence"
+    CONTEXT_VERIFICATION = "context_verification"
     VERDICT = "verdict"
     AUDIT = "audit"
 
@@ -80,6 +85,34 @@ class ModelTask(StrEnum):
     CLASSIFY_EVIDENCE = "classify_evidence"
     JUDGE_EVIDENCE = "judge_evidence"
     AUDIT_SENTENCE = "audit_sentence"
+    REVIEW_ANNOTATION = "review_annotation"
+    REVIEW_CRITIQUE = "review_critique"
+    EVALUATE_PASSAGE = "evaluate_passage"
+
+
+class ModelCallUsage(DomainModel):
+    """Measured usage and estimated price for one structured model call."""
+
+    provider_id: str = Field(min_length=1, max_length=500)
+    model: str = Field(min_length=1, max_length=200)
+    task: ModelTask
+    duration_seconds: float = Field(ge=0.0)
+    input_tokens: int | None = Field(default=None, ge=0)
+    cached_input_tokens: int | None = Field(default=None, ge=0)
+    output_tokens: int | None = Field(default=None, ge=0)
+    estimated_cost_usd: float | None = Field(default=None, ge=0.0)
+    pricing_version: str | None = Field(default=None, max_length=100)
+    output_valid: bool = False
+
+    @model_validator(mode="after")
+    def cached_tokens_cannot_exceed_input(self) -> "ModelCallUsage":
+        if (
+            self.input_tokens is not None
+            and self.cached_input_tokens is not None
+            and self.cached_input_tokens > self.input_tokens
+        ):
+            raise ValueError("cached_input_tokens cannot exceed input_tokens")
+        return self
 
 
 class Investigation(DomainModel):
@@ -159,5 +192,7 @@ class InvestigationReport(DomainModel):
     plan: InvestigationPlan
     sources: tuple[Source, ...]
     evidence: tuple[Evidence, ...]
+    independence_analysis: IndependenceAnalysis | None = None
+    context_verification: ContextVerification | None = None
     verdict: Verdict
     audits: tuple[SentenceAudit, ...]

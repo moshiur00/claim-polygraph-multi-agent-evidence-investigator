@@ -6,6 +6,8 @@ import httpx
 import pytest
 
 from claim_polygraph_ng.retrieval import (
+    InvalidDocumentContentError,
+    PdfPermissionRequiredError,
     RedirectLimitError,
     ResponseTooLargeError,
     SafeHttpFetcher,
@@ -147,11 +149,112 @@ def test_rejects_non_text_content() -> None:
         transport=httpx.MockTransport(
             lambda request: httpx.Response(
                 200,
-                headers={"content-type": "application/pdf"},
-                content=b"%PDF",
+                headers={"content-type": "image/png"},
+                content=b"\x89PNG",
             )
         ),
     )
 
     with pytest.raises(UnsupportedContentTypeError):
+        asyncio.run(fetcher.fetch("https://public.example/image.png"))
+
+
+def test_accepts_bounded_pdf_bytes_and_validates_signature() -> None:
+    pdf = b"%PDF-1.7\nbounded test document"
+    fetcher = SafeHttpFetcher(
+        policy=UrlSafetyPolicy(allowed_pdf_hosts=frozenset({"public.example"})),
+        resolver=public_resolver,
+        transport=httpx.MockTransport(
+            lambda request: httpx.Response(
+                200,
+                headers={"content-type": "application/pdf"},
+                content=pdf,
+            )
+        ),
+    )
+
+    document = asyncio.run(fetcher.fetch("https://public.example/document.pdf"))
+
+    assert document.content_type == "application/pdf"
+    assert document.text == ""
+    assert document.raw_content == pdf
+    assert document.byte_length == len(pdf)
+
+    invalid_fetcher = SafeHttpFetcher(
+        policy=UrlSafetyPolicy(allowed_pdf_hosts=frozenset({"public.example"})),
+        resolver=public_resolver,
+        transport=httpx.MockTransport(
+            lambda request: httpx.Response(
+                200,
+                headers={"content-type": "application/pdf"},
+                content=b"not a PDF",
+            )
+        ),
+    )
+    with pytest.raises(InvalidDocumentContentError, match="signature"):
+        asyncio.run(invalid_fetcher.fetch("https://public.example/invalid.pdf"))
+
+
+def test_pdf_has_a_separate_bounded_response_budget() -> None:
+    fetcher = SafeHttpFetcher(
+        policy=UrlSafetyPolicy(
+            maximum_response_bytes=1_024,
+            maximum_pdf_response_bytes=2_048,
+            allowed_pdf_hosts=frozenset({"public.example"}),
+        ),
+        resolver=public_resolver,
+        transport=httpx.MockTransport(
+            lambda request: httpx.Response(
+                200,
+                headers={"content-type": "application/pdf"},
+                content=b"%PDF-" + (b"x" * 1_500),
+            )
+        ),
+    )
+
+    document = asyncio.run(fetcher.fetch("https://public.example/document.pdf"))
+
+    assert document.byte_length == 1_505
+
+
+def test_pdf_requires_explicit_host_approval_before_body_download() -> None:
+    calls = 0
+
+    async def handler(request: httpx.Request) -> httpx.Response:
+        nonlocal calls
+        calls += 1
+        return httpx.Response(
+            200,
+            headers={"content-type": "application/pdf"},
+            content=b"%PDF-1.7",
+        )
+
+    fetcher = SafeHttpFetcher(
+        resolver=public_resolver,
+        transport=httpx.MockTransport(handler),
+    )
+
+    with pytest.raises(PdfPermissionRequiredError, match="explicit approval"):
         asyncio.run(fetcher.fetch("https://public.example/document.pdf"))
+    assert calls == 0
+
+
+def test_unexpected_pdf_response_is_rejected_before_streaming_body() -> None:
+    class GuardedStream(httpx.AsyncByteStream):
+        async def __aiter__(self):
+            raise AssertionError("PDF body must not be read without approval")
+            yield b""
+
+    fetcher = SafeHttpFetcher(
+        resolver=public_resolver,
+        transport=httpx.MockTransport(
+            lambda request: httpx.Response(
+                200,
+                headers={"content-type": "application/pdf"},
+                stream=GuardedStream(),
+            )
+        ),
+    )
+
+    with pytest.raises(PdfPermissionRequiredError, match="explicit approval"):
+        asyncio.run(fetcher.fetch("https://public.example/download?id=123"))

@@ -62,6 +62,23 @@ class ExtractionStatus(StrEnum):
     FAILED = "failed"
 
 
+class RightsStatus(StrEnum):
+    """Recorded copyright or reuse status; unknown is the safe default."""
+
+    UNKNOWN = "unknown"
+    LICENSED = "licensed"
+    PUBLIC_DOMAIN = "public_domain"
+    PERMISSION_CONFIRMED = "permission_confirmed"
+    LEGAL_EXCEPTION_ASSERTED = "legal_exception_asserted"
+
+
+class ContentRetention(StrEnum):
+    """How much retrieved source content may be stored durably."""
+
+    METADATA_ONLY = "metadata_only"
+    EVIDENCE_PASSAGES_ONLY = "evidence_passages_only"
+
+
 class VerdictLabel(StrEnum):
     """Nuanced verdict taxonomy."""
 

@@ -8,8 +8,10 @@ from uuid import UUID
 from claim_polygraph_ng.domain import (
     ArtifactType,
     AtomicClaim,
+    ContextVerification,
     Evidence,
     EvidenceStance,
+    IndependenceAnalysis,
     InvestigationReport,
     InvestigationStatus,
     SentenceAudit,
@@ -57,6 +59,16 @@ def load_report(
     plans = repository.list_artifacts(investigation_id, ArtifactType.PLAN, InvestigationPlan)
     sources = repository.list_artifacts(investigation_id, ArtifactType.SOURCE, Source)
     evidence = repository.list_artifacts(investigation_id, ArtifactType.EVIDENCE, Evidence)
+    independence = repository.list_artifacts(
+        investigation_id,
+        ArtifactType.INDEPENDENCE,
+        IndependenceAnalysis,
+    )
+    context_verification = repository.list_artifacts(
+        investigation_id,
+        ArtifactType.CONTEXT_VERIFICATION,
+        ContextVerification,
+    )
     verdicts = repository.list_artifacts(investigation_id, ArtifactType.VERDICT, Verdict)
     audits = repository.list_artifacts(investigation_id, ArtifactType.AUDIT, SentenceAudit)
 
@@ -81,6 +93,10 @@ def load_report(
         plan=plans[-1],
         sources=sources,
         evidence=evidence,
+        independence_analysis=independence[-1] if independence else None,
+        context_verification=(
+            context_verification[-1] if context_verification else None
+        ),
         verdict=verdicts[-1],
         audits=audits,
     )
@@ -179,6 +195,41 @@ def render_markdown(
         items = tuple(item for item in report.evidence if item.stance is stance)
         lines.extend(_evidence_section(heading, items, evidence_labels, source_by_id))
 
+    if report.independence_analysis is not None:
+        analysis = report.independence_analysis
+        lines.extend(
+            [
+                "## Evidence independence",
+                "",
+                f"- **Independent families:** {analysis.independent_family_count}",
+                f"- **Required families:** {analysis.required_independent_families}",
+                f"- **Requirement met:** {'yes' if analysis.requirement_met else 'no'}",
+            ]
+        )
+        for index, family in enumerate(analysis.families, start=1):
+            lines.append(
+                f"- **Family {index}:** hosts {_joined(family.hostnames)}; "
+                f"basis {_joined(family.grouping_reasons)}"
+            )
+        lines.append("")
+
+    if report.context_verification is not None:
+        verification = report.context_verification
+        lines.extend(
+            [
+                "## Context verification",
+                "",
+                f"- **Numerical check:** {verification.numerical.status.value}",
+                f"- **Claim values:** {_joined(verification.numerical.claim_values)}",
+                f"- **Numerical issues:** {_joined(verification.numerical.issues)}",
+                f"- **Temporal check:** {verification.temporal.status.value}",
+                f"- **Reference date:** "
+                f"{verification.temporal.reference_date or 'not specified'}",
+                f"- **Temporal issues:** {_joined(verification.temporal.issues)}",
+                "",
+            ]
+        )
+
     decisive = _evidence_references(report.verdict.decisive_evidence_ids, evidence_labels)
     contradictory = _evidence_references(report.verdict.contradictory_evidence_ids, evidence_labels)
     lines.extend(
@@ -246,6 +297,15 @@ def render_markdown(
     )
     model_calls = sum("task" in event.details for event in provider_events)
     search_calls = sum("research_path" in event.details for event in provider_events)
+    usage_events = tuple(
+        event for event in events if event.event_type is TraceEventType.MODEL_USAGE_RECORDED
+    )
+    input_tokens = int(_detail_total(usage_events, "input_tokens"))
+    cached_input_tokens = int(_detail_total(usage_events, "cached_input_tokens"))
+    output_tokens = int(_detail_total(usage_events, "output_tokens"))
+    estimated_cost = _detail_total(usage_events, "estimated_cost_usd")
+    model_latency = _detail_total(usage_events, "duration_seconds")
+    unpriced_calls = sum(event.details.get("estimated_cost_usd") is None for event in usage_events)
     lines.extend(
         [
             "",
@@ -254,6 +314,12 @@ def render_markdown(
             f"- **Providers:** {_joined(providers)}",
             f"- **Structured model calls:** {model_calls}",
             f"- **Search calls:** {search_calls}",
+            f"- **Metered input tokens:** {input_tokens}",
+            f"- **Cached input tokens:** {cached_input_tokens}",
+            f"- **Metered output tokens:** {output_tokens}",
+            f"- **Estimated model cost:** ${estimated_cost:.6f}",
+            f"- **Measured model latency:** {model_latency:.3f} seconds",
+            f"- **Unpriced model calls:** {unpriced_calls}",
             f"- **Trace events:** {len(events)}",
             "",
             "## Sources",
@@ -264,7 +330,9 @@ def render_markdown(
         publisher = f" — {_inline(source.publisher)}" if source.publisher else ""
         lines.append(
             f"- **{_inline(source.title)}**{publisher}: <{source.canonical_url}> "
-            f"_(extraction: {source.extraction_status.value})_"
+            f"_(extraction: {source.extraction_status.value}; "
+            f"rights: {source.rights_status.value}; "
+            f"retention: {source.content_retention.value})_"
         )
 
     lines.extend(
@@ -301,6 +369,8 @@ def _evidence_section(
                 "",
                 f"- **Publisher:** {_inline(source.publisher or 'Unknown')}",
                 f"- **Source type:** {source.source_type.value}",
+                f"- **Rights status:** {source.rights_status.value}",
+                f"- **Retention:** {source.content_retention.value}",
                 f"- **Relevance:** {item.relevance_score:.2f}",
                 f"- **Retrieval score:** {_confidence(item.retrieval_score)}",
                 f"- **Entailment:** {_confidence(item.entailment_score)}",
@@ -349,3 +419,12 @@ def _table(value: object) -> str:
 
 def _blockquote(value: object) -> str:
     return _inline(value).replace(">", "\\>")
+
+
+def _detail_total(events: tuple[TraceEvent, ...], key: str) -> float:
+    values = (event.details.get(key) for event in events)
+    return sum(
+        float(value)
+        for value in values
+        if isinstance(value, (int, float)) and not isinstance(value, bool)
+    )

@@ -3,6 +3,9 @@
 import re
 from html.parser import HTMLParser
 
+from claim_polygraph_ng.retrieval.models import FetchedDocument, PdfExtractionPolicy
+from claim_polygraph_ng.retrieval.pdf import extract_pdf_text
+
 
 class _ReadableTextParser(HTMLParser):
     """Collect visible text while excluding active and non-content elements."""
@@ -85,3 +88,16 @@ def extract_readable_text(text: str, content_type: str) -> str:
         for paragraph in re.split(r"(?:\r?\n\s*){2,}", extracted)
     ]
     return "\n\n".join(paragraph for paragraph in paragraphs if paragraph)
+
+
+def extract_document_text(
+    document: FetchedDocument,
+    pdf_policy: PdfExtractionPolicy | None = None,
+) -> str:
+    """Extract readable text according to the fetched document's media type."""
+    if document.content_type == "application/pdf":
+        if document.raw_content is None:
+            raise ValueError("PDF document is missing raw content")
+        extracted = extract_pdf_text(document.raw_content, pdf_policy)
+        return extract_readable_text(extracted, "text/plain")
+    return extract_readable_text(document.text, document.content_type)

@@ -42,7 +42,12 @@ The public-page fetcher:
 - disables automatic redirects and environment proxy inheritance;
 - limits redirects, time, response bytes, and content types;
 - verifies HTTPS with the operating system certificate store;
-- accepts textual HTML, XHTML, and plain-text content.
+- accepts textual HTML, XHTML, and plain-text content;
+- accepts PDF bytes under a separate 20 MB response ceiling, validates their
+  file signature, rejects encryption, and extracts text under 500-page and
+  500,000-character limits;
+- blocks PDF URLs before requesting them unless the source host is explicitly
+  approved, and rejects an unexpected PDF response before reading its body.
 
 An individual fetch failure is non-fatal. The source and extraction status are
 persisted, a provider-failure trace event is emitted, and the next search
@@ -51,6 +56,11 @@ evidence remains, the workflow completes as unverifiable rather than failing.
 
 The configured SearXNG base URL is a trusted service endpoint and may be local.
 URLs returned by SearXNG do not inherit that trust.
+
+Public availability does not establish permission to reproduce a document.
+PDF hosts therefore require an explicit operator decision based on a license,
+rights-holder permission, public-domain status, or an applicable legal
+exception. The allowlist records that decision; it does not make the decision.
 
 ## Consequences
 
@@ -64,7 +74,8 @@ URLs returned by SearXNG do not inherit that trust.
 
 ### Negative
 
-- PDF and dynamically rendered pages are not supported yet.
+- Image-only PDFs require a later, separately bounded OCR adapter.
+- Dynamically rendered pages are not supported yet.
 - Minimal HTML extraction does not identify the most relevant passage.
 - DNS validation and the HTTP connection are separate operations; production
   deployments still require network-level egress restrictions or a
@@ -76,5 +87,4 @@ URLs returned by SearXNG do not inherit that trust.
 
 The next retrieval work is passage segmentation, claim-passage ranking,
 canonical URL handling, deduplication, and extraction-status reporting. Browser
-automation and PDF extraction must be introduced only through separate bounded
-adapters.
+automation and OCR must be introduced only through separate bounded adapters.

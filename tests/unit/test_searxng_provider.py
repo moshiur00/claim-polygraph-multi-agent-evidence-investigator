@@ -16,6 +16,7 @@ def test_searxng_normalizes_valid_results_and_respects_limit() -> None:
         assert request.url.params["format"] == "json"
         assert request.url.params["safesearch"] == "2"
         assert request.url.params["categories"] == "general"
+        assert request.url.params["engines"] == "bing,mojeek"
         return httpx.Response(
             200,
             json={
@@ -45,6 +46,7 @@ def test_searxng_normalizes_valid_results_and_respects_limit() -> None:
 
     provider = SearXNGSearchProvider(
         "http://searxng.local:8080",
+        engines=("bing", "mojeek"),
         transport=httpx.MockTransport(handler),
     )
     results = asyncio.run(
