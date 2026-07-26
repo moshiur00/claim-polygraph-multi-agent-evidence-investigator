@@ -1,0 +1,61 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.pytest-tmp/
+.coverage
+htmlcov/
+.ruff_cache/
+
+# Virtual environments
+.venv/
+venv/
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# Local artifacts
+artifacts/
+data/*.db
+*.sqlite
+*.sqlite3
+
+# Editors and operating systems
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+
+# Build and packaging
+build/
+dist/
+
+# Additional test/type-check caches
+.mypy_cache/
+.pyright/
+.tox/
+.nox/
+coverage.xml
+.coverage.*
+
+# SQLite sidecar files
+*.db-wal
+*.db-shm
+*.sqlite-wal
+*.sqlite-shm
+*.sqlite3-wal
+*.sqlite3-shm
+
+# Runtime logs
+*.log
+
+# Local Codex/agent metadata
+.agents/
+.codex/
+
+# Windows
+Desktop.ini
