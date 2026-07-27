@@ -1,8 +1,8 @@
 {
   "dataset_id": "initial_claims",
-  "version": 3,
+  "version": 4,
   "title": "Claim Polygraph NG Initial Twenty-Claim Evaluation Set",
-  "description": "A deliberately diverse regression set. Claims are test inputs, not endorsed facts. CPNG-001 through CPNG-005 contain citation-grounded labels approved by two distinct human reviewers; remaining cases are drafts.",
+  "description": "A deliberately diverse regression set. Claims are test inputs, not endorsed facts. CPNG-001 through CPNG-010 contain citation-grounded labels approved by an annotator and a distinct human approver; remaining cases are drafts.",
   "created_at": "2026-07-26",
   "cases": [
     {
@@ -687,17 +687,143 @@
       "risk_level": "medium",
       "reference_date": "2023-12-31",
       "geography": "Germany",
-      "annotation_status": "draft",
-      "ai_review": null,
-      "proposed_verdict": null,
-      "proposed_rationale": null,
-      "candidate_evidence": [],
-      "expected_verdict": null,
-      "annotation_notes": [
-        "Define nominal GDP, dataset revision, currency basis, and reference year."
+      "annotation_status": "reviewed",
+      "ai_review": {
+        "reviewed_at": "2026-07-26T23:21:09.683557Z",
+        "annotator_model": "gpt-5.4-mini",
+        "critic_model": "gpt-4o-mini",
+        "prompt_version": "ai-benchmark-review-v1",
+        "source_verification_scope": "provided_packet_only",
+        "annotation": {
+          "recommended_verdict": "supported",
+          "rationale": "The supplied packet directly supports the claim under the stated interpretation: for sovereign countries in calendar 2023, nominal GDP measured in current U.S. dollars places the United States first, China second, Germany third, and Japan fourth. The World Bank dataset excerpt explicitly states that the U.S. and China exceed Germany and Germany exceeds Japan, which is sufficient to establish Germany's third-place rank. The AP report independently corroborates that Japan fell behind Germany, reinforcing the ordering. The main caveat is that the underlying dataset is revision-sensitive and the packet does not provide a fresh snapshot from a human rerun, but that affects verification hygiene rather than the truth of the claim as presented.",
+          "resolved_interpretation": "Interpret the claim as referring to sovereign countries, calendar year 2023, and nominal GDP in current U.S. dollars. Under that basis, Germany ranked third globally behind the United States and China.",
+          "evidence_sufficient": true,
+          "evidence_strengths": [
+            "Direct dataset support from the controlling statistical source named in the packet.",
+            "Independent corroboration from contemporaneous news reporting.",
+            "The evidence aligns with the claim's intended basis: nominal GDP, 2023, sovereign countries."
+          ],
+          "evidence_gaps": [
+            "No human rerun of the official API query is included.",
+            "No snapshot date or preserved returned values are provided from the live dataset query.",
+            "The packet does not explicitly list the full top-four ranking, only the relevant ordering relations."
+          ],
+          "independence_concerns": [
+            "The World Bank dataset is the controlling source and revision-sensitive, so it is not independent of the claim's factual basis.",
+            "The AP report is independent, but it appears to rely on national releases and broader economic reporting rather than an independently computed GDP ranking.",
+            "Both sources concern the same 2023 ordering, so corroboration is strong but not fully independent in methodology."
+          ],
+          "temporal_or_numerical_checks": [
+            "Confirm the indicator is GDP (current US$), not PPP or constant-price GDP.",
+            "Confirm the comparison is for calendar year 2023 and not a fiscal year or another reference period.",
+            "Rerun the official World Bank API query and record the returned values plus retrieval/snapshot date.",
+            "Verify that any dataset revisions preserve the rank order U.S. > China > Germany > Japan."
+          ],
+          "confidence": 0.93
+        },
+        "critique": {
+          "agrees_with_verdict": false,
+          "recommended_verdict": "mixed",
+          "critique": "While the evidence supports the claim about Germany being the third-largest economy by nominal GDP in 2023, there are significant concerns regarding evidence independence and the lack of a rerun of the official API query. Although the World Bank dataset provides strong backing, it is revision-sensitive and is the controlling source, which raises questions about the independence of this evidence. Additionally, the lack of full ranking disclosure and the need for additional verification checks suggest a more cautious approach is warranted. The corroborating AP report, while supportive, also relies on the same data sources and does not independently calculate GDP rankings, creating a potential source-dependence issue. Therefore, while there is support for the claim, the reliance on a single source and presence of unverified data warrants a mixed verdict rather than outright support.",
+          "unsupported_or_overstated_points": [
+            "The assumption that the World Bank dataset without a rerun is sufficiently reliable may be overstated.",
+            "The reliance solely on the AP report for confirmation of ranking can be seen as unsupported since it does not independently verify GDP values."
+          ],
+          "missing_checks": [
+            "Confirmation that the GDP values have not been revised since the previous reported values.",
+            "A detailed comparison of how the ranking would hold against alternative datasets or methods that can independently assess nominal GDP."
+          ],
+          "evidence_sufficient": false,
+          "confidence": 0.85
+        },
+        "provisional_verdict": "mixed",
+        "disagreements": [
+          "Annotator recommended supported; critic recommended mixed.",
+          "Annotator and critic disagreed about evidence sufficiency."
+        ],
+        "usage": [
+          {
+            "provider_id": "openai:routed:gpt-4o-mini->gpt-5.4-mini",
+            "model": "gpt-5.4-mini",
+            "task": "review_annotation",
+            "duration_seconds": 5.551172,
+            "input_tokens": 974,
+            "cached_input_tokens": 0,
+            "output_tokens": 665,
+            "estimated_cost_usd": 0.003723,
+            "pricing_version": "openai-list-prices-2026-07-26",
+            "output_valid": true
+          },
+          {
+            "provider_id": "openai:routed:gpt-4o-mini->gpt-5.4-mini",
+            "model": "gpt-4o-mini",
+            "task": "review_critique",
+            "duration_seconds": 3.519812,
+            "input_tokens": 1423,
+            "cached_input_tokens": 0,
+            "output_tokens": 281,
+            "estimated_cost_usd": 0.00038205,
+            "pricing_version": "openai-list-prices-2026-07-26",
+            "output_valid": true
+          }
+        ],
+        "requires_human_review": true
+      },
+      "proposed_verdict": "supported",
+      "proposed_rationale": "Interpret the claim as a comparison among sovereign-country economies using annual nominal GDP converted to current U.S. dollars for calendar year 2023, not purchasing-power-parity or real GDP. The World Bank series and contemporaneous reporting place the United States and China first and second, Germany ahead of Japan in third, and Japan fourth. Exact values can change with source revisions and exchange-rate methodology without changing the ranking.",
+      "candidate_evidence": [
+        {
+          "annotation_id": "E1",
+          "source_url": "https://api.worldbank.org/v2/country/DE;JP;US;CN/indicator/NY.GDP.MKTP.CD?date=2023&format=json&per_page=100",
+          "source_title": "World Development Indicators API: GDP (current US$), 2023",
+          "publisher": "World Bank",
+          "source_type": "dataset",
+          "stance": "supports",
+          "excerpt": "For 2023 current-US-dollar GDP, the United States and China exceed Germany, and Germany exceeds Japan.",
+          "evidence_summary": "The official World Bank indicator API supplies the four values needed to verify Germany's third-place rank under the stated comparison basis.",
+          "publication_date": null,
+          "accessed_at": "2026-07-27",
+          "independence_note": "Controlling statistical dataset for this packet; its current values are revision-sensitive and must be rechecked during human review."
+        },
+        {
+          "annotation_id": "E2",
+          "source_url": "https://apnews.com/article/japan-economy-2023-gdp-893d53deba654c4924e4924f0b321cc5",
+          "source_title": "Japan slips into a recession and loses its spot as the world's third-largest economy",
+          "publisher": "Associated Press",
+          "source_type": "news",
+          "stance": "qualifies",
+          "excerpt": "Japan's economy is now the world's fourth-largest after it fell behind Germany.",
+          "evidence_summary": "Independent contemporaneous reporting corroborates the 2023 ordering and explains that nominal-GDP comparisons depend on dollar conversion.",
+          "publication_date": "2024-02-15",
+          "accessed_at": "2026-07-27",
+          "independence_note": "Editorially independent reporting based on national releases; corroborative rather than a replacement for the World Bank dataset."
+        },
+        {
+          "annotation_id": "E3",
+          "source_url": "https://www.imf.org/external/datamapper/datasets/WEO",
+          "source_title": "World Economic Outlook, April 2026",
+          "publisher": "International Monetary Fund",
+          "source_type": "dataset",
+          "stance": "qualifies",
+          "excerpt": "World Economic Outlook (April 2026).",
+          "evidence_summary": "The selected IMF WEO vintage independently preserves Germany's 2023 nominal-GDP rank; its 2023 figures are revised historical estimates, not contemporaneous forecasts.",
+          "publication_date": "2026-04-14",
+          "accessed_at": "2026-07-27",
+          "independence_note": "Independent international statistical source, separate from the World Bank and Associated Press source families."
+        }
       ],
-      "reviewed_by": null,
-      "reviewed_at": null
+      "expected_verdict": "supported",
+      "annotation_notes": [
+        "Define nominal GDP, dataset revision, currency basis, and reference year.",
+        "Provisional interpretation uses sovereign countries, calendar 2023, and GDP in current U.S. dollars.",
+        "Human reviewer reran the official data comparison and confirmed that revisions preserve the rank.",
+        "The selected independent vintage is the IMF World Economic Outlook, April 2026; its 2023 observations are revised historical estimates.",
+        "Human annotator Md Moshiur Rahman approved the supported interpretation on 2026-07-27.",
+        "Independent approver Md Rashedul Islam approved the supported verdict on 2026-07-27."
+      ],
+      "reviewed_by": "Md Rashedul Islam",
+      "reviewed_at": "2026-07-27"
     },
     {
       "case_id": "CPNG-007",
@@ -710,17 +836,130 @@
       "risk_level": "low",
       "reference_date": null,
       "geography": null,
-      "annotation_status": "draft",
-      "ai_review": null,
-      "proposed_verdict": null,
-      "proposed_rationale": null,
-      "candidate_evidence": [],
-      "expected_verdict": null,
-      "annotation_notes": [
-        "Distinguish incorporation, founding, and commercial launch dates."
+      "annotation_status": "reviewed",
+      "ai_review": {
+        "reviewed_at": "2026-07-26T23:21:16.909827Z",
+        "annotator_model": "gpt-5.4-mini",
+        "critic_model": "gpt-4o-mini",
+        "prompt_version": "ai-benchmark-review-v1",
+        "source_verification_scope": "provided_packet_only",
+        "annotation": {
+          "recommended_verdict": "mostly_supported",
+          "rationale": "The packet supports the core claim that Amazon began in 1994, but the evidence distinguishes that from its commercial launch in July 1995. The SEC filing states Amazon.com, Inc. was incorporated in 1994 in Washington and opened its virtual doors in July 1995, while the independent history source says Bezos left his job in 1994 to start Amazon.com. That makes the 1994 founding/origin claim plausible and well supported, though the exact meaning of 'founded' is somewhat ambiguous because it could refer to incorporation, initial creation, or public launch.",
+          "resolved_interpretation": "Interpret 'founded in 1994' as the company’s origin/creation date or incorporation date, not its commercial website launch date; under that reading, the claim is supported.",
+          "evidence_sufficient": true,
+          "evidence_strengths": [
+            "Two separate sources converge on 1994 as the start/origin year.",
+            "One source is an SEC filing, which is authoritative for the company’s own corporate history statement.",
+            "The second source is independently edited and not controlled by Amazon.",
+            "The evidence explicitly separates 1994 founding/origin from the 1995 launch, reducing date confusion."
+          ],
+          "evidence_gaps": [
+            "No direct source in the packet explicitly says 'founded in 1994' in those exact words.",
+            "The claim could be challenged if a stricter benchmark defines 'founded' as the date of public launch rather than incorporation or initial formation.",
+            "The filing date/source excerpt should be checked if the benchmark requires precise historical chronology and not just later corporate self-reporting."
+          ],
+          "independence_concerns": [
+            "The SEC filing is primary company-reported history and is not independent of Amazon’s own account.",
+            "The two sources are not fully independent on the underlying fact pattern if the historical account is derived from widely cited company history.",
+            "No contemporaneous 1994 documentation is included."
+          ],
+          "temporal_or_numerical_checks": [
+            "1994 is presented as the incorporation/origin year.",
+            "July 1995 is presented as the website launch year, which is later and should not be conflated with founding.",
+            "Publication dates of the sources are much later than the events, so the packet relies on retrospective historical summaries."
+          ],
+          "confidence": 0.84
+        },
+        "critique": {
+          "agrees_with_verdict": false,
+          "recommended_verdict": "mixed",
+          "critique": "While the evidence suggests that Amazon began its formation in 1994 and clearly separates the incorporation date from the launch date, the claim that 'Amazon was founded in 1994' lacks precision and is reliant on interpretations. The confusion arises from the ambiguity in the definition of 'founded'—is it incorporation, initial creation, or public launch? The provided sources are not fully independent, as both lean heavily on the narrative constructed by Amazon itself. There's also a lack of contemporaneous documentation from 1994 to directly support the founding claim. Therefore, although the evidence is suggestive, it does not decisively affirm the claim, leading to a conclusion that the evidence is mixed overall.",
+          "unsupported_or_overstated_points": [
+            "The claim's certainty as a founding date is overstated; it could be refined to state 'incorporated in 1994' instead.",
+            "The nuances of what 'founded' means are not addressed sufficiently in the evidence or annotation."
+          ],
+          "missing_checks": [
+            "Verification of what constitutes 'founding' in corporate terminology should be assessed more thoroughly.",
+            "Cross-referencing the filing date with other historical records from 1994 would strengthen the narrative."
+          ],
+          "evidence_sufficient": false,
+          "confidence": 0.75
+        },
+        "provisional_verdict": "mixed",
+        "disagreements": [
+          "Annotator recommended mostly_supported; critic recommended mixed.",
+          "Annotator and critic disagreed about evidence sufficiency."
+        ],
+        "usage": [
+          {
+            "provider_id": "openai:routed:gpt-4o-mini->gpt-5.4-mini",
+            "model": "gpt-5.4-mini",
+            "task": "review_annotation",
+            "duration_seconds": 4.520926,
+            "input_tokens": 919,
+            "cached_input_tokens": 0,
+            "output_tokens": 587,
+            "estimated_cost_usd": 0.00333075,
+            "pricing_version": "openai-list-prices-2026-07-26",
+            "output_valid": true
+          },
+          {
+            "provider_id": "openai:routed:gpt-4o-mini->gpt-5.4-mini",
+            "model": "gpt-4o-mini",
+            "task": "review_critique",
+            "duration_seconds": 2.703382,
+            "input_tokens": 1361,
+            "cached_input_tokens": 0,
+            "output_tokens": 266,
+            "estimated_cost_usd": 0.00036375,
+            "pricing_version": "openai-list-prices-2026-07-26",
+            "output_valid": true
+          }
+        ],
+        "requires_human_review": true
+      },
+      "proposed_verdict": "supported",
+      "proposed_rationale": "Interpret 'founded' as creation or initial incorporation of the business that became Amazon, rather than the public launch of its online store. Amazon's SEC-filed history places incorporation in Washington in 1994 and distinguishes that event from opening the website in July 1995. An independent historical account likewise says Bezos began the venture in 1994 and that Amazon.com launched in 1995.",
+      "candidate_evidence": [
+        {
+          "annotation_id": "E1",
+          "source_url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872417000011/amzn-20161231x10k.htm",
+          "source_title": "Amazon.com, Inc. 2016 Form 10-K",
+          "publisher": "U.S. Securities and Exchange Commission",
+          "source_type": "primary_document",
+          "stance": "supports",
+          "excerpt": "Amazon.com, Inc. was incorporated in 1994 in Washington; it opened its virtual doors in July 1995.",
+          "evidence_summary": "The filed company history supports 1994 as the corporate origin while separating it from the website's 1995 commercial launch.",
+          "publication_date": "2017-02-10",
+          "accessed_at": "2026-07-27",
+          "independence_note": "Primary company disclosure hosted by the SEC; authoritative for the company's account but not editorially independent of Amazon."
+        },
+        {
+          "annotation_id": "E2",
+          "source_url": "https://www.historylink.org/File/23230",
+          "source_title": "Amazon: The Early Years (1995-1999)",
+          "publisher": "HistoryLink.org",
+          "source_type": "organization",
+          "stance": "qualifies",
+          "excerpt": "Jeff Bezos left a Wall Street investment firm in 1994 to start online bookseller Amazon.com in Seattle.",
+          "evidence_summary": "An independently edited historical account places the start in 1994 and separately dates the official online launch to July 1995.",
+          "publication_date": "2025-04-07",
+          "accessed_at": "2026-07-27",
+          "independence_note": "Independent nonprofit historical publisher, organizationally separate from Amazon and the SEC filing."
+        }
       ],
-      "reviewed_by": null,
-      "reviewed_at": null
+      "expected_verdict": "supported",
+      "annotation_notes": [
+        "Distinguish incorporation, founding, and commercial launch dates.",
+        "Provisional interpretation treats the 1994 creation or incorporation as founding and the July 1995 website opening as launch.",
+        "The filing date and historical source references were checked during human review.",
+        "Human review resolved ordinary 'founded' as creation or incorporation, not the later commercial launch.",
+        "Human annotator Md Moshiur Rahman approved the supported interpretation on 2026-07-27.",
+        "Independent approver Md Rashedul Islam approved the supported verdict on 2026-07-27."
+      ],
+      "reviewed_by": "Md Rashedul Islam",
+      "reviewed_at": "2026-07-27"
     },
     {
       "case_id": "CPNG-008",
@@ -733,17 +972,120 @@
       "risk_level": "medium",
       "reference_date": "2018-05-25",
       "geography": "European Union",
-      "annotation_status": "draft",
-      "ai_review": null,
-      "proposed_verdict": null,
-      "proposed_rationale": null,
-      "candidate_evidence": [],
-      "expected_verdict": null,
-      "annotation_notes": [
-        "Distinguish entry into force from the date of application."
+      "annotation_status": "reviewed",
+      "ai_review": {
+        "reviewed_at": "2026-07-26T23:21:23.467077Z",
+        "annotator_model": "gpt-5.4-mini",
+        "critic_model": "gpt-4o-mini",
+        "prompt_version": "ai-benchmark-review-v1",
+        "source_verification_scope": "provided_packet_only",
+        "annotation": {
+          "recommended_verdict": "supported",
+          "rationale": "The claim matches the controlling legal text: Article 99(2) states that the GDPR \"shall apply from 25 May 2018.\" The corroborating EDPB page also explicitly distinguishes entry into force (24 May 2016) from applicability/application (25 May 2018), which resolves the main ambiguity noted in the packet. No supplied evidence contradicts the claim.",
+          "resolved_interpretation": "\"Began applying\" is interpreted as the GDPR becoming applicable/enforceable from 25 May 2018, not its entry into force date.",
+          "evidence_sufficient": true,
+          "evidence_strengths": [
+            "Primary legal authority directly states the application date.",
+            "Secondary official EU source independently repeats the same date and clarifies the entry-into-force vs application distinction.",
+            "The claim is temporally precise and matches the cited date exactly."
+          ],
+          "evidence_gaps": [
+            "The packet notes Article 99(1)-(2) should be verified together, but only the Article 99(2) excerpt is supplied here.",
+            "No PDF or full consolidated text was provided, though the excerpt is sufficient for the date claim.",
+            "The secondary source is official but not fully independent from the same EU institutional/legal framework."
+          ],
+          "independence_concerns": [
+            "E1 and E2 are both official EU sources and are not fully independent in the journalistic sense.",
+            "Because E2 is within the same institutional ecosystem as the regulation itself, it should be treated as corroborative rather than independent confirmation."
+          ],
+          "temporal_or_numerical_checks": [
+            "Check that 25 May 2018 is the application date, not the entry-into-force date.",
+            "Verify the distinction against the stated 24 May 2016 entry-into-force date in E2.",
+            "Confirm that the claim uses 'began applying' in the legal sense of applicability, which aligns with Article 99(2)."
+          ],
+          "confidence": 0.98
+        },
+        "critique": {
+          "agrees_with_verdict": true,
+          "recommended_verdict": "supported",
+          "critique": "The evidence provided effectively supports the claim about the application date of the GDPR. Article 99(2) clearly states the date on which the GDPR began applying, and this is corroborated by the EDPB source. However, both sources stem from the EU institutional framework, raising some concerns about the independence of the corroborative evidence. The packet identifies some critical checks not completed, particularly the lack of verification of Article 99(1) alongside 99(2). While the primary legal text suffices for establishing the claim's core, additional checks could enhance the robustness of the review. Thus, the conclusion remains supported, albeit with noted areas for potential oversight or additional verification in an exhaustive review context.",
+          "unsupported_or_overstated_points": [],
+          "missing_checks": [
+            "Verification of Article 99(1) alongside Article 99(2) was not conducted. This could provide more comprehensive context."
+          ],
+          "evidence_sufficient": true,
+          "confidence": 0.85
+        },
+        "provisional_verdict": "supported",
+        "disagreements": [],
+        "usage": [
+          {
+            "provider_id": "openai:routed:gpt-4o-mini->gpt-5.4-mini",
+            "model": "gpt-5.4-mini",
+            "task": "review_annotation",
+            "duration_seconds": 4.112725,
+            "input_tokens": 907,
+            "cached_input_tokens": 0,
+            "output_tokens": 503,
+            "estimated_cost_usd": 0.00294375,
+            "pricing_version": "openai-list-prices-2026-07-26",
+            "output_valid": true
+          },
+          {
+            "provider_id": "openai:routed:gpt-4o-mini->gpt-5.4-mini",
+            "model": "gpt-4o-mini",
+            "task": "review_critique",
+            "duration_seconds": 2.442949,
+            "input_tokens": 1273,
+            "cached_input_tokens": 0,
+            "output_tokens": 212,
+            "estimated_cost_usd": 0.00031815,
+            "pricing_version": "openai-list-prices-2026-07-26",
+            "output_valid": true
+          }
+        ],
+        "requires_human_review": true
+      },
+      "proposed_verdict": "supported",
+      "proposed_rationale": "Interpret 'began applying' as the regulation's legally specified date of application, not its adoption, publication, or entry into force. Article 99(2) of Regulation (EU) 2016/679 says it applies from 25 May 2018. The European Data Protection Board independently explains that it entered into force on 24 May 2016 but became applicable from 25 May 2018.",
+      "candidate_evidence": [
+        {
+          "annotation_id": "E1",
+          "source_url": "https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng",
+          "source_title": "Regulation (EU) 2016/679, Article 99",
+          "publisher": "Official Journal of the European Union via EUR-Lex",
+          "source_type": "law_or_regulation",
+          "stance": "supports",
+          "excerpt": "It shall apply from 25 May 2018.",
+          "evidence_summary": "Article 99(2) is the controlling legal text and directly specifies the GDPR's date of application.",
+          "publication_date": "2016-05-04",
+          "accessed_at": "2026-07-27",
+          "independence_note": "Controlling primary legal authority; no secondary page can override its application clause."
+        },
+        {
+          "annotation_id": "E2",
+          "source_url": "https://www.edpb.europa.eu/about-edpb/legal-framework_en",
+          "source_title": "Legal Framework",
+          "publisher": "European Data Protection Board",
+          "source_type": "official",
+          "stance": "qualifies",
+          "excerpt": "The GDPR entered into force on 24 May 2016 and is applicable from 25 May 2018.",
+          "evidence_summary": "The EU data-protection authority confirms the date and clarifies the distinction between entry into force and application.",
+          "publication_date": null,
+          "accessed_at": "2026-07-27",
+          "independence_note": "Separate EU institutional explainer, useful corroboration but within the same EU legal ecosystem as EUR-Lex."
+        }
       ],
-      "reviewed_by": null,
-      "reviewed_at": null
+      "expected_verdict": "supported",
+      "annotation_notes": [
+        "Distinguish entry into force from the date of application.",
+        "Article 99 was checked in the official HTML legal text; no PDF was downloaded.",
+        "Human review confirmed that Article 99 distinguishes entry into force from application and that the claim uses the application date.",
+        "Human annotator Md Moshiur Rahman approved the supported interpretation on 2026-07-27.",
+        "Independent approver Md Rashedul Islam approved the supported verdict on 2026-07-27."
+      ],
+      "reviewed_by": "Md Rashedul Islam",
+      "reviewed_at": "2026-07-27"
     },
     {
       "case_id": "CPNG-009",
@@ -756,17 +1098,127 @@
       "risk_level": "high",
       "reference_date": null,
       "geography": null,
-      "annotation_status": "draft",
-      "ai_review": null,
-      "proposed_verdict": null,
-      "proposed_rationale": null,
-      "candidate_evidence": [],
-      "expected_verdict": null,
-      "annotation_notes": [
-        "Prefer major public-health reviews and explain population risk versus individual certainty."
+      "annotation_status": "reviewed",
+      "ai_review": {
+        "reviewed_at": "2026-07-26T23:21:30.130434Z",
+        "annotator_model": "gpt-5.4-mini",
+        "critic_model": "gpt-4o-mini",
+        "prompt_version": "ai-benchmark-review-v1",
+        "source_verification_scope": "provided_packet_only",
+        "annotation": {
+          "recommended_verdict": "supported",
+          "rationale": "The claim that cigarette smoking causes lung cancer is directly supported by the supplied NCI excerpt, which states that smoking causes cancers of the lung, and by WHO, which identifies smoking tobacco as the primary risk factor for lung cancer. The evidence aligns on a population-level causal relationship and does not require that smoking be necessary or sufficient for every individual lung-cancer case. The WHO source adds independent corroboration and also preserves appropriate nuance by framing smoking as the leading risk factor rather than the only cause.",
+          "resolved_interpretation": "Interpreted at the population level, the claim means cigarette smoking is a causal risk factor for lung cancer and substantially increases incidence, not that every lung-cancer case is caused solely by smoking or that every smoker will develop lung cancer.",
+          "evidence_sufficient": true,
+          "evidence_strengths": [
+            "Direct causal wording from a major U.S. cancer authority (NCI).",
+            "Independent corroboration from WHO identifying smoking as the primary risk factor for lung cancer.",
+            "The packet includes appropriate nuance distinguishing population-level causation from individual certainty.",
+            "No supplied evidence contradicts the claim."
+          ],
+          "evidence_gaps": [
+            "No direct quotation from the underlying Surgeon General reviews cited by NCI, so the causal chain is not fully inspected in the packet.",
+            "No quantitative risk estimate is provided, so the magnitude of effect cannot be checked here.",
+            "The WHO excerpt is a risk-factor statement rather than an explicit causal sentence, though it is consistent with causation."
+          ],
+          "independence_concerns": [
+            "Both sources are public-health authorities and may rely on overlapping epidemiologic literature, so their independence is partial rather than fully independent.",
+            "The NCI note references major federal reviews, which may not be fully independent of the NCI framing in the packet."
+          ],
+          "temporal_or_numerical_checks": [
+            "The WHO publication date is 2026-04-16 and the access date is 2026-07-27; no obvious temporal conflict is visible in the packet.",
+            "The claim is qualitative, so no numerical threshold or effect size check is required from the supplied evidence."
+          ],
+          "confidence": 0.96
+        },
+        "critique": {
+          "agrees_with_verdict": true,
+          "recommended_verdict": "supported",
+          "critique": "The annotation primarily relies on strong evidence from reputable public-health sources, namely the NCI and WHO, which assert a causal relationship between cigarette smoking and lung cancer. However, while the evidence is generally robust, there are notable gaps, specifically the lack of direct quotations from the Surgeon General’s reviews referenced by the NCI, and no quantitative risk estimates were provided, which may limit the assessment of the magnitude of effect. Additionally, while the NCI and WHO provide critical corroboration, their potential interdependence could affect the perceived independence of the evidence, as both agencies utilize overlapping epidemiologic literature.",
+          "unsupported_or_overstated_points": [
+            "The claim is overly confident that smoking is the sole cause across all individual cases, despite the annotations clarifying it pertains to population-level causation.",
+            "The absence of a quantitative estimate weakens the interpretation of how significantly smoking contributes to lung cancer rates."
+          ],
+          "missing_checks": [
+            "Verification of the causal language used in the NCI report against the referenced Surgeon General reviews.",
+            "Checks on whether the cited agency's consensus aligns with recent studies on smoking and lung cancer regarding new epidemiological data."
+          ],
+          "evidence_sufficient": false,
+          "confidence": 0.85
+        },
+        "provisional_verdict": "supported",
+        "disagreements": [
+          "Annotator and critic disagreed about evidence sufficiency."
+        ],
+        "usage": [
+          {
+            "provider_id": "openai:routed:gpt-4o-mini->gpt-5.4-mini",
+            "model": "gpt-5.4-mini",
+            "task": "review_annotation",
+            "duration_seconds": 3.880005,
+            "input_tokens": 912,
+            "cached_input_tokens": 0,
+            "output_tokens": 510,
+            "estimated_cost_usd": 0.002979,
+            "pricing_version": "openai-list-prices-2026-07-26",
+            "output_valid": true
+          },
+          {
+            "provider_id": "openai:routed:gpt-4o-mini->gpt-5.4-mini",
+            "model": "gpt-4o-mini",
+            "task": "review_critique",
+            "duration_seconds": 2.781139,
+            "input_tokens": 1317,
+            "cached_input_tokens": 0,
+            "output_tokens": 254,
+            "estimated_cost_usd": 0.00034995,
+            "pricing_version": "openai-list-prices-2026-07-26",
+            "output_valid": true
+          }
+        ],
+        "requires_human_review": true
+      },
+      "proposed_verdict": "supported",
+      "proposed_rationale": "Interpret the claim as a population-level causal statement about smoking combustible cigarettes increasing and producing lung-cancer risk, not as a claim that every smoker develops lung cancer or that smoking is the only cause. The U.S. National Cancer Institute explicitly lists lung cancer among cancers caused by smoking, and WHO identifies tobacco smoking as the primary lung-cancer risk factor. Other causes and variation in individual outcomes do not negate the causal relationship.",
+      "candidate_evidence": [
+        {
+          "annotation_id": "E1",
+          "source_url": "https://www.cancer.gov/about-cancer/causes-prevention/risk/tobacco/cessation-fact-sheet",
+          "source_title": "Harms of Cigarette Smoking and Health Benefits of Quitting",
+          "publisher": "U.S. National Cancer Institute",
+          "source_type": "official",
+          "stance": "supports",
+          "excerpt": "Smoking causes cancers of the lung, esophagus, larynx, mouth, throat, kidney, bladder, liver, pancreas, stomach, cervix, colon, and rectum.",
+          "evidence_summary": "The NCI directly states the causal relationship and links it to major Surgeon General evidence reviews.",
+          "publication_date": null,
+          "accessed_at": "2026-07-27",
+          "independence_note": "Authoritative U.S. cancer agency synthesis; independent source-family corroboration is supplied by WHO."
+        },
+        {
+          "annotation_id": "E2",
+          "source_url": "https://www.who.int/news-room/fact-sheets/detail/lung-cancer",
+          "source_title": "Lung cancer",
+          "publisher": "World Health Organization",
+          "source_type": "official",
+          "stance": "qualifies",
+          "excerpt": "Smoking tobacco, including cigarettes, cigars, and pipes, is the primary risk factor for lung cancer.",
+          "evidence_summary": "WHO independently identifies smoking as the leading risk factor while listing other causes that prevent an individual-certainty interpretation.",
+          "publication_date": "2026-04-16",
+          "accessed_at": "2026-07-27",
+          "independence_note": "Independent international public-health authority, separate from the U.S. NCI and its cited federal reviews."
+        }
       ],
-      "reviewed_by": null,
-      "reviewed_at": null
+      "expected_verdict": "supported",
+      "annotation_notes": [
+        "Prefer major public-health reviews and explain population risk versus individual certainty.",
+        "Provisional interpretation does not claim that smoking is necessary or sufficient for every individual lung-cancer case.",
+        "Human review approved the population-level causal wording without implying individual certainty or a sole cause.",
+        "The NCI reference chain and alignment with WHO's independent public-health synthesis were checked.",
+        "Human annotator Md Moshiur Rahman approved the supported interpretation on 2026-07-27.",
+        "Independent approver Md Rashedul Islam approved the supported verdict on 2026-07-27."
+      ],
+      "reviewed_by": "Md Rashedul Islam",
+      "reviewed_at": "2026-07-27"
     },
     {
       "case_id": "CPNG-010",
@@ -781,17 +1233,124 @@
       "risk_level": "high",
       "reference_date": null,
       "geography": null,
-      "annotation_status": "draft",
-      "ai_review": null,
-      "proposed_verdict": null,
-      "proposed_rationale": null,
-      "candidate_evidence": [],
-      "expected_verdict": null,
-      "annotation_notes": [
-        "Separate prevention, duration, severity, general population, and subgroup effects."
+      "annotation_status": "reviewed",
+      "ai_review": {
+        "reviewed_at": "2026-07-26T23:21:37.808890Z",
+        "annotator_model": "gpt-5.4-mini",
+        "critic_model": "gpt-4o-mini",
+        "prompt_version": "ai-benchmark-review-v1",
+        "source_verification_scope": "provided_packet_only",
+        "annotation": {
+          "recommended_verdict": "misleading",
+          "rationale": "The claim is an absolute causal statement: that taking vitamin C prevents the common cold. The supplied evidence does not support this as a general-population conclusion. The Cochrane review excerpt explicitly says regular vitamin C had no effect on common cold incidence in the ordinary population, and the NIH fact sheet likewise states that in the general population prophylactic vitamin C does not appear to reduce risk. However, the packet also notes limited subgroup and duration-related findings, so the evidence does not cleanly contradict every possible interpretation of vitamin C use; rather, it shows the claim is an overgeneralization from narrower or conditional effects. That makes 'misleading' the best fit instead of 'contradicted.'",
+          "resolved_interpretation": "Interpret the claim as a broad statement about routine vitamin C supplementation preventing common colds in the general population. Under that interpretation, the evidence says no preventive effect on incidence, while allowing possible modest duration benefit and special subgroup effects (eg, high-stress or deficient groups).",
+          "evidence_sufficient": true,
+          "evidence_strengths": [
+            "Two supplied sources independently converge on the same general-population conclusion: no reduction in common cold risk/incidence.",
+            "The evidence packet already distinguishes prevention from duration and subgroup effects, reducing ambiguity about what is and is not being claimed.",
+            "The NIH source is an authoritative clinical synthesis that corroborates the interpretation of the Cochrane review."
+          ],
+          "evidence_gaps": [
+            "No detailed numeric effect sizes or confidence intervals are provided in the excerpts.",
+            "The packet does not specify dose, timing, or formulation, which could matter for subgroup/duration effects.",
+            "It is unclear whether any newer systematic review after 2013 changes the general-population prevention conclusion.",
+            "The evidence base is partly derivative: NIH cites the Cochrane review, so independence is limited."
+          ],
+          "independence_concerns": [
+            "The NIH fact sheet is not fully independent from the Cochrane review because it relies partly on it.",
+            "Both sources are secondary syntheses rather than primary trials, so they do not provide fully independent underlying evidence."
+          ],
+          "temporal_or_numerical_checks": [
+            "Check whether any post-2013 systematic review or meta-analysis changes the conclusion for general-population prevention.",
+            "Record the exact dose and timing interpretation if the benchmark requires distinguishing routine prophylaxis from treatment or high-stress subgroup use.",
+            "If available, verify whether any subgroup effect is limited to reduced duration rather than reduced incidence, since the claim is about prevention."
+          ],
+          "confidence": 0.89
+        },
+        "critique": {
+          "agrees_with_verdict": true,
+          "recommended_verdict": "misleading",
+          "critique": "The claim states that taking vitamin C prevents the common cold, which is an absolute assertion. The evidence provided shows that regular intake of vitamin C does not prevent common cold incidence in the general population, but it allows for nuanced interpretations regarding subgroup effects and duration of illness. This indicates that the original claim can be seen as an overgeneralization, which justifies the 'misleading' label rather than 'contradicted'. The separation of prevention from duration and subgroup effects is well addressed, affirming that more clarity is needed. However, the strengths of the evidence, like convergence of findings and authoritative sources, substantiate the conclusion that there is no general prevention effect. The absence of detailed numeric data, the date of the last review, and reliance on secondary sources are critical limitations that warrant cautious interpretation of the findings. Overall, the provided evidence does not sufficiently support the sweeping claim made, but it leaves room for discussion about specific conditions.",
+          "unsupported_or_overstated_points": [],
+          "missing_checks": [
+            "Investigate any post-2013 systematic review or meta-analysis that may impact general-population conclusions.",
+            "Verify specific doses and timing if the benchmark necessitates differentiation between preventive use and treatment or high-stress subgroup application.",
+            "Ensure that any subgroup effects are not limited to duration reduction, given that the claim centers on prevention."
+          ],
+          "evidence_sufficient": true,
+          "confidence": 0.85
+        },
+        "provisional_verdict": "misleading",
+        "disagreements": [],
+        "usage": [
+          {
+            "provider_id": "openai:routed:gpt-4o-mini->gpt-5.4-mini",
+            "model": "gpt-5.4-mini",
+            "task": "review_annotation",
+            "duration_seconds": 4.325153,
+            "input_tokens": 933,
+            "cached_input_tokens": 0,
+            "output_tokens": 548,
+            "estimated_cost_usd": 0.00316575,
+            "pricing_version": "openai-list-prices-2026-07-26",
+            "output_valid": true
+          },
+          {
+            "provider_id": "openai:routed:gpt-4o-mini->gpt-5.4-mini",
+            "model": "gpt-4o-mini",
+            "task": "review_critique",
+            "duration_seconds": 3.351214,
+            "input_tokens": 1418,
+            "cached_input_tokens": 0,
+            "output_tokens": 295,
+            "estimated_cost_usd": 0.0003897,
+            "pricing_version": "openai-list-prices-2026-07-26",
+            "output_valid": true
+          }
+        ],
+        "requires_human_review": true
+      },
+      "proposed_verdict": "misleading",
+      "proposed_rationale": "As an unqualified general-population claim, 'prevents' implies that taking vitamin C reduces cold incidence. A Cochrane review found no incidence effect in the ordinary population, while NIH reports no general preventive effect but possible benefit for people under extreme physical stress, cold exposure, or with marginal vitamin C status. Regular use may modestly shorten symptoms, which is treatment context rather than general prevention. The absolute wording therefore hides important population and outcome distinctions.",
+      "candidate_evidence": [
+        {
+          "annotation_id": "E1",
+          "source_url": "https://www.cochrane.org/evidence/CD000980_vitamin-c-preventing-and-treating-common-cold",
+          "source_title": "Vitamin C for preventing and treating the common cold",
+          "publisher": "Cochrane",
+          "source_type": "academic",
+          "stance": "contradicts",
+          "excerpt": "Regular ingestion of vitamin C had no effect on common cold incidence in the ordinary population.",
+          "evidence_summary": "The systematic review found no general-population prevention effect, while separately reporting duration and extreme-stress subgroup findings.",
+          "publication_date": "2013-01-31",
+          "accessed_at": "2026-07-27",
+          "independence_note": "Systematic review of placebo-controlled trials; NIH relies partly on this review, so the two pages are not fully evidence-independent."
+        },
+        {
+          "annotation_id": "E2",
+          "source_url": "https://ods.od.nih.gov/factsheets/VitaminC-HealthProfessional/",
+          "source_title": "Vitamin C: Health Professional Fact Sheet",
+          "publisher": "NIH Office of Dietary Supplements",
+          "source_type": "official",
+          "stance": "qualifies",
+          "excerpt": "In the general population, taking vitamin C prophylactically does not appear to reduce the risk of the common cold.",
+          "evidence_summary": "NIH distinguishes no general prevention effect from modest duration benefits and possible effects in special high-stress or deficient groups.",
+          "publication_date": null,
+          "accessed_at": "2026-07-27",
+          "independence_note": "Authoritative clinical synthesis, but it cites the Cochrane review; it corroborates interpretation rather than constituting a fully independent trial base."
+        }
       ],
-      "reviewed_by": null,
-      "reviewed_at": null
+      "expected_verdict": "misleading",
+      "annotation_notes": [
+        "Separate prevention, duration, severity, general population, and subgroup effects.",
+        "Provisional label is misleading rather than contradicted because limited subgroup prevention findings make the absolute statement an overgeneralization.",
+        "Human review confirmed that updated context does not change the general-population prevention conclusion.",
+        "The taxonomy uses misleading because the absolute claim overgeneralizes despite limited subgroup support; contradicted was considered and rejected.",
+        "Human annotator Md Moshiur Rahman approved the misleading interpretation on 2026-07-27.",
+        "Independent approver Md Rashedul Islam approved the misleading verdict on 2026-07-27."
+      ],
+      "reviewed_by": "Md Rashedul Islam",
+      "reviewed_at": "2026-07-27"
     },
     {
       "case_id": "CPNG-011",

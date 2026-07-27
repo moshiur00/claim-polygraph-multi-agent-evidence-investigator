@@ -17,9 +17,10 @@ accept a reasoning-effort control; `gpt-4o-mini` does not use that parameter.
 
 Route OpenAI tasks by role:
 
-- `gpt-4o-mini`: claim normalization, evidence classification, and
-  sentence-level citation auditing.
-- `gpt-5.4-mini`: investigation planning and final verdict judgment.
+- `gpt-4o-mini`: claim normalization, evidence classification, and review
+  critique.
+- `gpt-5.4-mini`: investigation planning, final verdict judgment, semantic
+  passage evaluation, and sentence-level citation auditing.
 
 `OPENAI_MODEL` configures the planning/verdict model.
 `OPENAI_FAST_MODEL` configures the focused-task model. The corresponding CLI
@@ -32,10 +33,10 @@ supported by omitting the fast model.
 
 ## Consequences
 
-Most model calls use the substantially cheaper focused-task model, while the
-two tasks with the greatest effect on research strategy and conclusions retain
-the stronger model. There is no fallback between models: failure of the routed
-model remains an explicit investigation failure.
+Focused tasks use the cheaper model, while tasks with the greatest effect on
+research strategy, conclusions, semantic retrieval measurement, and citation
+validity retain the stronger model. There is no fallback between models:
+failure of the routed model remains an explicit investigation failure.
 
 The route is provisional until evaluated on the reviewed benchmark. Cost,
 latency, schema reliability, citation validity, and verdict quality must be

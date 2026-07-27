@@ -16,6 +16,7 @@ def test_default_policy_is_local_and_zero_cost() -> None:
     policy = RuntimePolicy()
 
     assert policy.operating_mode is OperatingMode.FULLY_LOCAL
+    assert policy.budget.maximum_llm_calls == 12
     assert policy.budget.maximum_cost_usd == 0
     assert CostClass.CHEAP_PAID not in policy.allowed_cost_classes
 

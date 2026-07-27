@@ -53,18 +53,15 @@ class BenchmarkEvidenceSearchProvider:
             and annotation.stance is EvidenceStance.CONTRADICTS
         ):
             return 0
-        if (
-            research_path is ResearchPath.GENERAL
-            and annotation.stance
-            in {EvidenceStance.QUALIFIES, EvidenceStance.SUPPORTS, EvidenceStance.CONTEXT}
-        ):
+        if research_path is ResearchPath.GENERAL and annotation.stance in {
+            EvidenceStance.QUALIFIES,
+            EvidenceStance.SUPPORTS,
+            EvidenceStance.CONTEXT,
+        }:
             return 0
         if research_path is ResearchPath.PRIMARY and annotation.source_type in _PRIMARY_TYPES:
             return 0
-        if (
-            research_path is ResearchPath.ACADEMIC
-            and annotation.source_type is SourceType.ACADEMIC
-        ):
+        if research_path is ResearchPath.ACADEMIC and annotation.source_type is SourceType.ACADEMIC:
             return 0
         if (
             research_path is ResearchPath.FACT_CHECK

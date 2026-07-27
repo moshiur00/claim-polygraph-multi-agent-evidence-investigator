@@ -77,11 +77,10 @@ def test_search_results_are_safely_fetched_before_becoming_evidence(tmp_path) ->
 
     report = asyncio.run(service.investigate("The example programme reduced emissions."))
 
-    assert report.verdict.label is VerdictLabel.MIXED
-    assert len(report.evidence) == 3
+    assert report.verdict.label is VerdictLabel.SUPPORTED
+    assert len(report.evidence) == 1
     assert all(
-        "The example programme reduced emissions." in item.passage
-        for item in report.evidence
+        "The example programme reduced emissions." in item.passage for item in report.evidence
     )
     assert all(item.chunk_id is not None for item in report.evidence)
     assert all(item.retrieval_score is not None for item in report.evidence)
@@ -96,7 +95,7 @@ def test_search_results_are_safely_fetched_before_becoming_evidence(tmp_path) ->
     }
     assert {"searxng", "safe-http-fetcher"} <= provider_ids
     completed = events[-1]
-    assert completed.details["pages_fetched"] == 3
+    assert completed.details["pages_fetched"] == 1
     retained_chunks = repository.list_artifacts(
         report.investigation.investigation_id,
         ArtifactType.CHUNK,
@@ -154,10 +153,10 @@ def test_blocked_result_is_recorded_and_next_candidate_is_used(tmp_path) -> None
     report = asyncio.run(service.investigate("A claim with a blocked source."))
 
     assert report.investigation.status is InvestigationStatus.COMPLETED
-    assert len(report.sources) == 6
-    assert len(report.evidence) == 3
+    assert len(report.sources) == 2
+    assert len(report.evidence) == 1
     assert (
-        sum(source.extraction_status is ExtractionStatus.BLOCKED for source in report.sources) == 3
+        sum(source.extraction_status is ExtractionStatus.BLOCKED for source in report.sources) == 1
     )
     assert all(
         item.passage == "A claim with a blocked source has retrieved fallback evidence."
@@ -166,7 +165,7 @@ def test_blocked_result_is_recorded_and_next_candidate_is_used(tmp_path) -> None
 
     events = repository.list_events(report.investigation.investigation_id)
     failures = [event for event in events if event.event_type is TraceEventType.PROVIDER_FAILED]
-    assert len(failures) == 3
+    assert len(failures) == 1
     assert all("blocked.example" in str(event.details["url"]) for event in failures)
 
 
@@ -248,9 +247,9 @@ def test_pdf_without_readable_text_is_recorded_and_falls_back(tmp_path) -> None:
     report = asyncio.run(service.investigate("The fallback source contains useful claim evidence."))
 
     assert report.investigation.status is InvestigationStatus.COMPLETED
-    assert len(report.evidence) == 3
+    assert len(report.evidence) == 1
     assert (
-        sum(source.extraction_status is ExtractionStatus.FAILED for source in report.sources) == 3
+        sum(source.extraction_status is ExtractionStatus.FAILED for source in report.sources) == 1
     )
 
 
@@ -294,5 +293,5 @@ def test_zero_score_page_text_is_not_promoted_to_evidence(tmp_path) -> None:
 
     assert report.investigation.status is InvestigationStatus.COMPLETED
     assert report.verdict.label is VerdictLabel.UNVERIFIABLE
-    assert len(report.sources) == 3
+    assert len(report.sources) == 1
     assert report.evidence == ()

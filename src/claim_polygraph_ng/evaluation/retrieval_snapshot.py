@@ -77,9 +77,7 @@ class SnapshotReplaySearchProvider:
         if captured is None:
             raise SearchProviderError(f"query is absent from snapshot: {request.query}")
         if captured.error_type is not None:
-            raise SearchProviderError(
-                f"captured {captured.error_type}: {captured.error_message}"
-            )
+            raise SearchProviderError(f"captured {captured.error_type}: {captured.error_message}")
         return tuple(
             SearchResult(
                 url=item.url,
@@ -123,9 +121,7 @@ def build_retrieval_snapshot(
 
 def load_retrieval_snapshot(path: str | Path) -> RetrievalSearchSnapshot:
     """Load and validate a retrieval snapshot."""
-    return RetrievalSearchSnapshot.model_validate_json(
-        Path(path).read_text(encoding="utf-8")
-    )
+    return RetrievalSearchSnapshot.model_validate_json(Path(path).read_text(encoding="utf-8"))
 
 
 def export_retrieval_snapshot(

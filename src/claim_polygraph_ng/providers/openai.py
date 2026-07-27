@@ -12,7 +12,7 @@ from uuid import UUID
 
 import httpx
 import truststore
-from pydantic import Field, JsonValue, ValidationError
+from pydantic import Field, JsonValue, ValidationError, field_validator
 
 from claim_polygraph_ng.domain import (
     AtomicClaim,
@@ -66,6 +66,14 @@ class _AtomicClaimSemantics(DomainModel):
     ambiguities: tuple[str, ...]
     checkworthiness: float = Field(ge=0.0, le=1.0)
 
+    @field_validator("reference_date", mode="before")
+    @classmethod
+    def normalize_year_only_reference_date(cls, value: object) -> object:
+        """Interpret a bare calendar year as its end-of-year reference date."""
+        if isinstance(value, str) and len(value) == 4 and value.isdecimal():
+            return f"{value}-12-31"
+        return value
+
 
 class _VerdictSemantics(DomainModel):
     """Model-generated judgment without application-owned verdict identity."""
@@ -85,7 +93,7 @@ class _VerdictSemantics(DomainModel):
 class OpenAIStructuredModelProvider:
     """Generate validated artifacts through the hosted OpenAI Responses API."""
 
-    prompt_version = "openai-responses-structured-v9"
+    prompt_version = "openai-responses-structured-v10"
 
     def __init__(
         self,

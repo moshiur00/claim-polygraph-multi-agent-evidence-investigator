@@ -43,8 +43,7 @@ class SearXNGSearchProvider:
         if safe_search not in {0, 1, 2}:
             raise ValueError("safe_search must be 0, 1, or 2")
         if any(
-            not engine.strip()
-            or re.fullmatch(r"[a-zA-Z0-9 _-]+", engine.strip()) is None
+            not engine.strip() or re.fullmatch(r"[a-zA-Z0-9 _-]+", engine.strip()) is None
             for engine in engines
         ):
             raise ValueError("SearXNG engine names contain unsupported characters")

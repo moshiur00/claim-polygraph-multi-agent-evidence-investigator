@@ -28,7 +28,7 @@ class CostClass(StrEnum):
 class ExecutionBudget(DomainModel):
     """Hard limits applied to one atomic-claim investigation."""
 
-    maximum_llm_calls: int = Field(default=8, ge=0, le=100)
+    maximum_llm_calls: int = Field(default=12, ge=0, le=100)
     maximum_search_calls: int = Field(default=6, ge=1, le=100)
     maximum_pages_fetched: int = Field(default=10, ge=1, le=500)
     maximum_research_rounds: int = Field(default=2, ge=1, le=10)

@@ -206,12 +206,8 @@ async def run_retrieval_evaluation(
                         publisher=result.publisher,
                         fusion_score=candidate_metadata[_normalized_url(str(result.url))][0],
                         query_ranks=candidate_metadata[_normalized_url(str(result.url))][1],
-                        quality_score=candidate_metadata[
-                            _normalized_url(str(result.url))
-                        ][2],
-                        quality_features=candidate_metadata[
-                            _normalized_url(str(result.url))
-                        ][3],
+                        quality_score=candidate_metadata[_normalized_url(str(result.url))][2],
+                        quality_features=candidate_metadata[_normalized_url(str(result.url))][3],
                     )
                     for rank, result in enumerate(results, start=1)
                 ),
@@ -221,16 +217,12 @@ async def run_retrieval_evaluation(
         )
 
     completed = tuple(result for result in case_results if result.error_type is None)
-    references = tuple(
-        reference for result in case_results for reference in result.references
-    )
+    references = tuple(reference for result in case_results for reference in result.references)
     primary_references = tuple(
         reference for reference in references if reference.source_type in _PRIMARY_TYPES
     )
     successful_cases = sum(result.first_reviewed_host_rank is not None for result in case_results)
-    candidates = tuple(
-        candidate for result in case_results for candidate in result.candidates
-    )
+    candidates = tuple(candidate for result in case_results for candidate in result.candidates)
     unique_host_total = sum(
         len({_normalized_host(str(candidate.url)) for candidate in result.candidates})
         for result in case_results
@@ -262,18 +254,13 @@ async def run_retrieval_evaluation(
             sum(reference.lexical_rank is not None for reference in references),
             len(references),
         ),
-        exact_url_mrr=_mean(
-            tuple(result.reciprocal_rank_exact_url for result in case_results)
-        ),
+        exact_url_mrr=_mean(tuple(result.reciprocal_rank_exact_url for result in case_results)),
         reviewed_host_mrr=_mean(
             tuple(result.reciprocal_rank_reviewed_host for result in case_results)
         ),
         case_success_at_k=round(successful_cases / len(cases), 6),
         reviewed_primary_host_recall_at_k=_recall(
-            sum(
-                reference.reviewed_host_rank is not None
-                for reference in primary_references
-            ),
+            sum(reference.reviewed_host_rank is not None for reference in primary_references),
             len(primary_references),
         ),
         mean_candidate_quality_score=_mean(
@@ -281,19 +268,14 @@ async def run_retrieval_evaluation(
         ),
         low_quality_candidate_rate=(
             round(
-                sum(
-                    candidate.quality_features["low_quality_risk"] > 0
-                    for candidate in candidates
-                )
+                sum(candidate.quality_features["low_quality_risk"] > 0 for candidate in candidates)
                 / len(candidates),
                 6,
             )
             if candidates
             else 0.0
         ),
-        unique_host_rate=(
-            round(unique_host_total / len(candidates), 6) if candidates else 0.0
-        ),
+        unique_host_rate=(round(unique_host_total / len(candidates), 6) if candidates else 0.0),
         results=tuple(case_results),
         limitations=(
             "Queries are generated from the benchmark claim and strategy templates only; they "
@@ -330,9 +312,7 @@ def _queries_for(
 def _claim_shape_terms(claim: str) -> tuple[str, str]:
     normalized = claim.casefold()
     numerical = bool(re.search(r"(?<![\w-])\d+(?:[.,]\d+)?", normalized))
-    universal = bool(
-        re.search(r"\b(always|all|every|exactly|never|only)\b", normalized)
-    )
+    universal = bool(re.search(r"\b(always|all|every|exactly|never|only)\b", normalized))
     temporal = bool(
         re.search(r"\b(current|currently|today|now|still|as of|no longer)\b", normalized)
     )
@@ -376,10 +356,7 @@ def _fuse_results(
     query_weights = _query_weights(query_results, strategy)
     scores = {}
     for key, query_ranks in ranks_by_url.items():
-        score = sum(
-            query_weights[query] / (60 + rank)
-            for query, rank in query_ranks.items()
-        )
+        score = sum(query_weights[query] / (60 + rank) for query, rank in query_ranks.items())
         scores[key] = round(score, 9)
     max_fusion_score = max(scores.values(), default=0.0)
     quality = {
@@ -455,22 +432,12 @@ def _guarded_keys(
     expansion_slots = min(3, top_k)
     preserved_count = top_k - expansion_slots
     claim_results = query_results[0][1]
-    selected = [
-        _normalized_url(str(result.url))
-        for result in claim_results[:preserved_count]
-    ]
+    selected = [_normalized_url(str(result.url)) for result in claim_results[:preserved_count]]
 
     for _, expansion_results in query_results[1:3]:
-        expansion_keys = {
-            _normalized_url(str(result.url))
-            for result in expansion_results
-        }
+        expansion_keys = {_normalized_url(str(result.url)) for result in expansion_results}
         expansion_key = next(
-            (
-                key
-                for key in fused_keys
-                if key in expansion_keys and key not in selected
-            ),
+            (key for key in fused_keys if key in expansion_keys and key not in selected),
             None,
         )
         if expansion_key is not None and len(selected) < top_k:
@@ -627,8 +594,7 @@ def _ensure_quality_query_coverage(
         eligible = [
             key
             for key in path_keys
-            if quality[key][0] >= 0.15
-            and quality[key][1]["low_quality_risk"] <= 0.2
+            if quality[key][0] >= 0.15 and quality[key][1]["low_quality_risk"] <= 0.2
         ]
         if not eligible:
             continue
@@ -665,9 +631,7 @@ def export_retrieval_evaluation(
 
 def load_retrieval_evaluation(path: str | Path) -> RetrievalEvaluationSummary:
     """Load and validate a retrieval evaluation summary."""
-    return RetrievalEvaluationSummary.model_validate_json(
-        Path(path).read_text(encoding="utf-8")
-    )
+    return RetrievalEvaluationSummary.model_validate_json(Path(path).read_text(encoding="utf-8"))
 
 
 def _match_reference(

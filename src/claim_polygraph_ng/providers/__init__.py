@@ -16,6 +16,7 @@ from claim_polygraph_ng.providers.searxng import (
     SearchProviderError,
     SearXNGSearchProvider,
 )
+from claim_polygraph_ng.providers.serpapi import SerpAPISearchProvider
 
 __all__ = [
     "DeterministicModelProvider",
@@ -28,5 +29,6 @@ __all__ = [
     "SearXNGSearchProvider",
     "SearchProvider",
     "SearchProviderError",
+    "SerpAPISearchProvider",
     "StructuredModelProvider",
 ]

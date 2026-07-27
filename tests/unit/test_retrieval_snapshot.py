@@ -110,9 +110,7 @@ def test_snapshot_replay_rejects_missing_query_and_larger_budget() -> None:
         maximum_results=5,
     )
     asyncio.run(recorder.search(captured_request))
-    replay = SnapshotReplaySearchProvider(
-        build_retrieval_snapshot(dataset, recorder, top_k=5)
-    )
+    replay = SnapshotReplaySearchProvider(build_retrieval_snapshot(dataset, recorder, top_k=5))
 
     missing_request = captured_request.model_copy(update={"query": "missing query"})
     with pytest.raises(SearchProviderError, match="absent from snapshot"):
