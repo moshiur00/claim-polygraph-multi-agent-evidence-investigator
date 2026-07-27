@@ -1,8 +1,16 @@
 # Phase 2 execution plan
 
-Status: **approved to start**  
-Start date: 27 July 2026  
+Status: **closed and complete**
+
+Start date: 27 July 2026
+
+Close date: 27 July 2026
+
 Theme: benchmark expansion and live-retrieval hardening
+
+The final gate results, case-level outcomes, rights check, limitations, and
+infrastructure decision are recorded in
+[`PHASE_2_COMPLETION_REPORT.md`](PHASE_2_COMPLETION_REPORT.md).
 
 ## Purpose
 
@@ -27,13 +35,39 @@ shows a concrete need.
   proposed verdict, expected verdict, reviewer, or approval metadata.
 - The local SearXNG service responds, but its tested engines do not yet provide
   acceptable reviewed-source recall.
+- SerpAPI is selected as the primary Phase 2 live-search provider; SearXNG
+  remains an experimental self-hosted comparison.
+
+## Progress checkpoint — 27 July 2026
+
+The first provider milestone is complete:
+
+- Added a secret-safe SerpAPI provider supporting Google and optional
+  DuckDuckGo results.
+- Added CLI configuration, normalized failures, verified operating-system TLS,
+  and one bounded transient retry.
+- Captured a five-claim, three-query Google snapshot with 15/15 successful
+  search calls.
+- The top-five page run fetched and extracted 76% of attempted candidates,
+  reached 66.67% lexical passage recall, and succeeded on 80% of cases.
+- Bounded semantic evaluation recovered two equivalent evidence points and
+  raised combined passage recall to 83.33%, above the 75% gate.
+- A live SerpAPI-to-page-to-verdict smoke run completed 5/5 cases, matched all
+  five reviewed verdicts, produced full citation support for all five concise
+  verdict sentences, and estimated $0.009443 model cost per completed case.
+- No PDF host was approved or downloaded.
+
+SerpAPI Google is therefore promoted as the primary provider for preparing
+CPNG-006. The next milestone is the CPNG-006 provisional evidence packet and
+genuine two-person review.
 
 ## Objectives
 
 1. Expand the scored benchmark from five to ten genuinely human-reviewed
    claims.
-2. Make live SearXNG retrieval observable and dependable enough to evaluate
-   without silently falling back to frozen candidates.
+2. Make SerpAPI live retrieval observable and dependable enough to evaluate
+   without silently falling back to frozen candidates, while retaining SearXNG
+   as a non-blocking comparison.
 3. Preserve evidence rights, provenance, source-independence, temporal,
    numerical, and citation-audit safeguards.
 4. Measure quality, stability, latency, and cost on the expanded benchmark.
@@ -68,24 +102,26 @@ Deliverables:
 - Reviewer and distinct-approver identities and dates.
 - `review-status` reporting 10/10 across CPNG-001–010.
 
-### 2. Live SearXNG hardening
+### 2. Live search integration and comparison
 
-1. Define a minimal engine set using engines that return permitted public
-   results reliably in the operator's environment.
-2. Add a health diagnostic that distinguishes connection, HTTP, engine,
-   empty-result, rate-limit, and malformed-response failures.
-3. Use bounded retry, pacing, and per-engine telemetry.
-4. Reject a snapshot when required queries are missing or silently empty.
-5. Capture a new rights-safe live snapshot for the ten reviewed claims.
-6. Keep the Phase 1 frozen snapshot as a reproducible control; never silently
-   substitute it for live retrieval.
+1. Use SerpAPI Google as the primary live engine and DuckDuckGo only as an
+   optional comparison.
+2. Keep credentials in the Git-ignored environment file and never place them
+   in commands, traces, provider IDs, or artifacts.
+3. Distinguish connection, HTTP, authentication, quota, empty-result,
+   rate-limit, and malformed-response failures.
+4. Use bounded retry, pacing, and per-provider telemetry.
+5. Reject a snapshot when required queries are missing or silently empty.
+6. Capture a new rights-safe SerpAPI snapshot for the ten reviewed claims.
+7. Keep the Phase 1 frozen snapshot as a reproducible control and SearXNG as a
+   diagnostic comparison; never silently substitute either for live SerpAPI.
 
 Deliverables:
 
-- Documented SearXNG engine configuration.
+- Documented SerpAPI configuration and optional SearXNG comparison.
 - Health-check output and normalized failure report.
 - A valid ten-claim live search snapshot.
-- Live-versus-frozen retrieval comparison.
+- SerpAPI-versus-frozen retrieval comparison.
 
 ### 3. Retrieval and evidence-quality evaluation
 
@@ -126,7 +162,9 @@ Add tests for:
 
 - CLI use of frozen and live retrieval modes;
 - audit-guided revision and its one-retry limit;
-- SearXNG empty-result and engine-failure diagnostics;
+- SerpAPI authentication, quota, empty-result, and transient-failure
+  diagnostics;
+- SearXNG empty-result and engine-failure diagnostics where it remains enabled;
 - benchmark versioning and human-review requirements;
 - no unapproved PDF download;
 - interrupted-run persistence behavior.
@@ -162,8 +200,8 @@ general real-world accuracy.
 
 Pause the current approach and review the design if any of these occurs:
 
-- live SearXNG cannot produce candidates for at least 90% of cases after the
-  bounded engine-configuration experiment;
+- live SerpAPI cannot produce candidates for at least 90% of cases after one
+  bounded provider/query experiment;
 - passage recall remains below 75% after one documented query/ranking
   iteration;
 - the same workflow interruption or audit failure repeats in three declared
@@ -188,12 +226,13 @@ not introduce:
 1. Prepare the ambiguity and evidence requirements for CPNG-006.
 2. Build and review CPNG-006 fully before repeating the process for CPNG-007
    through CPNG-010.
-3. In parallel with human availability, harden SearXNG and capture the live
-   search snapshot.
+3. In parallel with human availability, validate SerpAPI on the first five
+   cases and capture the live search snapshot.
 4. Run staged retrieval evaluation on all ten reviewed claims.
 5. Run two declared end-to-end evaluations.
 6. Produce the Phase 2 exit report and the infrastructure decision for the
    next phase.
 
-The immediate next task is CPNG-006 preparation. Its output is a provisional
-evidence packet for human review, not a scored label.
+Execution is complete. The final evidence and gate decisions are recorded in
+[`PHASE_2_COMPLETION_REPORT.md`](PHASE_2_COMPLETION_REPORT.md); any future work
+starts under a separately approved Phase 3 plan.

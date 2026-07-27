@@ -6,6 +6,7 @@ from datetime import UTC, datetime
 import pytest
 
 from claim_polygraph_ng.application import BudgetExceededError, InvestigationService
+from claim_polygraph_ng.application.investigation_service import _research_query
 from claim_polygraph_ng.config import ExecutionBudget, RuntimePolicy
 from claim_polygraph_ng.domain import (
     ArtifactType,
@@ -16,6 +17,7 @@ from claim_polygraph_ng.domain import (
     InvestigationStage,
     InvestigationStatus,
     ModelTask,
+    ResearchPath,
     SentenceAudit,
     Source,
     SupportLevel,
@@ -65,9 +67,7 @@ def test_complete_investigation_is_persisted_and_reloadable(tmp_path) -> None:
         DocumentChunk,
     )
     assert len(chunks) == 3
-    assert {chunk.chunk_id for chunk in chunks} == {
-        item.chunk_id for item in report.evidence
-    }
+    assert {chunk.chunk_id for chunk in chunks} == {item.chunk_id for item in report.evidence}
     assert (
         repository.list_artifacts(investigation_id, ArtifactType.EVIDENCE, Evidence)
         == report.evidence
@@ -94,6 +94,18 @@ def test_complete_investigation_is_persisted_and_reloadable(tmp_path) -> None:
     assert events[0].event_type is TraceEventType.INVESTIGATION_CREATED
     assert events[-1].event_type is TraceEventType.INVESTIGATION_COMPLETED
     assert any(event.event_type is TraceEventType.PROVIDER_CALLED for event in events)
+
+
+def test_research_queries_are_path_specific_and_keep_the_claim_verbatim() -> None:
+    claim = "Cigarette smoking causes lung cancer."
+
+    queries = {path: _research_query(claim, path) for path in ResearchPath}
+
+    assert len(set(queries.values())) == len(ResearchPath)
+    assert all(query.endswith(f": {claim}") for query in queries.values())
+    assert "official primary source dataset" in queries[ResearchPath.PRIMARY]
+    assert "peer reviewed academic evidence" in queries[ResearchPath.ACADEMIC]
+    assert "counterevidence limitations exceptions" in queries[ResearchPath.CONTRADICTION]
 
 
 def test_claim_context_is_supplied_to_evidence_classification_and_judgment(tmp_path) -> None:

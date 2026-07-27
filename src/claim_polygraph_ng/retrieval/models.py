@@ -42,10 +42,7 @@ class UrlSafetyPolicy(DomainModel):
     @classmethod
     def normalize_pdf_hosts(cls, hosts: frozenset[str]) -> frozenset[str]:
         normalized = frozenset(host.casefold().rstrip(".") for host in hosts)
-        if any(
-            not host or re.fullmatch(r"[a-z0-9.-]+", host) is None
-            for host in normalized
-        ):
+        if any(not host or re.fullmatch(r"[a-z0-9.-]+", host) is None for host in normalized):
             raise ValueError("PDF allowlist entries must be hostnames without schemes or paths")
         return normalized
 

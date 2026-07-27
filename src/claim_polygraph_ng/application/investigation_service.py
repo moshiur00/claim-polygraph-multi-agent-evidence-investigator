@@ -25,6 +25,7 @@ from claim_polygraph_ng.domain import (
     InvestigationStatus,
     ModelCallUsage,
     ModelTask,
+    ResearchPath,
     SearchRequest,
     SearchResult,
     SentenceAudit,
@@ -57,6 +58,13 @@ _TEMPORAL_CUE_PATTERN = re.compile(
     r"\b(current|currently|today|now|still|as of|no longer)\b",
     re.IGNORECASE,
 )
+_RESEARCH_QUERY_PREFIXES = {
+    ResearchPath.PRIMARY: "official primary source dataset",
+    ResearchPath.GENERAL: "authoritative independent context",
+    ResearchPath.FACT_CHECK: "independent fact check evidence",
+    ResearchPath.ACADEMIC: "peer reviewed academic evidence",
+    ResearchPath.CONTRADICTION: "counterevidence limitations exceptions",
+}
 
 
 def _anchor_claim_to_user_text(claim: AtomicClaim, original_text: str) -> AtomicClaim:
@@ -66,12 +74,16 @@ def _anchor_claim_to_user_text(claim: AtomicClaim, original_text: str) -> Atomic
     return AtomicClaim.model_validate({**claim.model_dump(), **updates})
 
 
+def _research_query(claim_text: str, research_path: ResearchPath) -> str:
+    """Shape a generic non-oracle query for one planned research path."""
+    return f"{_RESEARCH_QUERY_PREFIXES[research_path]}: {claim_text}"
+
+
 def _taxonomy_guidance(verification: ContextVerification) -> tuple[str, ...]:
     guidance: list[str] = []
     numerical = verification.numerical
-    if (
-        numerical.exactness_terms
-        and set(numerical.claim_values).intersection(numerical.evidence_values)
+    if numerical.exactness_terms and set(numerical.claim_values).intersection(
+        numerical.evidence_values
     ):
         guidance.append(
             "The packet preserves a claimed numerical value under a credible qualification. "
@@ -208,9 +220,7 @@ class InvestigationService:
                 investigation,
                 stage=InvestigationStage.RESEARCH,
             )
-            sources, evidence_items, independence = await self._research(
-                investigation, claim, plan
-            )
+            sources, evidence_items, independence = await self._research(investigation, claim, plan)
             context_verification = verify_claim_context(
                 claim=claim,
                 plan=plan,
@@ -356,6 +366,7 @@ class InvestigationService:
         sources: list[Source] = []
         candidate_chunks: list[DocumentChunk] = []
         evidence_items: list[Evidence] = []
+        seen_result_urls: set[str] = set()
         budget_exhausted = False
         self._active_page_limit = min(
             plan.maximum_pages_fetched,
@@ -365,13 +376,17 @@ class InvestigationService:
         for research_path in plan.required_research_paths:
             request = SearchRequest(
                 claim_id=claim.claim_id,
-                query=f"{research_path.value}: {claim.text}",
+                query=_research_query(claim.text, research_path),
                 research_path=research_path,
                 maximum_results=3,
             )
             results = await self._search(investigation, request)
 
             for result in results:
+                result_key = str(result.url).rstrip("/").casefold()
+                if result_key in seen_result_urls:
+                    continue
+                seen_result_urls.add(result_key)
                 try:
                     content, canonical_url, retrieved_at = await self._result_content(
                         investigation,

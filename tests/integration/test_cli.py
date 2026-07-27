@@ -15,6 +15,8 @@ BENCHMARK = Path(__file__).parents[2] / "benchmarks" / "initial_claims_v1.json"
 def isolate_cli_environment(tmp_path, monkeypatch) -> None:
     """Prevent developer-local .env settings from changing deterministic tests."""
     monkeypatch.chdir(tmp_path)
+    monkeypatch.delenv("SERPAPI_API_KEY", raising=False)
+    monkeypatch.delenv("SERPAPI_ENGINE", raising=False)
 
 
 def test_cli_investigate_list_and_show(tmp_path, capsys) -> None:
@@ -153,7 +155,7 @@ def test_cli_rejects_benchmark_evidence_with_searxng(tmp_path, capsys) -> None:
     assert "are mutually exclusive" in output.err
 
 
-def test_cli_retrieval_evaluation_requires_searxng(tmp_path, capsys) -> None:
+def test_cli_retrieval_evaluation_requires_a_live_provider(tmp_path, capsys) -> None:
     exit_code = main(
         [
             "evaluate-retrieval",
@@ -166,7 +168,49 @@ def test_cli_retrieval_evaluation_requires_searxng(tmp_path, capsys) -> None:
     output = capsys.readouterr()
 
     assert exit_code == 1
-    assert "requires --searxng-url or SEARXNG_BASE_URL" in output.err
+    assert "requires --searxng-url, --serpapi-engine, or a snapshot input" in output.err
+
+
+def test_cli_serpapi_requires_api_key(tmp_path, capsys) -> None:
+    exit_code = main(
+        [
+            "--serpapi-engine",
+            "google",
+            "evaluate-retrieval",
+            "--dataset",
+            str(BENCHMARK),
+            "--output",
+            str(tmp_path / "retrieval.json"),
+            "--limit",
+            "1",
+        ]
+    )
+    output = capsys.readouterr()
+
+    assert exit_code == 1
+    assert "--serpapi-engine requires SERPAPI_API_KEY" in output.err
+
+
+def test_cli_rejects_searxng_with_serpapi(tmp_path, capsys) -> None:
+    exit_code = main(
+        [
+            "--searxng-url",
+            "http://localhost:8080",
+            "--serpapi-engine",
+            "google",
+            "evaluate-retrieval",
+            "--dataset",
+            str(BENCHMARK),
+            "--output",
+            str(tmp_path / "retrieval.json"),
+            "--limit",
+            "1",
+        ]
+    )
+    output = capsys.readouterr()
+
+    assert exit_code == 1
+    assert "--searxng-url and --serpapi-engine are mutually exclusive" in output.err
 
 
 def test_cli_rejects_multiple_model_providers(tmp_path, capsys) -> None:

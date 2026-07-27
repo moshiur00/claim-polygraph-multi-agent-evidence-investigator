@@ -59,11 +59,7 @@ async def run_semantic_passage_evaluation(
                 continue
 
             best = max(
-                (
-                    (page, match)
-                    for page, match in candidates
-                    if match.passage_text is not None
-                ),
+                ((page, match) for page, match in candidates if match.passage_text is not None),
                 key=lambda item: (
                     item[1].lexical_score,
                     -item[0].candidate_rank,
@@ -136,8 +132,7 @@ async def run_semantic_passage_evaluation(
 
     evaluated = tuple(result for result in results if result.evaluated)
     equivalent_count = sum(
-        result.judgment is not None
-        and result.judgment.relationship == "equivalent"
+        result.judgment is not None and result.judgment.relationship == "equivalent"
         for result in evaluated
     )
     partial_count = sum(
@@ -145,8 +140,7 @@ async def run_semantic_passage_evaluation(
         for result in evaluated
     )
     not_equivalent_count = sum(
-        result.judgment is not None
-        and result.judgment.relationship == "not_equivalent"
+        result.judgment is not None and result.judgment.relationship == "not_equivalent"
         for result in evaluated
     )
     reference_count = sum(
@@ -179,9 +173,7 @@ async def run_semantic_passage_evaluation(
         partial_count=partial_count,
         not_equivalent_count=not_equivalent_count,
         combined_match_count=combined,
-        combined_passage_recall=(
-            round(combined / reference_count, 6) if reference_count else None
-        ),
+        combined_passage_recall=(round(combined / reference_count, 6) if reference_count else None),
         metered_model_call_count=len(usages),
         input_tokens=sum(usage.input_tokens or 0 for usage in usages),
         cached_input_tokens=sum(usage.cached_input_tokens or 0 for usage in usages),

@@ -72,11 +72,7 @@ def verify_claim_context(
         reference_date or _CURRENT_PATTERN.search(claim.text)
     )
     publication_dates = tuple(
-        sorted(
-            source.publication_date
-            for source in sources
-            if source.publication_date is not None
-        )
+        sorted(source.publication_date for source in sources if source.publication_date is not None)
     )
     temporal_issues: list[str] = []
     if temporal_required and reference_date is None:

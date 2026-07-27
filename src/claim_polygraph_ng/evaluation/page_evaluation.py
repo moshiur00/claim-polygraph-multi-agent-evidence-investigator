@@ -70,10 +70,7 @@ async def run_page_fetch_evaluation(
         raise ValueError("passage top-k must be between 1 and 20")
     if not 0.0 <= passage_lexical_threshold <= 1.0:
         raise ValueError("passage lexical threshold must be between zero and one")
-    if (
-        retrieval.dataset_id != dataset.dataset_id
-        or retrieval.dataset_version != dataset.version
-    ):
+    if retrieval.dataset_id != dataset.dataset_id or retrieval.dataset_version != dataset.version:
         raise ValueError("retrieval evaluation does not match the benchmark dataset")
 
     cases_by_id = {case.case_id: case for case in dataset.cases}
@@ -85,9 +82,7 @@ async def run_page_fetch_evaluation(
     for retrieval_case in retrieval.results:
         case = cases_by_id.get(retrieval_case.case_id)
         if case is None:
-            raise ValueError(
-                f"retrieval case is absent from benchmark: {retrieval_case.case_id}"
-            )
+            raise ValueError(f"retrieval case is absent from benchmark: {retrieval_case.case_id}")
         pages: list[PageFetchEvaluationResult] = []
         for candidate in retrieval_case.candidates[:candidate_top_n]:
             page = await _evaluate_page(
@@ -104,9 +99,7 @@ async def run_page_fetch_evaluation(
         matched_ids = {
             reference_id for page in pages for reference_id in page.matched_reference_ids
         }
-        matching_ranks = tuple(
-            page.candidate_rank for page in pages if page.matched_reference_ids
-        )
+        matching_ranks = tuple(page.candidate_rank for page in pages if page.matched_reference_ids)
         case_results.append(
             PageFetchCaseResult(
                 case_id=case.case_id,
@@ -126,12 +119,8 @@ async def run_page_fetch_evaluation(
     extracted = sum(result.extracted_count for result in case_results)
     duplicates = sum(result.duplicate_count for result in case_results)
     reference_count = sum(result.reference_count for result in case_results)
-    matched_reference_count = sum(
-        result.matched_reference_count for result in case_results
-    )
-    successful_cases = sum(
-        result.matched_reference_count > 0 for result in case_results
-    )
+    matched_reference_count = sum(result.matched_reference_count for result in case_results)
+    successful_cases = sum(result.matched_reference_count > 0 for result in case_results)
 
     return PageFetchEvaluationSummary(
         dataset_id=dataset.dataset_id,
@@ -155,9 +144,7 @@ async def run_page_fetch_evaluation(
         reference_count=reference_count,
         matched_reference_count=matched_reference_count,
         passage_lexical_recall=(
-            round(matched_reference_count / reference_count, 6)
-            if reference_count
-            else None
+            round(matched_reference_count / reference_count, 6) if reference_count else None
         ),
         case_passage_success_rate=_rate(successful_cases, len(case_results)),
         results=tuple(case_results),
@@ -275,9 +262,7 @@ async def _evaluate_page(
                 lexical_match=score >= passage_lexical_threshold,
             )
         )
-    matched = tuple(
-        item.annotation_id for item in reference_matches if item.lexical_match
-    )
+    matched = tuple(item.annotation_id for item in reference_matches if item.lexical_match)
     best_reference_score = max(
         (item.lexical_score for item in reference_matches),
         default=0.0,
@@ -322,9 +307,7 @@ def export_page_fetch_evaluation(
 
 def load_page_fetch_evaluation(path: str | Path) -> PageFetchEvaluationSummary:
     """Load and validate a page-fetch evaluation summary."""
-    return PageFetchEvaluationSummary.model_validate_json(
-        Path(path).read_text(encoding="utf-8")
-    )
+    return PageFetchEvaluationSummary.model_validate_json(Path(path).read_text(encoding="utf-8"))
 
 
 def _tokens(value: str) -> frozenset[str]:

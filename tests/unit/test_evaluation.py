@@ -42,17 +42,22 @@ def test_initial_benchmark_has_twenty_cases_and_complete_category_coverage() -> 
     assert {category for case in dataset.cases for category in case.categories} == set(
         EvaluationCategory
     )
-    assert [case.expected_verdict.value for case in dataset.cases[:5]] == [
+    assert [case.expected_verdict.value for case in dataset.cases[:10]] == [
         "misleading",
         "misleading",
         "misleading",
         "outdated",
         "contradicted",
+        "supported",
+        "supported",
+        "supported",
+        "supported",
+        "misleading",
     ]
-    assert all(case.expected_verdict is None for case in dataset.cases[5:])
-    assert all(case.annotation_status.value == "reviewed" for case in dataset.cases[:5])
-    assert all(case.proposed_verdict is not None for case in dataset.cases[:5])
-    assert all(case.candidate_evidence for case in dataset.cases[:5])
+    assert all(case.expected_verdict is None for case in dataset.cases[10:])
+    assert all(case.annotation_status.value == "reviewed" for case in dataset.cases[:10])
+    assert all(case.proposed_verdict is not None for case in dataset.cases[:10])
+    assert all(case.candidate_evidence for case in dataset.cases[:10])
     assert all(
         len(annotation.excerpt.split()) <= 25
         for case in dataset.cases
@@ -181,9 +186,9 @@ def test_benchmark_evidence_provider_serves_each_reviewed_annotation_once() -> N
     returned_urls = {str(batch[0].url) for batch in results[:3]}
     expected_urls = {str(annotation.source_url) for annotation in case.candidate_evidence}
     assert returned_urls == expected_urls
-    assert {
-        batch[0].inline_content for batch in results[:3]
-    } == {annotation.excerpt for annotation in case.candidate_evidence}
+    assert {batch[0].inline_content for batch in results[:3]} == {
+        annotation.excerpt for annotation in case.candidate_evidence
+    }
 
 
 def test_ai_review_is_provenanced_and_excluded_from_human_labels() -> None:

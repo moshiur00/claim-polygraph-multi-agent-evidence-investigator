@@ -22,9 +22,7 @@ class RetrievalCandidateSearchProvider:
         selected = ordered[: request.maximum_results]
         selected_ids = {str(candidate.url) for candidate in selected}
         self._remaining = [
-            candidate
-            for candidate in self._remaining
-            if str(candidate.url) not in selected_ids
+            candidate for candidate in self._remaining if str(candidate.url) not in selected_ids
         ]
         return tuple(
             SearchResult(

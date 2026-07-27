@@ -2,6 +2,7 @@
 
 import asyncio
 import json
+from datetime import date
 from uuid import uuid4
 
 import httpx
@@ -99,6 +100,49 @@ def test_openai_normalizes_auth_error_without_exposing_key() -> None:
 
     assert "HTTP 401" in str(captured.value)
     assert "do-not-leak-this-key" not in str(captured.value)
+
+
+def test_openai_normalizes_year_only_reference_date_to_calendar_year_end() -> None:
+    async def handler(request: httpx.Request) -> httpx.Response:
+        del request
+        content = {
+            "text": "Germany ranked third by nominal GDP in 2023.",
+            "claim_type": "comparative",
+            "entities": ["Germany"],
+            "quantities": ["third", "2023"],
+            "reference_date": "2023",
+            "geography": "Germany",
+            "ambiguities": [],
+            "checkworthiness": 0.9,
+        }
+        return httpx.Response(
+            200,
+            json={
+                "status": "completed",
+                "output": [
+                    {
+                        "type": "message",
+                        "content": [{"type": "output_text", "text": json.dumps(content)}],
+                    }
+                ],
+            },
+        )
+
+    provider = OpenAIStructuredModelProvider(
+        api_key="test-secret",
+        model="gpt-test",
+        transport=httpx.MockTransport(handler),
+    )
+
+    result = asyncio.run(
+        provider.generate(
+            task=ModelTask.NORMALIZE_CLAIM,
+            response_model=AtomicClaim,
+            inputs={"claim_text": "Germany ranked third by nominal GDP in 2023."},
+        )
+    )
+
+    assert result.reference_date == date(2023, 12, 31)
 
 
 def test_openai_routes_focused_and_reasoning_tasks_with_compatible_parameters() -> None:

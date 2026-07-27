@@ -33,9 +33,7 @@ def test_semantic_evaluation_recovers_only_borderline_unmatched_references() -> 
                 ),
             )
 
-    retrieval = asyncio.run(
-        run_retrieval_evaluation(dataset, SearchProvider(), limit=1, top_k=1)
-    )
+    retrieval = asyncio.run(run_retrieval_evaluation(dataset, SearchProvider(), limit=1, top_k=1))
 
     class Fetcher:
         provider_id = "semantic-fetcher"
@@ -104,12 +102,6 @@ def test_semantic_evaluation_recovers_only_borderline_unmatched_references() -> 
     assert summary.reference_count == 2
     assert summary.semantic_candidate_count >= 1
     assert summary.equivalent_count == summary.evaluated_count
-    assert summary.combined_match_count == (
-        summary.lexical_match_count + summary.equivalent_count
-    )
+    assert summary.combined_match_count == (summary.lexical_match_count + summary.equivalent_count)
     assert summary.model == "semantic-test-model"
-    assert all(
-        result.judgment is not None
-        for result in summary.results
-        if result.evaluated
-    )
+    assert all(result.judgment is not None for result in summary.results if result.evaluated)

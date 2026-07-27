@@ -108,10 +108,14 @@ _TASK_INSTRUCTIONS = {
     ),
     ModelTask.EVALUATE_PASSAGE: (
         "Compare the retrieved passage only with the supplied reviewed evidence target in "
-        "the context of the claim. Mark equivalent only when it establishes materially the "
-        "same evidentiary point, partial when it establishes some but not all essential "
-        "points, and not_equivalent when it is merely topical or conflicts. Do not browse, "
-        "add facts, or treat lexical similarity as sufficient."
+        "the context of the claim. Do not judge whether either passage supports the original "
+        "claim: a retrieved passage that contradicts the original claim can be equivalent to "
+        "reviewed evidence that makes the same contradiction. Mark equivalent when it "
+        "independently establishes the same core evidentiary point; it need not repeat "
+        "source-specific wording or every incidental detail. Mark partial when it establishes "
+        "some but not all essential points, and not_equivalent when it is merely topical or "
+        "materially conflicts with the reviewed target. Do not browse, add facts, or treat "
+        "lexical similarity as sufficient."
     ),
 }
 
@@ -152,7 +156,7 @@ class _SentenceAuditSemantics(DomainModel):
 class OllamaStructuredModelProvider:
     """Generate validated domain artifacts through a trusted local Ollama API."""
 
-    prompt_version = "ollama-structured-v9"
+    prompt_version = "ollama-structured-v10"
 
     def __init__(
         self,

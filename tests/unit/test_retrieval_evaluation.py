@@ -72,9 +72,7 @@ def test_retrieval_evaluation_measures_exact_and_host_recall(tmp_path) -> None:
     assert summary.results[0].queries == (dataset.cases[0].claim,)
     assert summary.results[0].candidates[1].rank == 2
     assert summary.results[0].candidates[1].title == "Astronomical Almanac Glossary"
-    assert summary.results[0].candidates[1].query_ranks == {
-        dataset.cases[0].claim: 2
-    }
+    assert summary.results[0].candidates[1].query_ranks == {dataset.cases[0].claim: 2}
     assert summary.results[0].references[1].exact_url_rank == 2
     assert summary.results[1].references[0].reviewed_host_rank == 1
     assert str(water_reference.source_url).startswith("https://nvlpubs.nist.gov/")
@@ -91,9 +89,7 @@ def test_retrieval_evaluation_records_provider_failures() -> None:
             del request
             raise RuntimeError("search unavailable")
 
-    summary = asyncio.run(
-        run_retrieval_evaluation(dataset, FailingSearchProvider(), limit=1)
-    )
+    summary = asyncio.run(run_retrieval_evaluation(dataset, FailingSearchProvider(), limit=1))
 
     assert summary.completed_case_count == 0
     assert summary.completion_rate == 0.0
@@ -318,9 +314,7 @@ def test_quality_rerank_reserves_safe_counterevidence_in_early_access_window() -
         )
     )
 
-    leading_hosts = [
-        candidate.url.host for candidate in summary.results[0].candidates[:3]
-    ]
+    leading_hosts = [candidate.url.host for candidate in summary.results[0].candidates[:3]]
     assert "independent.example" in leading_hosts
 
 

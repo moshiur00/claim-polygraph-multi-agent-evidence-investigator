@@ -64,6 +64,28 @@ against the public-network policy and fetched with redirect, content-type,
 timeout, and response-size limits. The structured analysis and verdict remain
 deterministic unless an Ollama model is explicitly enabled.
 
+For Phase 2, SerpAPI is the primary live-search path and SearXNG remains an
+optional self-hosted comparison. Put the key only in the Git-ignored `.env`
+file:
+
+```dotenv
+SERPAPI_API_KEY=your-real-key
+SERPAPI_ENGINE=google
+SERPAPI_LANGUAGE=en
+SERPAPI_COUNTRY=us
+SERPAPI_TIMEOUT_SECONDS=15
+```
+
+Then run:
+
+```powershell
+claim-polygraph --serpapi-engine google investigate "The claim"
+```
+
+`duckduckgo` is also accepted as an optional comparison engine. SerpAPI and
+SearXNG cannot be enabled in the same command. The API key is deliberately not
+accepted as a command-line argument and is never included in provider IDs.
+
 To opt into local schema-constrained reasoning with an already installed
 Ollama model:
 
@@ -129,10 +151,11 @@ alerts should be configured separately because the CLI does not yet calculate
 or enforce a monetary cap.
 
 The current cost-first route uses `gpt-4o-mini` for claim normalization,
-evidence classification, and citation auditing, while `gpt-5.4-mini` handles
-investigation planning and final verdict judgment. `--openai-model` remains a
-single-model override when `--openai-fast-model` is omitted. Model quality must
-be compared against the benchmark before changing the production route.
+evidence classification, and review critique. `gpt-5.4-mini` handles
+investigation planning, final verdict judgment, semantic passage evaluation,
+and citation auditing. `--openai-model` remains a single-model override when
+`--openai-fast-model` is omitted. Model quality must be compared against the
+benchmark before changing the production route.
 
 An inaccessible result is recorded with its extraction status and skipped.
 The workflow tries the next candidate within its page budget instead of
@@ -181,8 +204,18 @@ run. This is an evidence-oracle baseline: it passes each reviewed excerpt
 through the normal extraction, evidence classification, synthesis, and
 citation-audit stages, but it does not measure web search or retrieval.
 
-Measure SearXNG search-candidate quality separately with a claim-only query
-for each of the five reviewed cases:
+Measure live search-candidate quality separately with a claim-only query for
+each of the five reviewed cases. Phase 2 uses SerpAPI Google:
+
+```powershell
+claim-polygraph --serpapi-engine google evaluate-retrieval `
+  --limit 5 --top-k 10 `
+  --query-strategy claim_only `
+  --snapshot-output artifacts/evaluations/serpapi-five-claim-snapshot.json `
+  --output artifacts/evaluations/serpapi-retrieval.json
+```
+
+The equivalent SearXNG comparison remains available:
 
 ```powershell
 claim-polygraph --searxng-url http://localhost:8080 evaluate-retrieval `
@@ -206,7 +239,7 @@ the first seven claim-only results in a top-10 run. It reserves at most three
 tail positions for weighted expansion candidates, including one candidate from
 each expansion path when available.
 
-Capture all three query paths once:
+Capture all three query paths once, using either live provider:
 
 ```powershell
 claim-polygraph --searxng-url http://localhost:8080 evaluate-retrieval `
@@ -312,9 +345,23 @@ verdict sentences. The candidate list is frozen for reproducibility, while the
 selected public pages are fetched live. This is not a live SearXNG search
 measurement.
 
+Phase 2 is closed. The ten-claim SerpAPI evaluation completed all 30 live
+queries and returned candidates for 10/10 cases. Combined reviewed-passage
+recall was 82.61%, with the original five cases holding their 75% Phase 1
+baseline. Two declared end-to-end runs completed 10/10 cases each, reached
+90% and 80% reviewed-label accuracy, delivered 100% full citation support,
+and achieved 90% exact label stability. Mean estimated model cost was
+$0.01085 and $0.01062 per completed case. No PDF was approved or downloaded.
+
+The final artifacts use the `phase2-ten-` prefix under
+`artifacts/evaluations/`. See
+[`docs/PHASE_2_COMPLETION_REPORT.md`](docs/PHASE_2_COMPLETION_REPORT.md) for
+the gate table, case-level outcomes, known weaknesses, and infrastructure
+decision.
+
 See [`docs/PHASE_1_COMPLETION_REPORT.md`](docs/PHASE_1_COMPLETION_REPORT.md) for
 the closed Phase 1 exit gates, costs, rights controls, and limitations. The
-approved next-phase scope and measurable gates are in
+closed Phase 2 scope and original measurable gates remain in
 [`docs/PHASE_2_EXECUTION_PLAN.md`](docs/PHASE_2_EXECUTION_PLAN.md).
 
 The default summary is written to

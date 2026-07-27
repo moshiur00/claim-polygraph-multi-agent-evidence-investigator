@@ -5,6 +5,7 @@ import asyncio
 import os
 import sys
 from collections.abc import Sequence
+from dataclasses import dataclass
 from pathlib import Path
 from uuid import UUID
 
@@ -44,6 +45,7 @@ from claim_polygraph_ng.providers import (
     OllamaStructuredModelProvider,
     OpenAIStructuredModelProvider,
     SearXNGSearchProvider,
+    SerpAPISearchProvider,
     StructuredModelProvider,
 )
 from claim_polygraph_ng.reporting import export_report, load_report, render_markdown
@@ -54,9 +56,7 @@ DEFAULT_ARTIFACTS = Path("artifacts")
 DEFAULT_BENCHMARK = Path("benchmarks") / "initial_claims_v1.json"
 DEFAULT_EVALUATION_OUTPUT = DEFAULT_ARTIFACTS / "evaluations" / "deterministic-baseline.json"
 DEFAULT_RETRIEVAL_OUTPUT = DEFAULT_ARTIFACTS / "evaluations" / "searxng-retrieval.json"
-DEFAULT_PAGE_EVALUATION_OUTPUT = (
-    DEFAULT_ARTIFACTS / "evaluations" / "page-fetch-evaluation.json"
-)
+DEFAULT_PAGE_EVALUATION_OUTPUT = DEFAULT_ARTIFACTS / "evaluations" / "page-fetch-evaluation.json"
 DEFAULT_SEMANTIC_PASSAGE_OUTPUT = (
     DEFAULT_ARTIFACTS / "evaluations" / "semantic-passage-evaluation.json"
 )
@@ -73,6 +73,26 @@ class _EnvironmentSettings(BaseSettings):
     openai_model: str | None = None
     openai_fast_model: str | None = None
     openai_timeout_seconds: float = 60.0
+    serpapi_api_key: SecretStr | None = None
+    serpapi_engine: str | None = None
+    serpapi_language: str = "en"
+    serpapi_country: str = "us"
+    serpapi_timeout_seconds: float = 15.0
+
+
+@dataclass(frozen=True)
+class _SerpAPIOptions:
+    """Secret-safe CLI configuration for the optional hosted search provider."""
+
+    api_key: SecretStr | None
+    engine: str | None
+    language: str
+    country: str
+    timeout_seconds: float
+
+    @property
+    def enabled(self) -> bool:
+        return self.engine is not None
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -109,6 +129,31 @@ def build_parser() -> argparse.ArgumentParser:
             "Optional comma-separated SearXNG engines, for example bing,mojeek. "
             "Can also be set with SEARXNG_ENGINES."
         ),
+    )
+    parser.add_argument(
+        "--serpapi-engine",
+        choices=("google", "duckduckgo"),
+        default=environment.serpapi_engine,
+        help=(
+            "Opt into hosted SerpAPI search with Google or DuckDuckGo. "
+            "Requires SERPAPI_API_KEY; can also be set with SERPAPI_ENGINE."
+        ),
+    )
+    parser.add_argument(
+        "--serpapi-language",
+        default=environment.serpapi_language,
+        help="Two-letter SerpAPI result language (default: en).",
+    )
+    parser.add_argument(
+        "--serpapi-country",
+        default=environment.serpapi_country,
+        help="Two-letter SerpAPI result country (default: us).",
+    )
+    parser.add_argument(
+        "--serpapi-timeout",
+        type=float,
+        default=environment.serpapi_timeout_seconds,
+        help="Per-search SerpAPI timeout in seconds (default: 15).",
     )
     parser.add_argument(
         "--ollama-url",
@@ -208,7 +253,7 @@ def build_parser() -> argparse.ArgumentParser:
         type=Path,
         help=(
             "Use frozen ranked search candidates, then fetch their live pages. "
-            "Cannot be combined with --benchmark-evidence or --searxng-url."
+            "Cannot be combined with --benchmark-evidence or a live search provider."
         ),
     )
     evaluate_retrieval = subparsers.add_parser(
@@ -259,7 +304,7 @@ def build_parser() -> argparse.ArgumentParser:
     evaluate_retrieval.add_argument(
         "--snapshot-input",
         type=Path,
-        help="Replay query responses from this snapshot without using SearXNG.",
+        help="Replay query responses from this snapshot without using a live search provider.",
     )
     evaluate_retrieval.add_argument(
         "--empty-result-retries",
@@ -271,7 +316,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--search-delay",
         type=float,
         default=1.0,
-        help="Seconds between live SearXNG calls (default: 1).",
+        help="Seconds between live search calls (default: 1).",
     )
     evaluate_pages = subparsers.add_parser(
         "evaluate-pages",
@@ -389,6 +434,14 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv: Sequence[str] | None = None) -> int:
     """Run a CLI command and return a process exit code."""
     args = build_parser().parse_args(argv)
+    environment = _EnvironmentSettings()
+    serpapi = _SerpAPIOptions(
+        api_key=environment.serpapi_api_key,
+        engine=args.serpapi_engine,
+        language=args.serpapi_language,
+        country=args.serpapi_country,
+        timeout_seconds=args.serpapi_timeout,
+    )
 
     try:
         if args.command == "review-status":
@@ -413,6 +466,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 args.snapshot_input,
                 args.searxng_url,
                 args.searxng_engines,
+                serpapi,
                 args.empty_result_retries,
                 args.search_delay,
             )
@@ -447,6 +501,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 args.claim,
                 args.searxng_url,
                 args.searxng_engines,
+                serpapi,
                 args.ollama_url,
                 args.ollama_model,
                 args.ollama_timeout,
@@ -469,6 +524,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 args.retrieval_candidates,
                 args.searxng_url,
                 args.searxng_engines,
+                serpapi,
                 args.ollama_url,
                 args.ollama_model,
                 args.ollama_timeout,
@@ -497,6 +553,7 @@ def _investigate(
     claim: str,
     searxng_url: str | None,
     searxng_engines: str | None,
+    serpapi: _SerpAPIOptions,
     ollama_url: str,
     ollama_model: str | None,
     ollama_timeout: float,
@@ -505,10 +562,16 @@ def _investigate(
     openai_timeout: float,
     allowed_pdf_hosts: tuple[str, ...],
 ) -> int:
-    if searxng_url:
-        search_provider = _searxng_provider(searxng_url, searxng_engines)
+    if searxng_url or serpapi.enabled:
+        search_provider = _configured_search_provider(
+            searxng_url,
+            searxng_engines,
+            serpapi,
+        )
         content_fetcher = _safe_fetcher(allowed_pdf_hosts)
-        retrieval_message = "Retrieval: real SearXNG search and safe public-page fetching."
+        retrieval_message = (
+            f"Retrieval: {search_provider.provider_id} search and safe public-page fetching."
+        )
     else:
         search_provider = DeterministicSearchProvider()
         content_fetcher = None
@@ -570,6 +633,7 @@ def _evaluate(
     retrieval_candidates_path: Path | None,
     searxng_url: str | None,
     searxng_engines: str | None,
+    serpapi: _SerpAPIOptions,
     ollama_url: str,
     ollama_model: str | None,
     ollama_timeout: float,
@@ -587,12 +651,13 @@ def _evaluate(
             benchmark_evidence,
             retrieval_candidates_path is not None,
             searxng_url is not None,
+            serpapi.enabled,
         )
     )
     if selected_retrieval_modes > 1:
         raise ValueError(
-            "--benchmark-evidence, --retrieval-candidates, and --searxng-url "
-            "are mutually exclusive"
+            "--benchmark-evidence, --retrieval-candidates, --searxng-url, and "
+            "--serpapi-engine are mutually exclusive"
         )
 
     search_provider = None
@@ -613,6 +678,10 @@ def _evaluate(
         search_provider = _searxng_provider(searxng_url, searxng_engines)
         content_fetcher = _safe_fetcher(allowed_pdf_hosts)
         retrieval_mode = "real_retrieval"
+    elif serpapi.enabled:
+        search_provider = _serpapi_provider(serpapi)
+        content_fetcher = _safe_fetcher(allowed_pdf_hosts)
+        retrieval_mode = "serpapi_retrieval"
     else:
         search_provider = DeterministicSearchProvider()
         content_fetcher = None
@@ -647,9 +716,7 @@ def _evaluate(
                 None,
             )
             if retrieval_case is None:
-                raise RuntimeError(
-                    f"retrieval candidates are missing case {case.case_id}"
-                )
+                raise RuntimeError(f"retrieval candidates are missing case {case.case_id}")
             case_search_provider = RetrievalCandidateSearchProvider(
                 retrieval_case,
                 retrieval_candidates.provider_id,
@@ -715,14 +782,17 @@ def _evaluate_retrieval(
     snapshot_input: Path | None,
     searxng_url: str | None,
     searxng_engines: str | None,
+    serpapi: _SerpAPIOptions,
     empty_result_retries: int,
     search_delay: float,
 ) -> int:
     if snapshot_output is not None and snapshot_input is not None:
         raise ValueError("--snapshot-output cannot be combined with --snapshot-input")
-    if snapshot_input is None and not searxng_url:
+    if searxng_url and serpapi.enabled:
+        raise ValueError("--searxng-url and --serpapi-engine are mutually exclusive")
+    if snapshot_input is None and not searxng_url and not serpapi.enabled:
         raise ValueError(
-            "retrieval evaluation requires --searxng-url or SEARXNG_BASE_URL"
+            "retrieval evaluation requires --searxng-url, --serpapi-engine, or a snapshot input"
         )
     dataset = load_benchmark(dataset_path)
     if dataset.dataset_id == "initial_claims":
@@ -731,16 +801,17 @@ def _evaluate_retrieval(
     recording_provider = None
     if snapshot_input is not None:
         snapshot = load_retrieval_snapshot(snapshot_input)
-        if (
-            snapshot.dataset_id != dataset.dataset_id
-            or snapshot.dataset_version != dataset.version
-        ):
+        if snapshot.dataset_id != dataset.dataset_id or snapshot.dataset_version != dataset.version:
             raise ValueError(
                 "retrieval snapshot dataset identity/version does not match the benchmark"
             )
         provider = SnapshotReplaySearchProvider(snapshot)
     else:
-        live_provider = _searxng_provider(str(searxng_url), searxng_engines)
+        live_provider = _configured_search_provider(
+            searxng_url,
+            searxng_engines,
+            serpapi,
+        )
         if snapshot_output is not None:
             recording_provider = RecordingSearchProvider(live_provider)
             provider = recording_provider
@@ -755,9 +826,7 @@ def _evaluate_retrieval(
             top_k=top_k,
             lexical_threshold=lexical_threshold,
             query_strategy=query_strategy,
-            empty_result_retries=(
-                0 if snapshot_input is not None else empty_result_retries
-            ),
+            empty_result_retries=(0 if snapshot_input is not None else empty_result_retries),
             retry_delay_seconds=0.0 if snapshot_input is not None else search_delay,
         )
     )
@@ -860,9 +929,7 @@ def _evaluate_pages(
 
 
 def _safe_fetcher(allowed_pdf_hosts: tuple[str, ...]) -> SafeHttpFetcher:
-    return SafeHttpFetcher(
-        policy=UrlSafetyPolicy(allowed_pdf_hosts=frozenset(allowed_pdf_hosts))
-    )
+    return SafeHttpFetcher(policy=UrlSafetyPolicy(allowed_pdf_hosts=frozenset(allowed_pdf_hosts)))
 
 
 def _searxng_provider(
@@ -870,11 +937,37 @@ def _searxng_provider(
     configured_engines: str | None,
 ) -> SearXNGSearchProvider:
     engines = tuple(
-        value.strip()
-        for value in (configured_engines or "").split(",")
-        if value.strip()
+        value.strip() for value in (configured_engines or "").split(",") if value.strip()
     )
     return SearXNGSearchProvider(base_url, engines=engines)
+
+
+def _serpapi_provider(options: _SerpAPIOptions) -> SerpAPISearchProvider:
+    if options.api_key is None:
+        raise ValueError("--serpapi-engine requires SERPAPI_API_KEY")
+    if options.engine is None:
+        raise ValueError("SerpAPI engine is not configured")
+    return SerpAPISearchProvider(
+        api_key=options.api_key.get_secret_value(),
+        engine=options.engine,
+        language=options.language,
+        country=options.country,
+        timeout_seconds=options.timeout_seconds,
+    )
+
+
+def _configured_search_provider(
+    searxng_url: str | None,
+    searxng_engines: str | None,
+    serpapi: _SerpAPIOptions,
+) -> SearXNGSearchProvider | SerpAPISearchProvider:
+    if searxng_url and serpapi.enabled:
+        raise ValueError("--searxng-url and --serpapi-engine are mutually exclusive")
+    if searxng_url:
+        return _searxng_provider(searxng_url, searxng_engines)
+    if serpapi.enabled:
+        return _serpapi_provider(serpapi)
+    raise ValueError("a live search provider is not configured")
 
 
 def _evaluate_semantic_passages(
@@ -890,9 +983,7 @@ def _evaluate_semantic_passages(
     openai_timeout: float,
 ) -> int:
     if not openai_model and not ollama_model:
-        raise ValueError(
-            "semantic passage evaluation requires --openai-model or --ollama-model"
-        )
+        raise ValueError("semantic passage evaluation requires --openai-model or --ollama-model")
     dataset = load_benchmark(dataset_path)
     if dataset.dataset_id == "initial_claims":
         validate_initial_benchmark(dataset)

@@ -94,9 +94,7 @@ def load_report(
         sources=sources,
         evidence=evidence,
         independence_analysis=independence[-1] if independence else None,
-        context_verification=(
-            context_verification[-1] if context_verification else None
-        ),
+        context_verification=(context_verification[-1] if context_verification else None),
         verdict=verdicts[-1],
         audits=audits,
     )
@@ -223,8 +221,7 @@ def render_markdown(
                 f"- **Claim values:** {_joined(verification.numerical.claim_values)}",
                 f"- **Numerical issues:** {_joined(verification.numerical.issues)}",
                 f"- **Temporal check:** {verification.temporal.status.value}",
-                f"- **Reference date:** "
-                f"{verification.temporal.reference_date or 'not specified'}",
+                f"- **Reference date:** {verification.temporal.reference_date or 'not specified'}",
                 f"- **Temporal issues:** {_joined(verification.temporal.issues)}",
                 "",
             ]
