@@ -902,17 +902,24 @@ The roadmap is organized by capability and exit criterion. Calendar estimates wi
 
 A validated set of domain contracts, architecture decisions, baseline claims, and a stored baseline result.
 
-### Current execution status — 27 July 2026
+### Current execution status — 28 July 2026
 
 The lightweight foundation, provider/retrieval interfaces, and five-claim
 single-agent vertical slice described in roadmap Phases 1–3 have been
 implemented and evaluated together as the first delivery milestone. That
 milestone is formally closed in `docs/PHASE_1_COMPLETION_REPORT.md`.
 
-The active execution phase is benchmark expansion and live-retrieval
-hardening, defined in `docs/PHASE_2_EXECUTION_PLAN.md`. This delivery naming
-does not renumber the long-term architecture roadmap below; it packages the
-next evidence-driven work without prematurely adding target infrastructure.
+Delivery Phases 1 through 6 are complete. The latest delivery phase implemented
+the long-term roadmap's verification, argument, and judgment capability,
+defined in `docs/PHASE_6_EXECUTION_PLAN.md` and closed in
+`docs/PHASE_6_COMPLETION_REPORT.md`.
+
+The deterministic judgment policy was not promoted because its frozen
+20-claim evaluation regressed verdict quality. Numerical and temporal
+verification, the typed argument ledger, challenger findings, readiness, and
+an observational policy trace remain integrated, while the existing
+evidence-grounded verdict remains authoritative. Delivery-phase naming does
+not renumber the long-term architecture roadmap below.
 
 ### Phase 1 — Lightweight execution foundation
 

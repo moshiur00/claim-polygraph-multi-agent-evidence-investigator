@@ -46,6 +46,7 @@ _FAST_TASKS = frozenset(
         ModelTask.NORMALIZE_CLAIM,
         ModelTask.CLASSIFY_EVIDENCE,
         ModelTask.REVIEW_CRITIQUE,
+        ModelTask.CLASSIFY_PROVENANCE_RELATIONSHIP,
     }
 )
 _NON_REASONING_MODEL_PREFIXES = ("gpt-4o", "gpt-4.1")

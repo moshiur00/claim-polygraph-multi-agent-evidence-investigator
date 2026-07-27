@@ -37,12 +37,12 @@ def test_supported_and_contradicted_components_produce_mixed_parent() -> None:
     )
 
 
-def test_misleading_component_constrains_parent_to_misleading() -> None:
+def test_misleading_and_contradicted_components_produce_mixed_parent() -> None:
     assert (
         aggregate_component_label(
             [_verdict(VerdictLabel.MISLEADING), _verdict(VerdictLabel.CONTRADICTED)]
         )
-        is VerdictLabel.MISLEADING
+        is VerdictLabel.MIXED
     )
 
 

@@ -1,0 +1,130 @@
+{
+  "dataset_id": "phase5_provenance_fixtures",
+  "version": 1,
+  "status": "reviewed",
+  "annotated_by": "Md Moshiur Rahman",
+  "approved_by": "Md Rashedul Islam",
+  "approval_date": "2026-07-27",
+  "cases": [
+    {
+      "case_id": "PROV-001",
+      "scenario": "tracking_url_variant",
+      "component_claim": "River sensors recorded 42 units.",
+      "sources": [
+        {"source_id":"SRC-001","url":"https://example.test/report?id=42&utm_source=news","title":"River report","publisher":"Example Lab","published_at":"2026-01-01","excerpt":"The north river sensor recorded 42 units during the January measurement window.","rights_basis":"synthetic_project_authored"},
+        {"source_id":"SRC-002","url":"https://example.test/report?id=42","title":"River report","publisher":"Example Lab","published_at":"2026-01-01","excerpt":"The north river sensor recorded 42 units during the January measurement window.","rights_basis":"synthetic_project_authored"}
+      ],
+      "expected_relationships":[{"left_source_id":"SRC-001","right_source_id":"SRC-002","relationship":"same_document","same_canonical_document":true,"same_evidence_family":true,"rationale":"Only a tracking parameter differs."}]
+    },
+    {
+      "case_id": "PROV-002",
+      "scenario": "print_view",
+      "component_claim": "The council adopted the rule.",
+      "sources": [
+        {"source_id":"SRC-003","url":"https://city.test/news/rule","title":"Council rule","publisher":"City","published_at":"2026-02-01","excerpt":"The city council adopted the water rule at its public meeting on Monday.","rights_basis":"synthetic_project_authored"},
+        {"source_id":"SRC-004","url":"https://city.test/news/rule?output=print","title":"Council rule - print","publisher":"City","published_at":"2026-02-01","excerpt":"The city council adopted the water rule at its public meeting on Monday.","rights_basis":"synthetic_project_authored"}
+      ],
+      "expected_relationships":[{"left_source_id":"SRC-003","right_source_id":"SRC-004","relationship":"same_document","same_canonical_document":true,"same_evidence_family":true,"rationale":"The second URL is a print representation."}]
+    },
+    {
+      "case_id": "PROV-003",
+      "scenario": "mirror",
+      "component_claim": "The observatory detected three events.",
+      "sources": [
+        {"source_id":"SRC-005","url":"https://observatory.test/bulletin","title":"Event bulletin","publisher":"Observatory","published_at":"2026-03-01","excerpt":"Instruments detected three events between midnight and six in the morning.","rights_basis":"synthetic_project_authored"},
+        {"source_id":"SRC-006","url":"https://archive.test/observatory/bulletin","title":"Archived event bulletin","publisher":"Archive","published_at":"2026-03-01","excerpt":"Instruments detected three events between midnight and six in the morning.","rights_basis":"synthetic_project_authored"}
+      ],
+      "expected_relationships":[{"left_source_id":"SRC-005","right_source_id":"SRC-006","relationship":"mirror","same_canonical_document":true,"same_evidence_family":true,"rationale":"An archive mirrors the same bulletin."}]
+    },
+    {
+      "case_id": "PROV-004",
+      "scenario": "syndicated_copy",
+      "component_claim": "A factory will open in June.",
+      "sources": [
+        {"source_id":"SRC-007","url":"https://wire.test/factory","title":"Factory opening","publisher":"Example Wire","published_at":"2026-03-02","excerpt":"The company said its northern factory will open in June and employ 300 people.","rights_basis":"synthetic_project_authored"},
+        {"source_id":"SRC-008","url":"https://daily.test/business/factory","title":"Factory opening","publisher":"Daily News","published_at":"2026-03-02","excerpt":"The company said its northern factory will open in June and employ 300 people.","rights_basis":"synthetic_project_authored"}
+      ],
+      "expected_relationships":[{"left_source_id":"SRC-007","right_source_id":"SRC-008","relationship":"syndicated_copy","same_canonical_document":false,"same_evidence_family":true,"rationale":"A separate publisher republishes the wire text verbatim."}]
+    },
+    {
+      "case_id": "PROV-005",
+      "scenario": "summary_of_primary",
+      "component_claim": "The trial enrolled 240 participants.",
+      "sources": [
+        {"source_id":"SRC-009","url":"https://journal.test/trial","title":"Trial report","publisher":"Example Journal","published_at":"2026-04-01","excerpt":"We enrolled 240 participants and randomly assigned them to two equal groups.","rights_basis":"synthetic_project_authored"},
+        {"source_id":"SRC-010","url":"https://science-news.test/trial","title":"Trial summarized","publisher":"Science News","published_at":"2026-04-02","excerpt":"A newly published trial reports that researchers enrolled 240 participants in two groups.","rights_basis":"synthetic_project_authored"}
+      ],
+      "expected_relationships":[{"left_source_id":"SRC-010","right_source_id":"SRC-009","relationship":"summary_of","same_canonical_document":false,"same_evidence_family":true,"rationale":"The news item summarizes the named trial."}]
+    },
+    {
+      "case_id": "PROV-006",
+      "scenario": "common_press_release_origin",
+      "component_claim": "The company plans 50 charging stations.",
+      "sources": [
+        {"source_id":"SRC-011","url":"https://east.test/charging","title":"Charging plan","publisher":"East News","published_at":"2026-04-03","excerpt":"The company plans 50 charging stations, according to its Tuesday announcement.","rights_basis":"synthetic_project_authored"},
+        {"source_id":"SRC-012","url":"https://west.test/charging","title":"Company charging plan","publisher":"West News","published_at":"2026-04-03","excerpt":"A Tuesday company announcement says that 50 charging stations are planned.","rights_basis":"synthetic_project_authored"}
+      ],
+      "expected_relationships":[{"left_source_id":"SRC-011","right_source_id":"SRC-012","relationship":"common_origin","same_canonical_document":false,"same_evidence_family":true,"rationale":"Both reports attribute the assertion to one company announcement."}]
+    },
+    {
+      "case_id": "PROV-007",
+      "scenario": "independent_measurements",
+      "component_claim": "Rainfall exceeded 80 millimetres.",
+      "sources": [
+        {"source_id":"SRC-013","url":"https://north-lab.test/rain","title":"Northern gauge","publisher":"North Lab","published_at":"2026-05-01","excerpt":"Our calibrated northern gauge measured 84 millimetres of rainfall in the period.","rights_basis":"synthetic_project_authored"},
+        {"source_id":"SRC-014","url":"https://south-lab.test/rain","title":"Southern gauge","publisher":"South Lab","published_at":"2026-05-01","excerpt":"Our separate southern station measured 82 millimetres during the same period.","rights_basis":"synthetic_project_authored"}
+      ],
+      "expected_relationships":[{"left_source_id":"SRC-013","right_source_id":"SRC-014","relationship":"independent","same_canonical_document":false,"same_evidence_family":false,"rationale":"Separate organizations report independent instruments and measurements."}]
+    },
+    {
+      "case_id": "PROV-008",
+      "scenario": "shared_dataset_independent_analysis",
+      "component_claim": "The public dataset shows a downward trend.",
+      "sources": [
+        {"source_id":"SRC-015","url":"https://alpha.test/analysis","title":"Trend analysis A","publisher":"Alpha Institute","published_at":"2026-05-03","excerpt":"Using the public Series Z dataset, our regression finds a modest downward trend.","rights_basis":"synthetic_project_authored"},
+        {"source_id":"SRC-016","url":"https://beta.test/analysis","title":"Trend analysis B","publisher":"Beta Institute","published_at":"2026-05-04","excerpt":"Our independently written model of public Series Z also estimates a downward trend.","rights_basis":"synthetic_project_authored"}
+      ],
+      "expected_relationships":[{"left_source_id":"SRC-015","right_source_id":"SRC-016","relationship":"common_origin","same_canonical_document":false,"same_evidence_family":false,"rationale":"They share raw data but perform independent analyses; family separation is intentional."}]
+    },
+    {
+      "case_id": "PROV-009",
+      "scenario": "explicit_citation",
+      "component_claim": "The standard requires a ten-minute test.",
+      "sources": [
+        {"source_id":"SRC-017","url":"https://standards.test/s7","title":"Standard S7","publisher":"Standards Board","published_at":"2026-06-01","excerpt":"Section seven requires the device test to continue for ten uninterrupted minutes.","rights_basis":"synthetic_project_authored"},
+        {"source_id":"SRC-018","url":"https://guide.test/device","title":"Device guide","publisher":"Example Guide","published_at":"2026-06-05","excerpt":"The test lasts ten minutes, as required by section seven of Standard S7.","rights_basis":"synthetic_project_authored"}
+      ],
+      "expected_relationships":[{"left_source_id":"SRC-018","right_source_id":"SRC-017","relationship":"cites","same_canonical_document":false,"same_evidence_family":true,"rationale":"The guide explicitly cites the controlling standard."}]
+    },
+    {
+      "case_id": "PROV-010",
+      "scenario": "translation",
+      "component_claim": "The museum opens at nine.",
+      "sources": [
+        {"source_id":"SRC-019","url":"https://museum.test/de/hours","title":"Öffnungszeiten","publisher":"Museum","published_at":"2026-06-10","excerpt":"Das Museum öffnet täglich um neun Uhr und schließt um siebzehn Uhr.","rights_basis":"synthetic_project_authored"},
+        {"source_id":"SRC-020","url":"https://museum.test/en/hours","title":"Opening hours","publisher":"Museum","published_at":"2026-06-10","excerpt":"The museum opens every day at nine and closes at seventeen hundred hours.","rights_basis":"synthetic_project_authored"}
+      ],
+      "expected_relationships":[{"left_source_id":"SRC-019","right_source_id":"SRC-020","relationship":"translation","same_canonical_document":true,"same_evidence_family":true,"rationale":"Official language variants convey the same document."}]
+    },
+    {
+      "case_id": "PROV-011",
+      "scenario": "similar_topic_independent",
+      "component_claim": "The crop disease affected local farms.",
+      "sources": [
+        {"source_id":"SRC-021","url":"https://university.test/crop","title":"Crop survey","publisher":"University","published_at":"2026-07-01","excerpt":"Field sampling confirmed the crop disease on six farms in the eastern district.","rights_basis":"synthetic_project_authored"},
+        {"source_id":"SRC-022","url":"https://farmers.test/crop","title":"Grower survey","publisher":"Farmers Union","published_at":"2026-07-02","excerpt":"Our member survey separately recorded disease symptoms on eight local farms.","rights_basis":"synthetic_project_authored"}
+      ],
+      "expected_relationships":[{"left_source_id":"SRC-021","right_source_id":"SRC-022","relationship":"independent","same_canonical_document":false,"same_evidence_family":false,"rationale":"Topical similarity does not establish dependence."}]
+    },
+    {
+      "case_id": "PROV-012",
+      "scenario": "ambiguous_paraphrase",
+      "component_claim": "The bridge inspection found surface cracks.",
+      "sources": [
+        {"source_id":"SRC-023","url":"https://engineering.test/bridge","title":"Bridge notes","publisher":"Engineering Group","published_at":"2026-07-03","excerpt":"Inspectors observed several shallow surface cracks but reported no structural failure.","rights_basis":"synthetic_project_authored"},
+        {"source_id":"SRC-024","url":"https://local.test/bridge","title":"Bridge inspected","publisher":"Local Report","published_at":"2026-07-03","excerpt":"A local bridge examination reportedly found minor cracking without structural damage.","rights_basis":"synthetic_project_authored"}
+      ],
+      "expected_relationships":[{"left_source_id":"SRC-023","right_source_id":"SRC-024","relationship":"unresolved","same_canonical_document":false,"same_evidence_family":true,"rationale":"The wording suggests derivation, but attribution is insufficient; conservative shared-family labeling prevents false independence."}]
+    }
+  ]
+}

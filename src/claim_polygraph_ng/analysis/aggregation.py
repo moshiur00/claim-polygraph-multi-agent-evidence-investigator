@@ -18,7 +18,7 @@ def aggregate_component_label(component_verdicts: Sequence[Verdict]) -> VerdictL
     if labels <= _POSITIVE:
         return VerdictLabel.MOSTLY_SUPPORTED
     if VerdictLabel.MISLEADING in labels:
-        if len(component_verdicts) >= 3 and VerdictLabel.CONTRADICTED in labels:
+        if VerdictLabel.CONTRADICTED in labels:
             return VerdictLabel.MIXED
         return VerdictLabel.MISLEADING
     if VerdictLabel.CONTRADICTED in labels and labels & _POSITIVE:

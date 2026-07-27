@@ -35,6 +35,7 @@ from claim_polygraph_ng.evaluation import (
     load_benchmark,
     load_complex_evaluation,
     load_page_fetch_evaluation,
+    load_phase4_manifest,
     load_retrieval_evaluation,
     load_retrieval_snapshot,
     load_semantic_passage_evaluation,
@@ -46,6 +47,7 @@ from claim_polygraph_ng.evaluation import (
     run_retrieval_evaluation,
     run_semantic_passage_evaluation,
     validate_initial_benchmark,
+    verify_phase4_manifest,
 )
 from claim_polygraph_ng.persistence import SQLiteInvestigationRepository
 from claim_polygraph_ng.providers import (
@@ -340,6 +342,17 @@ def build_parser() -> argparse.ArgumentParser:
         type=Path,
         default=DEFAULT_PHASE3_GATE_OUTPUT,
     )
+    verify_phase4 = subparsers.add_parser(
+        "verify-phase4-manifest",
+        help="Verify the frozen Phase 4 baseline without network or model calls.",
+    )
+    verify_phase4.add_argument("--manifest", type=Path, required=True)
+    verify_phase4.add_argument(
+        "--project-root",
+        type=Path,
+        default=Path("."),
+        help="Root used to resolve manifest artifact paths (default: current directory).",
+    )
     evaluate_retrieval = subparsers.add_parser(
         "evaluate-retrieval",
         help="Measure claim-only SearXNG candidates against reviewed evidence.",
@@ -569,6 +582,8 @@ def main(argv: Sequence[str] | None = None) -> int:
                 args.second_run,
                 args.output,
             )
+        if args.command == "verify-phase4-manifest":
+            return _verify_phase4_manifest(args.manifest, args.project_root)
         if args.command == "evaluate-retrieval":
             return _evaluate_retrieval(
                 args.dataset,
@@ -1279,6 +1294,18 @@ def _audit_phase3(
     print(f"Release ready: {'yes' if audit.release_ready else 'no'}")
     print(f"Audit: {exported}")
     return 0 if audit.release_ready else 1
+
+
+def _verify_phase4_manifest(manifest_path: Path, project_root: Path) -> int:
+    manifest = load_phase4_manifest(manifest_path)
+    result = verify_phase4_manifest(manifest, project_root)
+    print(f"Manifest: {result.manifest_id}")
+    print(f"Artifacts checked: {result.checked_artifact_count}")
+    if result.errors:
+        for error in result.errors:
+            print(f"FAILED  {error}")
+    print(f"Valid: {'yes' if result.valid else 'no'}")
+    return 0 if result.valid else 1
 
 
 def _evaluate_pages(

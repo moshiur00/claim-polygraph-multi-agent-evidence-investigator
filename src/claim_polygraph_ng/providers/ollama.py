@@ -72,6 +72,12 @@ _TASK_INSTRUCTIONS = {
         "classification fields; the application owns all identifiers and passage provenance. "
         "Universal terms such as 'always', 'every', and 'exactly' are material to the claim."
     ),
+    ModelTask.CLASSIFY_PROVENANCE_RELATIONSHIP: (
+        "Compare only the two supplied stored passages and metadata. Decide whether they likely "
+        "derive from one underlying report or were independently produced. Similar subject "
+        "matter alone is insufficient. Identify evidence for dependency and independence, "
+        "preserve uncertainty, do not browse, and do not invent sources or citations."
+    ),
     ModelTask.JUDGE_EVIDENCE: (
         "Judge only the supplied evidence packet. Do not add facts or browse. Use only "
         "evidence IDs present in the packet, disclose unresolved questions, and leave "
@@ -494,6 +500,7 @@ def _validate_task_invariants(
         ModelTask.REVIEW_ANNOTATION,
         ModelTask.REVIEW_CRITIQUE,
         ModelTask.EVALUATE_PASSAGE,
+        ModelTask.CLASSIFY_PROVENANCE_RELATIONSHIP,
     }:
         return
     if task is ModelTask.NORMALIZE_CLAIM:
