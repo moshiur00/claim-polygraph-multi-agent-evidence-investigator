@@ -6,6 +6,7 @@ from pathlib import Path
 from uuid import UUID
 
 from claim_polygraph_ng.domain import (
+    ArgumentLedger,
     ArtifactType,
     AtomicClaim,
     ClaimCoverage,
@@ -16,13 +17,18 @@ from claim_polygraph_ng.domain import (
     Evidence,
     EvidenceStance,
     IndependenceAnalysis,
+    InvestigationProvenance,
     InvestigationReport,
     InvestigationStatus,
+    JudgmentPolicyTrace,
+    JudgmentReadiness,
+    MultiAgentInvestigationReport,
     SentenceAudit,
     Source,
     TraceEvent,
     TraceEventType,
     Verdict,
+    VerificationPacketV2,
 )
 from claim_polygraph_ng.domain.models import InvestigationPlan
 from claim_polygraph_ng.persistence import InvestigationRepository
@@ -68,6 +74,23 @@ def load_report(
         ArtifactType.INDEPENDENCE,
         IndependenceAnalysis,
     )
+    provenance = repository.list_artifacts(
+        investigation_id,
+        ArtifactType.PROVENANCE,
+        InvestigationProvenance,
+    )
+    verification_packets = repository.list_artifacts(
+        investigation_id, ArtifactType.VERIFICATION_PACKET, VerificationPacketV2
+    )
+    argument_ledgers = repository.list_artifacts(
+        investigation_id, ArtifactType.ARGUMENT_LEDGER, ArgumentLedger
+    )
+    judgment_policies = repository.list_artifacts(
+        investigation_id, ArtifactType.JUDGMENT_POLICY, JudgmentPolicyTrace
+    )
+    readiness_artifacts = repository.list_artifacts(
+        investigation_id, ArtifactType.READINESS, JudgmentReadiness
+    )
     context_verification = repository.list_artifacts(
         investigation_id,
         ArtifactType.CONTEXT_VERIFICATION,
@@ -98,6 +121,11 @@ def load_report(
         sources=sources,
         evidence=evidence,
         independence_analysis=independence[-1] if independence else None,
+        provenance=provenance[-1] if provenance else None,
+        verification_packet=verification_packets[-1] if verification_packets else None,
+        argument_ledger=argument_ledgers[-1] if argument_ledgers else None,
+        judgment_policy=judgment_policies[-1] if judgment_policies else None,
+        readiness=readiness_artifacts[-1] if readiness_artifacts else None,
         context_verification=(context_verification[-1] if context_verification else None),
         verdict=verdicts[-1],
         audits=audits,
@@ -269,6 +297,51 @@ def render_complex_markdown(report: ComplexInvestigationReport) -> str:
     return "\n".join(lines)
 
 
+def render_multi_agent_markdown(report: MultiAgentInvestigationReport) -> str:
+    """Render role activation, shared evidence, sufficiency, and stopping state."""
+    lines = [
+        "# Claim Polygraph NG Multi-Agent Investigation",
+        "",
+        f"- **ID:** `{report.investigation_id}`",
+        f"- **Claim:** {_inline(report.claim.text)}",
+        f"- **Roles activated:** {_joined(item.role.value for item in report.assignments)}",
+        f"- **Role results:** {len(report.results)}",
+        f"- **Consolidated sources:** {len(report.consolidation.sources)}",
+        f"- **Consolidated evidence:** {len(report.consolidation.evidence)}",
+        f"- **Independent families:** {report.consolidation.independence.independent_family_count}",
+        f"- **Sources removed as duplicates:** {report.consolidation.removed_source_count}",
+        f"- **Evidence removed as duplicates:** {report.consolidation.removed_evidence_count}",
+        f"- **Stopping decision:** {report.assessment.decision.value}",
+        f"- **Verdict:** {report.verdict.label.value}",
+        f"- **Citation support:** {report.audit.support_level.value}",
+        "",
+        "## Role trace",
+        "",
+    ]
+    for result in report.results:
+        lines.append(
+            f"- **{result.role.value}:** searches {result.search_call_count}; "
+            f"fetches {result.fetch_call_count}; evidence {len(result.evidence_ids)}; "
+            f"cost ${result.estimated_cost_usd:.6f}; "
+            f"status {'failed: ' + result.failure_reason if result.failure_reason else 'completed'}"
+        )
+    lines.extend(
+        [
+            "",
+            "## Sufficiency",
+            "",
+            _inline(report.assessment.rationale),
+            "",
+            "## Grounding",
+            "",
+            f"- **Stored verdict evidence IDs:** {_joined(report.verdict.decisive_evidence_ids)}",
+            f"- **Audited evidence IDs:** {_joined(report.audit.cited_evidence_ids)}",
+            "",
+        ]
+    )
+    return "\n".join(lines)
+
+
 def render_markdown(
     report: InvestigationReport,
     events: tuple[TraceEvent, ...],
@@ -341,6 +414,40 @@ def render_markdown(
             )
         lines.append("")
 
+    if report.provenance is not None:
+        provenance = report.provenance
+        lines.extend(
+            [
+                "## Provenance inspection",
+                "",
+                f"- **Confirmed independent lower bound:** "
+                f"{provenance.confirmed_independent_lower_bound}",
+                f"- **Possible independent upper bound:** "
+                f"{provenance.possible_independent_upper_bound}",
+                f"- **Required families:** {provenance.required_independent_families}",
+                f"- **Requirement state:** {provenance.requirement_state.value}",
+                f"- **Unresolved source relationships:** "
+                f"{provenance.unresolved_dependency_count}",
+                f"- **Inferred families:** {len(provenance.families)}",
+                "",
+            ]
+        )
+        for family in provenance.families:
+            reasons = _joined(family.grouping_reasons) if family.grouping_reasons else "none"
+            lines.append(
+                f"- **{family.family_id}:** {len(family.source_ids)} source(s); "
+                f"grouping signals: {reasons}"
+            )
+        lines.extend(
+            [
+                "",
+                "These bounds preserve unresolved dependency instead of treating it as "
+                "confirmed independence. Source-quality observations are available in "
+                "the JSON report and are not an aggregate trust score.",
+                "",
+            ]
+        )
+
     if report.context_verification is not None:
         verification = report.context_verification
         lines.extend(
@@ -353,6 +460,71 @@ def render_markdown(
                 f"- **Temporal check:** {verification.temporal.status.value}",
                 f"- **Reference date:** {verification.temporal.reference_date or 'not specified'}",
                 f"- **Temporal issues:** {_joined(verification.temporal.issues)}",
+                "",
+            ]
+        )
+
+    if report.verification_packet is not None:
+        packet = report.verification_packet
+        lines.extend(
+            [
+                "## Assertion-level verification",
+                "",
+                f"- **Numerical assertions:** {len(packet.numerical_assertions)}",
+                f"- **Temporal assertions:** {len(packet.temporal_assertions)}",
+                f"- **Version:** {packet.verification_version}",
+                "",
+            ]
+        )
+
+    if report.argument_ledger is not None:
+        ledger = report.argument_ledger
+        lines.extend(
+            [
+                "## Argument ledger",
+                "",
+                f"- **Material propositions:** "
+                f"{sum(item.material for item in ledger.propositions)}",
+                f"- **Challenger findings:** {len(ledger.challenge_findings)}",
+                "",
+            ]
+        )
+        for argument in ledger.arguments:
+            lines.append(
+                f"- **Proposition `{argument.proposition_id}`:** "
+                f"{argument.resolution.value}"
+            )
+        lines.append("")
+
+    if report.judgment_policy is not None:
+        policy = report.judgment_policy
+        lines.extend(
+            [
+                "## Judgment policy",
+                "",
+                f"- **Proposed label:** {policy.proposed_label.value}",
+                f"- **Policy candidate label:** {policy.enforced_label.value}",
+                f"- **Changed:** {'yes' if policy.changed else 'no'}",
+                f"- **Applied to verdict:** {'yes' if policy.applied else 'no'}",
+                f"- **Reason codes:** {_joined(item.value for item in policy.reason_codes)}",
+                "",
+            ]
+        )
+
+    if report.readiness is not None:
+        readiness = report.readiness
+        lines.extend(
+            [
+                "## Judgment readiness",
+                "",
+                f"- **State:** {readiness.state.value}",
+                f"- **Material coverage:** {readiness.material_coverage:.2%}",
+                f"- **Verification completeness:** "
+                f"{readiness.verification_completeness:.2%}",
+                f"- **Citation audit complete:** "
+                f"{'yes' if readiness.citation_audit_complete else 'no'}",
+                f"- **Reason codes:** "
+                f"{_joined(item.value for item in readiness.reason_codes)}",
                 "",
             ]
         )

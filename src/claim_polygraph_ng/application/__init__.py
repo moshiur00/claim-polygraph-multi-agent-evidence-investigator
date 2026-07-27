@@ -9,11 +9,27 @@ from claim_polygraph_ng.application.investigation_service import (
     DocumentRetrievalError,
     InvestigationService,
 )
+from claim_polygraph_ng.application.multi_agent_service import (
+    DeterministicResearchWorker,
+    MultiAgentInvestigationService,
+    StructuredResearchWorker,
+)
+from claim_polygraph_ng.application.research_executor import (
+    ResearchExecutor,
+    ResearchWorker,
+    SharedResearchOperations,
+)
 
 __all__ = [
     "BudgetExceededError",
     "ComplexInvestigationService",
     "ComplexWorkflowInterrupted",
+    "DeterministicResearchWorker",
     "DocumentRetrievalError",
     "InvestigationService",
+    "MultiAgentInvestigationService",
+    "ResearchExecutor",
+    "ResearchWorker",
+    "SharedResearchOperations",
+    "StructuredResearchWorker",
 ]

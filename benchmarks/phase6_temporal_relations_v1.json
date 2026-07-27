@@ -1,0 +1,27 @@
+{
+  "dataset_id":"phase6_temporal_relations",
+  "version":1,
+  "rights_basis":"synthetic_project_authored",
+  "cases":[
+    {"case_id":"TMP-001","description":"The event occurred before 2021.","relation":"before","reference_date":"2021-01-01","facts":[{"start":"2020-01-01","end":"2020-12-31"}],"expected_state":"verified"},
+    {"case_id":"TMP-002","description":"The event occurred after 2021.","relation":"after","reference_date":"2021-01-01","facts":[{"start":"2022-01-01","end":"2022-12-31"}],"expected_state":"verified"},
+    {"case_id":"TMP-003","description":"The event occurred during 2020.","relation":"during","claimed_start":"2020-01-01","claimed_end":"2020-12-31","facts":[{"start":"2020-03-01","end":"2020-04-01"}],"expected_state":"verified"},
+    {"case_id":"TMP-004","description":"The event did not occur during 2020.","relation":"during","claimed_start":"2020-01-01","claimed_end":"2020-12-31","facts":[{"start":"2021-03-01","end":"2021-04-01"}],"expected_state":"contradicted"},
+    {"case_id":"TMP-005","description":"The status started on 2020-03-01.","relation":"started","reference_date":"2020-03-01","facts":[{"start":"2020-03-01","end":"2021-01-01"}],"expected_state":"verified"},
+    {"case_id":"TMP-006","description":"The status ended on 2023-05-05.","relation":"ended","reference_date":"2023-05-05","facts":[{"start":"2020-01-01","end":"2023-05-05"}],"expected_state":"verified"},
+    {"case_id":"TMP-007","description":"The designation was active on the reference date.","relation":"active","reference_date":"2023-01-01","facts":[{"start":"2020-01-01","end":"2025-12-31","status":"active"}],"expected_state":"verified"},
+    {"case_id":"TMP-008","description":"The designation was active, but evidence says inactive.","relation":"active","reference_date":"2023-01-01","facts":[{"start":"2020-01-01","end":"2025-12-31","status":"inactive"}],"expected_state":"contradicted"},
+    {"case_id":"TMP-009","description":"The status changed on 2023-05-05.","relation":"changed_status","reference_date":"2023-05-05","facts":[{"start":"2023-05-05","end":"2023-05-05","status":"changed"}],"expected_state":"verified"},
+    {"case_id":"TMP-010","description":"Year-only start precision cannot establish a June day.","relation":"started","reference_date":"2020-06-01","facts":[{"start":"2020-01-01","precision":"year"}],"expected_state":"qualified"},
+    {"case_id":"TMP-011","description":"A later retrospective source verifies earlier status.","relation":"active","reference_date":"2020-06-01","facts":[{"start":"2020-01-01","end":"2020-12-31","publication_date":"2021-01-01","status":"active","retrospective":true}],"expected_state":"verified"},
+    {"case_id":"TMP-012","description":"An unmarked postdated source qualifies earlier status.","relation":"active","reference_date":"2020-06-01","facts":[{"start":"2020-01-01","end":"2020-12-31","publication_date":"2021-01-01","status":"active"}],"expected_state":"qualified"},
+    {"case_id":"TMP-013","description":"Conflicting status evidence remains qualified.","relation":"active","reference_date":"2023-01-01","facts":[{"start":"2020-01-01","end":"2025-12-31","status":"active"},{"start":"2020-01-01","end":"2025-12-31","status":"inactive"}],"expected_state":"qualified"},
+    {"case_id":"TMP-014","description":"Current status without a reference date is insufficient.","relation":"active","requires_reference_date":true,"facts":[{"start":"2020-01-01","end":"2025-12-31","status":"active"}],"expected_state":"insufficient"},
+    {"case_id":"TMP-015","description":"Publication date alone is not an effective event date.","relation":"before","reference_date":"2021-01-01","facts":[{"publication_date":"2020-01-01"}],"expected_state":"insufficient"},
+    {"case_id":"TMP-016","description":"No temporal fact is insufficient.","relation":"on","reference_date":"2021-01-01","facts":[],"expected_state":"insufficient"},
+    {"case_id":"TMP-017","description":"A month-precision start overlaps but does not prove one day.","relation":"started","reference_date":"2020-03-15","facts":[{"start":"2020-03-01","precision":"month"}],"expected_state":"qualified"},
+    {"case_id":"TMP-018","description":"An event on another day contradicts the claim date.","relation":"on","reference_date":"2020-03-15","facts":[{"start":"2020-03-16","end":"2020-03-16"}],"expected_state":"contradicted"},
+    {"case_id":"TMP-019","description":"An interval containing the claimed day verifies on.","relation":"on","reference_date":"2020-03-15","facts":[{"start":"2020-03-01","end":"2020-03-31"}],"expected_state":"verified"},
+    {"case_id":"TMP-020","description":"An active fact outside the reference date is inapplicable.","relation":"active","reference_date":"2023-01-01","facts":[{"start":"2020-01-01","end":"2020-12-31","status":"active"}],"expected_state":"insufficient"}
+  ]
+}

@@ -9,7 +9,17 @@ from uuid import UUID
 
 from pydantic import JsonValue
 
-from claim_polygraph_ng.analysis import analyze_source_independence, verify_claim_context
+from claim_polygraph_ng.analysis import (
+    analyze_source_independence,
+    build_argument_ledger,
+    calculate_judgment_readiness,
+    enforce_judgment_policy,
+    verify_claim_context,
+)
+from claim_polygraph_ng.analysis.investigation_provenance import (
+    build_investigation_provenance,
+)
+from claim_polygraph_ng.analysis.verification_bridge import bridge_legacy_verification
 from claim_polygraph_ng.config import RuntimePolicy
 from claim_polygraph_ng.domain import (
     ArtifactType,
@@ -311,6 +321,17 @@ class InvestigationService:
                 stage=InvestigationStage.RESEARCH,
             )
             sources, evidence_items, independence = await self._research(investigation, claim, plan)
+            provenance = build_investigation_provenance(
+                plan=plan,
+                sources=sources,
+                evidence=evidence_items,
+            )
+            self._save_artifact(
+                investigation,
+                ArtifactType.PROVENANCE,
+                claim.claim_id,
+                provenance,
+            )
             context_verification = verify_claim_context(
                 claim=claim,
                 plan=plan,
@@ -322,6 +343,30 @@ class InvestigationService:
                 ArtifactType.CONTEXT_VERIFICATION,
                 claim.claim_id,
                 context_verification,
+            )
+            verification_packet = bridge_legacy_verification(
+                claim=claim,
+                legacy=context_verification,
+                sources=sources,
+                evidence=evidence_items,
+            )
+            self._save_artifact(
+                investigation,
+                ArtifactType.VERIFICATION_PACKET,
+                claim.claim_id,
+                verification_packet,
+            )
+            argument_ledger = build_argument_ledger(
+                claim=claim,
+                evidence=evidence_items,
+                verification=verification_packet,
+                provenance=provenance,
+            )
+            self._save_artifact(
+                investigation,
+                ArtifactType.ARGUMENT_LEDGER,
+                claim.claim_id,
+                argument_ledger,
             )
 
             investigation = self._transition(
@@ -349,6 +394,16 @@ class InvestigationService:
                 temporal_status=context_verification.temporal.status.value,
             )
             verdict = _enforce_evidence_label_consistency(verdict, evidence_items)
+            _policy_candidate, judgment_policy = enforce_judgment_policy(
+                verdict, argument_ledger
+            )
+            judgment_policy = judgment_policy.model_copy(update={"applied": False})
+            self._save_artifact(
+                investigation,
+                ArtifactType.JUDGMENT_POLICY,
+                verdict.verdict_id,
+                judgment_policy,
+            )
             investigation = self._transition(
                 investigation,
                 stage=InvestigationStage.CITATION_AUDIT,
@@ -403,6 +458,19 @@ class InvestigationService:
                 audit.sentence_id,
                 audit,
             )
+            readiness = calculate_judgment_readiness(
+                ledger=argument_ledger,
+                verification=verification_packet,
+                provenance=provenance,
+                audits=(audit,),
+                unresolved_question_count=len(verdict.unresolved_questions),
+            )
+            self._save_artifact(
+                investigation,
+                ArtifactType.READINESS,
+                claim.claim_id,
+                readiness,
+            )
 
             investigation = self._transition(
                 investigation,
@@ -427,6 +495,11 @@ class InvestigationService:
                 sources=sources,
                 evidence=evidence_items,
                 independence_analysis=independence,
+                provenance=provenance,
+                verification_packet=verification_packet,
+                argument_ledger=argument_ledger,
+                judgment_policy=judgment_policy,
+                readiness=readiness,
                 context_verification=context_verification,
                 verdict=verdict,
                 audits=(audit,),

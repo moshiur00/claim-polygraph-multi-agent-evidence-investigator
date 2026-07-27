@@ -1,0 +1,67 @@
+{
+  "dataset_id": "phase5_source_quality_calibration",
+  "version": 1,
+  "status": "reviewed",
+  "drafted_by": "OpenAI Codex",
+  "annotated_by": "Md Moshiur Rahman",
+  "approved_by": "Md Rashedul Islam",
+  "approval_date": "2026-07-28",
+  "cases": [
+    {
+      "case_id": "QUAL-001",
+      "description": "Sparse official metadata with no claim-specific verification.",
+      "metadata": {"source_type":"official","publisher_identified":true,"author_identified":false},
+      "expected_findings": {"authority":"unknown","directness":"unknown","methodological_transparency":"unknown","editorial_accountability":"unknown","citation_transparency":"unknown","temporal_relevance":"unknown","domain_relevance":"unknown","conflict_of_interest":"unknown"},
+      "rationale": "The official label and identified publisher do not establish any claim-specific quality dimension."
+    },
+    {
+      "case_id": "QUAL-002",
+      "description": "Fully documented relevant academic primary study.",
+      "metadata": {"source_type":"academic","publisher_identified":true,"author_identified":true,"domain_relevance_confirmed":true,"institutional_authority_confirmed":true,"primary_for_assertion":true,"methodology_disclosed":true,"citations_disclosed":true,"editorial_policy_disclosed":true,"correction_policy_disclosed":true,"interested_party":false,"temporally_compatible":true},
+      "expected_findings": {"authority":"favorable","directness":"favorable","methodological_transparency":"favorable","editorial_accountability":"favorable","citation_transparency":"favorable","temporal_relevance":"favorable","domain_relevance":"favorable","conflict_of_interest":"unknown"},
+      "rationale": "All favorable findings except conflict are supported explicitly; absence of a known conflict is not proof of no conflict."
+    },
+    {
+      "case_id": "QUAL-003",
+      "description": "Interested organization is primary for its own announcement.",
+      "metadata": {"source_type":"organization","publisher_identified":true,"author_identified":false,"primary_for_assertion":true,"interested_party":true},
+      "expected_findings": {"authority":"unknown","directness":"favorable","methodological_transparency":"unknown","editorial_accountability":"unknown","citation_transparency":"unknown","temporal_relevance":"unknown","domain_relevance":"unknown","conflict_of_interest":"unfavorable"},
+      "rationale": "Directness and conflict are separate: the organization is primary but interested."
+    },
+    {
+      "case_id": "QUAL-004",
+      "description": "Secondary source with explicitly absent method, citations, and accountability.",
+      "metadata": {"source_type":"other","publisher_identified":false,"author_identified":false,"institutional_authority_confirmed":false,"primary_for_assertion":false,"methodology_disclosed":false,"citations_disclosed":false,"editorial_policy_disclosed":false,"correction_policy_disclosed":false,"domain_relevance_confirmed":false,"temporally_compatible":false},
+      "expected_findings": {"authority":"unfavorable","directness":"unfavorable","methodological_transparency":"unfavorable","editorial_accountability":"unfavorable","citation_transparency":"unfavorable","temporal_relevance":"unfavorable","domain_relevance":"unfavorable","conflict_of_interest":"unknown"},
+      "rationale": "Each unfavorable label follows an explicit negative observation; conflict remains unknown."
+    },
+    {
+      "case_id": "QUAL-005",
+      "description": "News source discloses a potential conflict and only partial accountability metadata.",
+      "metadata": {"source_type":"news","publisher_identified":true,"author_identified":true,"editorial_policy_disclosed":true,"correction_policy_disclosed":null,"conflict_disclosed":true},
+      "expected_findings": {"authority":"unknown","directness":"unknown","methodological_transparency":"unknown","editorial_accountability":"unknown","citation_transparency":"unknown","temporal_relevance":"unknown","domain_relevance":"unknown","conflict_of_interest":"mixed"},
+      "rationale": "Partial accountability stays unknown; a disclosed potential conflict is mixed rather than automatically disqualifying."
+    },
+    {
+      "case_id": "QUAL-006",
+      "description": "Accountable secondary fact-check with disclosed citations.",
+      "metadata": {"source_type":"fact_check","publisher_identified":true,"author_identified":true,"primary_for_assertion":false,"citations_disclosed":true,"editorial_policy_disclosed":true,"correction_policy_disclosed":true},
+      "expected_findings": {"authority":"unknown","directness":"unfavorable","methodological_transparency":"unknown","editorial_accountability":"favorable","citation_transparency":"favorable","temporal_relevance":"unknown","domain_relevance":"unknown","conflict_of_interest":"unknown"},
+      "rationale": "Editorial accountability and citations are favorable, while the source remains secondary."
+    },
+    {
+      "case_id": "QUAL-007",
+      "description": "Relevant dataset with disclosed method but unresolved authority and timing.",
+      "metadata": {"source_type":"dataset","publisher_identified":true,"author_identified":false,"domain_relevance_confirmed":true,"primary_for_assertion":true,"methodology_disclosed":true,"citations_disclosed":false},
+      "expected_findings": {"authority":"unknown","directness":"favorable","methodological_transparency":"favorable","editorial_accountability":"unknown","citation_transparency":"unfavorable","temporal_relevance":"unknown","domain_relevance":"favorable","conflict_of_interest":"unknown"},
+      "rationale": "The dataset is direct and relevant with a method, but missing references and unverified authority remain explicit."
+    },
+    {
+      "case_id": "QUAL-008",
+      "description": "Controlling regulation is authoritative and timely but has no applicable empirical method.",
+      "metadata": {"source_type":"law_or_regulation","publisher_identified":true,"author_identified":false,"domain_relevance_confirmed":true,"institutional_authority_confirmed":true,"primary_for_assertion":true,"methodology_disclosed":null,"citations_disclosed":true,"temporally_compatible":true},
+      "expected_findings": {"authority":"favorable","directness":"favorable","methodological_transparency":"unknown","editorial_accountability":"unknown","citation_transparency":"favorable","temporal_relevance":"favorable","domain_relevance":"favorable","conflict_of_interest":"unknown"},
+      "rationale": "Authority is claim-specific; empirical methodology is not inferred where metadata does not establish applicability."
+    }
+  ]
+}

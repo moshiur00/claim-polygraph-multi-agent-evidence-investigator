@@ -6,8 +6,10 @@ from uuid import UUID, uuid4
 
 from pydantic import AnyHttpUrl, Field, JsonValue, model_validator
 
+from claim_polygraph_ng.domain.argument import ArgumentLedger
 from claim_polygraph_ng.domain.base import DomainModel
 from claim_polygraph_ng.domain.enums import ResearchPath, SourceType
+from claim_polygraph_ng.domain.judgment import JudgmentPolicyTrace
 from claim_polygraph_ng.domain.models import (
     AtomicClaim,
     Evidence,
@@ -16,8 +18,9 @@ from claim_polygraph_ng.domain.models import (
     Source,
     Verdict,
 )
-from claim_polygraph_ng.domain.provenance import IndependenceAnalysis
-from claim_polygraph_ng.domain.verification import ContextVerification
+from claim_polygraph_ng.domain.provenance import IndependenceAnalysis, InvestigationProvenance
+from claim_polygraph_ng.domain.readiness import JudgmentReadiness
+from claim_polygraph_ng.domain.verification import ContextVerification, VerificationPacketV2
 
 
 def utc_now() -> datetime:
@@ -83,6 +86,11 @@ class ArtifactType(StrEnum):
     CHUNK = "chunk"
     EVIDENCE = "evidence"
     INDEPENDENCE = "independence"
+    PROVENANCE = "provenance"
+    VERIFICATION_PACKET = "verification_packet"
+    ARGUMENT_LEDGER = "argument_ledger"
+    JUDGMENT_POLICY = "judgment_policy"
+    READINESS = "readiness"
     CONTEXT_VERIFICATION = "context_verification"
     VERDICT = "verdict"
     AUDIT = "audit"
@@ -103,6 +111,7 @@ class ModelTask(StrEnum):
     REVIEW_ANNOTATION = "review_annotation"
     REVIEW_CRITIQUE = "review_critique"
     EVALUATE_PASSAGE = "evaluate_passage"
+    CLASSIFY_PROVENANCE_RELATIONSHIP = "classify_provenance_relationship"
 
 
 class ModelCallUsage(DomainModel):
@@ -256,6 +265,11 @@ class InvestigationReport(DomainModel):
     sources: tuple[Source, ...]
     evidence: tuple[Evidence, ...]
     independence_analysis: IndependenceAnalysis | None = None
+    provenance: InvestigationProvenance | None = None
+    verification_packet: VerificationPacketV2 | None = None
+    argument_ledger: ArgumentLedger | None = None
+    judgment_policy: JudgmentPolicyTrace | None = None
+    readiness: JudgmentReadiness | None = None
     context_verification: ContextVerification | None = None
     verdict: Verdict
     audits: tuple[SentenceAudit, ...]

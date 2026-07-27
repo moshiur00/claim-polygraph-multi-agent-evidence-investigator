@@ -1,0 +1,84 @@
+{
+  "claim_id": "10000000-0000-0000-0000-000000000001",
+  "verification_version": "verification-packet-v2",
+  "approved_evidence_ids": [
+    "20000000-0000-0000-0000-000000000001",
+    "20000000-0000-0000-0000-000000000002"
+  ],
+  "numerical_assertions": [
+    {
+      "assertion_id": "30000000-0000-0000-0000-000000000001",
+      "claim_id": "10000000-0000-0000-0000-000000000001",
+      "claim_text_span": "increased by 10 percent",
+      "comparator": "equal",
+      "operation": "percentage_change",
+      "expected_values": [
+        {
+          "value": "10.0",
+          "unit": "percent",
+          "dimension": "percentage",
+          "scale": "1",
+          "tolerance": null
+        }
+      ],
+      "evidence_ids": [
+        "20000000-0000-0000-0000-000000000001"
+      ],
+      "state": "verified",
+      "normalized_result": {
+        "value": "10.0",
+        "unit": "percent",
+        "dimension": "percentage",
+        "scale": "1",
+        "tolerance": null
+      },
+      "expression": "(110 - 100) / 100 * 100",
+      "rounding_rule": null,
+      "issues": [],
+      "limitations": []
+    }
+  ],
+  "temporal_assertions": [
+    {
+      "assertion_id": "30000000-0000-0000-0000-000000000002",
+      "claim_id": "10000000-0000-0000-0000-000000000001",
+      "claim_text_span": "remained active during 2025",
+      "relation": "active",
+      "reference_date": {
+        "value": "2025-12-31",
+        "precision": "day"
+      },
+      "claimed_interval": {
+        "start": {
+          "value": "2025-01-01",
+          "precision": "year"
+        },
+        "end": {
+          "value": "2025-12-31",
+          "precision": "year"
+        },
+        "start_inclusive": true,
+        "end_inclusive": true
+      },
+      "requires_reference_date": true,
+      "observations": [
+        {
+          "evidence_id": "20000000-0000-0000-0000-000000000002",
+          "publication_date": {
+            "value": "2026-01-10",
+            "precision": "day"
+          },
+          "effective_interval": null,
+          "observed_status": "The designation remained active throughout 2025.",
+          "retrospective": true
+        }
+      ],
+      "state": "verified",
+      "issues": [],
+      "limitations": []
+    }
+  ],
+  "limitations": [
+    "This example demonstrates contracts only; Stage 6.1 does not execute calculations."
+  ]
+}
