@@ -8,7 +8,13 @@ from uuid import uuid4
 import httpx
 import pytest
 
-from claim_polygraph_ng.domain import AtomicClaim, ClaimType, InvestigationPlan, ModelTask
+from claim_polygraph_ng.domain import (
+    AtomicClaim,
+    ClaimDecomposition,
+    ClaimType,
+    InvestigationPlan,
+    ModelTask,
+)
 from claim_polygraph_ng.evaluation import SemanticPassageJudgment
 from claim_polygraph_ng.providers import (
     ModelOutputError,
@@ -24,7 +30,10 @@ def test_openai_sends_strict_responses_request_and_validates_output() -> None:
         claim_type=ClaimType.SCIENTIFIC,
         checkworthiness=0.8,
     )
-    semantics = artifact.model_dump(exclude={"claim_id", "parent_claim_id"}, mode="json")
+    semantics = artifact.model_dump(
+        exclude={"claim_id", "parent_claim_id", "retained_context"},
+        mode="json",
+    )
 
     async def handler(request: httpx.Request) -> httpx.Response:
         assert request.url == "https://api.openai.com/v1/responses"
@@ -74,6 +83,76 @@ def test_openai_sends_strict_responses_request_and_validates_output() -> None:
     assert schema["additionalProperties"] is False
     assert set(schema["required"]) == set(schema["properties"])
     assert "claim_id" not in schema["properties"]
+
+
+def test_openai_decomposition_preserves_application_owned_parent_identity() -> None:
+    root = AtomicClaim(
+        text="The programme cut costs and increased output.",
+        checkworthiness=0.9,
+    )
+
+    async def handler(request: httpx.Request) -> httpx.Response:
+        payload = json.loads(request.content)
+        schema = payload["text"]["format"]["schema"]
+        component_schema = schema["$defs"]["_ComponentClaimSemantics"]
+        assert "claim_id" not in component_schema["properties"]
+        assert "parent_claim_id" not in component_schema["properties"]
+        content = {
+            "requires_decomposition": True,
+            "components": [
+                {
+                    "text": "The programme cut costs.",
+                    "claim_type": "factual",
+                    "entities": ["programme"],
+                    "quantities": [],
+                    "reference_date": None,
+                    "geography": None,
+                    "ambiguities": [],
+                    "retained_context": ["The programme is the submitted programme."],
+                    "checkworthiness": 0.9,
+                },
+                {
+                    "text": "The programme increased output.",
+                    "claim_type": "factual",
+                    "entities": ["programme"],
+                    "quantities": [],
+                    "reference_date": None,
+                    "geography": None,
+                    "ambiguities": [],
+                    "retained_context": ["The programme is the submitted programme."],
+                    "checkworthiness": 0.9,
+                },
+            ],
+            "rationale": "The sentence contains two independently checkable outcomes.",
+        }
+        return httpx.Response(
+            200,
+            json={
+                "status": "completed",
+                "output": [
+                    {
+                        "type": "message",
+                        "content": [{"type": "output_text", "text": json.dumps(content)}],
+                    }
+                ],
+            },
+        )
+
+    provider = OpenAIStructuredModelProvider(
+        api_key="test-secret",
+        model="gpt-test",
+        transport=httpx.MockTransport(handler),
+    )
+    result = asyncio.run(
+        provider.generate(
+            task=ModelTask.DECOMPOSE_CLAIM,
+            response_model=ClaimDecomposition,
+            inputs={"root_claim": root.model_dump(mode="json")},
+        )
+    )
+
+    assert result.root_claim == root
+    assert all(component.parent_claim_id == root.claim_id for component in result.components)
 
 
 def test_openai_normalizes_auth_error_without_exposing_key() -> None:

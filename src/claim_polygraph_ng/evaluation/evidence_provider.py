@@ -1,5 +1,7 @@
 """Case-scoped search provider backed by reviewed benchmark evidence."""
 
+import re
+
 from claim_polygraph_ng.domain import EvidenceStance, ResearchPath, SearchRequest, SearchResult
 from claim_polygraph_ng.domain.enums import SourceType
 from claim_polygraph_ng.evaluation.models import BenchmarkCase, BenchmarkEvidenceAnnotation
@@ -15,9 +17,35 @@ _PRIMARY_TYPES = {
 class BenchmarkEvidenceSearchProvider:
     """Serve each curated evidence annotation once through the search protocol."""
 
-    def __init__(self, case: BenchmarkCase) -> None:
-        self.provider_id = f"benchmark-evidence:{case.case_id}"
-        self._remaining = list(case.candidate_evidence)
+    def __init__(
+        self,
+        case: BenchmarkCase,
+        *,
+        component_number: int | None = None,
+    ) -> None:
+        suffix = f":component-{component_number}" if component_number is not None else ""
+        self.provider_id = f"benchmark-evidence:{case.case_id}{suffix}"
+        self._remaining = [
+            annotation
+            for annotation in case.candidate_evidence
+            if component_number is None or component_number in annotation.material_component_numbers
+        ]
+
+    @classmethod
+    def for_component(
+        cls,
+        case: BenchmarkCase,
+        component_text: str,
+    ) -> "BenchmarkEvidenceSearchProvider":
+        """Create an independent evidence pool for the closest expected component."""
+        if not case.expected_components:
+            return cls(case)
+        component_tokens = _tokens(component_text)
+        scores = [
+            _jaccard(component_tokens, _tokens(expected)) for expected in case.expected_components
+        ]
+        component_number = max(range(len(scores)), key=scores.__getitem__) + 1
+        return cls(case, component_number=component_number)
 
     async def search(self, request: SearchRequest) -> tuple[SearchResult, ...]:
         """Return the best unserved annotation for the requested research path."""
@@ -69,3 +97,12 @@ class BenchmarkEvidenceSearchProvider:
         ):
             return 0
         return 1
+
+
+def _tokens(value: str) -> set[str]:
+    return set(re.findall(r"[a-z0-9]+", value.casefold()))
+
+
+def _jaccard(left: set[str], right: set[str]) -> float:
+    union = left | right
+    return len(left & right) / len(union) if union else 0.0

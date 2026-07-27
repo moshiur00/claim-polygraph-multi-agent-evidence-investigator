@@ -3,6 +3,7 @@
 from claim_polygraph_ng.domain.enums import (
     AuditIssue,
     ClaimType,
+    ComponentStatus,
     ContentRetention,
     EvidenceStance,
     ExtractionStatus,
@@ -14,6 +15,11 @@ from claim_polygraph_ng.domain.enums import (
 )
 from claim_polygraph_ng.domain.investigation import (
     ArtifactType,
+    ComplexCheckpointStage,
+    ComplexInvestigationReport,
+    ComplexWorkflowCheckpoint,
+    ComponentExecution,
+    ComponentFailure,
     Investigation,
     InvestigationReport,
     InvestigationStage,
@@ -27,6 +33,9 @@ from claim_polygraph_ng.domain.investigation import (
 )
 from claim_polygraph_ng.domain.models import (
     AtomicClaim,
+    ClaimCoverage,
+    ClaimDecomposition,
+    ComponentOutcome,
     Evidence,
     InvestigationPlan,
     SentenceAudit,
@@ -46,7 +55,16 @@ __all__ = [
     "ArtifactType",
     "AtomicClaim",
     "AuditIssue",
+    "ClaimCoverage",
+    "ClaimDecomposition",
     "ClaimType",
+    "ComplexCheckpointStage",
+    "ComplexInvestigationReport",
+    "ComplexWorkflowCheckpoint",
+    "ComponentExecution",
+    "ComponentFailure",
+    "ComponentOutcome",
+    "ComponentStatus",
     "ContentRetention",
     "ContextVerification",
     "Evidence",

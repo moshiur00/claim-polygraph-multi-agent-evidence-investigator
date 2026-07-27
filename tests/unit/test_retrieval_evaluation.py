@@ -347,3 +347,59 @@ def test_expansion_queries_follow_claim_shape_without_reviewed_evidence() -> Non
     assert "exceptions variability qualification" in provider.queries[8]
     assert "current status dated statement" in provider.queries[10]
     assert "ended superseded timeline" in provider.queries[11]
+
+
+def test_component_queries_report_completion_candidates_and_reviewed_recovery() -> None:
+    source = load_benchmark(BENCHMARK)
+    case = source.cases[10]
+    dataset = source.model_copy(update={"cases": (case,)})
+    reviewed = case.candidate_evidence[0]
+
+    class ComponentSearchProvider:
+        provider_id = "component-search"
+
+        async def search(self, request):
+            if request.query == case.expected_components[0]:
+                return (
+                    SearchResult(
+                        url=reviewed.source_url,
+                        title=reviewed.source_title,
+                        snippet=reviewed.excerpt,
+                        source_type=reviewed.source_type,
+                    ),
+                )
+            if request.query == case.expected_components[1]:
+                return (
+                    SearchResult(
+                        url="https://unrelated.example/energy",
+                        title="Unrelated energy result",
+                        snippet="A candidate that does not recover reviewed evidence.",
+                        source_type=SourceType.OTHER,
+                    ),
+                )
+            if request.query == case.expected_components[2]:
+                raise RuntimeError("component search failed")
+            return ()
+
+    summary = asyncio.run(
+        run_retrieval_evaluation(
+            dataset,
+            ComponentSearchProvider(),
+            top_k=10,
+            include_component_queries=True,
+        )
+    )
+
+    assert summary.component_query_enabled is True
+    assert summary.material_component_count == 3
+    assert summary.search_call_count == 4
+    assert summary.component_query_completion_rate == 0.666667
+    assert summary.component_candidate_rate == 0.666667
+    assert summary.component_reviewed_evidence_rate == 0.333333
+    assert summary.results[0].components[0].reviewed_evidence_found is True
+    assert summary.results[0].components[1].candidate_found is True
+    assert summary.results[0].components[1].reviewed_evidence_found is False
+    assert summary.results[0].components[2].query_completed is False
+    assert "RuntimeError: component search failed" in (
+        summary.results[0].components[2].error_message or ""
+    )

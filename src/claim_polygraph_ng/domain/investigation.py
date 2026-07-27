@@ -49,6 +49,17 @@ class InvestigationStage(StrEnum):
     FAILED = "failed"
 
 
+class ComplexCheckpointStage(StrEnum):
+    """Persisted progress through a complex-claim investigation."""
+
+    CREATED = "created"
+    DECOMPOSED = "decomposed"
+    COMPONENTS = "components"
+    AGGREGATED = "aggregated"
+    AUDITED = "audited"
+    COMPLETE = "complete"
+
+
 class TraceEventType(StrEnum):
     """Observable workflow events."""
 
@@ -75,12 +86,16 @@ class ArtifactType(StrEnum):
     CONTEXT_VERIFICATION = "context_verification"
     VERDICT = "verdict"
     AUDIT = "audit"
+    DECOMPOSITION = "decomposition"
+    COVERAGE = "coverage"
+    CHECKPOINT = "checkpoint"
 
 
 class ModelTask(StrEnum):
     """Logical structured-generation tasks."""
 
     NORMALIZE_CLAIM = "normalize_claim"
+    DECOMPOSE_CLAIM = "decompose_claim"
     PLAN_INVESTIGATION = "plan_investigation"
     CLASSIFY_EVIDENCE = "classify_evidence"
     JUDGE_EVIDENCE = "judge_evidence"
@@ -119,6 +134,8 @@ class Investigation(DomainModel):
     """Top-level investigation record."""
 
     investigation_id: UUID = Field(default_factory=uuid4)
+    parent_investigation_id: UUID | None = None
+    component_claim_id: UUID | None = None
     input_claim: str = Field(min_length=3, max_length=10_000)
     status: InvestigationStatus = InvestigationStatus.PENDING
     stage: InvestigationStage = InvestigationStage.CREATED
@@ -142,6 +159,52 @@ class Investigation(DomainModel):
             and self.stage is not InvestigationStage.COMPLETE
         ):
             raise ValueError("completed investigations must use the complete stage")
+        if self.parent_investigation_id is None and self.component_claim_id is not None:
+            raise ValueError("component_claim_id requires parent_investigation_id")
+        if self.parent_investigation_id == self.investigation_id:
+            raise ValueError("an investigation cannot be its own parent")
+        return self
+
+
+class ComponentExecution(DomainModel):
+    """Durable link from a material component to its child investigation."""
+
+    claim_id: UUID
+    investigation_id: UUID
+
+
+class ComponentFailure(DomainModel):
+    """Exhausted component failure retained in parent coverage."""
+
+    claim_id: UUID
+    investigation_id: UUID | None = None
+    reason: str = Field(min_length=1, max_length=5_000)
+
+
+class ComplexWorkflowCheckpoint(DomainModel):
+    """Idempotent resume state for a complex investigation."""
+
+    checkpoint_id: UUID
+    stage: ComplexCheckpointStage
+    decomposition_id: UUID | None = None
+    completed_components: tuple[ComponentExecution, ...] = ()
+    failed_components: tuple[ComponentFailure, ...] = ()
+
+    @model_validator(mode="after")
+    def validate_component_links(self) -> "ComplexWorkflowCheckpoint":
+        claim_ids = [item.claim_id for item in self.completed_components]
+        investigation_ids = [item.investigation_id for item in self.completed_components]
+        if len(claim_ids) != len(set(claim_ids)):
+            raise ValueError("checkpoint component claim IDs must be unique")
+        if len(investigation_ids) != len(set(investigation_ids)):
+            raise ValueError("checkpoint child investigation IDs must be unique")
+        failed_claim_ids = [item.claim_id for item in self.failed_components]
+        if len(failed_claim_ids) != len(set(failed_claim_ids)):
+            raise ValueError("checkpoint failed component claim IDs must be unique")
+        if set(claim_ids) & set(failed_claim_ids):
+            raise ValueError("a component cannot be both completed and failed")
+        if self.stage is not ComplexCheckpointStage.CREATED and self.decomposition_id is None:
+            raise ValueError("post-creation checkpoints require a decomposition ID")
         return self
 
 
@@ -196,3 +259,19 @@ class InvestigationReport(DomainModel):
     context_verification: ContextVerification | None = None
     verdict: Verdict
     audits: tuple[SentenceAudit, ...]
+
+
+class ComplexInvestigationReport(DomainModel):
+    """Audited parent result with every material child investigation."""
+
+    investigation: Investigation
+    decomposition: "ClaimDecomposition"
+    component_reports: tuple[InvestigationReport, ...]
+    coverage: "ClaimCoverage"
+    verdict: Verdict
+    audits: tuple[SentenceAudit, ...]
+
+
+from claim_polygraph_ng.domain.models import ClaimCoverage, ClaimDecomposition  # noqa: E402
+
+ComplexInvestigationReport.model_rebuild()

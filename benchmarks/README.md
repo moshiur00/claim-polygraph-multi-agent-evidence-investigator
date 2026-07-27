@@ -28,8 +28,10 @@ For each case:
    corroborating or contradictory evidence.
 4. Confirm or revise the proposed verdict and rationale.
 5. Have a second person review the evidence and conclusion.
-6. Copy the approved result to `expected_verdict`, record `reviewed_by` and
-   `reviewed_at`, and only then change `annotation_status` to `reviewed`.
+6. Copy the approved result to `expected_verdict`; record `annotated_by`,
+   `annotated_at`, `approved_by`, and `approved_at`; mirror the approver in the
+   compatibility fields `reviewed_by` and `reviewed_at`; and only then change
+   `annotation_status` to `reviewed`.
 
 Changing an existing reviewed claim, expected verdict, or evidence packet
 requires a dataset version increment. New experimental annotations should not
@@ -80,7 +82,8 @@ To promote a case after genuine human review:
 2. Resolve the AI passes and any recorded disagreement; do not accept the
    provisional verdict automatically.
 3. Add or correct evidence, `proposed_verdict`, and `proposed_rationale`.
-4. Set `expected_verdict`, `reviewed_by`, and `reviewed_at`.
+4. Set `expected_verdict`, the typed annotator and distinct-approver fields,
+   plus the compatibility `reviewed_by` and `reviewed_at` fields.
 5. Change `annotation_status` from `ai_reviewed` to `reviewed`.
 6. Increment the dataset version if the approved benchmark is being released.
 7. Run `claim-polygraph review-status` and `python -m pytest`.

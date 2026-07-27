@@ -9,6 +9,7 @@ from pydantic import JsonValue
 from claim_polygraph_ng.domain import (
     AtomicClaim,
     AuditIssue,
+    ClaimDecomposition,
     ClaimType,
     Evidence,
     EvidenceStance,
@@ -51,6 +52,8 @@ class DeterministicModelProvider:
     def _build(self, task: ModelTask, inputs: Mapping[str, JsonValue]) -> DomainModel:
         if task is ModelTask.NORMALIZE_CLAIM:
             return self._normalize_claim(inputs)
+        if task is ModelTask.DECOMPOSE_CLAIM:
+            return self._decompose(inputs)
         if task is ModelTask.PLAN_INVESTIGATION:
             return self._plan(inputs)
         if task is ModelTask.CLASSIFY_EVIDENCE:
@@ -84,6 +87,25 @@ class DeterministicModelProvider:
             maximum_research_rounds=1,
             maximum_search_calls=3,
             maximum_pages_fetched=9,
+        )
+
+    @staticmethod
+    def _decompose(inputs: Mapping[str, JsonValue]) -> ClaimDecomposition:
+        root = AtomicClaim.model_validate(inputs["root_claim"])
+        component = root.model_copy(
+            update={
+                "claim_id": UUID(int=root.claim_id.int ^ 1),
+                "parent_claim_id": root.claim_id,
+                "retained_context": (
+                    "The submitted claim is already atomic; all root context is retained.",
+                ),
+            }
+        )
+        return ClaimDecomposition(
+            root_claim=root,
+            requires_decomposition=False,
+            components=(component,),
+            rationale="The deterministic provider treats this submitted claim as atomic.",
         )
 
     @staticmethod

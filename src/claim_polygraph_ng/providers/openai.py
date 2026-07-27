@@ -30,8 +30,10 @@ from claim_polygraph_ng.providers.ollama import (
     ModelProviderError,
     ModelUnavailableError,
     _assemble_audit,
+    _assemble_decomposition,
     _assemble_evidence,
     _assemble_plan,
+    _ClaimDecompositionSemantics,
     _EvidenceSemantics,
     _InvestigationPlanSemantics,
     _SentenceAuditSemantics,
@@ -93,7 +95,7 @@ class _VerdictSemantics(DomainModel):
 class OpenAIStructuredModelProvider:
     """Generate validated artifacts through the hosted OpenAI Responses API."""
 
-    prompt_version = "openai-responses-structured-v10"
+    prompt_version = "openai-responses-structured-v13"
 
     def __init__(
         self,
@@ -152,6 +154,7 @@ class OpenAIStructuredModelProvider:
         """Call OpenAI, validate its JSON, and enforce task-specific invariants."""
         schema_models: dict[ModelTask, type[DomainModel]] = {
             ModelTask.NORMALIZE_CLAIM: _AtomicClaimSemantics,
+            ModelTask.DECOMPOSE_CLAIM: _ClaimDecompositionSemantics,
             ModelTask.PLAN_INVESTIGATION: _InvestigationPlanSemantics,
             ModelTask.CLASSIFY_EVIDENCE: _EvidenceSemantics,
             ModelTask.JUDGE_EVIDENCE: _VerdictSemantics,
@@ -245,16 +248,26 @@ class OpenAIStructuredModelProvider:
         if task is ModelTask.NORMALIZE_CLAIM:
             semantics = cast(_AtomicClaimSemantics, generated)
             artifact = AtomicClaim(**semantics.model_dump())
+        elif task is ModelTask.DECOMPOSE_CLAIM:
+            artifact = _assemble_decomposition(
+                cast(_ClaimDecompositionSemantics, generated),
+                inputs,
+            )
         elif task is ModelTask.PLAN_INVESTIGATION:
             artifact = _assemble_plan(cast(_InvestigationPlanSemantics, generated), inputs)
         elif task is ModelTask.CLASSIFY_EVIDENCE:
             artifact = _assemble_evidence(cast(_EvidenceSemantics, generated), inputs)
         elif task is ModelTask.JUDGE_EVIDENCE:
             semantics = cast(_VerdictSemantics, generated)
-            artifact = Verdict(
-                claim_id=UUID(str(inputs["claim_id"])),
-                **semantics.model_dump(),
-            )
+            try:
+                artifact = Verdict(
+                    claim_id=UUID(str(inputs["claim_id"])),
+                    **semantics.model_dump(),
+                )
+            except (KeyError, ValidationError, ValueError) as error:
+                raise ModelOutputError(
+                    f"OpenAI verdict failed protected validation: {error}"
+                ) from error
         elif task is ModelTask.AUDIT_SENTENCE:
             artifact = _assemble_audit(cast(_SentenceAuditSemantics, generated), inputs)
         else:

@@ -205,3 +205,12 @@ def export_semantic_passage_evaluation(
         encoding="utf-8",
     )
     return output
+
+
+def load_semantic_passage_evaluation(
+    path: str | Path,
+) -> SemanticPassageEvaluationSummary:
+    """Load and validate a semantic-passage evaluation artifact."""
+    return SemanticPassageEvaluationSummary.model_validate_json(
+        Path(path).read_text(encoding="utf-8")
+    )

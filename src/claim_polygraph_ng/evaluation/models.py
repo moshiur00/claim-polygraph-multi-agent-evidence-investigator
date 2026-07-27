@@ -71,6 +71,7 @@ class BenchmarkEvidenceAnnotation(DomainModel):
     publication_date: date | None = None
     accessed_at: date
     independence_note: str = Field(min_length=10, max_length=1_000)
+    material_component_numbers: tuple[int, ...] = ()
 
 
 class AIReviewAnnotation(DomainModel):
@@ -132,6 +133,12 @@ class BenchmarkCase(DomainModel):
     candidate_evidence: tuple[BenchmarkEvidenceAnnotation, ...] = ()
     expected_verdict: VerdictLabel | None = None
     annotation_notes: tuple[str, ...] = ()
+    expected_components: tuple[str, ...] = ()
+    annotated_by: str | None = Field(default=None, min_length=2, max_length=200)
+    annotated_at: date | None = None
+    approved_by: str | None = Field(default=None, min_length=2, max_length=200)
+    approved_at: date | None = None
+    # Retained for dataset compatibility. These mirror the final approver.
     reviewed_by: str | None = Field(default=None, min_length=2, max_length=200)
     reviewed_at: date | None = None
 
@@ -142,6 +149,22 @@ class BenchmarkCase(DomainModel):
         evidence_ids = [item.annotation_id for item in self.candidate_evidence]
         if len(evidence_ids) != len(set(evidence_ids)):
             raise ValueError("candidate evidence annotation_id values must be unique")
+        normalized_components = [
+            " ".join(component.casefold().split()) for component in self.expected_components
+        ]
+        if len(normalized_components) != len(set(normalized_components)):
+            raise ValueError("expected material components must be unique")
+        if len(self.expected_components) == 1:
+            raise ValueError("expected_components must be empty for atomic cases or contain 2+")
+        referenced_components = {
+            number
+            for annotation in self.candidate_evidence
+            for number in annotation.material_component_numbers
+        }
+        if any(
+            number < 1 or number > len(self.expected_components) for number in referenced_components
+        ):
+            raise ValueError("evidence references an unknown material component")
         if self.proposed_verdict is not None:
             if not self.proposed_rationale:
                 raise ValueError("proposed verdicts require a rationale")
@@ -152,14 +175,34 @@ class BenchmarkCase(DomainModel):
                 raise ValueError("reviewed cases require an expected verdict")
             if not self.candidate_evidence:
                 raise ValueError("reviewed cases require candidate evidence")
-            if not self.reviewed_by or self.reviewed_at is None:
-                raise ValueError("reviewed cases require reviewer identity and review date")
+            if not self.annotated_by or self.annotated_at is None:
+                raise ValueError("reviewed cases require annotator identity and annotation date")
+            if not self.approved_by or self.approved_at is None:
+                raise ValueError("reviewed cases require approver identity and approval date")
+            if self.annotated_by.casefold() == self.approved_by.casefold():
+                raise ValueError("reviewed cases require a distinct approver")
+            if self.reviewed_by != self.approved_by or self.reviewed_at != self.approved_at:
+                raise ValueError("legacy reviewer fields must mirror the distinct approver")
+            if self.expected_components and referenced_components != set(
+                range(1, len(self.expected_components) + 1)
+            ):
+                raise ValueError("reviewed complex cases require evidence for every component")
         if self.annotation_status is AnnotationStatus.AI_REVIEWED:
             if self.ai_review is None:
                 raise ValueError("AI-reviewed cases require explicit AI review provenance")
             if self.expected_verdict is not None:
                 raise ValueError("AI-reviewed cases cannot define a human expected verdict")
-            if self.reviewed_by is not None or self.reviewed_at is not None:
+            if any(
+                value is not None
+                for value in (
+                    self.annotated_by,
+                    self.annotated_at,
+                    self.approved_by,
+                    self.approved_at,
+                    self.reviewed_by,
+                    self.reviewed_at,
+                )
+            ):
                 raise ValueError("AI-reviewed cases cannot contain human review metadata")
         return self
 
@@ -243,6 +286,108 @@ class EvaluationSummary(DomainModel):
     limitations: tuple[str, ...]
 
 
+class ComplexEvaluationCaseResult(DomainModel):
+    """Observed decomposition, coverage, and parent-verdict result for one case."""
+
+    case_id: str
+    completed: bool
+    investigation_id: UUID | None = None
+    expected_component_count: int = Field(ge=2)
+    observed_component_count: int = Field(ge=0)
+    observed_components: tuple[str, ...] = ()
+    matched_expected_component_count: int = Field(ge=0)
+    component_recall: float = Field(ge=0.0, le=1.0)
+    parent_linkage_valid: bool = False
+    context_contract_valid: bool = False
+    material_coverage_rate: float = Field(ge=0.0, le=1.0)
+    verdict_label: VerdictLabel | None = None
+    expected_verdict: VerdictLabel | None = None
+    verdict_matches: bool | None = None
+    parent_full_audit_count: int = Field(ge=0)
+    parent_audit_count: int = Field(ge=0)
+    completed_component_count: int = Field(ge=0)
+    failed_or_unresolved_component_count: int = Field(ge=0)
+    duration_seconds: float = Field(ge=0.0)
+    metered_model_call_count: int = Field(default=0, ge=0)
+    priced_model_call_count: int = Field(default=0, ge=0)
+    input_tokens: int = Field(default=0, ge=0)
+    cached_input_tokens: int = Field(default=0, ge=0)
+    output_tokens: int = Field(default=0, ge=0)
+    estimated_model_cost_usd: float = Field(default=0.0, ge=0.0)
+    error_type: str | None = None
+    error_message: str | None = None
+
+
+class ComplexEvaluationSummary(DomainModel):
+    """Aggregate Phase 3 complex-claim evaluation metrics."""
+
+    dataset_id: str
+    dataset_version: int
+    provider_mode: str
+    started_at: datetime
+    duration_seconds: float = Field(ge=0.0)
+    case_count: int = Field(ge=1)
+    reviewed_case_count: int = Field(ge=0)
+    completed_case_count: int = Field(ge=0)
+    completion_rate: float = Field(ge=0.0, le=1.0)
+    mean_component_recall: float = Field(ge=0.0, le=1.0)
+    parent_linkage_valid_rate: float = Field(ge=0.0, le=1.0)
+    context_contract_valid_rate: float = Field(ge=0.0, le=1.0)
+    material_component_coverage_rate: float = Field(ge=0.0, le=1.0)
+    parent_citation_full_rate: float | None = Field(default=None, ge=0.0, le=1.0)
+    verdict_accuracy: float | None = Field(default=None, ge=0.0, le=1.0)
+    metered_model_call_count: int = Field(default=0, ge=0)
+    priced_model_call_count: int = Field(default=0, ge=0)
+    input_tokens: int = Field(default=0, ge=0)
+    cached_input_tokens: int = Field(default=0, ge=0)
+    output_tokens: int = Field(default=0, ge=0)
+    estimated_model_cost_usd: float = Field(default=0.0, ge=0.0)
+    mean_estimated_model_cost_per_completed_component_usd: float = Field(
+        default=0.0,
+        ge=0.0,
+    )
+    results: tuple[ComplexEvaluationCaseResult, ...]
+    limitations: tuple[str, ...]
+
+
+class ComplexStabilityCaseResult(DomainModel):
+    """Cross-run stability result for one complex benchmark case."""
+
+    case_id: str
+    first_completed: bool
+    second_completed: bool
+    completion_matches: bool
+    first_verdict: VerdictLabel | None = None
+    second_verdict: VerdictLabel | None = None
+    verdict_comparable: bool
+    exact_verdict_match: bool | None = None
+    exact_component_set_match: bool | None = None
+
+
+class ComplexStabilitySummary(DomainModel):
+    """Comparison of two declared complex evaluation runs."""
+
+    dataset_id: str
+    dataset_version: int
+    first_provider_mode: str
+    second_provider_mode: str
+    case_count: int = Field(ge=1)
+    verdict_comparison_count: int = Field(ge=0)
+    completion_stability_rate: float = Field(ge=0.0, le=1.0)
+    exact_verdict_stability_rate: float | None = Field(
+        default=None,
+        ge=0.0,
+        le=1.0,
+    )
+    exact_component_set_stability_rate: float | None = Field(
+        default=None,
+        ge=0.0,
+        le=1.0,
+    )
+    results: tuple[ComplexStabilityCaseResult, ...]
+    limitations: tuple[str, ...]
+
+
 class RetrievalReferenceResult(DomainModel):
     """Match outcomes for one reviewed evidence source."""
 
@@ -253,6 +398,23 @@ class RetrievalReferenceResult(DomainModel):
     reviewed_host_rank: int | None = Field(default=None, ge=1)
     lexical_rank: int | None = Field(default=None, ge=1)
     best_lexical_score: float = Field(ge=0.0, le=1.0)
+
+
+class RetrievalComponentResult(DomainModel):
+    """Direct-query candidate coverage for one expected material component."""
+
+    component_number: int = Field(ge=1)
+    component_text: str = Field(min_length=3, max_length=2_000)
+    query: str = Field(min_length=3, max_length=2_000)
+    query_completed: bool
+    candidate_count: int = Field(ge=0)
+    reference_count: int = Field(ge=0)
+    exact_url_hit_count: int = Field(ge=0)
+    reviewed_host_hit_count: int = Field(ge=0)
+    lexical_hit_count: int = Field(ge=0)
+    candidate_found: bool
+    reviewed_evidence_found: bool
+    error_message: str | None = None
 
 
 class RetrievalCandidate(DomainModel):
@@ -287,6 +449,7 @@ class RetrievalCaseResult(DomainModel):
     reciprocal_rank_reviewed_host: float = Field(ge=0.0, le=1.0)
     candidates: tuple[RetrievalCandidate, ...]
     references: tuple[RetrievalReferenceResult, ...]
+    components: tuple[RetrievalComponentResult, ...] = ()
     duration_seconds: float = Field(ge=0.0)
     error_type: str | None = None
     error_message: str | None = None
@@ -322,6 +485,19 @@ class RetrievalEvaluationSummary(DomainModel):
     mean_candidate_quality_score: float = Field(ge=0.0, le=1.0)
     low_quality_candidate_rate: float = Field(ge=0.0, le=1.0)
     unique_host_rate: float = Field(ge=0.0, le=1.0)
+    component_query_enabled: bool = False
+    material_component_count: int = Field(default=0, ge=0)
+    component_query_completion_rate: float | None = Field(
+        default=None,
+        ge=0.0,
+        le=1.0,
+    )
+    component_candidate_rate: float | None = Field(default=None, ge=0.0, le=1.0)
+    component_reviewed_evidence_rate: float | None = Field(
+        default=None,
+        ge=0.0,
+        le=1.0,
+    )
     results: tuple[RetrievalCaseResult, ...]
     limitations: tuple[str, ...]
 

@@ -18,6 +18,15 @@ class ClaimType(StrEnum):
     OTHER = "other"
 
 
+class ComponentStatus(StrEnum):
+    """Durable outcome for one material claim component."""
+
+    PLANNED = "planned"
+    COMPLETED = "completed"
+    UNRESOLVED = "unresolved"
+    FAILED = "failed"
+
+
 class ResearchPath(StrEnum):
     """Available evidence-research paths."""
 

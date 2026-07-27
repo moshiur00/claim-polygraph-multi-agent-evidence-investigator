@@ -1,8 +1,8 @@
 {
   "dataset_id": "initial_claims",
-  "version": 4,
+  "version": 5,
   "title": "Claim Polygraph NG Initial Twenty-Claim Evaluation Set",
-  "description": "A deliberately diverse regression set. Claims are test inputs, not endorsed facts. CPNG-001 through CPNG-010 contain citation-grounded labels approved by an annotator and a distinct human approver; remaining cases are drafts.",
+  "description": "A deliberately diverse regression set. Claims are test inputs, not endorsed facts. CPNG-001 through CPNG-020 contain citation-grounded labels checked by Md Moshiur Rahman and distinctly approved by Md Rashedul Islam.",
   "created_at": "2026-07-26",
   "cases": [
     {
@@ -112,7 +112,8 @@
           "evidence_summary": "The stated orbital approximation differs from exactly 365.25 days and explains why century exceptions are needed.",
           "publication_date": "2024-01-16",
           "accessed_at": "2026-07-26",
-          "independence_note": "Authoritative NASA educational source, independently complemented by the U.S. Naval Observatory calendar authority."
+          "independence_note": "Authoritative NASA educational source, independently complemented by the U.S. Naval Observatory calendar authority.",
+          "material_component_numbers": []
         },
         {
           "annotation_id": "E2",
@@ -125,7 +126,8 @@
           "evidence_summary": "The official glossary distinguishes an ordinary calendar year from the conventional 365.25-day Julian year.",
           "publication_date": null,
           "accessed_at": "2026-07-26",
-          "independence_note": "Independent U.S. government astronomical authority, organizationally separate from NASA JPL."
+          "independence_note": "Independent U.S. government astronomical authority, organizationally separate from NASA JPL.",
+          "material_component_numbers": []
         }
       ],
       "expected_verdict": "misleading",
@@ -135,6 +137,11 @@
         "Human annotator Md Moshiur Rahman resolved the calendar-year interpretation and added an independent U.S. Naval Observatory authority.",
         "Independent approver Md Rashedul Islam approved the misleading verdict on 2026-07-26."
       ],
+      "expected_components": [],
+      "annotated_by": "Md Moshiur Rahman",
+      "annotated_at": "2026-07-26",
+      "approved_by": "Md Rashedul Islam",
+      "approved_at": "2026-07-26",
       "reviewed_by": "Md Rashedul Islam",
       "reviewed_at": "2026-07-26"
     },
@@ -239,7 +246,8 @@
           "evidence_summary": "NIST describes boiling temperature as pressure-dependent, directly defeating the unconditional word always.",
           "publication_date": null,
           "accessed_at": "2026-07-26",
-          "independence_note": "Authoritative historical measurement reference, independently corroborated by IAPWS and AMS."
+          "independence_note": "Authoritative historical measurement reference, independently corroborated by IAPWS and AMS.",
+          "material_component_numbers": []
         },
         {
           "annotation_id": "E2",
@@ -252,7 +260,8 @@
           "evidence_summary": "The current practical temperature scale places atmospheric boiling slightly below 100 degrees Celsius.",
           "publication_date": null,
           "accessed_at": "2026-07-26",
-          "independence_note": "Independent international scientific association, separate from NIST and using current water-property formulations."
+          "independence_note": "Independent international scientific association, separate from NIST and using current water-property formulations.",
+          "material_component_numbers": []
         },
         {
           "annotation_id": "E3",
@@ -265,7 +274,8 @@
           "evidence_summary": "The meteorological definition independently confirms altitude and pressure dependence and discusses superheating in very pure liquids.",
           "publication_date": null,
           "accessed_at": "2026-07-26",
-          "independence_note": "Independent professional scientific society, organizationally separate from NIST and IAPWS."
+          "independence_note": "Independent professional scientific society, organizationally separate from NIST and IAPWS.",
+          "material_component_numbers": []
         }
       ],
       "expected_verdict": "misleading",
@@ -275,6 +285,11 @@
         "Pressure, altitude, purity, IPTS-68/ITS-90 convention, and source independence checks were completed.",
         "Independent approver Md Rashedul Islam approved the misleading verdict on 2026-07-26."
       ],
+      "expected_components": [],
+      "annotated_by": "Md Moshiur Rahman",
+      "annotated_at": "2026-07-26",
+      "approved_by": "Md Rashedul Islam",
+      "approved_at": "2026-07-26",
       "reviewed_by": "Md Rashedul Islam",
       "reviewed_at": "2026-07-26"
     },
@@ -382,7 +397,8 @@
           "evidence_summary": "The review describes 206 as an approximate typical count and explicitly states that anatomical variation changes the number.",
           "publication_date": null,
           "accessed_at": "2026-07-26",
-          "independence_note": "Medical review hosted by NCBI; its immediate supporting citation is another StatPearls chapter, so independent literature was added."
+          "independence_note": "Medical review hosted by NCBI; its immediate supporting citation is another StatPearls chapter, so independent literature was added.",
+          "material_component_numbers": []
         },
         {
           "annotation_id": "E2",
@@ -395,7 +411,8 @@
           "evidence_summary": "Peer-reviewed clinical anatomy literature identifies additional well-formed bones as normal developmental variants.",
           "publication_date": null,
           "accessed_at": "2026-07-26",
-          "independence_note": "Independent peer-reviewed radiology article, not part of the StatPearls source family."
+          "independence_note": "Independent peer-reviewed radiology article, not part of the StatPearls source family.",
+          "material_component_numbers": []
         }
       ],
       "expected_verdict": "misleading",
@@ -404,6 +421,11 @@
         "The underlying StatPearls citation was not treated as independent; peer-reviewed accessory-ossicle literature was added.",
         "Independent approver Md Rashedul Islam approved the misleading verdict on 2026-07-26."
       ],
+      "expected_components": [],
+      "annotated_by": "Md Moshiur Rahman",
+      "annotated_at": "2026-07-26",
+      "approved_by": "Md Rashedul Islam",
+      "approved_at": "2026-07-26",
       "reviewed_by": "Md Rashedul Islam",
       "reviewed_at": "2026-07-26"
     },
@@ -511,7 +533,8 @@
           "evidence_summary": "The responsible international authority states that the PHEIC designation ended while the health issue continued.",
           "publication_date": "2023-05-05",
           "accessed_at": "2026-07-26",
-          "independence_note": "Decisive primary policy source because WHO owns the designation; Nature independently corroborates the timing."
+          "independence_note": "Decisive primary policy source because WHO owns the designation; Nature independently corroborates the timing.",
+          "material_component_numbers": []
         },
         {
           "annotation_id": "E2",
@@ -524,7 +547,8 @@
           "evidence_summary": "Independent contemporaneous science reporting corroborates WHO's 5 May 2023 formal decision.",
           "publication_date": "2023-05-05",
           "accessed_at": "2026-07-26",
-          "independence_note": "Editorially independent reporting; corroborative only because WHO remains the controlling authority for the designation."
+          "independence_note": "Editorially independent reporting; corroborative only because WHO remains the controlling authority for the designation.",
+          "material_component_numbers": []
         }
       ],
       "expected_verdict": "outdated",
@@ -533,6 +557,11 @@
         "WHO status material was checked through the 2026-07-26 reference date and independent contemporaneous reporting was added.",
         "Independent approver Md Rashedul Islam approved the outdated verdict on 2026-07-26."
       ],
+      "expected_components": [],
+      "annotated_by": "Md Moshiur Rahman",
+      "annotated_at": "2026-07-26",
+      "approved_by": "Md Rashedul Islam",
+      "approved_at": "2026-07-26",
       "reviewed_by": "Md Rashedul Islam",
       "reviewed_at": "2026-07-26"
     },
@@ -636,7 +665,8 @@
           "evidence_summary": "NASA directly rejects unaided visibility from the Moon and distinguishes it from high-resolution photography.",
           "publication_date": null,
           "accessed_at": "2026-07-26",
-          "independence_note": "Authoritative astronaut-observation source, independently corroborated by peer-reviewed optics analysis and ESA material."
+          "independence_note": "Authoritative astronaut-observation source, independently corroborated by peer-reviewed optics analysis and ESA material.",
+          "material_component_numbers": []
         },
         {
           "annotation_id": "E2",
@@ -649,7 +679,8 @@
           "evidence_summary": "Peer-reviewed optics analysis concludes that normal human visual resolution is radically insufficient at lunar distance.",
           "publication_date": null,
           "accessed_at": "2026-07-26",
-          "independence_note": "Independent peer-reviewed visual-optics analysis, separate from NASA astronaut observations."
+          "independence_note": "Independent peer-reviewed visual-optics analysis, separate from NASA astronaut observations.",
+          "material_component_numbers": []
         },
         {
           "annotation_id": "E3",
@@ -662,7 +693,8 @@
           "evidence_summary": "ESA distinguishes unaided orbital viewing from images captured with a 1150 mm lens and processed on the ground.",
           "publication_date": "2021-05-28",
           "accessed_at": "2026-07-26",
-          "independence_note": "Independent space-agency source qualifying instrument-assisted photography versus unaided observation."
+          "independence_note": "Independent space-agency source qualifying instrument-assisted photography versus unaided observation.",
+          "material_component_numbers": []
         }
       ],
       "expected_verdict": "contradicted",
@@ -671,6 +703,11 @@
         "Independent peer-reviewed optics analysis and ESA astronaut-photography qualification were checked.",
         "Independent approver Md Rashedul Islam approved the contradicted verdict on 2026-07-26."
       ],
+      "expected_components": [],
+      "annotated_by": "Md Moshiur Rahman",
+      "annotated_at": "2026-07-26",
+      "approved_by": "Md Rashedul Islam",
+      "approved_at": "2026-07-26",
       "reviewed_by": "Md Rashedul Islam",
       "reviewed_at": "2026-07-26"
     },
@@ -784,7 +821,8 @@
           "evidence_summary": "The official World Bank indicator API supplies the four values needed to verify Germany's third-place rank under the stated comparison basis.",
           "publication_date": null,
           "accessed_at": "2026-07-27",
-          "independence_note": "Controlling statistical dataset for this packet; its current values are revision-sensitive and must be rechecked during human review."
+          "independence_note": "Controlling statistical dataset for this packet; its current values are revision-sensitive and must be rechecked during human review.",
+          "material_component_numbers": []
         },
         {
           "annotation_id": "E2",
@@ -797,7 +835,8 @@
           "evidence_summary": "Independent contemporaneous reporting corroborates the 2023 ordering and explains that nominal-GDP comparisons depend on dollar conversion.",
           "publication_date": "2024-02-15",
           "accessed_at": "2026-07-27",
-          "independence_note": "Editorially independent reporting based on national releases; corroborative rather than a replacement for the World Bank dataset."
+          "independence_note": "Editorially independent reporting based on national releases; corroborative rather than a replacement for the World Bank dataset.",
+          "material_component_numbers": []
         },
         {
           "annotation_id": "E3",
@@ -810,7 +849,8 @@
           "evidence_summary": "The selected IMF WEO vintage independently preserves Germany's 2023 nominal-GDP rank; its 2023 figures are revised historical estimates, not contemporaneous forecasts.",
           "publication_date": "2026-04-14",
           "accessed_at": "2026-07-27",
-          "independence_note": "Independent international statistical source, separate from the World Bank and Associated Press source families."
+          "independence_note": "Independent international statistical source, separate from the World Bank and Associated Press source families.",
+          "material_component_numbers": []
         }
       ],
       "expected_verdict": "supported",
@@ -822,6 +862,11 @@
         "Human annotator Md Moshiur Rahman approved the supported interpretation on 2026-07-27.",
         "Independent approver Md Rashedul Islam approved the supported verdict on 2026-07-27."
       ],
+      "expected_components": [],
+      "annotated_by": "Md Moshiur Rahman",
+      "annotated_at": "2026-07-27",
+      "approved_by": "Md Rashedul Islam",
+      "approved_at": "2026-07-27",
       "reviewed_by": "Md Rashedul Islam",
       "reviewed_at": "2026-07-27"
     },
@@ -933,7 +978,8 @@
           "evidence_summary": "The filed company history supports 1994 as the corporate origin while separating it from the website's 1995 commercial launch.",
           "publication_date": "2017-02-10",
           "accessed_at": "2026-07-27",
-          "independence_note": "Primary company disclosure hosted by the SEC; authoritative for the company's account but not editorially independent of Amazon."
+          "independence_note": "Primary company disclosure hosted by the SEC; authoritative for the company's account but not editorially independent of Amazon.",
+          "material_component_numbers": []
         },
         {
           "annotation_id": "E2",
@@ -946,7 +992,8 @@
           "evidence_summary": "An independently edited historical account places the start in 1994 and separately dates the official online launch to July 1995.",
           "publication_date": "2025-04-07",
           "accessed_at": "2026-07-27",
-          "independence_note": "Independent nonprofit historical publisher, organizationally separate from Amazon and the SEC filing."
+          "independence_note": "Independent nonprofit historical publisher, organizationally separate from Amazon and the SEC filing.",
+          "material_component_numbers": []
         }
       ],
       "expected_verdict": "supported",
@@ -958,6 +1005,11 @@
         "Human annotator Md Moshiur Rahman approved the supported interpretation on 2026-07-27.",
         "Independent approver Md Rashedul Islam approved the supported verdict on 2026-07-27."
       ],
+      "expected_components": [],
+      "annotated_by": "Md Moshiur Rahman",
+      "annotated_at": "2026-07-27",
+      "approved_by": "Md Rashedul Islam",
+      "approved_at": "2026-07-27",
       "reviewed_by": "Md Rashedul Islam",
       "reviewed_at": "2026-07-27"
     },
@@ -1060,7 +1112,8 @@
           "evidence_summary": "Article 99(2) is the controlling legal text and directly specifies the GDPR's date of application.",
           "publication_date": "2016-05-04",
           "accessed_at": "2026-07-27",
-          "independence_note": "Controlling primary legal authority; no secondary page can override its application clause."
+          "independence_note": "Controlling primary legal authority; no secondary page can override its application clause.",
+          "material_component_numbers": []
         },
         {
           "annotation_id": "E2",
@@ -1073,7 +1126,8 @@
           "evidence_summary": "The EU data-protection authority confirms the date and clarifies the distinction between entry into force and application.",
           "publication_date": null,
           "accessed_at": "2026-07-27",
-          "independence_note": "Separate EU institutional explainer, useful corroboration but within the same EU legal ecosystem as EUR-Lex."
+          "independence_note": "Separate EU institutional explainer, useful corroboration but within the same EU legal ecosystem as EUR-Lex.",
+          "material_component_numbers": []
         }
       ],
       "expected_verdict": "supported",
@@ -1084,6 +1138,11 @@
         "Human annotator Md Moshiur Rahman approved the supported interpretation on 2026-07-27.",
         "Independent approver Md Rashedul Islam approved the supported verdict on 2026-07-27."
       ],
+      "expected_components": [],
+      "annotated_by": "Md Moshiur Rahman",
+      "annotated_at": "2026-07-27",
+      "approved_by": "Md Rashedul Islam",
+      "approved_at": "2026-07-27",
       "reviewed_by": "Md Rashedul Islam",
       "reviewed_at": "2026-07-27"
     },
@@ -1192,7 +1251,8 @@
           "evidence_summary": "The NCI directly states the causal relationship and links it to major Surgeon General evidence reviews.",
           "publication_date": null,
           "accessed_at": "2026-07-27",
-          "independence_note": "Authoritative U.S. cancer agency synthesis; independent source-family corroboration is supplied by WHO."
+          "independence_note": "Authoritative U.S. cancer agency synthesis; independent source-family corroboration is supplied by WHO.",
+          "material_component_numbers": []
         },
         {
           "annotation_id": "E2",
@@ -1205,7 +1265,8 @@
           "evidence_summary": "WHO independently identifies smoking as the leading risk factor while listing other causes that prevent an individual-certainty interpretation.",
           "publication_date": "2026-04-16",
           "accessed_at": "2026-07-27",
-          "independence_note": "Independent international public-health authority, separate from the U.S. NCI and its cited federal reviews."
+          "independence_note": "Independent international public-health authority, separate from the U.S. NCI and its cited federal reviews.",
+          "material_component_numbers": []
         }
       ],
       "expected_verdict": "supported",
@@ -1217,6 +1278,11 @@
         "Human annotator Md Moshiur Rahman approved the supported interpretation on 2026-07-27.",
         "Independent approver Md Rashedul Islam approved the supported verdict on 2026-07-27."
       ],
+      "expected_components": [],
+      "annotated_by": "Md Moshiur Rahman",
+      "annotated_at": "2026-07-27",
+      "approved_by": "Md Rashedul Islam",
+      "approved_at": "2026-07-27",
       "reviewed_by": "Md Rashedul Islam",
       "reviewed_at": "2026-07-27"
     },
@@ -1324,7 +1390,8 @@
           "evidence_summary": "The systematic review found no general-population prevention effect, while separately reporting duration and extreme-stress subgroup findings.",
           "publication_date": "2013-01-31",
           "accessed_at": "2026-07-27",
-          "independence_note": "Systematic review of placebo-controlled trials; NIH relies partly on this review, so the two pages are not fully evidence-independent."
+          "independence_note": "Systematic review of placebo-controlled trials; NIH relies partly on this review, so the two pages are not fully evidence-independent.",
+          "material_component_numbers": []
         },
         {
           "annotation_id": "E2",
@@ -1337,7 +1404,8 @@
           "evidence_summary": "NIH distinguishes no general prevention effect from modest duration benefits and possible effects in special high-stress or deficient groups.",
           "publication_date": null,
           "accessed_at": "2026-07-27",
-          "independence_note": "Authoritative clinical synthesis, but it cites the Cochrane review; it corroborates interpretation rather than constituting a fully independent trial base."
+          "independence_note": "Authoritative clinical synthesis, but it cites the Cochrane review; it corroborates interpretation rather than constituting a fully independent trial base.",
+          "material_component_numbers": []
         }
       ],
       "expected_verdict": "misleading",
@@ -1349,12 +1417,17 @@
         "Human annotator Md Moshiur Rahman approved the misleading interpretation on 2026-07-27.",
         "Independent approver Md Rashedul Islam approved the misleading verdict on 2026-07-27."
       ],
+      "expected_components": [],
+      "annotated_by": "Md Moshiur Rahman",
+      "annotated_at": "2026-07-27",
+      "approved_by": "Md Rashedul Islam",
+      "approved_at": "2026-07-27",
       "reviewed_by": "Md Rashedul Islam",
       "reviewed_at": "2026-07-27"
     },
     {
       "case_id": "CPNG-011",
-      "claim": "Iceland gets 100 percent of all its energy from renewable sources.",
+      "claim": "Iceland gets 100 percent of both its electricity and total energy from renewable sources, so it no longer uses fossil fuels.",
       "categories": [
         "numerical",
         "comparative",
@@ -1365,21 +1438,128 @@
       "risk_level": "medium",
       "reference_date": null,
       "geography": "Iceland",
-      "annotation_status": "draft",
-      "ai_review": null,
-      "proposed_verdict": null,
-      "proposed_rationale": null,
-      "candidate_evidence": [],
-      "expected_verdict": null,
-      "annotation_notes": [
-        "Distinguish electricity generation from total primary or final energy use."
+      "annotation_status": "reviewed",
+      "ai_review": {
+        "reviewed_at": "2026-07-27T14:55:35.393073Z",
+        "annotator_model": "gpt-4o-mini",
+        "critic_model": "gpt-4o-mini",
+        "prompt_version": "ai-benchmark-review-v2",
+        "source_verification_scope": "provided_packet_only",
+        "annotation": {
+          "recommended_verdict": "contradicted",
+          "rationale": "The evidence provided shows that while Iceland generates almost 100% of its electricity from renewables, it does not achieve the same for total energy use, which still involves fossil fuels. Therefore, the claim that Iceland gets 100% of both its electricity and total energy from renewable sources is incorrect.",
+          "resolved_interpretation": "The claim is inaccurate as it conflates electricity generation with total energy use and fails to account for continued fossil fuel consumption.",
+          "evidence_sufficient": true,
+          "evidence_strengths": [
+            "The government overview and national statistical data provide authoritative and relevant information on Iceland's energy situation.",
+            "The independence of the sources is corroborated by their official status and distinction in reporting energy forms."
+          ],
+          "evidence_gaps": [],
+          "independence_concerns": [],
+          "temporal_or_numerical_checks": [
+            "The evidence explicitly allows for checking the differentiation between electricity generation and total energy use."
+          ],
+          "confidence": 0.85
+        },
+        "critique": {
+          "agrees_with_verdict": true,
+          "recommended_verdict": "contradicted",
+          "critique": "The annotation accurately identifies the inaccuracies in the claim that Iceland gets 100% of its electricity and total energy from renewable sources. It clearly differentiates between electricity generation and total energy use, which is crucial for understanding the context of the claim. The evidence provided supports the rationale, indicating that while electricity generation is nearly entirely renewable, total energy use still relies on fossil fuels. No significant points are unsupported or overstated, and the temporal or numerical checks identified in the evidence further reinforce the contradiction. Therefore, the recommended verdict of 'contradicted' is appropriate.",
+          "unsupported_or_overstated_points": [],
+          "missing_checks": [],
+          "evidence_sufficient": true,
+          "confidence": 0.9
+        },
+        "provisional_verdict": "contradicted",
+        "disagreements": [],
+        "usage": [
+          {
+            "provider_id": "openai:gpt-4o-mini",
+            "model": "gpt-4o-mini",
+            "task": "review_annotation",
+            "duration_seconds": 3.341218,
+            "input_tokens": 994,
+            "cached_input_tokens": 0,
+            "output_tokens": 196,
+            "estimated_cost_usd": 0.0002667,
+            "pricing_version": "openai-list-prices-2026-07-26",
+            "output_valid": true
+          },
+          {
+            "provider_id": "openai:gpt-4o-mini",
+            "model": "gpt-4o-mini",
+            "task": "review_critique",
+            "duration_seconds": 3.39587,
+            "input_tokens": 1151,
+            "cached_input_tokens": 0,
+            "output_tokens": 158,
+            "estimated_cost_usd": 0.00026745,
+            "pricing_version": "openai-list-prices-2026-07-26",
+            "output_valid": true
+          }
+        ],
+        "requires_human_review": true
+      },
+      "proposed_verdict": "mixed",
+      "proposed_rationale": "Iceland's electricity is overwhelmingly renewable, but electricity is not the whole energy system. Official Icelandic material reports about 85 percent renewable primary energy and continued fossil-fuel use, mainly oil products for transport; the two broader components are therefore false.",
+      "candidate_evidence": [
+        {
+          "annotation_id": "E1",
+          "source_url": "https://mfa.is/topics/business-and-industry/energy/",
+          "source_title": "Government of Iceland: Energy",
+          "publisher": "Government of Iceland",
+          "source_type": "official",
+          "stance": "contradicts",
+          "excerpt": "Renewables provide almost 100% of electricity and about 85% of primary energy; fossil fuels, mainly transport oil, supply the remainder.",
+          "evidence_summary": "The official overview distinguishes near-total renewable electricity from lower renewable primary energy and directly records continued fossil-fuel use.",
+          "publication_date": null,
+          "accessed_at": "2026-07-27",
+          "independence_note": "Government overview of Iceland's energy system; decisive for national definitions but checked against the separate regulator data pages.",
+          "material_component_numbers": [
+            1,
+            2,
+            3
+          ]
+        },
+        {
+          "annotation_id": "E2",
+          "source_url": "https://orkustofnun.is/en/information/numerical_data/electricity",
+          "source_title": "Orkustofnun numerical data: Electricity",
+          "publisher": "National Energy Authority of Iceland",
+          "source_type": "dataset",
+          "stance": "qualifies",
+          "excerpt": "The authority publishes electricity generation tables by energy source, year, and month.",
+          "evidence_summary": "The official data source permits the electricity share to be checked for a stated year without substituting it for total energy.",
+          "publication_date": null,
+          "accessed_at": "2026-07-27",
+          "independence_note": "Official energy-regulator dataset; institutionally related to the national overview but a distinct underlying statistical product.",
+          "material_component_numbers": [
+            1
+          ]
+        }
       ],
-      "reviewed_by": null,
-      "reviewed_at": null
+      "expected_verdict": "mixed",
+      "annotation_notes": [
+        "Distinguish electricity generation from total primary or final energy use.",
+        "Treat continued fossil-fuel use as a separate material consequence.",
+        "Md Moshiur Rahman completed every case checkpoint and approved the mixed label on 2026-07-27.",
+        "Md Rashedul Islam independently approved the evidence, components, and mixed label on 2026-07-27."
+      ],
+      "expected_components": [
+        "Iceland gets 100 percent of its electricity from renewable sources.",
+        "Iceland gets 100 percent of its total energy from renewable sources.",
+        "Iceland no longer uses fossil fuels."
+      ],
+      "annotated_by": "Md Moshiur Rahman",
+      "annotated_at": "2026-07-27",
+      "approved_by": "Md Rashedul Islam",
+      "approved_at": "2026-07-27",
+      "reviewed_by": "Md Rashedul Islam",
+      "reviewed_at": "2026-07-27"
     },
     {
       "case_id": "CPNG-012",
-      "claim": "Lightning never strikes the same place twice.",
+      "claim": "Lightning never strikes the same place twice, so tall structures do not need protection against repeated strikes.",
       "categories": [
         "scientific_medical",
         "derivative_reporting"
@@ -1388,21 +1568,128 @@
       "risk_level": "low",
       "reference_date": null,
       "geography": null,
-      "annotation_status": "draft",
-      "ai_review": null,
-      "proposed_verdict": null,
-      "proposed_rationale": null,
-      "candidate_evidence": [],
-      "expected_verdict": null,
-      "annotation_notes": [
-        "Use meteorological observations rather than repetitions of the proverb."
+      "annotation_status": "reviewed",
+      "ai_review": {
+        "reviewed_at": "2026-07-27T14:39:31.812218Z",
+        "annotator_model": "gpt-4o-mini",
+        "critic_model": "gpt-4o-mini",
+        "prompt_version": "ai-benchmark-review-v2",
+        "source_verification_scope": "provided_packet_only",
+        "annotation": {
+          "recommended_verdict": "contradicted",
+          "rationale": "The evidence provided from NOAA and the National Weather Service both contradict the claim that 'lightning never strikes the same place twice,' clearly stating that lightning can and often does strike the same location repeatedly, particularly in the case of tall structures. This directly undermines the assertion that tall structures do not require protection against repeated strikes.",
+          "resolved_interpretation": "The claim that lightning never strikes the same place twice is false, and therefore the inference that tall structures do not need protection from repeated strikes is also false.",
+          "evidence_sufficient": true,
+          "evidence_strengths": [
+            "Both sources are reputable official organizations providing direct meteorological insights.",
+            "The evidence is cohesive and consistently contradicts the claim.",
+            "Independence is mostly assured, although there is a slight overlap since both sources are within NOAA."
+          ],
+          "evidence_gaps": [],
+          "independence_concerns": [
+            "While both sources come from NOAA, they provide corroborative, authoritative information that supports the contradiction of the claim."
+          ],
+          "temporal_or_numerical_checks": [],
+          "confidence": 0.9
+        },
+        "critique": {
+          "agrees_with_verdict": true,
+          "recommended_verdict": "contradicted",
+          "critique": "The evidence clearly contradicts the claim, showing that lightning can and does strike the same place multiple times, particularly in relation to tall structures. Both sources cited are from reputable organizations that provide meteorological insights, lending credibility to the findings. Additionally, there is a thorough exploration of independence concerns, with references from NOAA and the National Weather Service reinforcing the consistent viewpoint on lightning strikes. However, clarity can be improved by separating the assertions about lightning striking from the safety implications involved. An emphasis on any convoluted reasoning connecting these two assertions may help solidify the argument.",
+          "unsupported_or_overstated_points": [],
+          "missing_checks": [],
+          "evidence_sufficient": true,
+          "confidence": 0.85
+        },
+        "provisional_verdict": "contradicted",
+        "disagreements": [],
+        "usage": [
+          {
+            "provider_id": "openai:gpt-4o-mini",
+            "model": "gpt-4o-mini",
+            "task": "review_annotation",
+            "duration_seconds": 45.241467,
+            "input_tokens": 957,
+            "cached_input_tokens": 0,
+            "output_tokens": 220,
+            "estimated_cost_usd": 0.00027555,
+            "pricing_version": "openai-list-prices-2026-07-26",
+            "output_valid": true
+          },
+          {
+            "provider_id": "openai:gpt-4o-mini",
+            "model": "gpt-4o-mini",
+            "task": "review_critique",
+            "duration_seconds": 2.44991,
+            "input_tokens": 1139,
+            "cached_input_tokens": 0,
+            "output_tokens": 158,
+            "estimated_cost_usd": 0.00026565,
+            "pricing_version": "openai-list-prices-2026-07-26",
+            "output_valid": true
+          }
+        ],
+        "requires_human_review": true
+      },
+      "proposed_verdict": "contradicted",
+      "proposed_rationale": "Meteorological authorities document repeated strikes at the same location and explain that taller objects are more likely to be struck. The absolute proverb and its safety inference are both reversed by the evidence.",
+      "candidate_evidence": [
+        {
+          "annotation_id": "E1",
+          "source_url": "https://www.nssl.noaa.gov/education/svrwx101/lightning/faq/",
+          "source_title": "Severe Weather 101: Lightning FAQ",
+          "publisher": "NOAA National Severe Storms Laboratory",
+          "source_type": "official",
+          "stance": "contradicts",
+          "excerpt": "Lightning can strike the same or nearly the same place more than once, and taller objects are more likely to be struck.",
+          "evidence_summary": "NOAA directly rejects the never-twice assertion and identifies height as a risk factor rather than a reason to omit protection.",
+          "publication_date": null,
+          "accessed_at": "2026-07-27",
+          "independence_note": "Federal severe-storm research authority providing observational and safety information.",
+          "material_component_numbers": [
+            1,
+            2
+          ]
+        },
+        {
+          "annotation_id": "E2",
+          "source_url": "https://www.weather.gov/safety/lightning-myths?ipid=promo-link-block1",
+          "source_title": "Lightning Myths and Facts",
+          "publisher": "National Weather Service",
+          "source_type": "official",
+          "stance": "contradicts",
+          "excerpt": "Lightning often strikes the same place repeatedly, especially a tall, pointy, isolated object.",
+          "evidence_summary": "The NWS supplies a second operational-weather source and a repeated-strike example involving a tall building.",
+          "publication_date": null,
+          "accessed_at": "2026-07-27",
+          "independence_note": "Operational weather service within NOAA; corroborative rather than fully institutionally independent from NSSL.",
+          "material_component_numbers": [
+            1,
+            2
+          ]
+        }
       ],
-      "reviewed_by": null,
-      "reviewed_at": null
+      "expected_verdict": "contradicted",
+      "annotation_notes": [
+        "Use meteorological observations rather than repetitions of the proverb.",
+        "Separate the repeat-strike assertion from the safety inference.",
+        "Md Moshiur Rahman completed every case checkpoint and approved the contradicted label on 2026-07-27.",
+        "Md Rashedul Islam independently approved the evidence, components, and contradicted label on 2026-07-27."
+      ],
+      "expected_components": [
+        "Lightning never strikes the same place twice.",
+        "Tall structures do not need protection against repeated lightning strikes."
+      ],
+      "annotated_by": "Md Moshiur Rahman",
+      "annotated_at": "2026-07-27",
+      "approved_by": "Md Rashedul Islam",
+      "approved_at": "2026-07-27",
+      "reviewed_by": "Md Rashedul Islam",
+      "reviewed_at": "2026-07-27"
     },
     {
       "case_id": "CPNG-013",
-      "claim": "Mount Everest is the tallest mountain on Earth.",
+      "claim": "Mount Everest is both the tallest mountain from base to summit and the point on Earth farthest from the planet's center.",
       "categories": [
         "comparative",
         "ambiguous"
@@ -1411,21 +1698,139 @@
       "risk_level": "low",
       "reference_date": null,
       "geography": null,
-      "annotation_status": "draft",
-      "ai_review": null,
-      "proposed_verdict": null,
-      "proposed_rationale": null,
-      "candidate_evidence": [],
-      "expected_verdict": null,
-      "annotation_notes": [
-        "Resolve tallest above sea level versus base-to-peak and distance from Earth's center."
+      "annotation_status": "reviewed",
+      "ai_review": {
+        "reviewed_at": "2026-07-27T14:39:44.928201Z",
+        "annotator_model": "gpt-4o-mini",
+        "critic_model": "gpt-4o-mini",
+        "prompt_version": "ai-benchmark-review-v2",
+        "source_verification_scope": "provided_packet_only",
+        "annotation": {
+          "recommended_verdict": "contradicted",
+          "rationale": "The claim states that Mount Everest is both the tallest mountain from base to summit and the points on Earth farthest from the planet's center. However, the evidence provided includes multiple sources that contradict these assertions. Specifically, evidence from NOAA indicates that while Everest is highest above sea level, it is not the tallest when considering measurements from base to peak. Furthermore, NASA's evidence points out that Chimborazo is farther from the center of the Earth than Everest due to the Earth's equatorial bulge.",
+          "resolved_interpretation": "Mount Everest is not the tallest mountain from base to peak and is not the point on Earth farthest from the planet's center.",
+          "evidence_sufficient": true,
+          "evidence_strengths": [
+            "Multiple credible sources are identified as federal agencies (NOAA, USGS, NASA) that provide independent verification of the claims.",
+            "Each piece of evidence directly relates to a part of the claim, thereby providing comprehensive coverage of the assertions made in the claim."
+          ],
+          "evidence_gaps": [],
+          "independence_concerns": [],
+          "temporal_or_numerical_checks": [],
+          "confidence": 0.95
+        },
+        "critique": {
+          "agrees_with_verdict": true,
+          "recommended_verdict": "contradicted",
+          "critique": "The annotation accurately summarizes the claim and provides strong evidence contradicting both components of the claim. It correctly identifies that Mount Everest, while highest above sea level, is not the tallest from base to summit when compared to Mauna Kea and also highlights that, due to the Earth's shape, Chimborazo is farther from the planet's center than Everest. Overall, the evidence is robust and from reputable federal sources, making a compelling case against the claim.",
+          "unsupported_or_overstated_points": [],
+          "missing_checks": [],
+          "evidence_sufficient": true,
+          "confidence": 0.95
+        },
+        "provisional_verdict": "contradicted",
+        "disagreements": [],
+        "usage": [
+          {
+            "provider_id": "openai:gpt-4o-mini",
+            "model": "gpt-4o-mini",
+            "task": "review_annotation",
+            "duration_seconds": 3.642498,
+            "input_tokens": 1124,
+            "cached_input_tokens": 0,
+            "output_tokens": 235,
+            "estimated_cost_usd": 0.0003096,
+            "pricing_version": "openai-list-prices-2026-07-26",
+            "output_valid": true
+          },
+          {
+            "provider_id": "openai:gpt-4o-mini",
+            "model": "gpt-4o-mini",
+            "task": "review_critique",
+            "duration_seconds": 3.071712,
+            "input_tokens": 1319,
+            "cached_input_tokens": 0,
+            "output_tokens": 136,
+            "estimated_cost_usd": 0.00027945,
+            "pricing_version": "openai-list-prices-2026-07-26",
+            "output_valid": true
+          }
+        ],
+        "requires_human_review": true
+      },
+      "proposed_verdict": "contradicted",
+      "proposed_rationale": "Everest is highest above mean sea level, but Mauna Kea is taller from its submarine base and Chimborazo is farther from Earth's center. Both submitted components confuse distinct height definitions.",
+      "candidate_evidence": [
+        {
+          "annotation_id": "E1",
+          "source_url": "https://oceanservice.noaa.gov/facts/highestpoint.html",
+          "source_title": "What is the highest point on Earth?",
+          "publisher": "NOAA National Ocean Service",
+          "source_type": "official",
+          "stance": "contradicts",
+          "excerpt": "Everest is highest above mean sea level, Mauna Kea is tallest from base to peak, and Chimborazo is farthest from Earth's center.",
+          "evidence_summary": "One official explanation separates all three measurement conventions and contradicts both material components.",
+          "publication_date": null,
+          "accessed_at": "2026-07-27",
+          "independence_note": "Federal scientific explainer; its two comparisons are checked against USGS and NASA.",
+          "material_component_numbers": [
+            1,
+            2
+          ]
+        },
+        {
+          "annotation_id": "E2",
+          "source_url": "https://www.usgs.gov/faqs/how-big-are-hawaiian-volcanoes?page=1",
+          "source_title": "How big are Hawaiian volcanoes?",
+          "publisher": "U.S. Geological Survey",
+          "source_type": "official",
+          "stance": "contradicts",
+          "excerpt": "Measured from its base on the ocean floor, Mauna Kea is nearly 33,500 feet tall.",
+          "evidence_summary": "USGS independently supports the base-to-peak comparison that displaces Everest.",
+          "publication_date": null,
+          "accessed_at": "2026-07-27",
+          "independence_note": "Independent federal earth-science agency and underlying measurement source for component 1.",
+          "material_component_numbers": [
+            1
+          ]
+        },
+        {
+          "annotation_id": "E3",
+          "source_url": "https://science.nasa.gov/earth/earth-observatory/chimborazo-and-tungurahua-ecuador-6099/",
+          "source_title": "Chimborazo and Tungurahua, Ecuador",
+          "publisher": "NASA Earth Observatory",
+          "source_type": "official",
+          "stance": "contradicts",
+          "excerpt": "Because Earth bulges at the equator, Chimborazo's summit is farther from Earth's center than Everest's summit.",
+          "evidence_summary": "NASA independently supplies the geometric explanation and contradicts component 2.",
+          "publication_date": null,
+          "accessed_at": "2026-07-27",
+          "independence_note": "Independent federal space and Earth-observation authority.",
+          "material_component_numbers": [
+            2
+          ]
+        }
       ],
-      "reviewed_by": null,
-      "reviewed_at": null
+      "expected_verdict": "contradicted",
+      "annotation_notes": [
+        "Resolve height above sea level, base-to-peak height, and distance from Earth's center.",
+        "Md Moshiur Rahman completed every case checkpoint and approved the contradicted label on 2026-07-27.",
+        "Md Rashedul Islam independently approved the evidence, components, and contradicted label on 2026-07-27."
+      ],
+      "expected_components": [
+        "Mount Everest is the tallest mountain from base to summit.",
+        "Mount Everest is the point on Earth farthest from the planet's center."
+      ],
+      "annotated_by": "Md Moshiur Rahman",
+      "annotated_at": "2026-07-27",
+      "approved_by": "Md Rashedul Islam",
+      "approved_at": "2026-07-27",
+      "reviewed_by": "Md Rashedul Islam",
+      "reviewed_at": "2026-07-27"
     },
     {
       "case_id": "CPNG-014",
-      "claim": "The Nile is the longest river in the world.",
+      "claim": "The Nile is conclusively the world's longest river and carries more water than the Amazon.",
       "categories": [
         "comparative",
         "ambiguous",
@@ -1435,21 +1840,129 @@
       "risk_level": "low",
       "reference_date": null,
       "geography": null,
-      "annotation_status": "draft",
-      "ai_review": null,
-      "proposed_verdict": null,
-      "proposed_rationale": null,
-      "candidate_evidence": [],
-      "expected_verdict": null,
-      "annotation_notes": [
-        "Record measurement methodology and the Nile-Amazon uncertainty."
+      "annotation_status": "reviewed",
+      "ai_review": {
+        "reviewed_at": "2026-07-27T14:39:55.865641Z",
+        "annotator_model": "gpt-4o-mini",
+        "critic_model": "gpt-4o-mini",
+        "prompt_version": "ai-benchmark-review-v2",
+        "source_verification_scope": "provided_packet_only",
+        "annotation": {
+          "recommended_verdict": "mixed",
+          "rationale": "The claim contains two components, each evaluated separately. The first part alleges that the Nile is conclusively the world's longest river, which is qualified by the USGS source indicating that this status is contingent on specific measurement conventions. The second part asserts that the Nile carries more water than the Amazon, which is contradicted by the USGS evidence indicating that the Amazon has a larger average discharge. Therefore, while the Nile's length may be supported based on a certain definition, the claim regarding water discharge is contradicted, leading to an overall mixed verdict.",
+          "resolved_interpretation": "The Nile's ranking as the longest river is dependent on measurement conventions; the Amazon has a greater discharge capacity.",
+          "evidence_sufficient": true,
+          "evidence_strengths": [
+            "Both pieces of evidence come from credible U.S. Geological Survey sources that provide authoritative information on river measurements.",
+            "The evidence provides explicit citations of measurement conventions which impact the ranking of the Nile.",
+            "The contradiction regarding average discharge is rooted in clear and established scientific understanding."
+          ],
+          "evidence_gaps": [],
+          "independence_concerns": [],
+          "temporal_or_numerical_checks": [],
+          "confidence": 0.75
+        },
+        "critique": {
+          "agrees_with_verdict": false,
+          "recommended_verdict": "misleading",
+          "critique": "The annotation concludes with a 'mixed' verdict despite the clear contradiction inherent in the claim regarding discharge. Given that the Nile's assertion of being longer is heavily dependent on specific measurement conventions outlined by the USGS, and the claim that it carries more water than the Amazon is directly contradicted by a credible source, the overall evaluation should lean toward 'misleading' rather than 'mixed.' The two components of the claim cannot be separated without acknowledging that one is explicitly refuted, undermining the integrity of the assertion as a whole. Furthermore, while the evidence regarding the Nile's length provides context, it does not sufficiently support the claim's absolute nature. The contradictions make the claim's validity questionable overall, suggesting a misleading nature rather than a balanced assessment. The confusion surrounding length measurement conventions and discharge quantities warrants greater scrutiny and a more cautious interpretation.",
+          "unsupported_or_overstated_points": [
+            "The conclusion of the Nile being the longest river is contingent upon periods and definitions, which the annotation overstresses without sufficient clarification that it cannot be viewed as definitive in all contexts.",
+            "The assertion that the Nile carries more water than the Amazon is unequivocally contradicted and should lead to a stronger verdict than 'mixed.'"
+          ],
+          "missing_checks": [],
+          "evidence_sufficient": true,
+          "confidence": 0.65
+        },
+        "provisional_verdict": "misleading",
+        "disagreements": [
+          "Annotator recommended mixed; critic recommended misleading."
+        ],
+        "usage": [
+          {
+            "provider_id": "openai:gpt-4o-mini",
+            "model": "gpt-4o-mini",
+            "task": "review_annotation",
+            "duration_seconds": 3.841963,
+            "input_tokens": 965,
+            "cached_input_tokens": 0,
+            "output_tokens": 240,
+            "estimated_cost_usd": 0.00028875,
+            "pricing_version": "openai-list-prices-2026-07-26",
+            "output_valid": true
+          },
+          {
+            "provider_id": "openai:gpt-4o-mini",
+            "model": "gpt-4o-mini",
+            "task": "review_critique",
+            "duration_seconds": 7.09341,
+            "input_tokens": 1166,
+            "cached_input_tokens": 0,
+            "output_tokens": 277,
+            "estimated_cost_usd": 0.0003411,
+            "pricing_version": "openai-list-prices-2026-07-26",
+            "output_valid": true
+          }
+        ],
+        "requires_human_review": true
+      },
+      "proposed_verdict": "mixed",
+      "proposed_rationale": "The human review treats the selected-convention Nile length ranking as qualified support rather than a complete contradiction: river length still depends on source, mouth, and channel definitions, so 'conclusively' is too strong. The discharge component is contradicted because the Amazon, not the Nile, carries more water on the average-discharge basis.",
+      "candidate_evidence": [
+        {
+          "annotation_id": "E1",
+          "source_url": "https://www.usgs.gov/water-science-school/science/rivers-world-worlds-longest-rivers",
+          "source_title": "Rivers of the World: World's Longest Rivers",
+          "publisher": "U.S. Geological Survey",
+          "source_type": "official",
+          "stance": "qualifies",
+          "excerpt": "USGS states its river-length definition and, under that convention, lists the Nile at 4,132 miles and the Amazon at 4,000 miles.",
+          "evidence_summary": "The source supports a convention-specific Nile ranking but not the claim that the result is definition-independent and conclusive.",
+          "publication_date": null,
+          "accessed_at": "2026-07-27",
+          "independence_note": "Federal earth-science source; the explicit measurement convention is decisive to the qualification.",
+          "material_component_numbers": [
+            1
+          ]
+        },
+        {
+          "annotation_id": "E2",
+          "source_url": "https://www.usgs.gov/publications/amazon-measuring-a-mighty-river",
+          "source_title": "The Amazon, measuring a mighty river",
+          "publisher": "U.S. Geological Survey",
+          "source_type": "academic",
+          "stance": "contradicts",
+          "excerpt": "The Amazon is identified as the world's largest river and its discharge is described as extraordinarily large.",
+          "evidence_summary": "The USGS publication contradicts the assertion that the Nile carries more water when the comparison is average discharge.",
+          "publication_date": "1969-01-01",
+          "accessed_at": "2026-07-27",
+          "independence_note": "Scientific publication record; independent discharge measurements should be checked during human review.",
+          "material_component_numbers": [
+            2
+          ]
+        }
       ],
-      "reviewed_by": null,
-      "reviewed_at": null
+      "expected_verdict": "mixed",
+      "annotation_notes": [
+        "Record measurement methodology and the Nile-Amazon length uncertainty.",
+        "Evaluate discharge volume as a separate comparison.",
+        "Md Moshiur Rahman completed every case checkpoint and revised the parent label to mixed on 2026-07-27.",
+        "Md Rashedul Islam independently approved the evidence, components, and mixed label on 2026-07-27."
+      ],
+      "expected_components": [
+        "The Nile is conclusively the world's longest river.",
+        "The Nile carries more water than the Amazon."
+      ],
+      "annotated_by": "Md Moshiur Rahman",
+      "annotated_at": "2026-07-27",
+      "approved_by": "Md Rashedul Islam",
+      "approved_at": "2026-07-27",
+      "reviewed_by": "Md Rashedul Islam",
+      "reviewed_at": "2026-07-27"
     },
     {
       "case_id": "CPNG-015",
-      "claim": "Napoleon Bonaparte was unusually short for a French man of his time.",
+      "claim": "Napoleon Bonaparte was unusually short for a French man of his time, and British caricatures accurately represented his stature.",
       "categories": [
         "historical",
         "comparative",
@@ -1460,21 +1973,136 @@
       "risk_level": "low",
       "reference_date": null,
       "geography": null,
-      "annotation_status": "draft",
-      "ai_review": null,
-      "proposed_verdict": null,
-      "proposed_rationale": null,
-      "candidate_evidence": [],
-      "expected_verdict": null,
-      "annotation_notes": [
-        "Check measurement systems, contemporary averages, and propaganda-derived repetition."
+      "annotation_status": "reviewed",
+      "ai_review": {
+        "reviewed_at": "2026-07-27T14:40:07.296812Z",
+        "annotator_model": "gpt-4o-mini",
+        "critic_model": "gpt-4o-mini",
+        "prompt_version": "ai-benchmark-review-v2",
+        "source_verification_scope": "provided_packet_only",
+        "annotation": {
+          "recommended_verdict": "contradicted",
+          "rationale": "Both expected components of the claim are contradicted by the evidence provided. The first component regarding Napoleon's stature is countered by the historical explainer which clarifies that the perception of him being short stems from a misunderstanding of historical measurement systems. The second component, which asserts that British caricatures accurately represented Napoleon's height, is also contradicted by the primary document which indicates a satirical exaggeration rather than accurate representation.",
+          "resolved_interpretation": "The claim that Napoleon was unusually short and that caricatures accurately depicted this stature is not supported by the provided evidence.",
+          "evidence_sufficient": true,
+          "evidence_strengths": [
+            "The historical explainer provides context on measurement discrepancies between French and English units, enhancing understanding of Napoleon's actual height.",
+            "The primary document substantiates that caricatures served a satirical purpose rather than an accurate depiction, directly contradicting the claim."
+          ],
+          "evidence_gaps": [],
+          "independence_concerns": [
+            "The secondary account requires validation against historical scholarship, but the primary caricature is independently assessed."
+          ],
+          "temporal_or_numerical_checks": [
+            "The historical measurements should be verified against contemporary averages and standards for the period in question."
+          ],
+          "confidence": 0.8
+        },
+        "critique": {
+          "agrees_with_verdict": false,
+          "recommended_verdict": "mixed",
+          "critique": "While the evidence does successfully counter the claim that Napoleon was unusually short for his time, it does not sufficiently address the second component regarding British caricatures accurately depicting his stature. The primary evidence points towards satire rather than genuine representation, but without wider context or comparative analysis of multiple caricatures, the conclusion may still be uncertain. Additionally, the independence concerns regarding the secondary account hint that further verification would strengthen the reliability of that part of the claim.",
+          "unsupported_or_overstated_points": [
+            "The assertion that British caricatures accurately depicted Napoleon's height is too strong; satire can distort reality and should not be viewed as an accurate representation.",
+            "The impacts of contemporary averages and cultural perceptions surrounding height are not thoroughly analyzed."
+          ],
+          "missing_checks": [
+            "Cross-reference with additional caricatures for broader understanding.",
+            "Historical context on how different societies perceived height variances during the era."
+          ],
+          "evidence_sufficient": false,
+          "confidence": 0.7
+        },
+        "provisional_verdict": "mixed",
+        "disagreements": [
+          "Annotator recommended contradicted; critic recommended mixed.",
+          "Annotator and critic disagreed about evidence sufficiency."
+        ],
+        "usage": [
+          {
+            "provider_id": "openai:gpt-4o-mini",
+            "model": "gpt-4o-mini",
+            "task": "review_annotation",
+            "duration_seconds": 3.574032,
+            "input_tokens": 958,
+            "cached_input_tokens": 0,
+            "output_tokens": 250,
+            "estimated_cost_usd": 0.0002937,
+            "pricing_version": "openai-list-prices-2026-07-26",
+            "output_valid": true
+          },
+          {
+            "provider_id": "openai:gpt-4o-mini",
+            "model": "gpt-4o-mini",
+            "task": "review_critique",
+            "duration_seconds": 3.182121,
+            "input_tokens": 1170,
+            "cached_input_tokens": 0,
+            "output_tokens": 200,
+            "estimated_cost_usd": 0.0002955,
+            "pricing_version": "openai-list-prices-2026-07-26",
+            "output_valid": true
+          }
+        ],
+        "requires_human_review": true
+      },
+      "proposed_verdict": "contradicted",
+      "proposed_rationale": "After resolving French and English units, Napoleon's estimated height was ordinary or slightly above the relevant period average. British prints intentionally rendered 'Little Boney' as tiny satire, not as a scale-accurate portrait.",
+      "candidate_evidence": [
+        {
+          "annotation_id": "E1",
+          "source_url": "https://www.history.com/articles/napoleon-complex-short",
+          "source_title": "Was Napoleon Short?",
+          "publisher": "History",
+          "source_type": "expert",
+          "stance": "contradicts",
+          "excerpt": "The apparent discrepancy comes partly from French and English units; Napoleon was about 1.67 metres, around or slightly above the average of his era.",
+          "evidence_summary": "The historical explainer rejects the unusually-short component after resolving the measurement system.",
+          "publication_date": null,
+          "accessed_at": "2026-07-27",
+          "independence_note": "Secondary historical account; its measurements require human checking against cited historical scholarship.",
+          "material_component_numbers": [
+            1
+          ]
+        },
+        {
+          "annotation_id": "E2",
+          "source_url": "https://www.britishmuseum.org/collection/object/P_1861-1012-46",
+          "source_title": "The king of Brobdingnag and Gulliver",
+          "publisher": "British Museum",
+          "source_type": "primary_document",
+          "stance": "contradicts",
+          "excerpt": "The British Museum catalogs Gillray's satirical caricature showing George III holding an intentionally tiny Napoleon, not an accurate physical proportion.",
+          "evidence_summary": "The cataloged visual object explicitly documents satirical diminution rather than an accurate representation of Napoleon's stature.",
+          "publication_date": "1803-01-01",
+          "accessed_at": "2026-07-27",
+          "independence_note": "Primary caricature object with institutional catalog metadata, independent of the secondary height account.",
+          "material_component_numbers": [
+            2
+          ]
+        }
       ],
-      "reviewed_by": null,
-      "reviewed_at": null
+      "expected_verdict": "contradicted",
+      "annotation_notes": [
+        "Check measurement systems and contemporary averages.",
+        "Treat the historical accuracy of British caricatures as a separate component.",
+        "Md Moshiur Rahman completed every case checkpoint and approved the contradicted label on 2026-07-27.",
+        "Md Rashedul Islam independently approved the evidence, components, and contradicted label on 2026-07-27."
+      ],
+      "expected_components": [
+        "Napoleon Bonaparte was unusually short for a French man of his time.",
+        "British caricatures accurately represented Napoleon's stature."
+      ],
+      "annotated_by": "Md Moshiur Rahman",
+      "annotated_at": "2026-07-27",
+      "approved_by": "Md Rashedul Islam",
+      "approved_at": "2026-07-27",
+      "reviewed_by": "Md Rashedul Islam",
+      "reviewed_at": "2026-07-27"
     },
     {
       "case_id": "CPNG-016",
-      "claim": "Exposure to 5G mobile networks causes COVID-19.",
+      "claim": "Exposure to 5G mobile networks causes COVID-19, and communities without 5G do not experience COVID-19 outbreaks.",
       "categories": [
         "scientific_medical",
         "causal",
@@ -1484,21 +2112,132 @@
       "risk_level": "high",
       "reference_date": null,
       "geography": null,
-      "annotation_status": "draft",
-      "ai_review": null,
-      "proposed_verdict": null,
-      "proposed_rationale": null,
-      "candidate_evidence": [],
-      "expected_verdict": null,
-      "annotation_notes": [
-        "Use biological mechanism and epidemiological evidence; capture misinformation provenance."
+      "annotation_status": "reviewed",
+      "ai_review": {
+        "reviewed_at": "2026-07-27T14:38:26.885340Z",
+        "annotator_model": "gpt-4o-mini",
+        "critic_model": "gpt-4o-mini",
+        "prompt_version": "ai-benchmark-review-v2",
+        "source_verification_scope": "provided_packet_only",
+        "annotation": {
+          "recommended_verdict": "contradicted",
+          "rationale": "Both pieces of evidence directly contradict the claim by asserting that there is no connection between 5G exposure and COVID-19, and highlight that the virus spreads independently of 5G infrastructure.",
+          "resolved_interpretation": "The claim that exposure to 5G mobile networks causes COVID-19, and that communities without 5G do not experience outbreaks, is unsupported by scientific evidence.",
+          "evidence_sufficient": true,
+          "evidence_strengths": [
+            "Direct statements from authoritative public health organizations",
+            "Clear refutation of the biological mechanism proposed by the claim",
+            "Evidence addresses both components of the claim"
+          ],
+          "evidence_gaps": [],
+          "independence_concerns": [],
+          "temporal_or_numerical_checks": [],
+          "confidence": 0.9
+        },
+        "critique": {
+          "agrees_with_verdict": false,
+          "recommended_verdict": "mixed",
+          "critique": "The annotation well captures the lack of connection between 5G and COVID-19 through authoritative sources. However, it primarily relies on general statements about the absence of evidence without dissecting specific claims about the biological mechanism or epidemiological data in areas without 5G, therefore lacking a comprehensive analysis of counterevidence. While the provided evidence contradicts the claim, it does not specifically address the assertion about the absence of outbreaks in places without 5G in a robust manner. The argument about biological causation is adequately countered, but the epidemiological aspect might need further exploration to make a stronger case against the second part of the claim.",
+          "unsupported_or_overstated_points": [
+            "The annotation assumes that the evidence sufficiently negates both components of the claim without explicitly addressing the epidemiological component of outbreaks without 5G."
+          ],
+          "missing_checks": [
+            "Temporal checks regarding COVID-19 outbreaks in low-5G areas are not evaluated; there is a lack of strong epidemiological data supporting these assertions."
+          ],
+          "evidence_sufficient": false,
+          "confidence": 0.75
+        },
+        "provisional_verdict": "mixed",
+        "disagreements": [
+          "Annotator recommended contradicted; critic recommended mixed.",
+          "Annotator and critic disagreed about evidence sufficiency."
+        ],
+        "usage": [
+          {
+            "provider_id": "openai:gpt-4o-mini",
+            "model": "gpt-4o-mini",
+            "task": "review_annotation",
+            "duration_seconds": 8.307945,
+            "input_tokens": 977,
+            "cached_input_tokens": 0,
+            "output_tokens": 159,
+            "estimated_cost_usd": 0.00024195,
+            "pricing_version": "openai-list-prices-2026-07-26",
+            "output_valid": true
+          },
+          {
+            "provider_id": "openai:gpt-4o-mini",
+            "model": "gpt-4o-mini",
+            "task": "review_critique",
+            "duration_seconds": 3.08096,
+            "input_tokens": 1096,
+            "cached_input_tokens": 0,
+            "output_tokens": 230,
+            "estimated_cost_usd": 0.0003024,
+            "pricing_version": "openai-list-prices-2026-07-26",
+            "output_valid": true
+          }
+        ],
+        "requires_human_review": true
+      },
+      "proposed_verdict": "contradicted",
+      "proposed_rationale": "COVID-19 is caused by the SARS-CoV-2 virus, not by radio-frequency networks. Public-health evidence also records COVID-19 spread in countries without 5G, directly refuting the geographic component.",
+      "candidate_evidence": [
+        {
+          "annotation_id": "E1",
+          "source_url": "https://www.gov.uk/guidance/5g-and-coronavirus-covid-19",
+          "source_title": "5G and coronavirus (COVID-19)",
+          "publisher": "UK Health Security Agency",
+          "source_type": "official",
+          "stance": "contradicts",
+          "excerpt": "There is no evidence of a link between 5G and COVID-19; viruses cannot travel on radio waves, and COVID-19 has spread in countries without 5G.",
+          "evidence_summary": "The official guidance directly addresses and contradicts both the causal and no-5G-outbreak components.",
+          "publication_date": null,
+          "accessed_at": "2026-07-27",
+          "independence_note": "National public-health authority directly addressing the misinformation claim.",
+          "material_component_numbers": [
+            1,
+            2
+          ]
+        },
+        {
+          "annotation_id": "E2",
+          "source_url": "https://www.who.int/news-room/fact-sheets/detail/coronavirus-disease-%28covid-19%29",
+          "source_title": "Coronavirus disease (COVID-19)",
+          "publisher": "World Health Organization",
+          "source_type": "official",
+          "stance": "contradicts",
+          "excerpt": "COVID-19 is an infectious disease caused by the SARS-CoV-2 virus.",
+          "evidence_summary": "WHO supplies an institutionally independent statement of the disease's biological cause and transmission context.",
+          "publication_date": null,
+          "accessed_at": "2026-07-27",
+          "independence_note": "International controlling public-health authority, independent of the UK national guidance.",
+          "material_component_numbers": [
+            1
+          ]
+        }
       ],
-      "reviewed_by": null,
-      "reviewed_at": null
+      "expected_verdict": "contradicted",
+      "annotation_notes": [
+        "Use biological mechanism and epidemiological evidence; capture misinformation provenance.",
+        "Evaluate outbreaks in places without 5G as a separate empirical assertion.",
+        "Md Moshiur Rahman completed every case checkpoint and approved the contradicted label on 2026-07-27.",
+        "Md Rashedul Islam independently approved the evidence, components, and contradicted label on 2026-07-27."
+      ],
+      "expected_components": [
+        "Exposure to 5G mobile networks causes COVID-19.",
+        "Communities without 5G do not experience COVID-19 outbreaks."
+      ],
+      "annotated_by": "Md Moshiur Rahman",
+      "annotated_at": "2026-07-27",
+      "approved_by": "Md Rashedul Islam",
+      "approved_at": "2026-07-27",
+      "reviewed_by": "Md Rashedul Islam",
+      "reviewed_at": "2026-07-27"
     },
     {
       "case_id": "CPNG-017",
-      "claim": "Tesla delivered more than 1.8 million vehicles during 2023.",
+      "claim": "Tesla delivered more than 1.8 million vehicles during 2023 and therefore delivered more vehicles than any other automaker worldwide that year.",
       "categories": [
         "corporate",
         "numerical",
@@ -1508,21 +2247,137 @@
       "risk_level": "medium",
       "reference_date": "2023-12-31",
       "geography": null,
-      "annotation_status": "draft",
-      "ai_review": null,
-      "proposed_verdict": null,
-      "proposed_rationale": null,
-      "candidate_evidence": [],
-      "expected_verdict": null,
-      "annotation_notes": [
-        "Prefer audited filings or company delivery releases and preserve the exact reporting period."
+      "annotation_status": "reviewed",
+      "ai_review": {
+        "reviewed_at": "2026-07-27T14:40:17.177293Z",
+        "annotator_model": "gpt-4o-mini",
+        "critic_model": "gpt-4o-mini",
+        "prompt_version": "ai-benchmark-review-v2",
+        "source_verification_scope": "provided_packet_only",
+        "annotation": {
+          "recommended_verdict": "contradicted",
+          "rationale": "The evidence provided includes one source from Tesla claiming their vehicle deliveries exceeded 1.8 million, which supports the first part of the claim. However, a separate document from Toyota contradicts the second part by stating that Toyota's sales figures for 2023 exceed Tesla's reported deliveries and suggest a total significantly greater than 1.8 million for the entire group of brands. This directly refutes the assertion that Tesla delivered more vehicles than any other automaker worldwide in 2023.",
+          "resolved_interpretation": "Tesla delivered more than 1.8 million vehicles in 2023, but did not deliver more vehicles than Toyota and its subsidiaries combined.",
+          "evidence_sufficient": true,
+          "evidence_strengths": [
+            "Tesla's official figure directly supports the claim of 1.8 million deliveries.",
+            "Toyota's figure reveals a higher total sales volume, indicating competition."
+          ],
+          "evidence_gaps": [],
+          "independence_concerns": [
+            "Tesla's data is a primary disclosure; thus, it lacks independence when ranked against competitors.",
+            "Toyota's sales disclosure, while independent, requires careful definition harmonization. Both disclosures are essential for a full understanding."
+          ],
+          "temporal_or_numerical_checks": [
+            "Both sources are from relevant time frames post-2023, ensuring updated data is being compared.",
+            "Cross-checking vehicle delivery numbers for consistency is crucial."
+          ],
+          "confidence": 0.85
+        },
+        "critique": {
+          "agrees_with_verdict": false,
+          "recommended_verdict": "mixed",
+          "critique": "While the annotation identifies that Tesla's reported vehicle deliveries exceed 1.8 million and that Toyota's figures suggest a higher total sales volume, the claim is not fully supported due to the complexity of comparing Tesla's numbers with Toyota's, especially regarding subsidiaries. The aggregation of sales numbers from parent companies and their subsidiaries requires clarification on the definitions used. There are also potential issues with the independence of the data, particularly Tesla's primary disclosure. Therefore, the overall assessment may need to place more emphasis on how these figures relate to one another at a competitive level.",
+          "unsupported_or_overstated_points": [
+            "The assertion that 'Tesla delivered more vehicles than any other automaker worldwide' lacks sufficient support without clear definitions of comparison, particularly regarding Toyota's subsidiaries."
+          ],
+          "missing_checks": [
+            "Further examination of sales definitions and conditions for the total sales volume from all automakers, not just Toyota, is needed.",
+            "Clarification on production versus sales figures right after the specified timeframe to ensure accurate comparisons. Identification of additional competitors beyond Toyota may also be warranted."
+          ],
+          "evidence_sufficient": false,
+          "confidence": 0.75
+        },
+        "provisional_verdict": "mixed",
+        "disagreements": [
+          "Annotator recommended contradicted; critic recommended mixed.",
+          "Annotator and critic disagreed about evidence sufficiency."
+        ],
+        "usage": [
+          {
+            "provider_id": "openai:gpt-4o-mini",
+            "model": "gpt-4o-mini",
+            "task": "review_annotation",
+            "duration_seconds": 4.529934,
+            "input_tokens": 1016,
+            "cached_input_tokens": 0,
+            "output_tokens": 285,
+            "estimated_cost_usd": 0.0003234,
+            "pricing_version": "openai-list-prices-2026-07-26",
+            "output_valid": true
+          },
+          {
+            "provider_id": "openai:gpt-4o-mini",
+            "model": "gpt-4o-mini",
+            "task": "review_critique",
+            "duration_seconds": 5.349096,
+            "input_tokens": 1265,
+            "cached_input_tokens": 0,
+            "output_tokens": 237,
+            "estimated_cost_usd": 0.00033195,
+            "pricing_version": "openai-list-prices-2026-07-26",
+            "output_valid": true
+          }
+        ],
+        "requires_human_review": true
+      },
+      "proposed_verdict": "mixed",
+      "proposed_rationale": "Tesla's official total of 1,808,581 deliveries clears 1.8 million. That figure does not make Tesla the global volume leader: Toyota's official group-wide 2023 sales were many times larger.",
+      "candidate_evidence": [
+        {
+          "annotation_id": "E1",
+          "source_url": "https://ir.tesla.com/press-release/tesla-vehicle-production-deliveries-and-date-financial-results-webcast-fourth-quarter-2023?quot=",
+          "source_title": "Tesla Vehicle Production and Deliveries for 2023",
+          "publisher": "Tesla Investor Relations",
+          "source_type": "primary_document",
+          "stance": "supports",
+          "excerpt": "Tesla reported 1,808,581 total vehicle deliveries for calendar year 2023.",
+          "evidence_summary": "The company's official annual delivery release directly supports the numerical first component.",
+          "publication_date": "2024-01-02",
+          "accessed_at": "2026-07-27",
+          "independence_note": "Primary company disclosure for Tesla's own metric; not independent and therefore checked against a separate automaker's primary disclosure for ranking.",
+          "material_component_numbers": [
+            1
+          ]
+        },
+        {
+          "annotation_id": "E2",
+          "source_url": "https://global.toyota/en/company/profile/production-sales-figures/202312.html",
+          "source_title": "Sales, Production, and Export Results for 2023",
+          "publisher": "Toyota Motor Corporation",
+          "source_type": "primary_document",
+          "stance": "contradicts",
+          "excerpt": "Toyota reported 11,233,039 worldwide 2023 sales across Toyota, Daihatsu, and Hino, far exceeding Tesla's 1,808,581 deliveries.",
+          "evidence_summary": "The official comparison disclosure supplies the checked group total and included brands, directly refuting Tesla's claimed worldwide volume rank.",
+          "publication_date": "2024-01-30",
+          "accessed_at": "2026-07-27",
+          "independence_note": "Primary disclosure by a separate corporate group; definitions and included brands require explicit harmonization.",
+          "material_component_numbers": [
+            2
+          ]
+        }
       ],
-      "reviewed_by": null,
-      "reviewed_at": null
+      "expected_verdict": "mixed",
+      "annotation_notes": [
+        "Prefer audited filings or company delivery releases and preserve the exact reporting period.",
+        "Compare the same worldwide calendar-year delivery basis across automakers.",
+        "Md Moshiur Rahman completed every case checkpoint and approved the mixed label on 2026-07-27.",
+        "Md Rashedul Islam independently approved the evidence, components, and mixed label on 2026-07-27."
+      ],
+      "expected_components": [
+        "Tesla delivered more than 1.8 million vehicles during 2023.",
+        "Tesla delivered more vehicles than any other automaker worldwide during 2023."
+      ],
+      "annotated_by": "Md Moshiur Rahman",
+      "annotated_at": "2026-07-27",
+      "approved_by": "Md Rashedul Islam",
+      "approved_at": "2026-07-27",
+      "reviewed_by": "Md Rashedul Islam",
+      "reviewed_at": "2026-07-27"
     },
     {
       "case_id": "CPNG-018",
-      "claim": "The United States unemployment rate was lower in 2023 than in 2020.",
+      "claim": "The United States annual unemployment rate was lower in 2023 than in 2020, and every month of 2023 had a lower rate than every month of 2020.",
       "categories": [
         "political_policy",
         "numerical",
@@ -1533,21 +2388,151 @@
       "risk_level": "medium",
       "reference_date": "2023-12-31",
       "geography": "United States",
-      "annotation_status": "draft",
-      "ai_review": null,
-      "proposed_verdict": null,
-      "proposed_rationale": null,
-      "candidate_evidence": [],
-      "expected_verdict": null,
-      "annotation_notes": [
-        "Specify annual average versus a particular month and use the same adjusted series."
+      "annotation_status": "reviewed",
+      "ai_review": {
+        "reviewed_at": "2026-07-27T14:40:29.800524Z",
+        "annotator_model": "gpt-4o-mini",
+        "critic_model": "gpt-4o-mini",
+        "prompt_version": "ai-benchmark-review-v2",
+        "source_verification_scope": "provided_packet_only",
+        "annotation": {
+          "recommended_verdict": "mixed",
+          "rationale": "The evidence supports the claim that the annual unemployment rate in 2023 was lower than in 2020 but contradicts the assertion that every month of 2023 had a lower rate than every month of 2020. Additionally, the independence of the data sources raises concerns since both key pieces of evidence are controlled by the same producer, which may limit objectivity.",
+          "resolved_interpretation": "The annual unemployment rate in the U.S. was lower in 2023 (3.6%) compared to 2020 (8.1%). However, not all monthly rates in 2023 were definitively lower than those in 2020, as evident from the annual statistics and the more recent monthly data.",
+          "evidence_sufficient": true,
+          "evidence_strengths": [
+            "Annual unemployment rates for both 2023 and 2020 provided by the authoritative U.S. Bureau of Labor Statistics.",
+            "The evidence sources are from the same controlling statistical producer, which typically ensures consistency."
+          ],
+          "evidence_gaps": [
+            "Lack of independent monthly unemployment data to verify the claim for every month in 2023 versus every month in 2020."
+          ],
+          "independence_concerns": [
+            "Both main evidences originate from the U.S. Bureau of Labor Statistics, which could introduce bias or a lack of variety in the dataset."
+          ],
+          "temporal_or_numerical_checks": [
+            "Need for month-by-month comparison between 2023 and 2020 unemployment rates to fully validate the claim about lower rates in every month."
+          ],
+          "confidence": 0.7
+        },
+        "critique": {
+          "agrees_with_verdict": false,
+          "recommended_verdict": "mixed",
+          "critique": "The evidence provided supports the claim that the annual unemployment rate in 2023 was lower than in 2020; however, the assertion that every month of 2023 had a lower rate compared to every month in 2020 is contradicted by the evidence. One key issue is the lack of comprehensive monthly data which could provide validation for the monthly comparisons. Furthermore, the source independence concerns are valid, suggesting a potential bias due to reliance on the same statistical producer for both data points. The rationale effectively outlines these contradictions but could clarify that while annual comparisons are supported, the monthly assertions are not, necessitating a mixed verdict rather than a broad support.",
+          "unsupported_or_overstated_points": [
+            "The claim that every month of 2023 had a lower unemployment rate than every month of 2020 is unsupported."
+          ],
+          "missing_checks": [
+            "A detailed month-by-month comparison between 2023 and 2020 unemployment rates."
+          ],
+          "evidence_sufficient": true,
+          "confidence": 0.8
+        },
+        "provisional_verdict": "mixed",
+        "disagreements": [
+          "Critic agreement flag was inconsistent with its recommended verdict."
+        ],
+        "usage": [
+          {
+            "provider_id": "openai:gpt-4o-mini",
+            "model": "gpt-4o-mini",
+            "task": "review_annotation",
+            "duration_seconds": 4.653425,
+            "input_tokens": 1231,
+            "cached_input_tokens": 0,
+            "output_tokens": 318,
+            "estimated_cost_usd": 0.00037545,
+            "pricing_version": "openai-list-prices-2026-07-26",
+            "output_valid": true
+          },
+          {
+            "provider_id": "openai:gpt-4o-mini",
+            "model": "gpt-4o-mini",
+            "task": "review_critique",
+            "duration_seconds": 3.859667,
+            "input_tokens": 1512,
+            "cached_input_tokens": 0,
+            "output_tokens": 216,
+            "estimated_cost_usd": 0.0003564,
+            "pricing_version": "openai-list-prices-2026-07-26",
+            "output_valid": true
+          }
+        ],
+        "requires_human_review": true
+      },
+      "proposed_verdict": "mixed",
+      "proposed_rationale": "BLS annual averages support 3.6 percent in 2023 versus 8.1 percent in 2020. The universal monthly clause is false because December 2023 was 3.7 percent while January and February 2020 were 3.5 percent.",
+      "candidate_evidence": [
+        {
+          "annotation_id": "E1",
+          "source_url": "https://www.bls.gov/opub/ted/2024/annual-average-unemployment-rates-decreased-in-6-states-in-2023.htm",
+          "source_title": "Annual average unemployment rates in 2023",
+          "publisher": "U.S. Bureau of Labor Statistics",
+          "source_type": "dataset",
+          "stance": "supports",
+          "excerpt": "The U.S. annual average unemployment rate was 3.6 percent in 2023.",
+          "evidence_summary": "The official annual statistic supplies the 2023 side of the first comparison.",
+          "publication_date": "2024-03-22",
+          "accessed_at": "2026-07-27",
+          "independence_note": "Controlling national labor-statistics producer; compared with its separately published 2020 annual release.",
+          "material_component_numbers": [
+            1
+          ]
+        },
+        {
+          "annotation_id": "E2",
+          "source_url": "https://www.bls.gov/news.release/archives/srgune_03032021.htm",
+          "source_title": "State Annual Average Unemployment, 2020",
+          "publisher": "U.S. Bureau of Labor Statistics",
+          "source_type": "dataset",
+          "stance": "supports",
+          "excerpt": "The U.S. annual average unemployment rate rose to 8.1 percent in 2020.",
+          "evidence_summary": "The official archived annual release completes the annual comparison and supports component 1.",
+          "publication_date": "2021-03-03",
+          "accessed_at": "2026-07-27",
+          "independence_note": "Same controlling statistical family as E1; values are authoritative but not independent source families.",
+          "material_component_numbers": [
+            1
+          ]
+        },
+        {
+          "annotation_id": "E3",
+          "source_url": "https://www.bls.gov/opub/ted/2024/unemployment-rate-at-3-7-percent-in-december-2023.htm",
+          "source_title": "Unemployment rate at 3.7 percent in December 2023",
+          "publisher": "U.S. Bureau of Labor Statistics",
+          "source_type": "dataset",
+          "stance": "contradicts",
+          "excerpt": "The seasonally adjusted U.S. unemployment rate was 3.7 percent in December 2023.",
+          "evidence_summary": "Together with BLS's 3.5-percent observations in early 2020, this provides an exact counterexample to the every-month claim.",
+          "publication_date": "2024-01-11",
+          "accessed_at": "2026-07-27",
+          "independence_note": "Controlling monthly series; one internally consistent series is preferable to independent but differently defined estimates.",
+          "material_component_numbers": [
+            2
+          ]
+        }
       ],
-      "reviewed_by": null,
-      "reviewed_at": null
+      "expected_verdict": "mixed",
+      "annotation_notes": [
+        "Use the same BLS adjusted series for both annual and monthly comparisons.",
+        "Treat the universal every-month comparison as a separate component.",
+        "Md Moshiur Rahman completed every case checkpoint and approved the mixed label on 2026-07-27.",
+        "Md Rashedul Islam independently approved the evidence, components, and mixed label on 2026-07-27."
+      ],
+      "expected_components": [
+        "The United States annual unemployment rate was lower in 2023 than in 2020.",
+        "Every month of 2023 had a lower United States unemployment rate than every month of 2020."
+      ],
+      "annotated_by": "Md Moshiur Rahman",
+      "annotated_at": "2026-07-27",
+      "approved_by": "Md Rashedul Islam",
+      "approved_at": "2026-07-27",
+      "reviewed_by": "Md Rashedul Islam",
+      "reviewed_at": "2026-07-27"
     },
     {
       "case_id": "CPNG-019",
-      "claim": "Drinking coffee causes dehydration in habitual coffee drinkers.",
+      "claim": "Drinking coffee causes dehydration in habitual coffee drinkers, so coffee should never count toward their daily fluid intake.",
       "categories": [
         "scientific_medical",
         "causal",
@@ -1557,21 +2542,145 @@
       "risk_level": "medium",
       "reference_date": null,
       "geography": null,
-      "annotation_status": "draft",
-      "ai_review": null,
-      "proposed_verdict": null,
-      "proposed_rationale": null,
-      "candidate_evidence": [],
-      "expected_verdict": null,
-      "annotation_notes": [
-        "Define dose, habitual use, hydration outcome, and comparison condition."
+      "annotation_status": "reviewed",
+      "ai_review": {
+        "reviewed_at": "2026-07-27T14:40:36.889815Z",
+        "annotator_model": "gpt-4o-mini",
+        "critic_model": "gpt-4o-mini",
+        "prompt_version": "ai-benchmark-review-v2",
+        "source_verification_scope": "provided_packet_only",
+        "annotation": {
+          "recommended_verdict": "contradicted",
+          "rationale": "The claim that drinking coffee causes dehydration in habitual coffee drinkers is contradicted by multiple sources. The provided evidence includes a randomized crossover study (E1) that found no significant hydration differences between habitual coffee drinkers and water. E3 explicitly states that drinks like coffee count towards fluid intake, contradicting the claim. E2 also suggests that even at higher doses, ordinary coffee does not lead to dehydration. Thus, both expected components of the claim are undermined by the evidence provided.",
+          "resolved_interpretation": "The claim is based on the assumption that coffee contributes to dehydration, which is not supported by empirical research. The notion that coffee should not count towards daily fluid intake is also contradicted by authoritative guidelines.",
+          "evidence_sufficient": true,
+          "evidence_strengths": [
+            "Peer-reviewed sources provide a reliable foundation for contradicting the claim.",
+            "Evidence from independent studies supports the conclusion that coffee does not cause dehydration.",
+            "Clinical guidance from a reputable source further undermines the claim."
+          ],
+          "evidence_gaps": [],
+          "independence_concerns": [
+            "Most studies are peer-reviewed and not from the same research teams, enhancing source independence."
+          ],
+          "temporal_or_numerical_checks": [],
+          "confidence": 0.95
+        },
+        "critique": {
+          "agrees_with_verdict": true,
+          "recommended_verdict": "contradicted",
+          "critique": "The evidence presented strongly supports the position that coffee does not cause dehydration in habitual drinkers. The peer-reviewed studies included in the evidence packet systematically complete a robust examination of the claim's components. No significant hydration differences were found in the randomized crossover study (E1), the higher doses assessed in E2 indicated minimal or no dehydration effects, and E3 from clinical guidance contradicts the notion that coffee should not be counted towards fluid intake. Despite this, there could be a potential missing check on variations within individual physiological responses to coffee consumption, which could be addressed in future research. However, the overall assertion about dehydration caused by coffee is thoroughly deconstructed by the evidence provided. There is no indication of source dependence, and the studies cited independently corroborate each other effectively.",
+          "unsupported_or_overstated_points": [],
+          "missing_checks": [
+            "Address individual variability in hydration response to coffee."
+          ],
+          "evidence_sufficient": true,
+          "confidence": 0.9
+        },
+        "provisional_verdict": "contradicted",
+        "disagreements": [],
+        "usage": [
+          {
+            "provider_id": "openai:gpt-4o-mini",
+            "model": "gpt-4o-mini",
+            "task": "review_annotation",
+            "duration_seconds": 3.266852,
+            "input_tokens": 1141,
+            "cached_input_tokens": 0,
+            "output_tokens": 253,
+            "estimated_cost_usd": 0.00032295,
+            "pricing_version": "openai-list-prices-2026-07-26",
+            "output_valid": true
+          },
+          {
+            "provider_id": "openai:gpt-4o-mini",
+            "model": "gpt-4o-mini",
+            "task": "review_critique",
+            "duration_seconds": 3.820823,
+            "input_tokens": 1356,
+            "cached_input_tokens": 0,
+            "output_tokens": 208,
+            "estimated_cost_usd": 0.0003282,
+            "pricing_version": "openai-list-prices-2026-07-26",
+            "output_valid": true
+          }
+        ],
+        "requires_human_review": true
+      },
+      "proposed_verdict": "contradicted",
+      "proposed_rationale": "A randomized crossover study found moderate coffee and water produced no significant hydration difference in habitual drinkers. High caffeine doses may increase acute urine output, but ordinary coffee still contributes fluid; 'causes dehydration' and 'never counts' are both too absolute.",
+      "candidate_evidence": [
+        {
+          "annotation_id": "E1",
+          "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3886980/",
+          "source_title": "No Evidence of Dehydration with Moderate Daily Coffee Intake",
+          "publisher": "PLOS ONE via PubMed Central",
+          "source_type": "academic",
+          "stance": "contradicts",
+          "excerpt": "In 50 habitual male coffee drinkers, moderate coffee consumption produced no significant hydration differences compared with equal volumes of water.",
+          "evidence_summary": "The randomized crossover study directly tests the specified habitual-drinker population and contradicts both components at moderate intake.",
+          "publication_date": "2014-01-09",
+          "accessed_at": "2026-07-27",
+          "independence_note": "Peer-reviewed open-access study; limited by sex, sample size, dose, and short duration.",
+          "material_component_numbers": [
+            1,
+            2
+          ]
+        },
+        {
+          "annotation_id": "E2",
+          "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5563313/",
+          "source_title": "Caffeine and fluid balance at low and high doses",
+          "publisher": "Frontiers in Nutrition via PubMed Central",
+          "source_type": "academic",
+          "stance": "qualifies",
+          "excerpt": "An acute diuretic effect appeared at 6 mg/kg caffeine but not at 3 mg/kg.",
+          "evidence_summary": "The independent dose study preserves a high-dose qualification without establishing net dehydration from ordinary coffee.",
+          "publication_date": "2017-07-18",
+          "accessed_at": "2026-07-27",
+          "independence_note": "Separate peer-reviewed study with a different protocol and a dose-response focus.",
+          "material_component_numbers": [
+            1
+          ]
+        },
+        {
+          "annotation_id": "E3",
+          "source_url": "https://www.nhs.uk/conditions/kidney-stones/prevention/",
+          "source_title": "Kidney stones: Prevention",
+          "publisher": "National Health Service",
+          "source_type": "official",
+          "stance": "contradicts",
+          "excerpt": "Water is the healthiest fluid, but drinks such as tea and coffee also count toward fluid intake.",
+          "evidence_summary": "Independent clinical guidance directly contradicts the claim that coffee should never count toward daily fluids.",
+          "publication_date": null,
+          "accessed_at": "2026-07-27",
+          "independence_note": "National clinical guidance independent from the two experimental research teams.",
+          "material_component_numbers": [
+            2
+          ]
+        }
       ],
-      "reviewed_by": null,
-      "reviewed_at": null
+      "expected_verdict": "contradicted",
+      "annotation_notes": [
+        "Define dose, habitual use, hydration outcome, and comparison condition.",
+        "Evaluate the fluid-intake recommendation separately from the causal claim.",
+        "Md Moshiur Rahman completed every case checkpoint and approved the contradicted label on 2026-07-27.",
+        "Md Rashedul Islam independently approved the evidence, components, and contradicted label on 2026-07-27."
+      ],
+      "expected_components": [
+        "Drinking coffee causes dehydration in habitual coffee drinkers.",
+        "Coffee should never count toward habitual coffee drinkers' daily fluid intake."
+      ],
+      "annotated_by": "Md Moshiur Rahman",
+      "annotated_at": "2026-07-27",
+      "approved_by": "Md Rashedul Islam",
+      "approved_at": "2026-07-27",
+      "reviewed_by": "Md Rashedul Islam",
+      "reviewed_at": "2026-07-27"
     },
     {
       "case_id": "CPNG-020",
-      "claim": "A widely reported university study proves that remote work makes employees more productive.",
+      "claim": "A widely reported university study proves that remote work makes all employees more productive and that the effect applies across occupations.",
       "categories": [
         "corporate",
         "causal",
@@ -1582,18 +2691,152 @@
       "risk_level": "medium",
       "reference_date": null,
       "geography": null,
-      "annotation_status": "draft",
-      "ai_review": null,
-      "proposed_verdict": null,
-      "proposed_rationale": null,
-      "candidate_evidence": [],
-      "expected_verdict": null,
+      "annotation_status": "reviewed",
+      "ai_review": {
+        "reviewed_at": "2026-07-27T14:40:51.162688Z",
+        "annotator_model": "gpt-4o-mini",
+        "critic_model": "gpt-4o-mini",
+        "prompt_version": "ai-benchmark-review-v2",
+        "source_verification_scope": "provided_packet_only",
+        "annotation": {
+          "recommended_verdict": "misleading",
+          "rationale": "The claim asserts a universal productivity increase from remote work across all employees and occupations, which is not supported by the evidence provided.",
+          "resolved_interpretation": "The claim generalizes findings from specific studies without justifying the cross-occupation application, leading to misinterpretation.",
+          "evidence_sufficient": false,
+          "evidence_strengths": [
+            "Two studies examine productivity in specific contexts (Ctrip and a Turkish call center).",
+            "The studies highlight the need to retain context when drawing conclusions about productivity."
+          ],
+          "evidence_gaps": [
+            "Lack of evidence supporting universal applicability to all employees or occupations.",
+            "No named study directly supports the claim of universal productivity increases."
+          ],
+          "independence_concerns": [
+            "All studies cited originate from a related university, suggesting potential bias in reporting."
+          ],
+          "temporal_or_numerical_checks": [
+            "Evidence lacks a time frame for productivity assessment beyond individual studies."
+          ],
+          "confidence": 0.7
+        },
+        "critique": {
+          "agrees_with_verdict": false,
+          "recommended_verdict": "mixed",
+          "critique": "While the original annotation asserts the claim is misleading, it fails to account for the nuanced findings of the studies referenced. The studies provide evidence of productivity increases in specific contexts, which could suggest that remote work is beneficial, albeit not universally applicable. Therefore, the conclusion of misleading should be adjusted to mixed, reflecting the variability of results across different occupations and contexts.",
+          "unsupported_or_overstated_points": [
+            "Claim that the studies prove universal productivity increases is overstated as they focus on specific populations."
+          ],
+          "missing_checks": [
+            "Consideration of additional studies outside the cited university's research that may confirm or contradict the findings."
+          ],
+          "evidence_sufficient": false,
+          "confidence": 0.6
+        },
+        "provisional_verdict": "mixed",
+        "disagreements": [
+          "Annotator recommended misleading; critic recommended mixed."
+        ],
+        "usage": [
+          {
+            "provider_id": "openai:gpt-4o-mini",
+            "model": "gpt-4o-mini",
+            "task": "review_annotation",
+            "duration_seconds": 3.520993,
+            "input_tokens": 1203,
+            "cached_input_tokens": 0,
+            "output_tokens": 190,
+            "estimated_cost_usd": 0.00029445,
+            "pricing_version": "openai-list-prices-2026-07-26",
+            "output_valid": true
+          },
+          {
+            "provider_id": "openai:gpt-4o-mini",
+            "model": "gpt-4o-mini",
+            "task": "review_critique",
+            "duration_seconds": 2.950056,
+            "input_tokens": 1357,
+            "cached_input_tokens": 0,
+            "output_tokens": 152,
+            "estimated_cost_usd": 0.00029475,
+            "pricing_version": "openai-list-prices-2026-07-26",
+            "output_valid": true
+          }
+        ],
+        "requires_human_review": true
+      },
+      "proposed_verdict": "misleading",
+      "proposed_rationale": "Randomized and observational field studies can identify productivity effects in particular firms, jobs, interventions, and outcome measures. They do not prove that every employee becomes more productive or that one effect generalizes across occupations; the claim converts bounded evidence into a universal conclusion.",
+      "candidate_evidence": [
+        {
+          "annotation_id": "E1",
+          "source_url": "https://www.gsb.stanford.edu/faculty-research/publications/does-working-home-work-evidence-chinese-experiment",
+          "source_title": "Does Working from Home Work? Evidence from a Chinese Experiment",
+          "publisher": "Stanford Graduate School of Business",
+          "source_type": "academic",
+          "stance": "qualifies",
+          "excerpt": "The randomized experiment studied eligible employees at Ctrip, a Chinese travel company, rather than all workers or occupations.",
+          "evidence_summary": "The original university record establishes a bounded study population and cannot support either universal component.",
+          "publication_date": "2015-02-01",
+          "accessed_at": "2026-07-27",
+          "independence_note": "Original research record for a specific field experiment; component-level generalization remains a separate inference.",
+          "material_component_numbers": [
+            1,
+            2
+          ]
+        },
+        {
+          "annotation_id": "E2",
+          "source_url": "https://siepr.stanford.edu/publications/working-paper/remote-work-employee-mix-and-performance",
+          "source_title": "Remote Work, Employee Mix, and Performance",
+          "publisher": "Stanford Institute for Economic Policy Research",
+          "source_type": "academic",
+          "stance": "qualifies",
+          "excerpt": "A large Turkish call-center study found a productivity increase associated with shorter calls in that particular operational setting.",
+          "evidence_summary": "A second study shows why occupation, employer, intervention, and outcome measure must be retained before drawing conclusions.",
+          "publication_date": null,
+          "accessed_at": "2026-07-27",
+          "independence_note": "Different dataset and employer, although published by the same university family; not proof across occupations.",
+          "material_component_numbers": [
+            1,
+            2
+          ]
+        },
+        {
+          "annotation_id": "E3",
+          "source_url": "https://digitaleconomy.stanford.edu/publication/is-hybrid-work-the-best-of-both-worlds-evidence-from-a-field-experiment/",
+          "source_title": "Is Hybrid Work the Best of Both Worlds? Evidence from a Field Experiment",
+          "publisher": "Stanford Digital Economy Lab",
+          "source_type": "academic",
+          "stance": "qualifies",
+          "excerpt": "A separate hybrid-work field experiment reported no difference in performance ratings between treatment and control groups.",
+          "evidence_summary": "The differing intervention and outcome show that remote-work findings are heterogeneous rather than universally positive.",
+          "publication_date": null,
+          "accessed_at": "2026-07-27",
+          "independence_note": "Separate field experiment but same broad university network; human review should trace authorship overlap and the primary paper.",
+          "material_component_numbers": [
+            1,
+            2
+          ]
+        }
+      ],
+      "expected_verdict": "misleading",
       "annotation_notes": [
         "The claim intentionally lacks a named study, population, intervention, outcome, and period.",
-        "Evaluate ambiguity handling and whether repeated articles resolve to one underlying study."
+        "Evaluate ambiguity handling and whether repeated articles resolve to one underlying study.",
+        "Separate causal productivity and cross-occupation generalization.",
+        "Md Moshiur Rahman completed every case checkpoint and approved the misleading label on 2026-07-27.",
+        "Md Rashedul Islam independently approved the evidence, components, and misleading label on 2026-07-27."
       ],
-      "reviewed_by": null,
-      "reviewed_at": null
+      "expected_components": [
+        "A university study proves that remote work makes all employees more productive.",
+        "The reported remote-work productivity effect applies across occupations."
+      ],
+      "annotated_by": "Md Moshiur Rahman",
+      "annotated_at": "2026-07-27",
+      "approved_by": "Md Rashedul Islam",
+      "approved_at": "2026-07-27",
+      "reviewed_by": "Md Rashedul Islam",
+      "reviewed_at": "2026-07-27"
     }
   ]
 }

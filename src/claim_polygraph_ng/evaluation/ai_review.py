@@ -15,7 +15,7 @@ from claim_polygraph_ng.evaluation.models import (
 )
 from claim_polygraph_ng.providers import OpenAIStructuredModelProvider
 
-AI_REVIEW_PROMPT_VERSION = "ai-benchmark-review-v1"
+AI_REVIEW_PROMPT_VERSION = "ai-benchmark-review-v2"
 
 
 async def review_benchmark_cases(
@@ -69,6 +69,10 @@ async def _review_case(
             "proposed_verdict",
             "proposed_rationale",
             "expected_verdict",
+            "annotated_by",
+            "annotated_at",
+            "approved_by",
+            "approved_at",
             "reviewed_by",
             "reviewed_at",
         },
@@ -83,7 +87,11 @@ async def _review_case(
             "requirements": (
                 "Do not assume linked pages were opened. Assess only the supplied excerpts "
                 "and metadata. Deliberately consider support, contradiction, ambiguity, "
-                "source independence, temporal context, and numerical context."
+                "source independence, temporal context, and numerical context. The "
+                "recommended_verdict must classify the submitted claim, never the evidence "
+                "packet: evidence with stance 'contradicts' counts against the submitted "
+                "claim. Evaluate every expected component and then aggregate them without "
+                "hiding a false or unresolved material component."
             ),
         },
     )
@@ -99,7 +107,10 @@ async def _review_case(
             "requirements": (
                 "Challenge the annotation independently. Identify overstatement, missing "
                 "counterevidence, source-dependence problems, and unresolved temporal or "
-                "numerical checks. Do not claim human or external source verification."
+                "numerical checks. Do not claim human or external source verification. "
+                "The recommended_verdict must classify the submitted claim, not whether "
+                "the packet supports the curator's analysis. Treat 'contradicts' evidence "
+                "as evidence against the submitted claim and check every expected component."
             ),
         },
     )
@@ -135,6 +146,10 @@ async def _review_case(
             "annotation_status": AnnotationStatus.AI_REVIEWED,
             "ai_review": record,
             "expected_verdict": None,
+            "annotated_by": None,
+            "annotated_at": None,
+            "approved_by": None,
+            "approved_at": None,
             "reviewed_by": None,
             "reviewed_at": None,
         }

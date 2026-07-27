@@ -2,6 +2,7 @@
 
 import json
 from collections.abc import Mapping
+from datetime import date
 from typing import cast
 from uuid import UUID
 
@@ -11,6 +12,8 @@ from pydantic import Field, JsonValue, ValidationError
 from claim_polygraph_ng.domain import (
     AtomicClaim,
     AuditIssue,
+    ClaimDecomposition,
+    ClaimType,
     Evidence,
     EvidenceStance,
     ExtractionStatus,
@@ -44,6 +47,21 @@ _TASK_INSTRUCTIONS = {
         "entities, quantities, date, geography, ambiguities, and checkworthiness. Do not "
         "research or decide whether it is true."
     ),
+    ModelTask.DECOMPOSE_CLAIM: (
+        "Decide whether the normalized root claim contains multiple independently checkable "
+        "material assertions. Decompose only when doing so improves answerability. Every "
+        "component must be a complete claim and preserve material date, geography, quantity, "
+        "definition, attribution, comparison, and causal context in retained_context. Do not "
+        "merge two independently checkable propositions into one component merely to preserve "
+        "their causal relationship. A conclusion introduced by 'so', 'therefore', or an "
+        "equivalent causal connector must be its own component when it can be checked "
+        "independently; retain its premise and causal direction in retained_context. In "
+        "particular, do not leave a premise and conclusion joined by 'and therefore' inside one "
+        "component. When requires_decomposition is true, every component must be strictly "
+        "narrower than the root and the full root must never appear as a component. Only when "
+        "requires_decomposition is false may you return one parent-equivalent singleton "
+        "component."
+    ),
     ModelTask.PLAN_INVESTIGATION: (
         "Propose a bounded investigation plan with useful research paths and source types. "
         "The application will inject the claim ID and enforce mandatory research balance."
@@ -69,6 +87,11 @@ _TASK_INSTRUCTIONS = {
         "When labels overlap, use misleading for a familiar approximation or conditional truth "
         "made materially false by words such as 'always', 'every', or 'exactly'; reserve "
         "contradicted for a false central proposition without such a credible qualified form. "
+        "A credible qualified form must be explicitly supported by the packet: name that "
+        "narrower true proposition when choosing misleading. Use contradicted for an absolute "
+        "proverb or safety claim that the packet directly refutes without supporting a narrower "
+        "version. Conversely, use misleading when subgroup or setting-specific positive results "
+        "are inflated into a universal claim about all people, settings, or occupations. "
         "Treat supplied taxonomy_guidance as binding when it identifies such a qualified form; "
         "explain the qualification instead of overriding the guidance. "
         "Use outdated rather than contradicted when a temporal word such as 'still' or "
@@ -83,8 +106,11 @@ _TASK_INSTRUCTIONS = {
         "A conclusion such as misleading, outdated, or contradicted is fully supported when "
         "it follows directly from the cited facts and the original claim's exact wording; it "
         "does not need to appear verbatim in a source. Use the original_claim and verdict_label "
-        "only to interpret the sentence, not as evidence. Consider every supplied approved "
-        "evidence item and select all IDs needed to support the sentence. "
+        "only to interpret the sentence, not as evidence. When components, component_verdicts, "
+        "and coverage are supplied for a parent aggregation, verify every stated component "
+        "label against its decisive evidence and verify that the parent label follows from all "
+        "material component labels. Consider every supplied approved evidence item and select "
+        "all IDs needed to support the sentence. "
         "When support is partial, provide a conservative suggested_revision that preserves "
         "the verdict label while removing or qualifying only the unsupported clause; make the "
         "revision fully supportable from the supplied evidence. When prior_audit is present, "
@@ -128,6 +154,28 @@ class _EvidenceSemantics(DomainModel):
     entailment_score: float | None = Field(default=None, ge=0.0, le=1.0)
     temporal_compatibility: float | None = Field(default=None, ge=0.0, le=1.0)
     context: str | None = Field(default=None, max_length=2_000)
+
+
+class _ComponentClaimSemantics(DomainModel):
+    """Model-generated component meaning without application-owned identity."""
+
+    text: str = Field(min_length=3, max_length=2_000)
+    claim_type: ClaimType
+    entities: tuple[str, ...] = ()
+    quantities: tuple[str, ...] = ()
+    reference_date: date | None = None
+    geography: str | None = Field(default=None, max_length=200)
+    ambiguities: tuple[str, ...] = ()
+    retained_context: tuple[str, ...] = ()
+    checkworthiness: float = Field(ge=0.0, le=1.0)
+
+
+class _ClaimDecompositionSemantics(DomainModel):
+    """Selective decomposition without application-owned identifiers."""
+
+    requires_decomposition: bool
+    components: tuple[_ComponentClaimSemantics, ...] = Field(min_length=1, max_length=8)
+    rationale: str = Field(min_length=10, max_length=5_000)
 
 
 class _InvestigationPlanSemantics(DomainModel):
@@ -192,6 +240,7 @@ class OllamaStructuredModelProvider:
     ) -> StructuredResult:
         """Call Ollama, validate its JSON, and enforce task-specific invariants."""
         schema_models: dict[ModelTask, type[DomainModel]] = {
+            ModelTask.DECOMPOSE_CLAIM: _ClaimDecompositionSemantics,
             ModelTask.PLAN_INVESTIGATION: _InvestigationPlanSemantics,
             ModelTask.CLASSIFY_EVIDENCE: _EvidenceSemantics,
             ModelTask.AUDIT_SENTENCE: _SentenceAuditSemantics,
@@ -256,7 +305,12 @@ class OllamaStructuredModelProvider:
         except ValidationError as error:
             raise ModelOutputError(f"Ollama output failed schema validation: {error}") from error
 
-        if task is ModelTask.PLAN_INVESTIGATION:
+        if task is ModelTask.DECOMPOSE_CLAIM:
+            artifact = _assemble_decomposition(
+                cast(_ClaimDecompositionSemantics, generated),
+                inputs,
+            )
+        elif task is ModelTask.PLAN_INVESTIGATION:
             artifact = _assemble_plan(
                 cast(_InvestigationPlanSemantics, generated),
                 inputs,
@@ -327,6 +381,42 @@ def _assemble_evidence(
     except (KeyError, TypeError, ValueError) as error:
         raise ModelOutputError(
             f"evidence classification received invalid protected input: {error}"
+        ) from error
+
+
+def _assemble_decomposition(
+    semantics: _ClaimDecompositionSemantics,
+    inputs: Mapping[str, JsonValue],
+) -> ClaimDecomposition:
+    """Attach immutable root and parent identities to model-generated components."""
+    try:
+        root = AtomicClaim.model_validate(inputs["root_claim"])
+        protected_parent_context = f"Submitted parent claim: {root.text}"
+        components = tuple(
+            AtomicClaim(
+                parent_claim_id=root.claim_id,
+                **component.model_dump(exclude={"reference_date", "geography", "retained_context"}),
+                reference_date=(
+                    root.reference_date
+                    if root.reference_date is not None
+                    else component.reference_date
+                ),
+                geography=root.geography if root.geography is not None else component.geography,
+                retained_context=tuple(
+                    dict.fromkeys((*component.retained_context, protected_parent_context))
+                ),
+            )
+            for component in semantics.components
+        )
+        return ClaimDecomposition(
+            root_claim=root,
+            requires_decomposition=semantics.requires_decomposition,
+            components=components,
+            rationale=semantics.rationale,
+        )
+    except (KeyError, TypeError, ValueError) as error:
+        raise ModelOutputError(
+            f"claim decomposition received invalid protected input: {error}"
         ) from error
 
 
@@ -410,6 +500,13 @@ def _validate_task_invariants(
         normalized = cast(AtomicClaim, artifact)
         if not normalized.text:
             raise ModelOutputError("normalized claim text cannot be empty")
+        return
+
+    if task is ModelTask.DECOMPOSE_CLAIM:
+        decomposition = cast(ClaimDecomposition, artifact)
+        expected_root = AtomicClaim.model_validate(inputs["root_claim"])
+        if decomposition.root_claim != expected_root:
+            raise ModelOutputError("decomposition changed the protected root claim")
         return
 
     if task is ModelTask.PLAN_INVESTIGATION:

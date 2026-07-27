@@ -126,7 +126,7 @@ class SQLiteInvestigationRepository:
                     str(investigation_id),
                     artifact_type.value,
                     str(artifact_id),
-                    artifact.model_dump_json(),
+                    artifact.model_dump_json(exclude_computed_fields=True),
                 ),
             )
 

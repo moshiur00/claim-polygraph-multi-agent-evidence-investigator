@@ -12,26 +12,35 @@ from uuid import UUID
 from pydantic import SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-from claim_polygraph_ng.application import InvestigationService
-from claim_polygraph_ng.domain import InvestigationStatus
+from claim_polygraph_ng.application import ComplexInvestigationService, InvestigationService
+from claim_polygraph_ng.domain import ArtifactType, ClaimDecomposition, InvestigationStatus
 from claim_polygraph_ng.evaluation import (
     BenchmarkEvidenceSearchProvider,
     RecordingSearchProvider,
     RetrievalCandidateSearchProvider,
     RetrievalQueryStrategy,
     SnapshotReplaySearchProvider,
+    audit_phase3_gates,
     build_retrieval_snapshot,
+    compare_complex_evaluations,
     export_benchmark,
+    export_complex_evaluation,
+    export_complex_stability,
     export_evaluation,
     export_page_fetch_evaluation,
+    export_phase3_gate_audit,
     export_retrieval_evaluation,
     export_retrieval_snapshot,
     export_semantic_passage_evaluation,
     load_benchmark,
+    load_complex_evaluation,
     load_page_fetch_evaluation,
     load_retrieval_evaluation,
     load_retrieval_snapshot,
+    load_semantic_passage_evaluation,
+    merge_complex_evaluations,
     review_benchmark_cases,
+    run_complex_evaluation,
     run_evaluation,
     run_page_fetch_evaluation,
     run_retrieval_evaluation,
@@ -48,13 +57,24 @@ from claim_polygraph_ng.providers import (
     SerpAPISearchProvider,
     StructuredModelProvider,
 )
-from claim_polygraph_ng.reporting import export_report, load_report, render_markdown
+from claim_polygraph_ng.reporting import (
+    export_complex_report,
+    export_report,
+    load_complex_report,
+    load_report,
+    render_complex_markdown,
+    render_markdown,
+)
 from claim_polygraph_ng.retrieval import SafeHttpFetcher, UrlSafetyPolicy
 
 DEFAULT_DATABASE = Path("data") / "claim_polygraph_ng.sqlite3"
 DEFAULT_ARTIFACTS = Path("artifacts")
 DEFAULT_BENCHMARK = Path("benchmarks") / "initial_claims_v1.json"
 DEFAULT_EVALUATION_OUTPUT = DEFAULT_ARTIFACTS / "evaluations" / "deterministic-baseline.json"
+DEFAULT_COMPLEX_STABILITY_OUTPUT = (
+    DEFAULT_ARTIFACTS / "evaluations" / "phase3-complex-stability.json"
+)
+DEFAULT_PHASE3_GATE_OUTPUT = DEFAULT_ARTIFACTS / "evaluations" / "phase3-gate-audit.json"
 DEFAULT_RETRIEVAL_OUTPUT = DEFAULT_ARTIFACTS / "evaluations" / "searxng-retrieval.json"
 DEFAULT_PAGE_EVALUATION_OUTPUT = DEFAULT_ARTIFACTS / "evaluations" / "page-fetch-evaluation.json"
 DEFAULT_SEMANTIC_PASSAGE_OUTPUT = (
@@ -197,6 +217,14 @@ def build_parser() -> argparse.ArgumentParser:
         help="Per-task OpenAI timeout in seconds (default: 60).",
     )
     parser.add_argument(
+        "--no-hosted-model",
+        action="store_true",
+        help=(
+            "Ignore OPENAI_MODEL defaults for this command and use Ollama or the "
+            "deterministic development provider."
+        ),
+    )
+    parser.add_argument(
         "--allow-pdf-host",
         action="append",
         default=[],
@@ -213,6 +241,16 @@ def build_parser() -> argparse.ArgumentParser:
         help="Run a local investigation.",
     )
     investigate.add_argument("claim", help="Factual claim to investigate.")
+    investigate.add_argument(
+        "--complex",
+        action="store_true",
+        help="Selectively decompose the claim and produce a component-coverage report.",
+    )
+    resume_complex = subparsers.add_parser(
+        "resume-complex",
+        help="Resume a checkpointed complex investigation.",
+    )
+    resume_complex.add_argument("investigation_id", help="Root investigation UUID.")
 
     subparsers.add_parser("list", help="List stored investigations.")
 
@@ -244,9 +282,19 @@ def build_parser() -> argparse.ArgumentParser:
         help="Run only the first N cases for a smoke test.",
     )
     evaluate.add_argument(
+        "--cases",
+        nargs="+",
+        help="Run only these benchmark case IDs; cannot be combined with --limit.",
+    )
+    evaluate.add_argument(
         "--benchmark-evidence",
         action="store_true",
         help="Use each case's curated evidence packet instead of search.",
+    )
+    evaluate.add_argument(
+        "--complex",
+        action="store_true",
+        help="Evaluate only cases with 2+ expected material components.",
     )
     evaluate.add_argument(
         "--retrieval-candidates",
@@ -255,6 +303,42 @@ def build_parser() -> argparse.ArgumentParser:
             "Use frozen ranked search candidates, then fetch their live pages. "
             "Cannot be combined with --benchmark-evidence or a live search provider."
         ),
+    )
+    compare_complex = subparsers.add_parser(
+        "compare-complex-runs",
+        help="Compare two declared complex evaluation results for exact stability.",
+    )
+    compare_complex.add_argument("--first", type=Path, required=True)
+    compare_complex.add_argument("--second", type=Path, required=True)
+    compare_complex.add_argument(
+        "--output",
+        type=Path,
+        default=DEFAULT_COMPLEX_STABILITY_OUTPUT,
+        help=(f"Complex stability JSON path (default: {DEFAULT_COMPLEX_STABILITY_OUTPUT})."),
+    )
+    merge_complex = subparsers.add_parser(
+        "merge-complex-runs",
+        help="Replace selected cases in a base complex run and recompute all metrics.",
+    )
+    merge_complex.add_argument("--dataset", type=Path, default=DEFAULT_BENCHMARK)
+    merge_complex.add_argument("--base", type=Path, required=True)
+    merge_complex.add_argument("--patch", type=Path, nargs="*", default=())
+    merge_complex.add_argument("--output", type=Path, required=True)
+    audit_phase3 = subparsers.add_parser(
+        "audit-phase3",
+        help="Audit declared Phase 3 release artifacts against every numerical gate.",
+    )
+    audit_phase3.add_argument("--dataset", type=Path, default=DEFAULT_BENCHMARK)
+    audit_phase3.add_argument("--retrieval", type=Path, required=True)
+    audit_phase3.add_argument("--pages", type=Path, required=True)
+    audit_phase3.add_argument("--phase2-baseline", type=Path, required=True)
+    audit_phase3.add_argument("--semantic", type=Path)
+    audit_phase3.add_argument("--first-run", type=Path)
+    audit_phase3.add_argument("--second-run", type=Path)
+    audit_phase3.add_argument(
+        "--output",
+        type=Path,
+        default=DEFAULT_PHASE3_GATE_OUTPUT,
     )
     evaluate_retrieval = subparsers.add_parser(
         "evaluate-retrieval",
@@ -317,6 +401,14 @@ def build_parser() -> argparse.ArgumentParser:
         type=float,
         default=1.0,
         help="Seconds between live search calls (default: 1).",
+    )
+    evaluate_retrieval.add_argument(
+        "--component-queries",
+        action="store_true",
+        help=(
+            "Also query every declared material component and report component-level "
+            "candidate coverage."
+        ),
     )
     evaluate_pages = subparsers.add_parser(
         "evaluate-pages",
@@ -434,6 +526,9 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv: Sequence[str] | None = None) -> int:
     """Run a CLI command and return a process exit code."""
     args = build_parser().parse_args(argv)
+    if args.no_hosted_model:
+        args.openai_model = None
+        args.openai_fast_model = None
     environment = _EnvironmentSettings()
     serpapi = _SerpAPIOptions(
         api_key=environment.serpapi_api_key,
@@ -454,6 +549,26 @@ def main(argv: Sequence[str] | None = None) -> int:
                 args.critic_model,
                 args.openai_timeout,
             )
+        if args.command == "compare-complex-runs":
+            return _compare_complex_runs(args.first, args.second, args.output)
+        if args.command == "merge-complex-runs":
+            return _merge_complex_runs(
+                args.dataset,
+                args.base,
+                tuple(args.patch),
+                args.output,
+            )
+        if args.command == "audit-phase3":
+            return _audit_phase3(
+                args.dataset,
+                args.retrieval,
+                args.pages,
+                args.phase2_baseline,
+                args.semantic,
+                args.first_run,
+                args.second_run,
+                args.output,
+            )
         if args.command == "evaluate-retrieval":
             return _evaluate_retrieval(
                 args.dataset,
@@ -469,6 +584,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 serpapi,
                 args.empty_result_retries,
                 args.search_delay,
+                args.component_queries,
             )
         if args.command == "evaluate-pages":
             return _evaluate_pages(
@@ -509,6 +625,23 @@ def main(argv: Sequence[str] | None = None) -> int:
                 args.openai_fast_model,
                 args.openai_timeout,
                 tuple(args.allow_pdf_host),
+                args.complex,
+            )
+        if args.command == "resume-complex":
+            return _resume_complex(
+                repository,
+                args.artifacts,
+                args.investigation_id,
+                args.searxng_url,
+                args.searxng_engines,
+                serpapi,
+                args.ollama_url,
+                args.ollama_model,
+                args.ollama_timeout,
+                args.openai_model,
+                args.openai_fast_model,
+                args.openai_timeout,
+                tuple(args.allow_pdf_host),
             )
         if args.command == "list":
             return _list(repository)
@@ -520,7 +653,9 @@ def main(argv: Sequence[str] | None = None) -> int:
                 args.dataset,
                 args.output,
                 args.limit,
+                tuple(args.cases) if args.cases else (),
                 args.benchmark_evidence,
+                args.complex,
                 args.retrieval_candidates,
                 args.searxng_url,
                 args.searxng_engines,
@@ -561,6 +696,7 @@ def _investigate(
     openai_fast_model: str | None,
     openai_timeout: float,
     allowed_pdf_hosts: tuple[str, ...],
+    complex_mode: bool,
 ) -> int:
     if searxng_url or serpapi.enabled:
         search_provider = _configured_search_provider(
@@ -586,6 +722,25 @@ def _investigate(
         openai_timeout,
     )
 
+    if complex_mode:
+        complex_service = ComplexInvestigationService(
+            repository=repository,
+            model_provider=model_provider,
+            search_provider=search_provider,
+            content_fetcher=content_fetcher,
+        )
+        complex_report = asyncio.run(complex_service.investigate(claim))
+        events = repository.list_events(complex_report.investigation.investigation_id)
+        exported = export_complex_report(complex_report, events, artifacts)
+        print(f"Investigation ID: {complex_report.investigation.investigation_id}")
+        print(f"Status: {complex_report.investigation.status.value}")
+        print(f"Verdict: {complex_report.verdict.label.value}")
+        print(f"Components: {len(complex_report.component_reports)}")
+        print(f"Coverage: {complex_report.coverage.material_coverage_rate:.2%}")
+        print(f"Report: {exported.report_markdown}")
+        print(f"{retrieval_message} {model_message}")
+        return 0
+
     service = InvestigationService(
         repository=repository,
         model_provider=model_provider,
@@ -601,6 +756,58 @@ def _investigate(
     print(f"Verdict: {report.verdict.label.value}")
     print(f"Report: {exported.report_markdown}")
     print(f"{retrieval_message} {model_message}")
+    return 0
+
+
+def _resume_complex(
+    repository: SQLiteInvestigationRepository,
+    artifacts: Path,
+    raw_investigation_id: str,
+    searxng_url: str | None,
+    searxng_engines: str | None,
+    serpapi: _SerpAPIOptions,
+    ollama_url: str,
+    ollama_model: str | None,
+    ollama_timeout: float,
+    openai_model: str | None,
+    openai_fast_model: str | None,
+    openai_timeout: float,
+    allowed_pdf_hosts: tuple[str, ...],
+) -> int:
+    investigation_id = UUID(raw_investigation_id)
+    if searxng_url or serpapi.enabled:
+        search_provider = _configured_search_provider(
+            searxng_url,
+            searxng_engines,
+            serpapi,
+        )
+        content_fetcher = _safe_fetcher(allowed_pdf_hosts)
+    else:
+        search_provider = DeterministicSearchProvider()
+        content_fetcher = None
+    model_provider, _ = _configured_model_provider(
+        ollama_model,
+        ollama_url,
+        ollama_timeout,
+        openai_model,
+        openai_fast_model,
+        openai_timeout,
+    )
+    service = ComplexInvestigationService(
+        repository=repository,
+        model_provider=model_provider,
+        search_provider=search_provider,
+        content_fetcher=content_fetcher,
+    )
+    report = asyncio.run(service.resume(investigation_id))
+    events = repository.list_events(investigation_id)
+    exported = export_complex_report(report, events, artifacts)
+    print(f"Investigation ID: {investigation_id}")
+    print(f"Status: {report.investigation.status.value}")
+    print(f"Verdict: {report.verdict.label.value}")
+    print(f"Components: {len(report.component_reports)}")
+    print(f"Coverage: {report.coverage.material_coverage_rate:.2%}")
+    print(f"Report: {exported.report_markdown}")
     return 0
 
 
@@ -629,7 +836,9 @@ def _evaluate(
     dataset_path: Path,
     output_path: Path,
     limit: int | None,
+    case_ids: tuple[str, ...],
     benchmark_evidence: bool,
+    complex_mode: bool,
     retrieval_candidates_path: Path | None,
     searxng_url: str | None,
     searxng_engines: str | None,
@@ -645,6 +854,18 @@ def _evaluate(
     dataset = load_benchmark(dataset_path)
     if dataset.dataset_id == "initial_claims":
         validate_initial_benchmark(dataset)
+    if limit is not None and case_ids:
+        raise ValueError("--limit and --cases cannot be combined")
+    if case_ids:
+        cases_by_id = {case.case_id: case for case in dataset.cases}
+        missing = tuple(case_id for case_id in case_ids if case_id not in cases_by_id)
+        if missing:
+            raise LookupError(f"benchmark cases not found: {', '.join(missing)}")
+        if len(case_ids) != len(set(case_ids)):
+            raise ValueError("--cases values must be unique")
+        dataset = dataset.model_copy(
+            update={"cases": tuple(cases_by_id[case_id] for case_id in case_ids)}
+        )
 
     selected_retrieval_modes = sum(
         (
@@ -703,10 +924,10 @@ def _evaluate(
         reasoning_mode = "deterministic_reasoning"
     provider_mode = f"{retrieval_mode}+{reasoning_mode}"
 
-    def service_factory(case) -> InvestigationService:
+    def case_search_provider(case):
         if benchmark_evidence:
-            case_search_provider = BenchmarkEvidenceSearchProvider(case)
-        elif retrieval_candidates is not None:
+            return BenchmarkEvidenceSearchProvider(case)
+        if retrieval_candidates is not None:
             retrieval_case = next(
                 (
                     result
@@ -717,20 +938,85 @@ def _evaluate(
             )
             if retrieval_case is None:
                 raise RuntimeError(f"retrieval candidates are missing case {case.case_id}")
-            case_search_provider = RetrievalCandidateSearchProvider(
+            return RetrievalCandidateSearchProvider(
                 retrieval_case,
                 retrieval_candidates.provider_id,
             )
-        else:
-            case_search_provider = search_provider
-        if case_search_provider is None:
+        if search_provider is None:
             raise RuntimeError("evaluation search provider is not configured")
+        return search_provider
+
+    def service_factory(case) -> InvestigationService:
         return InvestigationService(
             repository=repository,
             model_provider=model_provider,
-            search_provider=case_search_provider,
+            search_provider=case_search_provider(case),
             content_fetcher=content_fetcher,
         )
+
+    if complex_mode:
+
+        def complex_service_factory(case) -> ComplexInvestigationService:
+            shared_search_provider = case_search_provider(case)
+            return ComplexInvestigationService(
+                repository=repository,
+                model_provider=model_provider,
+                search_provider=shared_search_provider,
+                component_search_provider_factory=(
+                    (
+                        lambda component: BenchmarkEvidenceSearchProvider.for_component(
+                            case,
+                            component.text,
+                        )
+                    )
+                    if benchmark_evidence
+                    else None
+                ),
+                content_fetcher=content_fetcher,
+            )
+
+        complex_summary = asyncio.run(
+            run_complex_evaluation(
+                dataset,
+                complex_service_factory,
+                provider_mode=provider_mode,
+                limit=limit,
+            )
+        )
+        exported = export_complex_evaluation(complex_summary, output_path)
+        print(f"Dataset: {complex_summary.dataset_id} v{complex_summary.dataset_version}")
+        print(f"Mode: {complex_summary.provider_mode}")
+        print(
+            f"Complex cases: {complex_summary.completed_case_count}/"
+            f"{complex_summary.case_count} completed"
+        )
+        print(f"Completion rate: {complex_summary.completion_rate:.2%}")
+        print(f"Component recall: {complex_summary.mean_component_recall:.2%}")
+        print(f"Parent linkage: {complex_summary.parent_linkage_valid_rate:.2%}")
+        print(f"Context validity: {complex_summary.context_contract_valid_rate:.2%}")
+        print(f"Material coverage: {complex_summary.material_component_coverage_rate:.2%}")
+        print(
+            "Parent citation full rate: "
+            + (
+                f"{complex_summary.parent_citation_full_rate:.2%}"
+                if complex_summary.parent_citation_full_rate is not None
+                else "not available"
+            )
+        )
+        print(
+            "Verdict accuracy: "
+            + (
+                f"{complex_summary.verdict_accuracy:.2%}"
+                if complex_summary.verdict_accuracy is not None
+                else "not available (no human-reviewed complex gold labels)"
+            )
+        )
+        print(
+            "Estimated cost per completed component: "
+            f"${complex_summary.mean_estimated_model_cost_per_completed_component_usd:.6f}"
+        )
+        print(f"Summary: {exported}")
+        return 0
 
     summary = asyncio.run(
         run_evaluation(
@@ -785,6 +1071,7 @@ def _evaluate_retrieval(
     serpapi: _SerpAPIOptions,
     empty_result_retries: int,
     search_delay: float,
+    component_queries: bool,
 ) -> int:
     if snapshot_output is not None and snapshot_input is not None:
         raise ValueError("--snapshot-output cannot be combined with --snapshot-input")
@@ -828,6 +1115,7 @@ def _evaluate_retrieval(
             query_strategy=query_strategy,
             empty_result_retries=(0 if snapshot_input is not None else empty_result_retries),
             retry_delay_seconds=0.0 if snapshot_input is not None else search_delay,
+            include_component_queries=component_queries,
         )
     )
     exported_snapshot = None
@@ -877,10 +1165,120 @@ def _evaluate_retrieval(
     print(f"Mean candidate quality: {summary.mean_candidate_quality_score:.4f}")
     print(f"Low-quality candidate rate: {summary.low_quality_candidate_rate:.2%}")
     print(f"Unique-host rate: {summary.unique_host_rate:.2%}")
+    if summary.component_query_enabled:
+        print(f"Component query completion: {summary.component_query_completion_rate or 0.0:.2%}")
+        print(f"Components with a candidate: {summary.component_candidate_rate or 0.0:.2%}")
+        print(
+            "Components recovering reviewed evidence: "
+            f"{summary.component_reviewed_evidence_rate or 0.0:.2%}"
+        )
     print(f"Summary: {exported}")
     if exported_snapshot is not None:
         print(f"Snapshot: {exported_snapshot}")
     return 0
+
+
+def _compare_complex_runs(
+    first_path: Path,
+    second_path: Path,
+    output_path: Path,
+) -> int:
+    first = load_complex_evaluation(first_path)
+    second = load_complex_evaluation(second_path)
+    summary = compare_complex_evaluations(first, second)
+    exported = export_complex_stability(summary, output_path)
+
+    print(f"Dataset: {summary.dataset_id} v{summary.dataset_version}")
+    print(f"Cases: {summary.case_count}")
+    print(f"Completion stability: {summary.completion_stability_rate:.2%}")
+    print(
+        "Exact verdict stability: "
+        + (
+            f"{summary.exact_verdict_stability_rate:.2%} "
+            f"({summary.verdict_comparison_count} compared)"
+            if summary.exact_verdict_stability_rate is not None
+            else "not available"
+        )
+    )
+    print(
+        "Exact component-set stability: "
+        + (
+            f"{summary.exact_component_set_stability_rate:.2%}"
+            if summary.exact_component_set_stability_rate is not None
+            else "not available"
+        )
+    )
+    print(f"Summary: {exported}")
+    return 0
+
+
+def _merge_complex_runs(
+    dataset_path: Path,
+    base_path: Path,
+    patch_paths: tuple[Path, ...],
+    output_path: Path,
+) -> int:
+    summary = merge_complex_evaluations(
+        load_benchmark(dataset_path),
+        load_complex_evaluation(base_path),
+        tuple(load_complex_evaluation(path) for path in patch_paths),
+    )
+    exported = export_complex_evaluation(summary, output_path)
+    print(f"Dataset: {summary.dataset_id} v{summary.dataset_version}")
+    print(f"Cases: {summary.completed_case_count}/{summary.case_count} completed")
+    print(f"Component recall: {summary.mean_component_recall:.2%}")
+    print(
+        "Parent citation full rate: "
+        + (
+            f"{summary.parent_citation_full_rate:.2%}"
+            if summary.parent_citation_full_rate is not None
+            else "not available"
+        )
+    )
+    print(
+        "Verdict accuracy: "
+        + (
+            f"{summary.verdict_accuracy:.2%}"
+            if summary.verdict_accuracy is not None
+            else "not available"
+        )
+    )
+    print(f"Summary: {exported}")
+    return 0
+
+
+def _audit_phase3(
+    dataset_path: Path,
+    retrieval_path: Path,
+    pages_path: Path,
+    phase2_baseline_path: Path,
+    semantic_path: Path | None,
+    first_run_path: Path | None,
+    second_run_path: Path | None,
+    output_path: Path,
+) -> int:
+    dataset = load_benchmark(dataset_path)
+    audit = audit_phase3_gates(
+        dataset,
+        load_retrieval_evaluation(retrieval_path),
+        load_page_fetch_evaluation(pages_path),
+        baseline_semantic=load_semantic_passage_evaluation(phase2_baseline_path),
+        semantic=(load_semantic_passage_evaluation(semantic_path) if semantic_path else None),
+        first_run=(load_complex_evaluation(first_run_path) if first_run_path else None),
+        second_run=(load_complex_evaluation(second_run_path) if second_run_path else None),
+    )
+    exported = export_phase3_gate_audit(audit, output_path)
+
+    print(f"Dataset: {audit.dataset_id} v{audit.dataset_version}")
+    for gate in audit.gates:
+        print(f"{gate.state.value.upper():<7} {gate.gate_id:<38} {gate.observed}")
+    print(
+        f"Gates: {audit.passed_count} passed, {audit.failed_count} failed, "
+        f"{audit.pending_count} pending"
+    )
+    print(f"Release ready: {'yes' if audit.release_ready else 'no'}")
+    print(f"Audit: {exported}")
+    return 0 if audit.release_ready else 1
 
 
 def _evaluate_pages(
@@ -1036,7 +1434,10 @@ def _review_status(dataset_path: Path, case_ids: Sequence[str]) -> int:
     if missing:
         raise LookupError(f"benchmark cases not found: {', '.join(missing)}")
 
-    print("CASE      STATUS    PROPOSED          EXPECTED          EVIDENCE  REVIEWER")
+    print(
+        "CASE      STATUS    PROPOSED          EXPECTED          "
+        "EVIDENCE  ANNOTATOR            APPROVER"
+    )
     for case_id in case_ids:
         case = cases_by_id[case_id]
         print(
@@ -1045,7 +1446,8 @@ def _review_status(dataset_path: Path, case_ids: Sequence[str]) -> int:
             f"{case.proposed_verdict.value if case.proposed_verdict else '-':<17} "
             f"{case.expected_verdict.value if case.expected_verdict else '-':<17} "
             f"{len(case.candidate_evidence):<9} "
-            f"{case.reviewed_by or '-'}"
+            f"{case.annotated_by or '-':<20} "
+            f"{case.approved_by or '-'}"
         )
 
     reviewed = sum(
@@ -1173,6 +1575,16 @@ def _show(
 
     events = repository.list_events(investigation_id)
     if investigation.status is InvestigationStatus.COMPLETED:
+        decompositions = repository.list_artifacts(
+            investigation_id,
+            ArtifactType.DECOMPOSITION,
+            ClaimDecomposition,
+        )
+        if decompositions:
+            complex_report = load_complex_report(repository, investigation_id)
+            export_complex_report(complex_report, events, artifacts)
+            print(render_complex_markdown(complex_report), end="")
+            return 0
         report = load_report(repository, investigation_id)
         export_report(report, events, artifacts)
         print(render_markdown(report, events), end="")

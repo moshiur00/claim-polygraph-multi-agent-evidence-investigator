@@ -24,8 +24,9 @@ Store the result with `ai_reviewed` status and explicit provenance: models,
 prompt version, timestamp, supplied-packet-only verification scope, structured
 outputs, disagreements, token usage, and estimated cost.
 
-AI-reviewed cases must retain empty `expected_verdict`, `reviewed_by`, and
-`reviewed_at` fields. They are excluded from human-grounded accuracy. The
+AI-reviewed cases must retain empty `expected_verdict`, typed human annotation
+and approval fields, `reviewed_by`, and `reviewed_at` fields. They are excluded
+from human-grounded accuracy. The
 workflow refuses to replace an already human-reviewed case.
 
 ## Consequences

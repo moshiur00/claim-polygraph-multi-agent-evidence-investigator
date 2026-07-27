@@ -9,7 +9,11 @@ from pydantic import ValidationError
 from claim_polygraph_ng.domain import (
     AtomicClaim,
     AuditIssue,
+    ClaimCoverage,
+    ClaimDecomposition,
     ClaimType,
+    ComponentOutcome,
+    ComponentStatus,
     Evidence,
     EvidenceStance,
     ExtractionStatus,
@@ -36,6 +40,93 @@ def test_atomic_claim_rejects_self_parent() -> None:
             text="The unemployment rate fell in 2025.",
             claim_type=ClaimType.NUMERICAL,
             checkworthiness=0.9,
+        )
+
+
+def test_decomposition_requires_unique_parent_linked_components() -> None:
+    root = AtomicClaim(
+        text="The programme cut costs and increased output.",
+        checkworthiness=0.9,
+    )
+    cost = AtomicClaim(
+        parent_claim_id=root.claim_id,
+        text="The programme cut costs.",
+        retained_context=("The programme is the one identified in the submitted claim.",),
+        checkworthiness=0.9,
+    )
+    output = AtomicClaim(
+        parent_claim_id=root.claim_id,
+        text="The programme increased output.",
+        retained_context=("The programme is the one identified in the submitted claim.",),
+        checkworthiness=0.9,
+    )
+
+    decomposition = ClaimDecomposition(
+        root_claim=root,
+        requires_decomposition=True,
+        components=(cost, output),
+        rationale="The sentence contains two independently checkable outcomes.",
+    )
+
+    assert len(decomposition.components) == 2
+    with pytest.raises(ValidationError, match="texts must be unique"):
+        ClaimDecomposition(
+            root_claim=root,
+            requires_decomposition=True,
+            components=(cost, cost.model_copy(update={"claim_id": uuid4()})),
+            rationale="Duplicating a component would conceal a coverage defect.",
+        )
+
+
+def test_atomic_decomposition_has_one_parent_linked_component() -> None:
+    root = AtomicClaim(text="The policy took effect in 2024.", checkworthiness=0.8)
+    component = root.model_copy(
+        update={
+            "claim_id": uuid4(),
+            "parent_claim_id": root.claim_id,
+        }
+    )
+
+    decomposition = ClaimDecomposition(
+        root_claim=root,
+        requires_decomposition=False,
+        components=(component,),
+        rationale="The submitted claim is already independently checkable.",
+    )
+
+    assert decomposition.components == (component,)
+
+
+def test_claim_coverage_counts_completed_and_explicitly_unresolved_components() -> None:
+    root_id = uuid4()
+    verdict_id = uuid4()
+    coverage = ClaimCoverage(
+        root_claim_id=root_id,
+        outcomes=(
+            ComponentOutcome(
+                claim_id=uuid4(),
+                status=ComponentStatus.COMPLETED,
+                verdict_id=verdict_id,
+                verdict_label=VerdictLabel.SUPPORTED,
+            ),
+            ComponentOutcome(
+                claim_id=uuid4(),
+                status=ComponentStatus.UNRESOLVED,
+                unresolved_reason="No suitably independent source was found.",
+            ),
+        ),
+    )
+
+    assert coverage.completed_count == 1
+    assert coverage.explicitly_unresolved_count == 1
+    assert coverage.material_coverage_rate == 1.0
+
+
+def test_unresolved_component_requires_a_reason() -> None:
+    with pytest.raises(ValidationError, match="require a reason"):
+        ComponentOutcome(
+            claim_id=uuid4(),
+            status=ComponentStatus.UNRESOLVED,
         )
 
 

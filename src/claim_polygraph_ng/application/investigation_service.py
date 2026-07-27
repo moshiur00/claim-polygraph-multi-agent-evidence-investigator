@@ -16,6 +16,7 @@ from claim_polygraph_ng.domain import (
     AtomicClaim,
     ContextVerification,
     Evidence,
+    EvidenceStance,
     ExtractionStatus,
     IndependenceAnalysis,
     Investigation,
@@ -34,11 +35,13 @@ from claim_polygraph_ng.domain import (
     TraceEvent,
     TraceEventType,
     Verdict,
+    VerdictLabel,
 )
 from claim_polygraph_ng.domain.base import DomainModel
 from claim_polygraph_ng.persistence import InvestigationRepository
 from claim_polygraph_ng.providers import (
     ModelOutputError,
+    ModelUnavailableError,
     SearchProvider,
     StructuredModelProvider,
 )
@@ -74,9 +77,31 @@ def _anchor_claim_to_user_text(claim: AtomicClaim, original_text: str) -> Atomic
     return AtomicClaim.model_validate({**claim.model_dump(), **updates})
 
 
-def _research_query(claim_text: str, research_path: ResearchPath) -> str:
+def _research_query(
+    claim_text: str,
+    research_path: ResearchPath,
+    *,
+    retained_context: tuple[str, ...] = (),
+) -> str:
     """Shape a generic non-oracle query for one planned research path."""
-    return f"{_RESEARCH_QUERY_PREFIXES[research_path]}: {claim_text}"
+    query = f"{_RESEARCH_QUERY_PREFIXES[research_path]}: {claim_text}"
+    if retained_context:
+        bounded_context = " ".join(item[:160] for item in retained_context[:4])
+        query = f"{query} Context: {bounded_context}"
+    return query[:1_000]
+
+
+def _claim_retrieval_context(claim: AtomicClaim) -> tuple[str, ...]:
+    """Return material, claim-derived context without benchmark-specific hints."""
+    context: list[str] = []
+    if claim.reference_date is not None:
+        context.append(f"Reference date {claim.reference_date.isoformat()}.")
+    if claim.geography:
+        context.append(f"Geography {claim.geography}.")
+    if claim.quantities:
+        context.append(f"Quantities {'; '.join(claim.quantities)}.")
+    context.extend(claim.retained_context)
+    return tuple(dict.fromkeys(context))
 
 
 def _taxonomy_guidance(verification: ContextVerification) -> tuple[str, ...]:
@@ -126,6 +151,52 @@ def _enforce_review_safeguards(
     )
 
 
+def _enforce_evidence_label_consistency(
+    verdict: Verdict,
+    evidence: tuple[Evidence, ...],
+) -> Verdict:
+    """Reject non-contradiction labels when every usable passage directly conflicts."""
+    usable = tuple(
+        item
+        for item in evidence
+        if item.relevance_score >= 0.5 and item.stance is not EvidenceStance.IRRELEVANT
+    )
+    inconsistent_labels = {
+        VerdictLabel.UNSUPPORTED,
+        VerdictLabel.UNVERIFIABLE,
+    }
+    if (
+        not usable
+        or verdict.label not in inconsistent_labels
+        or any(item.stance is not EvidenceStance.CONTRADICTS for item in usable)
+    ):
+        return verdict
+
+    evidence_ids = tuple(dict.fromkeys(item.evidence_id for item in usable))
+    reason = (
+        f"Verdict constrained from {verdict.label.value} to contradicted because every "
+        "usable retained passage was classified as directly contradictory."
+    )
+    if verdict.review_reason:
+        reason = f"{verdict.review_reason} {reason}"
+    return Verdict.model_validate(
+        {
+            **verdict.model_dump(),
+            "label": VerdictLabel.CONTRADICTED,
+            "concise_explanation": (
+                "The supplied packet contains direct evidence that conflicts with the claim "
+                "as stated."
+            ),
+            "detailed_reasoning": (
+                f"{reason} The original model reasoning was: {verdict.detailed_reasoning}"
+            ),
+            "contradictory_evidence_ids": evidence_ids,
+            "human_review_required": True,
+            "review_reason": reason,
+        }
+    )
+
+
 class BudgetExceededError(RuntimeError):
     """Raised before a provider call would exceed a hard execution budget."""
 
@@ -162,14 +233,30 @@ class InvestigationService:
         """Return metered model calls captured during the latest investigation."""
         return tuple(self._model_usage)
 
-    async def investigate(self, claim_text: str) -> InvestigationReport:
+    async def investigate(
+        self,
+        claim_text: str,
+        *,
+        prepared_claim: AtomicClaim | None = None,
+        parent_investigation_id: UUID | None = None,
+    ) -> InvestigationReport:
         """Run and persist one complete deterministic investigation."""
+        if prepared_claim is not None and prepared_claim.text != claim_text.strip():
+            raise ValueError("prepared claim text must equal the submitted component text")
+        if prepared_claim is not None and prepared_claim.parent_claim_id is None:
+            raise ValueError("prepared component claim must retain its parent claim ID")
+        if (prepared_claim is None) != (parent_investigation_id is None):
+            raise ValueError("prepared_claim and parent_investigation_id must be supplied together")
         self._llm_calls = 0
         self._search_calls = 0
         self._pages_fetched = 0
         self._model_usage = []
         self._active_page_limit = self._policy.budget.maximum_pages_fetched
-        investigation = Investigation(input_claim=claim_text)
+        investigation = Investigation(
+            input_claim=claim_text,
+            parent_investigation_id=parent_investigation_id,
+            component_claim_id=prepared_claim.claim_id if prepared_claim is not None else None,
+        )
         self._repository.initialize()
         self._repository.save_investigation(investigation)
         self._event(
@@ -185,13 +272,16 @@ class InvestigationService:
         )
 
         try:
-            claim = await self._generate(
-                investigation,
-                ModelTask.NORMALIZE_CLAIM,
-                AtomicClaim,
-                {"claim_text": claim_text},
-            )
-            claim = _anchor_claim_to_user_text(claim, claim_text)
+            if prepared_claim is None:
+                claim = await self._generate(
+                    investigation,
+                    ModelTask.NORMALIZE_CLAIM,
+                    AtomicClaim,
+                    {"claim_text": claim_text},
+                )
+                claim = _anchor_claim_to_user_text(claim, claim_text)
+            else:
+                claim = prepared_claim
             self._save_artifact(
                 investigation,
                 ArtifactType.CLAIM,
@@ -258,6 +348,7 @@ class InvestigationService:
                 numerical_status=context_verification.numerical.status.value,
                 temporal_status=context_verification.temporal.status.value,
             )
+            verdict = _enforce_evidence_label_consistency(verdict, evidence_items)
             investigation = self._transition(
                 investigation,
                 stage=InvestigationStage.CITATION_AUDIT,
@@ -275,12 +366,14 @@ class InvestigationService:
                 SentenceAudit,
                 audit_inputs,
             )
-            revision = (audit.suggested_revision or "").strip()
-            if (
-                audit.support_level is SupportLevel.PARTIAL
-                and 10 <= len(revision) <= 1_000
-                and revision != verdict.concise_explanation
-            ):
+            for _revision_attempt in range(2):
+                revision = (audit.suggested_revision or "").strip()
+                if (
+                    audit.support_level is not SupportLevel.PARTIAL
+                    or not 10 <= len(revision) <= 1_000
+                    or revision == verdict.concise_explanation
+                ):
+                    break
                 verdict = Verdict.model_validate(
                     {
                         **verdict.model_dump(),
@@ -376,7 +469,11 @@ class InvestigationService:
         for research_path in plan.required_research_paths:
             request = SearchRequest(
                 claim_id=claim.claim_id,
-                query=_research_query(claim.text, research_path),
+                query=_research_query(
+                    claim.text,
+                    research_path,
+                    retained_context=_claim_retrieval_context(claim),
+                ),
                 research_path=research_path,
                 maximum_results=3,
             )
@@ -571,6 +668,7 @@ class InvestigationService:
         inputs: Mapping[str, JsonValue],
         *,
         retry_invalid_output: bool = True,
+        retry_unavailable: bool = True,
     ) -> StructuredResult:
         if self._llm_calls >= self._policy.budget.maximum_llm_calls:
             raise BudgetExceededError("maximum LLM calls exceeded")
@@ -596,6 +694,7 @@ class InvestigationService:
             provider_details,
         )
         invalid_output: ModelOutputError | None = None
+        unavailable: ModelUnavailableError | None = None
         try:
             result = await self._model_provider.generate(
                 task=task,
@@ -604,6 +703,8 @@ class InvestigationService:
             )
         except ModelOutputError as error:
             invalid_output = error
+        except ModelUnavailableError as error:
+            unavailable = error
         finally:
             take_last_usage = getattr(self._model_provider, "take_last_usage", None)
             if callable(take_last_usage):
@@ -636,6 +737,29 @@ class InvestigationService:
                 response_model,
                 inputs,
                 retry_invalid_output=False,
+                retry_unavailable=retry_unavailable,
+            )
+        if unavailable is not None:
+            if not retry_unavailable:
+                raise unavailable
+            self._event(
+                investigation,
+                TraceEventType.PROVIDER_FAILED,
+                f"Structured provider unavailable for {task.value}; retrying once.",
+                {
+                    "provider_id": self._model_provider.provider_id,
+                    "task": task.value,
+                    "error_type": type(unavailable).__name__,
+                    "error": str(unavailable),
+                },
+            )
+            return await self._generate(
+                investigation,
+                task,
+                response_model,
+                inputs,
+                retry_invalid_output=retry_invalid_output,
+                retry_unavailable=False,
             )
         return result
 

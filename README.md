@@ -10,8 +10,8 @@ multi-agent architecture only after the core evidence workflow is measurable.
 
 ## Current milestone
 
-The repository now contains the first executable, mock-driven investigation
-lifecycle:
+The repository now contains the executable atomic workflow plus the Phase 3
+complex-claim coordinator:
 
 - claims and investigation plans;
 - sources, evidence, and source assessments;
@@ -24,6 +24,12 @@ lifecycle:
 - a local CLI with JSON, Markdown, and trace exports.
 - bounded document chunks with exact source-relative offsets;
 - deterministic BM25-style claim-passage ranking and top passage selection.
+- selective, typed claim decomposition with protected parent context;
+- one durable child investigation per material component;
+- component-coverage accounting and constrained parent aggregation;
+- resumable SQLite checkpoints that reuse completed work;
+- complex-run evaluation metrics for decomposition, context, coverage,
+  citations, verdicts, and cost.
 
 The mock providers deliberately return synthetic evidence. They validate
 orchestration, policy, persistence, and audit contracts; they do not perform
@@ -45,9 +51,13 @@ python -m venv .venv
 
 The CLI uses deterministic synthetic providers by default. It is intended to
 validate the workflow and report format before real providers are enabled.
+If `.env` defines an OpenAI model, add `--no-hosted-model` to explicitly force
+the local deterministic or selected Ollama provider.
 
 ```powershell
 claim-polygraph investigate "The claim to investigate"
+claim-polygraph investigate --complex "A compound claim with two assertions"
+claim-polygraph resume-complex ROOT_INVESTIGATION_ID
 claim-polygraph list
 claim-polygraph show INVESTIGATION_ID
 ```
@@ -177,8 +187,10 @@ The end-to-end behavior is demonstrated in
 ## Evaluation baseline
 
 The repository includes a versioned twenty-claim benchmark covering the claim
-categories required by the project specification. Its first five cases have
-two-person human-reviewed labels; the remaining cases are drafts. Run a
+categories required by the project specification. CPNG-001 through CPNG-010
+have two-person human-reviewed labels. CPNG-011 through CPNG-020 contain 21
+mapped material components and transparent AI-review records, but remain
+non-gold until genuine annotation and distinct approval. Run a
 deterministic workflow baseline with:
 
 ```powershell
@@ -190,6 +202,21 @@ For a quick smoke test:
 ```powershell
 claim-polygraph evaluate --limit 2
 ```
+
+Run the Phase 3 complex-only structural evaluation with:
+
+```powershell
+claim-polygraph --no-hosted-model evaluate --complex `
+  --benchmark-evidence --limit 1 `
+  --output artifacts/evaluations/phase3-complex-smoke.json
+```
+
+Remove `--no-hosted-model` (or provide explicit OpenAI/Ollama options) for a
+model-backed run. The complex summary reports expected-component token-overlap
+recall, parent-link validity, protected-context validity, material coverage,
+parent citation support, verdict accuracy when human gold exists, and estimated
+cost per completed component. The overlap metric is a deterministic diagnostic,
+not a substitute for human semantic review.
 
 To measure reasoning and verdict classification against the reviewed evidence
 packets without search quality affecting the result, run:
@@ -243,10 +270,15 @@ Capture all three query paths once, using either live provider:
 
 ```powershell
 claim-polygraph --searxng-url http://localhost:8080 evaluate-retrieval `
-  --query-strategy guarded_fusion --limit 5 --top-k 10 `
-  --snapshot-output artifacts/evaluations/searxng-five-claim-snapshot.json `
+  --query-strategy guarded_fusion --component-queries --limit 20 --top-k 10 `
+  --snapshot-output artifacts/evaluations/phase3-searxng-snapshot.json `
   --output artifacts/evaluations/guarded-live.json
 ```
+
+`--component-queries` adds one query for every declared material component
+without using reviewed source metadata. The summary reports component-query
+completion, components with any candidate, and components recovering reviewed
+evidence. Atomic cases add no component queries.
 
 Then replay any strategy without SearXNG or network access:
 
@@ -258,6 +290,19 @@ claim-polygraph evaluate-retrieval --query-strategy claim_only `
 
 Replay rejects missing queries, larger result budgets, and benchmark
 identity/version mismatches.
+
+After two declared complex end-to-end runs, calculate the exact stability gate:
+
+```powershell
+claim-polygraph compare-complex-runs `
+  --first artifacts/evaluations/phase3-complex-run-1.json `
+  --second artifacts/evaluations/phase3-complex-run-2.json `
+  --output artifacts/evaluations/phase3-complex-stability.json
+```
+
+The comparison rejects different datasets or case sets and reports completion,
+exact verdict-label, and exact normalized component-set stability. Stability is
+repeatability, not factual accuracy.
 
 Use `--query-strategy quality_rerank` with a captured three-query snapshot to
 apply deterministic source-quality ranking. The score combines lexical claim
@@ -391,7 +436,8 @@ claim-polygraph ai-review --cases CPNG-006 CPNG-007 CPNG-008 CPNG-009 CPNG-010
 
 This command records model, prompt, token, cost, and disagreement provenance
 and marks the cases `ai_reviewed`. It deliberately leaves `expected_verdict`,
-`reviewed_by`, and `reviewed_at` empty, so the output does not count as human
+typed human annotation and approval fields, `reviewed_by`, and `reviewed_at`
+empty, so the output does not count as human
 ground truth or verdict accuracy.
 
 Then follow the

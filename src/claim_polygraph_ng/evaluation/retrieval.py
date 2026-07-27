@@ -12,10 +12,12 @@ from uuid import uuid4
 
 from claim_polygraph_ng.domain import ResearchPath, SearchRequest, SearchResult, SourceType
 from claim_polygraph_ng.evaluation.models import (
+    BenchmarkCase,
     BenchmarkDataset,
     BenchmarkEvidenceAnnotation,
     RetrievalCandidate,
     RetrievalCaseResult,
+    RetrievalComponentResult,
     RetrievalEvaluationSummary,
     RetrievalQueryStrategy,
     RetrievalReferenceResult,
@@ -86,6 +88,7 @@ async def run_retrieval_evaluation(
     query_strategy: RetrievalQueryStrategy | str = RetrievalQueryStrategy.CLAIM_ONLY,
     empty_result_retries: int = 0,
     retry_delay_seconds: float = 0.0,
+    include_component_queries: bool = False,
 ) -> RetrievalEvaluationSummary:
     """Run a bounded non-oracle query strategy and aggregate recall metrics."""
     if limit is not None and limit < 1:
@@ -108,7 +111,11 @@ async def run_retrieval_evaluation(
 
     for case in cases:
         case_started = perf_counter()
-        queries = _queries_for(case.claim, strategy)
+        queries = _queries_for(
+            case.claim,
+            strategy,
+            components=case.expected_components if include_component_queries else (),
+        )
         query_results: list[tuple[str, tuple[SearchResult, ...]]] = []
         query_errors: dict[str, str] = {}
         for query in queries:
@@ -134,6 +141,16 @@ async def run_retrieval_evaluation(
                 query_errors[query] = f"{type(error).__name__}: {error}"
 
         if not query_results:
+            component_results = (
+                _component_results(
+                    case,
+                    {},
+                    query_errors,
+                    lexical_threshold,
+                )
+                if include_component_queries
+                else ()
+            )
             case_results.append(
                 RetrievalCaseResult(
                     case_id=case.case_id,
@@ -151,6 +168,7 @@ async def run_retrieval_evaluation(
                         _match_reference(annotation, (), lexical_threshold)
                         for annotation in case.candidate_evidence
                     ),
+                    components=component_results,
                     duration_seconds=round(perf_counter() - case_started, 6),
                     error_type="SearchProviderError",
                     error_message="all retrieval queries failed",
@@ -167,6 +185,16 @@ async def run_retrieval_evaluation(
         references = tuple(
             _match_reference(annotation, results, lexical_threshold)
             for annotation in case.candidate_evidence
+        )
+        component_results = (
+            _component_results(
+                case,
+                dict(query_results),
+                query_errors,
+                lexical_threshold,
+            )
+            if include_component_queries
+            else ()
         )
         exact_ranks = tuple(
             reference.exact_url_rank
@@ -212,6 +240,7 @@ async def run_retrieval_evaluation(
                     for rank, result in enumerate(results, start=1)
                 ),
                 references=references,
+                components=component_results,
                 duration_seconds=round(perf_counter() - case_started, 6),
             )
         )
@@ -227,6 +256,7 @@ async def run_retrieval_evaluation(
         len({_normalized_host(str(candidate.url)) for candidate in result.candidates})
         for result in case_results
     )
+    components = tuple(component for result in case_results for component in result.components)
 
     return RetrievalEvaluationSummary(
         dataset_id=dataset.dataset_id,
@@ -276,6 +306,32 @@ async def run_retrieval_evaluation(
             else 0.0
         ),
         unique_host_rate=(round(unique_host_total / len(candidates), 6) if candidates else 0.0),
+        component_query_enabled=include_component_queries,
+        material_component_count=len(components),
+        component_query_completion_rate=(
+            _recall(
+                sum(component.query_completed for component in components),
+                len(components),
+            )
+            if components
+            else None
+        ),
+        component_candidate_rate=(
+            _recall(
+                sum(component.candidate_found for component in components),
+                len(components),
+            )
+            if components
+            else None
+        ),
+        component_reviewed_evidence_rate=(
+            _recall(
+                sum(component.reviewed_evidence_found for component in components),
+                len(components),
+            )
+            if components
+            else None
+        ),
         results=tuple(case_results),
         limitations=(
             "Queries are generated from the benchmark claim and strategy templates only; they "
@@ -291,6 +347,8 @@ async def run_retrieval_evaluation(
             "summaries; it is not semantic entailment or passage recall.",
             "This search-candidate evaluation does not measure page access, extraction, "
             "reranking, evidence classification, or verdict quality.",
+            "Component-query metrics use expected component text but never reviewed URLs, "
+            "titles, excerpts, publishers, or host metadata.",
         ),
     )
 
@@ -298,15 +356,62 @@ async def run_retrieval_evaluation(
 def _queries_for(
     claim: str,
     strategy: RetrievalQueryStrategy,
+    *,
+    components: tuple[str, ...] = (),
 ) -> tuple[str, ...]:
     if strategy is RetrievalQueryStrategy.CLAIM_ONLY:
-        return (claim,)
-    shape_terms = _claim_shape_terms(claim)
-    return (
-        claim,
-        f"{claim} official authoritative source {shape_terms[0]}",
-        f"{claim} counterevidence fact check {shape_terms[1]}",
-    )
+        base_queries = (claim,)
+    else:
+        shape_terms = _claim_shape_terms(claim)
+        base_queries = (
+            claim,
+            f"{claim} official authoritative source {shape_terms[0]}",
+            f"{claim} counterevidence fact check {shape_terms[1]}",
+        )
+    return tuple(dict.fromkeys((*base_queries, *components)))
+
+
+def _component_results(
+    case: BenchmarkCase,
+    query_results: dict[str, tuple[SearchResult, ...]],
+    query_errors: dict[str, str],
+    lexical_threshold: float,
+) -> tuple[RetrievalComponentResult, ...]:
+    results: list[RetrievalComponentResult] = []
+    for component_number, component_text in enumerate(
+        case.expected_components,
+        start=1,
+    ):
+        candidates = query_results.get(component_text)
+        annotations = tuple(
+            annotation
+            for annotation in case.candidate_evidence
+            if component_number in annotation.material_component_numbers
+        )
+        matches = tuple(
+            _match_reference(annotation, candidates or (), lexical_threshold)
+            for annotation in annotations
+        )
+        exact_hits = sum(match.exact_url_rank is not None for match in matches)
+        host_hits = sum(match.reviewed_host_rank is not None for match in matches)
+        lexical_hits = sum(match.lexical_rank is not None for match in matches)
+        results.append(
+            RetrievalComponentResult(
+                component_number=component_number,
+                component_text=component_text,
+                query=component_text,
+                query_completed=candidates is not None,
+                candidate_count=len(candidates or ()),
+                reference_count=len(annotations),
+                exact_url_hit_count=exact_hits,
+                reviewed_host_hit_count=host_hits,
+                lexical_hit_count=lexical_hits,
+                candidate_found=bool(candidates),
+                reviewed_evidence_found=bool(exact_hits or host_hits or lexical_hits),
+                error_message=query_errors.get(component_text),
+            )
+        )
+    return tuple(results)
 
 
 def _claim_shape_terms(claim: str) -> tuple[str, str]:

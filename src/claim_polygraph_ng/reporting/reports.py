@@ -8,6 +8,10 @@ from uuid import UUID
 from claim_polygraph_ng.domain import (
     ArtifactType,
     AtomicClaim,
+    ClaimCoverage,
+    ClaimDecomposition,
+    ComplexInvestigationReport,
+    ComplexWorkflowCheckpoint,
     ContextVerification,
     Evidence,
     EvidenceStance,
@@ -100,6 +104,53 @@ def load_report(
     )
 
 
+def load_complex_report(
+    repository: InvestigationRepository,
+    investigation_id: UUID,
+) -> ComplexInvestigationReport:
+    """Reconstruct a completed parent report and its linked child reports."""
+    investigation = repository.get_investigation(investigation_id)
+    if investigation is None:
+        raise InvestigationNotFoundError(f"investigation not found: {investigation_id}")
+    if investigation.status is not InvestigationStatus.COMPLETED:
+        raise IncompleteInvestigationError(
+            f"investigation is {investigation.status.value}, not completed"
+        )
+    decompositions = repository.list_artifacts(
+        investigation_id,
+        ArtifactType.DECOMPOSITION,
+        ClaimDecomposition,
+    )
+    checkpoints = repository.list_artifacts(
+        investigation_id,
+        ArtifactType.CHECKPOINT,
+        ComplexWorkflowCheckpoint,
+    )
+    coverages = repository.list_artifacts(
+        investigation_id,
+        ArtifactType.COVERAGE,
+        ClaimCoverage,
+    )
+    verdicts = repository.list_artifacts(investigation_id, ArtifactType.VERDICT, Verdict)
+    audits = repository.list_artifacts(investigation_id, ArtifactType.AUDIT, SentenceAudit)
+    if not all((decompositions, checkpoints, coverages, verdicts, audits)):
+        raise IncompleteInvestigationError(
+            "completed complex investigation is missing required parent artifacts"
+        )
+    component_reports = tuple(
+        load_report(repository, item.investigation_id)
+        for item in checkpoints[-1].completed_components
+    )
+    return ComplexInvestigationReport(
+        investigation=investigation,
+        decomposition=decompositions[-1],
+        component_reports=component_reports,
+        coverage=coverages[-1],
+        verdict=verdicts[-1],
+        audits=audits,
+    )
+
+
 def export_report(
     report: InvestigationReport,
     events: tuple[TraceEvent, ...],
@@ -137,6 +188,85 @@ def export_report(
         report_markdown=report_markdown,
         trace_json=trace_json,
     )
+
+
+def export_complex_report(
+    report: ComplexInvestigationReport,
+    events: tuple[TraceEvent, ...],
+    output_root: str | Path,
+) -> ExportedReportPaths:
+    """Write a complex parent report and trace without flattening components."""
+    directory = Path(output_root) / str(report.investigation.investigation_id)
+    directory.mkdir(parents=True, exist_ok=True)
+    report_json = directory / "report.json"
+    report_markdown = directory / "report.md"
+    trace_json = directory / "trace.json"
+    report_json.write_text(
+        json.dumps(report.model_dump(mode="json"), indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
+    report_markdown.write_text(render_complex_markdown(report), encoding="utf-8")
+    trace_json.write_text(
+        json.dumps(
+            [event.model_dump(mode="json") for event in events],
+            indent=2,
+            ensure_ascii=False,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    return ExportedReportPaths(
+        directory=directory,
+        report_json=report_json,
+        report_markdown=report_markdown,
+        trace_json=trace_json,
+    )
+
+
+def render_complex_markdown(report: ComplexInvestigationReport) -> str:
+    """Render parent context, every component, coverage, verdict, and audit."""
+    lines = [
+        "# Claim Polygraph NG Complex Investigation",
+        "",
+        f"- **ID:** `{report.investigation.investigation_id}`",
+        f"- **Status:** {report.investigation.status.value}",
+        f"- **Original claim:** {_inline(report.investigation.input_claim)}",
+        f"- **Decomposed:** {'yes' if report.decomposition.requires_decomposition else 'no'}",
+        f"- **Material coverage:** {report.coverage.material_coverage_rate:.0%}",
+        "",
+        "## Material components",
+        "",
+    ]
+    for index, component_report in enumerate(report.component_reports, start=1):
+        lines.extend(
+            [
+                f"### C{index}: {_inline(component_report.claim.text)}",
+                "",
+                f"- **Verdict:** {component_report.verdict.label.value}",
+                f"- **Evidence passages:** {len(component_report.evidence)}",
+                f"- **Retained context:** {_joined(component_report.claim.retained_context)}",
+                f"- **Child investigation:** `{component_report.investigation.investigation_id}`",
+                "",
+            ]
+        )
+    lines.extend(
+        [
+            "## Parent verdict",
+            "",
+            f"**{report.verdict.label.value.replace('_', ' ').title()}**",
+            "",
+            _inline(report.verdict.concise_explanation),
+            "",
+            _inline(report.verdict.detailed_reasoning),
+            "",
+            "## Parent citation audit",
+            "",
+        ]
+    )
+    for audit in report.audits:
+        lines.append(f"- **{audit.support_level.value}:** {_inline(audit.sentence)}")
+    lines.append("")
+    return "\n".join(lines)
 
 
 def render_markdown(

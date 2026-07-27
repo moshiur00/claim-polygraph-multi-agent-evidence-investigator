@@ -9,6 +9,7 @@ from claim_polygraph_ng.domain.base import DomainModel
 from claim_polygraph_ng.domain.enums import (
     AuditIssue,
     ClaimType,
+    ComponentStatus,
     ContentRetention,
     EvidenceStance,
     ExtractionStatus,
@@ -34,6 +35,7 @@ class AtomicClaim(DomainModel):
     reference_date: date | None = None
     geography: str | None = Field(default=None, max_length=200)
     ambiguities: tuple[str, ...] = ()
+    retained_context: tuple[str, ...] = ()
     checkworthiness: Score = Field(ge=0.0, le=1.0)
 
     @model_validator(mode="after")
@@ -41,6 +43,94 @@ class AtomicClaim(DomainModel):
         """A claim cannot be its own parent."""
         if self.parent_claim_id == self.claim_id:
             raise ValueError("parent_claim_id must differ from claim_id")
+        return self
+
+
+class ClaimDecomposition(DomainModel):
+    """Selective, context-preserving material components for one parent claim."""
+
+    decomposition_id: UUID = Field(default_factory=uuid4)
+    root_claim: AtomicClaim
+    requires_decomposition: bool
+    components: tuple[AtomicClaim, ...] = Field(min_length=1, max_length=8)
+    rationale: str = Field(min_length=10, max_length=5_000)
+
+    @model_validator(mode="after")
+    def validate_components(self) -> "ClaimDecomposition":
+        if not self.requires_decomposition and len(self.components) != 1:
+            raise ValueError("an atomic claim must have exactly one material component")
+        component_ids = [component.claim_id for component in self.components]
+        if len(component_ids) != len(set(component_ids)):
+            raise ValueError("component claim identifiers must be unique")
+        normalized_texts = [
+            " ".join(component.text.casefold().split()) for component in self.components
+        ]
+        if len(normalized_texts) != len(set(normalized_texts)):
+            raise ValueError("component claim texts must be unique")
+        for component in self.components:
+            if component.parent_claim_id != self.root_claim.claim_id:
+                raise ValueError("every component must reference the root claim")
+            if component.text == self.root_claim.text and self.requires_decomposition:
+                raise ValueError("a decomposed component cannot merely repeat the root claim")
+        return self
+
+
+class ComponentOutcome(DomainModel):
+    """Coverage and conclusion state for one material component."""
+
+    claim_id: UUID
+    status: ComponentStatus
+    verdict_id: UUID | None = None
+    verdict_label: VerdictLabel | None = None
+    evidence_ids: tuple[UUID, ...] = ()
+    unresolved_reason: str | None = Field(default=None, max_length=2_000)
+
+    @model_validator(mode="after")
+    def validate_outcome(self) -> "ComponentOutcome":
+        if self.status is ComponentStatus.COMPLETED:
+            if self.verdict_id is None or self.verdict_label is None:
+                raise ValueError("completed components require a verdict")
+        elif self.verdict_id is not None or self.verdict_label is not None:
+            raise ValueError("only completed components may contain a verdict")
+        if self.status in {ComponentStatus.UNRESOLVED, ComponentStatus.FAILED}:
+            if not self.unresolved_reason:
+                raise ValueError("unresolved or failed components require a reason")
+        elif self.unresolved_reason is not None:
+            raise ValueError("only unresolved or failed components may contain a reason")
+        return self
+
+
+class ClaimCoverage(DomainModel):
+    """Material-component coverage gate for a complex investigation."""
+
+    coverage_id: UUID = Field(default_factory=uuid4)
+    root_claim_id: UUID
+    outcomes: tuple[ComponentOutcome, ...] = Field(min_length=1, max_length=8)
+
+    @computed_field
+    @property
+    def completed_count(self) -> int:
+        return sum(outcome.status is ComponentStatus.COMPLETED for outcome in self.outcomes)
+
+    @computed_field
+    @property
+    def explicitly_unresolved_count(self) -> int:
+        return sum(
+            outcome.status in {ComponentStatus.UNRESOLVED, ComponentStatus.FAILED}
+            for outcome in self.outcomes
+        )
+
+    @computed_field
+    @property
+    def material_coverage_rate(self) -> float:
+        covered = self.completed_count + self.explicitly_unresolved_count
+        return round(covered / len(self.outcomes), 4)
+
+    @model_validator(mode="after")
+    def require_unique_components(self) -> "ClaimCoverage":
+        claim_ids = [outcome.claim_id for outcome in self.outcomes]
+        if len(claim_ids) != len(set(claim_ids)):
+            raise ValueError("coverage outcomes must reference unique components")
         return self
 
 

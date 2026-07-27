@@ -80,6 +80,71 @@ def test_cli_reports_missing_investigation(tmp_path, capsys) -> None:
     assert "investigation not found" in output.err
 
 
+def test_cli_runs_complex_investigation_and_exports_coverage(tmp_path, capsys) -> None:
+    database = tmp_path / "complex-cli.sqlite3"
+    artifacts = tmp_path / "artifacts"
+
+    exit_code = main(
+        [
+            "--database",
+            str(database),
+            "--artifacts",
+            str(artifacts),
+            "investigate",
+            "--complex",
+            "The example programme reduced waste.",
+        ]
+    )
+    output = capsys.readouterr()
+
+    assert exit_code == 0
+    assert "Status: completed" in output.out
+    assert "Components: 1" in output.out
+    assert "Coverage: 100.00%" in output.out
+    investigation_id = UUID(
+        next(line for line in output.out.splitlines() if line.startswith("Investigation ID:"))
+        .split(":", maxsplit=1)[1]
+        .strip()
+    )
+    report_payload = json.loads(
+        (artifacts / str(investigation_id) / "report.json").read_text(encoding="utf-8")
+    )
+    assert report_payload["coverage"]["material_coverage_rate"] == 1.0
+    assert len(report_payload["component_reports"]) == 1
+
+    assert (
+        main(
+            [
+                "--database",
+                str(database),
+                "--artifacts",
+                str(artifacts),
+                "show",
+                str(investigation_id),
+            ]
+        )
+        == 0
+    )
+    show_output = capsys.readouterr()
+    assert "# Claim Polygraph NG Complex Investigation" in show_output.out
+
+    assert (
+        main(
+            [
+                "--database",
+                str(database),
+                "--artifacts",
+                str(artifacts),
+                "resume-complex",
+                str(investigation_id),
+            ]
+        )
+        == 0
+    )
+    resume_output = capsys.readouterr()
+    assert "Coverage: 100.00%" in resume_output.out
+
+
 def test_cli_runs_a_limited_deterministic_evaluation(tmp_path, capsys) -> None:
     summary_path = tmp_path / "evaluation.json"
 
@@ -132,6 +197,33 @@ def test_cli_runs_a_limited_benchmark_evidence_evaluation(tmp_path, capsys) -> N
     assert payload["provider_mode"] == "benchmark_evidence+deterministic_reasoning"
     assert payload["mean_sources_per_completed_case"] == 2.5
     assert any("evidence-oracle" in item for item in payload["limitations"])
+
+
+def test_cli_selects_named_complex_evaluation_cases(tmp_path, capsys) -> None:
+    summary_path = tmp_path / "selected-complex.json"
+
+    exit_code = main(
+        [
+            "--no-hosted-model",
+            "--database",
+            str(tmp_path / "selected-complex.sqlite3"),
+            "evaluate",
+            "--dataset",
+            str(BENCHMARK),
+            "--complex",
+            "--benchmark-evidence",
+            "--cases",
+            "CPNG-019",
+            "--output",
+            str(summary_path),
+        ]
+    )
+    output = capsys.readouterr()
+
+    assert exit_code == 0, output.err
+    payload = json.loads(summary_path.read_text(encoding="utf-8"))
+    assert "Complex cases: 1/1 completed" in output.out
+    assert payload["results"][0]["case_id"] == "CPNG-019"
 
 
 def test_cli_rejects_benchmark_evidence_with_searxng(tmp_path, capsys) -> None:
@@ -247,6 +339,29 @@ def test_cli_rejects_fast_model_without_primary_model(tmp_path, capsys) -> None:
 
     assert exit_code == 1
     assert "--openai-fast-model requires --openai-model" in output.err
+
+
+def test_cli_can_explicitly_disable_hosted_model_defaults(
+    tmp_path,
+    capsys,
+    monkeypatch,
+) -> None:
+    monkeypatch.setenv("OPENAI_MODEL", "configured-hosted-model")
+    monkeypatch.setenv("OPENAI_FAST_MODEL", "configured-fast-model")
+
+    exit_code = main(
+        [
+            "--no-hosted-model",
+            "--database",
+            str(tmp_path / "local-only.sqlite3"),
+            "investigate",
+            "A factual claim.",
+        ]
+    )
+    output = capsys.readouterr()
+
+    assert exit_code == 0
+    assert "deterministic development provider" in output.out
 
 
 def test_cli_shows_five_claim_review_status(tmp_path, capsys) -> None:
