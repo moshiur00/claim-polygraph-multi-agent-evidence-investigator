@@ -1,0 +1,16 @@
+{
+  "packet_id": "phase7-stage7.9-targeted-calibration-v1",
+  "routing_disagreement_count": 0,
+  "citation_error_count": 0,
+  "changed_authoritative_output_count": 0,
+  "targeted_case_ids": [],
+  "disclosed_baseline_disagreements": [
+    "CPNG-006",
+    "CPNG-019"
+  ],
+  "benchmark_reapproval_required": false,
+  "promotion_approval_required": true,
+  "promotion_approval_status": "approved",
+  "approver_identity": "Md Moshiur Rahman",
+  "approval_date": "2026-07-28"
+}

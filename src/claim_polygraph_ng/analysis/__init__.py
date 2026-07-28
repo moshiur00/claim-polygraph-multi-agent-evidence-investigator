@@ -12,6 +12,7 @@ from claim_polygraph_ng.analysis.canonicalization import (
     canonicalize_doi,
     canonicalize_url,
 )
+from claim_polygraph_ng.analysis.citation_assurance import audit_structured_assertions
 from claim_polygraph_ng.analysis.consolidation import consolidate_evidence
 from claim_polygraph_ng.analysis.context import verify_claim_context
 from claim_polygraph_ng.analysis.evidence_families import (
@@ -67,6 +68,7 @@ from claim_polygraph_ng.analysis.readiness import (
     calculate_judgment_readiness,
 )
 from claim_polygraph_ng.analysis.research_routing import route_research_roles
+from claim_polygraph_ng.analysis.review_routing import route_human_review
 from claim_polygraph_ng.analysis.source_quality import (
     SOURCE_QUALITY_VERSION,
     DimensionAssessment,
@@ -135,6 +137,7 @@ __all__ = [
     "assess_evidence_sufficiency",
     "assess_near_duplicate",
     "assess_source_quality",
+    "audit_structured_assertions",
     "bridge_legacy_verification",
     "build_argument_ledger",
     "calculate_evidence_gain",
@@ -150,6 +153,7 @@ __all__ = [
     "fingerprint_content",
     "infer_evidence_families",
     "normalize_exact_content",
+    "route_human_review",
     "route_research_roles",
     "satisfied_requirement_ids",
     "targeted_roles",

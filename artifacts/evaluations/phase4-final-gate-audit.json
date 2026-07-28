@@ -1,0 +1,99 @@
+{
+  "manifest_id": "phase4-controlled-multi-agent-v1",
+  "generated_at": "2026-07-27T20:03:18.771795Z",
+  "phase_complete": true,
+  "multi_agent_promoted": false,
+  "default_workflow": "phase3_single_coordinator",
+  "paid_cost_usd": 0.03882495,
+  "passed_count": 7,
+  "failed_count": 1,
+  "skipped_count": 2,
+  "gates": [
+    {
+      "gate_id": "pilot_preflight",
+      "state": "passed",
+      "requirement": "Locked controls and hard resource ceilings validate",
+      "observed": "valid=True; 6 components",
+      "evidence": [
+        "phase4-pilot-preflight.json"
+      ]
+    },
+    {
+      "gate_id": "structural_dry_run",
+      "state": "passed",
+      "requirement": "Zero-cost orchestration and grounding dry run validates",
+      "observed": "valid=True; cost=$0.000000",
+      "evidence": [
+        "phase4-pilot-dry-run.json"
+      ]
+    },
+    {
+      "gate_id": "pilot_completion",
+      "state": "passed",
+      "requirement": "All three locked pilot cases complete",
+      "observed": "3/3",
+      "evidence": [
+        "phase4-paid-pilot-final.json"
+      ]
+    },
+    {
+      "gate_id": "pilot_citations",
+      "state": "passed",
+      "requirement": "At least 95% full citation support",
+      "observed": "100.00%",
+      "evidence": [
+        "phase4-paid-pilot-final.json"
+      ]
+    },
+    {
+      "gate_id": "pilot_cost",
+      "state": "passed",
+      "requirement": "Paid pilot stays within its hard cost ceiling",
+      "observed": "$0.03882495 / $0.11330610",
+      "evidence": [
+        "phase4-paid-pilot-final.json"
+      ]
+    },
+    {
+      "gate_id": "pilot_latency",
+      "state": "passed",
+      "requirement": "Median latency stays within the declared ceiling",
+      "observed": "22.293s / 90.447s",
+      "evidence": [
+        "phase4-paid-pilot-final.json"
+      ]
+    },
+    {
+      "gate_id": "pilot_no_regressions",
+      "state": "passed",
+      "requirement": "No Phase 3-correct case regresses",
+      "observed": "0 regressions",
+      "evidence": [
+        "phase4-paid-pilot-final.json"
+      ]
+    },
+    {
+      "gate_id": "pilot_minimum_improvement",
+      "state": "failed",
+      "requirement": "At least 2 pilot cases improve over Phase 3",
+      "observed": "1 improved",
+      "evidence": [
+        "phase4-paid-pilot-final.json"
+      ]
+    },
+    {
+      "gate_id": "ten_claim_comparison",
+      "state": "skipped_by_gate",
+      "requirement": "Run only after the pilot promotion gate passes",
+      "observed": "Skipped because the three-claim promotion gate failed; no paid call was made.",
+      "evidence": []
+    },
+    {
+      "gate_id": "repeat_stability",
+      "state": "skipped_by_gate",
+      "requirement": "Run only after a successful ten-claim comparison",
+      "observed": "Skipped because the three-claim promotion gate failed; no paid call was made.",
+      "evidence": []
+    }
+  ]
+}

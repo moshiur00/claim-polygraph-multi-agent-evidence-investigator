@@ -1,0 +1,84 @@
+{
+  "manifest_id": "phase6-verification-judgment-v1",
+  "schema_version": 1,
+  "dataset_id": "initial_claims",
+  "dataset_version": 5,
+  "benchmark_case_ids": [
+    "CPNG-001",
+    "CPNG-002",
+    "CPNG-003",
+    "CPNG-004",
+    "CPNG-005",
+    "CPNG-006",
+    "CPNG-007",
+    "CPNG-008",
+    "CPNG-009",
+    "CPNG-010",
+    "CPNG-011",
+    "CPNG-012",
+    "CPNG-013",
+    "CPNG-014",
+    "CPNG-015",
+    "CPNG-016",
+    "CPNG-017",
+    "CPNG-018",
+    "CPNG-019",
+    "CPNG-020"
+  ],
+  "artifacts": [
+    {
+      "artifact_id": "benchmark",
+      "path": "benchmarks/initial_claims_v1.json",
+      "sha256": "44270e74e3b20028d66dc907036ed3fd8236372d8e1bb8c65fadbcad7598b8a3"
+    },
+    {
+      "artifact_id": "phase2_baseline",
+      "path": "artifacts/evaluations/phase2-ten-live-e2e-v4-independent-declared-1.json",
+      "sha256": "248d14de47f290ebb83adeab0e21ff48c7dd787764a71a8e7606a9bbd837caa9"
+    },
+    {
+      "artifact_id": "phase3_baseline",
+      "path": "artifacts/evaluations/phase3-v5-final-validated-a.json",
+      "sha256": "3578bdc9c028b967ef1843ebd406065e98d999f0d7804f8d49eaba9da7020405"
+    },
+    {
+      "artifact_id": "phase3_gate_audit",
+      "path": "artifacts/evaluations/phase3-v5-final-gate-audit.json",
+      "sha256": "9eba77a76c159bdfb7ba8a7cd03327ce4d3cb30f396f8678e0bdb082bed57853"
+    },
+    {
+      "artifact_id": "phase4_closure_audit",
+      "path": "artifacts/evaluations/phase4-final-gate-audit.json",
+      "sha256": "f98af0c1f976477eeaa61ace304a9688c9f355fcca2df11668ba12d4a8154953"
+    },
+    {
+      "artifact_id": "phase5_manifest",
+      "path": "artifacts/evaluations/phase5-source-intelligence-manifest-v1.json",
+      "sha256": "0ded4128ece734ef9cbc4a8dbf7ef5566b346f7d5fec5ea683958c3caa6739d3"
+    },
+    {
+      "artifact_id": "baseline_audit",
+      "path": "artifacts/evaluations/phase6-stage6.0-baseline-v1.json",
+      "sha256": "325adfc67a08b0ad4aab4123c1299bf6ced45d30403b49a17cd87f3e9201976f"
+    }
+  ],
+  "baseline_audit_id": "phase6-stage6.0-baseline-v1",
+  "thresholds": {
+    "maximum_verdict_regressions": 0,
+    "minimum_required_check_trigger_recall": 1.0,
+    "maximum_false_passed_incomplete_checks": 0,
+    "minimum_numerical_operation_accuracy": 0.95,
+    "minimum_temporal_relation_accuracy": 0.95,
+    "maximum_out_of_packet_argument_references": 0,
+    "maximum_unsupported_resolved_propositions": 0,
+    "maximum_post_enforcement_constraint_violations": 0,
+    "minimum_required_review_escalation_recall": 1.0,
+    "minimum_citation_full_rate": 0.95,
+    "maximum_added_deterministic_latency_ratio": 0.2,
+    "maximum_added_deterministic_model_cost_usd": 0.0,
+    "maximum_optional_model_cost_per_case_usd": 0.005
+  },
+  "paid_model_calls_authorized": false,
+  "live_retrieval_authorized": false,
+  "pdf_downloads_authorized": false
+}

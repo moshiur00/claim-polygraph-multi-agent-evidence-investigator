@@ -1,0 +1,87 @@
+{
+  "manifest_id": "phase4-controlled-multi-agent-v1",
+  "schema_version": 1,
+  "dataset_id": "initial_claims",
+  "dataset_version": 5,
+  "benchmark_case_ids": [
+    "CPNG-011",
+    "CPNG-012",
+    "CPNG-013",
+    "CPNG-014",
+    "CPNG-015",
+    "CPNG-016",
+    "CPNG-017",
+    "CPNG-018",
+    "CPNG-019",
+    "CPNG-020"
+  ],
+  "pilot_case_ids": [
+    "CPNG-014",
+    "CPNG-016",
+    "CPNG-020"
+  ],
+  "pilot_selection_rationale": {
+    "CPNG-014": "Conflicting comparative and definitional evidence tests primary-source coverage and qualification discovery.",
+    "CPNG-016": "A coordinated causal claim tests adversarial retrieval and resistance to unsupported causal reasoning.",
+    "CPNG-020": "An overgeneralized study claim tests academic-source routing, population limits, and source independence."
+  },
+  "artifacts": [
+    {
+      "artifact_id": "benchmark",
+      "path": "benchmarks/initial_claims_v1.json",
+      "sha256": "44270e74e3b20028d66dc907036ed3fd8236372d8e1bb8c65fadbcad7598b8a3"
+    },
+    {
+      "artifact_id": "retrieval_snapshot",
+      "path": "artifacts/evaluations/phase3-v5-serpapi-retrieval-snapshot.json",
+      "sha256": "ee3eb13aceaeeb2289e3da1db41069ef39e42cc5ed850fe2e8038d13b11ecbba"
+    },
+    {
+      "artifact_id": "retrieval_evaluation",
+      "path": "artifacts/evaluations/phase3-v5-serpapi-retrieval.json",
+      "sha256": "3fe4614c508facdfc7e665eaa9bf41eb299919f3234905b9b2654142f21046d2"
+    },
+    {
+      "artifact_id": "page_evaluation",
+      "path": "artifacts/evaluations/phase3-v5-final-pages-top10.json",
+      "sha256": "73b113cce04499c22120ca666cbf41a91af15aa17543bfac34d8efc107a32782"
+    },
+    {
+      "artifact_id": "phase3_run_a",
+      "path": "artifacts/evaluations/phase3-v5-final-run-a.json",
+      "sha256": "8f38bc2136e6d2700ec2b1acbd2caaf6b100738016ec105c7ecfe45d7437014f"
+    },
+    {
+      "artifact_id": "phase3_run_b",
+      "path": "artifacts/evaluations/phase3-v5-final-run-b.json",
+      "sha256": "c48a2163fa622dcacf80976406b364732ffd2695fa32e847b9046419ea4187d5"
+    },
+    {
+      "artifact_id": "phase3_stability",
+      "path": "artifacts/evaluations/phase3-v5-final-stability.json",
+      "sha256": "400f05858c7675ab93b2749bf75004ab0ef3ac9e4b4df1ac2ccc52b54956492a"
+    },
+    {
+      "artifact_id": "phase3_gate_audit",
+      "path": "artifacts/evaluations/phase3-v5-final-gate-audit.json",
+      "sha256": "9eba77a76c159bdfb7ba8a7cd03327ce4d3cb30f396f8678e0bdb082bed57853"
+    }
+  ],
+  "phase3_metrics": {
+    "run_a_verdict_accuracy": 0.9,
+    "run_b_verdict_accuracy": 0.9,
+    "material_component_coverage": 1.0,
+    "parent_citation_full_rate": 1.0,
+    "exact_repeated_label_stability": 1.0,
+    "reviewed_passage_recall": 0.8085,
+    "run_a_mean_cost_per_component_usd": 0.008199114,
+    "run_b_mean_cost_per_component_usd": 0.008779771
+  },
+  "pilot_gate": {
+    "minimum_improved_cases": 2,
+    "maximum_mean_cost_ratio": 2.0,
+    "maximum_median_latency_ratio": 2.5,
+    "verdict_regressions_allowed": 0,
+    "provenance_regressions_allowed": 0
+  }
+}

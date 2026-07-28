@@ -1,0 +1,146 @@
+{
+  "audit_id": "phase6-final-release-audit-v1",
+  "phase_complete": true,
+  "default_verdict_authority": "existing_evidence-grounded_workflow",
+  "deterministic_policy_promoted": false,
+  "targeted_review_required": false,
+  "artifacts": [
+    {
+      "artifact_id": "phase6_experiment_manifest_v1",
+      "path": "artifacts/evaluations/phase6-experiment-manifest-v1.json",
+      "sha256": "69b14598af77d031c3dc370a3d5c71491838dd391570a81889b0b99bc649cb58"
+    },
+    {
+      "artifact_id": "phase6_stage6_0_baseline_v1",
+      "path": "artifacts/evaluations/phase6-stage6.0-baseline-v1.json",
+      "sha256": "325adfc67a08b0ad4aab4123c1299bf6ced45d30403b49a17cd87f3e9201976f"
+    },
+    {
+      "artifact_id": "phase6_stage6_2_numerical_v1",
+      "path": "artifacts/evaluations/phase6-stage6.2-numerical-v1.json",
+      "sha256": "ccf64f4612f13fcf67efcbfce7c5cdecd649db936fc3c8aed4bc793177248bd3"
+    },
+    {
+      "artifact_id": "phase6_stage6_3_temporal_v1",
+      "path": "artifacts/evaluations/phase6-stage6.3-temporal-v1.json",
+      "sha256": "8799806e7b0caca18150b2924ecc5acdc85886b09bf277ba1f5bbc9ebda57c5d"
+    },
+    {
+      "artifact_id": "phase6_stage6_8_frozen_ablation_v1",
+      "path": "artifacts/evaluations/phase6-stage6.8-frozen-ablation-v1.json",
+      "sha256": "2256a9f6484bf569f456048c97e8015152e47d2309a08e731577a61670a9b7a8"
+    },
+    {
+      "artifact_id": "phase6_stage6_10_targeted_review_v1",
+      "path": "artifacts/evaluations/phase6-stage6.10-targeted-review-v1.json",
+      "sha256": "20df21731d299b965a547d9845c86db32c8854a57ccfc81957d4a1efcb3e966d"
+    },
+    {
+      "artifact_id": "phase6_numerical_operations_v1",
+      "path": "benchmarks/phase6_numerical_operations_v1.json",
+      "sha256": "c76213ed00810fd57cafa6a905e6e6fc45e417eea1e617acfdd18a65e23fc258"
+    },
+    {
+      "artifact_id": "phase6_temporal_relations_v1",
+      "path": "benchmarks/phase6_temporal_relations_v1.json",
+      "sha256": "a91303514b28850b88929720b17ad9e453805ab0959f642d9cb3337a6ea40c28"
+    },
+    {
+      "artifact_id": "0013_phase6_policy_not_promoted",
+      "path": "docs/adr/0013-phase6-policy-not-promoted.md",
+      "sha256": "e4de2278cddbec66ffa2096110859e655c8998fe3818703039b85f7ff81fe2d9"
+    },
+    {
+      "artifact_id": "phase_6_completion_report",
+      "path": "docs/PHASE_6_COMPLETION_REPORT.md",
+      "sha256": "0b135cfc457120c4ddcddcee55eaff8770dd40aac840b6a0aefc2453ea8fd3e1"
+    }
+  ],
+  "gates": [
+    {
+      "gate_id": "locked_manifest",
+      "state": "passed",
+      "requirement": "All locked Phase 6 inputs exist, match hashes, and remain reviewed.",
+      "observed": "valid=True; 7 artifacts checked",
+      "evidence": [
+        "artifacts/evaluations/phase6-experiment-manifest-v1.json"
+      ]
+    },
+    {
+      "gate_id": "numerical_verification",
+      "state": "passed",
+      "requirement": "Numerical operation accuracy is at least 95%.",
+      "observed": "100.00%",
+      "evidence": [
+        "artifacts/evaluations/phase6-stage6.2-numerical-v1.json"
+      ]
+    },
+    {
+      "gate_id": "temporal_verification",
+      "state": "passed",
+      "requirement": "Temporal relation accuracy is at least 95%.",
+      "observed": "100.00%",
+      "evidence": [
+        "artifacts/evaluations/phase6-stage6.3-temporal-v1.json"
+      ]
+    },
+    {
+      "gate_id": "citation_support",
+      "state": "passed",
+      "requirement": "Citation support remains at least 95%.",
+      "observed": "100.00%",
+      "evidence": [
+        "artifacts/evaluations/phase6-stage6.8-frozen-ablation-v1.json"
+      ]
+    },
+    {
+      "gate_id": "policy_promotion",
+      "state": "failed",
+      "requirement": "No verdict regressions and no loss versus the frozen baseline.",
+      "observed": "5 regressions; 65.00% policy accuracy versus 90.00% baseline",
+      "evidence": [
+        "artifacts/evaluations/phase6-stage6.8-frozen-ablation-v1.json"
+      ]
+    },
+    {
+      "gate_id": "safe_fallback",
+      "state": "passed",
+      "requirement": "A failed policy is not promoted into authoritative verdicts.",
+      "observed": "Policy trace is observational with applied=false.",
+      "evidence": [
+        "docs/adr/0013-phase6-policy-not-promoted.md"
+      ]
+    },
+    {
+      "gate_id": "targeted_review",
+      "state": "passed",
+      "requirement": "Changed candidates and unresolved disagreements are disclosed.",
+      "observed": "6 changed candidates; 0 benchmark-truth changes",
+      "evidence": [
+        "artifacts/evaluations/phase6-stage6.10-targeted-review-v1.json"
+      ]
+    },
+    {
+      "gate_id": "optional_model_experiment",
+      "state": "skipped_by_gate",
+      "requirement": "Run only for a narrow ambiguity that could affect promotion.",
+      "observed": "Skipped: the failure is deterministic representation/aggregation.",
+      "evidence": []
+    },
+    {
+      "gate_id": "repository_quality",
+      "state": "passed",
+      "requirement": "Full tests, coverage threshold, Ruff, and local security checks pass.",
+      "observed": "339 tests passed; 86.42% coverage; Ruff clean; pip check and safe-fetcher security tests clean.",
+      "evidence": [
+        "docs/PHASE_6_COMPLETION_REPORT.md"
+      ]
+    }
+  ],
+  "passed_count": 7,
+  "failed_count": 1,
+  "skipped_count": 1,
+  "model_calls": 0,
+  "network_calls": 0,
+  "pdf_downloads": 0
+}

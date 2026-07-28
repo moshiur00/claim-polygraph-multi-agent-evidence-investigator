@@ -1,0 +1,66 @@
+{
+  "audit_id": "phase7-final-closure-audit-v1",
+  "engineering_complete": true,
+  "phase_complete": true,
+  "langgraph_default_promoted": true,
+  "promotion_approval_status": "approved",
+  "manifest_sha256": "fb8276402b7fc4b15a7b0ee9ac87c287b90363c9be49f109a6562a06c74ac00c",
+  "gates": [
+    {
+      "gate_id": "frozen_comparison",
+      "state": "passed",
+      "requirement": "All Stage 7.8 promotion metrics pass.",
+      "observed": "All Stage 7.8 promotion metrics pass.",
+      "evidence": []
+    },
+    {
+      "gate_id": "recovery",
+      "state": "passed",
+      "requirement": "All eight recovery journeys pass.",
+      "observed": "All eight recovery journeys pass.",
+      "evidence": []
+    },
+    {
+      "gate_id": "security",
+      "state": "passed",
+      "requirement": "API and existing safe-fetch security tests pass.",
+      "observed": "API and existing safe-fetch security tests pass.",
+      "evidence": []
+    },
+    {
+      "gate_id": "accessibility_structure",
+      "state": "passed",
+      "requirement": "Dashboard structure and lint checks pass.",
+      "observed": "Dashboard structure and lint checks pass.",
+      "evidence": []
+    },
+    {
+      "gate_id": "artifact_integrity",
+      "state": "passed",
+      "requirement": "Every release artifact is SHA-256 frozen.",
+      "observed": "Every release artifact is SHA-256 frozen.",
+      "evidence": []
+    },
+    {
+      "gate_id": "targeted_calibration",
+      "state": "passed",
+      "requirement": "No new case-level disagreement requires reannotation.",
+      "observed": "No new case-level disagreement requires reannotation.",
+      "evidence": []
+    },
+    {
+      "gate_id": "human_promotion_approval",
+      "state": "passed",
+      "requirement": "ADR 0014 was approved by Md Moshiur Rahman on 2026-07-28.",
+      "observed": "ADR 0014 was approved by Md Moshiur Rahman on 2026-07-28.",
+      "evidence": []
+    }
+  ],
+  "passed_count": 7,
+  "failed_count": 0,
+  "pending_count": 0,
+  "model_calls": 0,
+  "search_calls": 0,
+  "network_calls": 0,
+  "pdf_downloads": 0
+}

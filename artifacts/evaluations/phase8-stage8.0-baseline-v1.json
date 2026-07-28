@@ -1,0 +1,113 @@
+{
+  "manifest_id": "phase8-stage8.0-baseline-v1",
+  "schema_version": 1,
+  "dataset_id": "initial_claims",
+  "dataset_version": 5,
+  "authoritative_case_count": 20,
+  "authoritative_accuracy": 0.9,
+  "known_disagreements": [
+    "CPNG-006",
+    "CPNG-019"
+  ],
+  "default_orchestrator": "langgraph",
+  "authoritative_service": "InvestigationService",
+  "rollback_orchestrator": "direct",
+  "resource_ceilings": {
+    "fixture_model_calls": 0,
+    "fixture_search_calls": 0,
+    "fixture_network_calls": 0,
+    "fixture_pdf_downloads": 0,
+    "pilot_case_count": 5,
+    "pilot_mean_cost_ratio": 2.0,
+    "pilot_median_latency_ratio": 2.0,
+    "verdict_regressions_allowed": 0,
+    "duplicate_paid_operations_allowed": 0,
+    "maximum_research_rounds": 2,
+    "maximum_concurrent_roles": 4
+  },
+  "quality_gates": {
+    "minimum_citation_support_rate": 0.95,
+    "mandatory_review_recall": 1.0,
+    "minimum_review_specificity": 0.8,
+    "minimum_review_route_accuracy": 0.9,
+    "minimum_improved_pilot_cases": 2,
+    "material_sentence_audit_coverage": 1.0
+  },
+  "artifacts": [
+    {
+      "artifact_id": "benchmark",
+      "path": "benchmarks/initial_claims_v1.json",
+      "sha256": "44270e74e3b20028d66dc907036ed3fd8236372d8e1bb8c65fadbcad7598b8a3"
+    },
+    {
+      "artifact_id": "routing_controls",
+      "path": "benchmarks/phase8_review_routing_controls_v1.json",
+      "sha256": "62a9ca8561743bfee5a2a35e3722faf9d51113928cf0f44a2bba57d1ca2310dd"
+    },
+    {
+      "artifact_id": "phase7_closure",
+      "path": "artifacts/evaluations/phase7-final-closure-audit-v1.json",
+      "sha256": "66ede56adfddf4d4540c0e084d11b0daf203f26e3c78f5c8c0596c0b083d6da2"
+    },
+    {
+      "artifact_id": "phase7_frozen",
+      "path": "artifacts/evaluations/phase7-stage7.8-frozen-comparison-v1.json",
+      "sha256": "2cbe6c8005214040fe9aec629d583ad990f1dba8d7dc43593467ebc5ed14625e"
+    },
+    {
+      "artifact_id": "promotion_adr",
+      "path": "docs/adr/0014-promote-langgraph-as-default-orchestrator.md",
+      "sha256": "0e1dace79136ec189c1defc31507d17571cf202ed8c635656e45dca99d23355c"
+    },
+    {
+      "artifact_id": "dashboard_adr",
+      "path": "docs/adr/0015-dashboard-root-monorepo.md",
+      "sha256": "05e3c6cf407b0fd65197830c4a0828f2fd4bc6017302028e7bd729ceefc70824"
+    },
+    {
+      "artifact_id": "dashboard_inventory",
+      "path": "docs/PHASE_8_STAGE_8.0_DASHBOARD_INVENTORY.md",
+      "sha256": "5717820915c93737232357a6418656ecf0b1d57ab04ae5eedbfbbd8ee1ec6d60"
+    },
+    {
+      "artifact_id": "dashboard_history",
+      "path": "dashboard-history/dashboard-pre-monorepo-4651a05.bundle",
+      "sha256": "88f993af870267b9e529aa77a6d023b61822c4484b3d371cfdc30f2d89f4be46"
+    },
+    {
+      "artifact_id": "dashboard_package",
+      "path": "dashboard/package.json",
+      "sha256": "71d4d259c19de1cf149d26c565b1a2b47b34d00ad550277c74b73121403cb110"
+    },
+    {
+      "artifact_id": "dashboard_lint",
+      "path": "dashboard/eslint.config.mjs",
+      "sha256": "733497e0ce24f8de310ac4907ab656dcb085cad9de0296d20e80c45e33d8d9f4"
+    },
+    {
+      "artifact_id": "dashboard_runner",
+      "path": "dashboard/scripts/run-vinext.mjs",
+      "sha256": "5f043b407c57856f337583e34711981482224fd2155cfe294b4d614050b54fa9"
+    },
+    {
+      "artifact_id": "readme",
+      "path": "README.md",
+      "sha256": "f3f4a33bb74d7a5092a3b44f321b5ea65f58ac86a28f44f2597b07c0300daa93"
+    },
+    {
+      "artifact_id": "benchmark_readme",
+      "path": "benchmarks/README.md",
+      "sha256": "312abc842b9026d2cf96427bbe110941307eaba4dc3c747274adc9ea55a9b505"
+    },
+    {
+      "artifact_id": "phase8_plan",
+      "path": "docs/PHASE_8_TRUE_MULTI_AGENT_EXECUTION_PLAN.md",
+      "sha256": "0d4bbb3be098dd48deba36c964191b9f5f58d52837d0a1386b7cada7d00b3856"
+    },
+    {
+      "artifact_id": "stage8_0_report",
+      "path": "docs/PHASE_8_STAGE_8.0_COMPLETION_REPORT.md",
+      "sha256": "23a36c8d68f5948dae42a0fb66c775177b1ce1ee5b559a4d82c19c79f8ce8c7a"
+    }
+  ]
+}

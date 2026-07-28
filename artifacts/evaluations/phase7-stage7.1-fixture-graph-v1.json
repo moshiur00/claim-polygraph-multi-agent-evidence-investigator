@@ -1,0 +1,38 @@
+{
+  "graph_run_id": "4638bf54-0a82-50dc-b2b4-a7745cea465f",
+  "status": "review_required",
+  "authoritative_verdict": "contradicted",
+  "approved_evidence_ids": [
+    "149aa1b3-46b0-5075-a89d-95bb9d6f812e",
+    "a0e3f1d4-05d3-5db0-9d2e-8441eda468ad",
+    "e045ded3-2a84-5900-b140-ea639bcaafef"
+  ],
+  "consumed_evidence_ids": [
+    "149aa1b3-46b0-5075-a89d-95bb9d6f812e",
+    "a0e3f1d4-05d3-5db0-9d2e-8441eda468ad",
+    "e045ded3-2a84-5900-b140-ea639bcaafef"
+  ],
+  "completed_nodes": [
+    "normalize",
+    "research",
+    "consolidate",
+    "verify_context",
+    "build_argument_ledger",
+    "draft_verdict",
+    "audit_citations",
+    "assess_readiness",
+    "route_review",
+    "interrupt_for_review"
+  ],
+  "route_decision": {
+    "route": "human_review",
+    "reason": "The absolute visibility statement and its orbital photography qualification require explicit human confirmation."
+  },
+  "model_calls": 0,
+  "search_calls": 0,
+  "estimated_cost_usd": 0.0,
+  "limitations": [
+    "Stage 7.1 uses frozen fixture data and no checkpoint persistence.",
+    "The graph is optional and does not replace InvestigationService."
+  ]
+}
