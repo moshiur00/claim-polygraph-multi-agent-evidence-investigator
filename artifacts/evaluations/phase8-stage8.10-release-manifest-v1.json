@@ -1,0 +1,69 @@
+{
+  "manifest_id": "phase8-stage8.10-release-manifest-v1",
+  "artifacts": [
+    {
+      "artifact_id": "sqlite_runtime_policy",
+      "path": "src/claim_polygraph_ng/persistence/sqlite_runtime.py",
+      "sha256": "01bd2061b2da5fb08396f07496944cbf70d8f6a61e20b15933deabdde1c5ce40"
+    },
+    {
+      "artifact_id": "investigation_repository",
+      "path": "src/claim_polygraph_ng/persistence/sqlite.py",
+      "sha256": "f446201e48db4473e08baa3907714abf9fb8eb56bb9a59ea7c56db39fa4cb021"
+    },
+    {
+      "artifact_id": "research_repository",
+      "path": "src/claim_polygraph_ng/persistence/research.py",
+      "sha256": "f2dd86d58cf8f07c9ec3da536086020a527936cd37fae9036809c53743b69c24"
+    },
+    {
+      "artifact_id": "review_ledger",
+      "path": "src/claim_polygraph_ng/persistence/review.py",
+      "sha256": "6e6ccd4c8d60f0355ef36532f65a9fea4266a74239ce404153e6341b614edf81"
+    },
+    {
+      "artifact_id": "langgraph_checkpoint_runtime",
+      "path": "src/claim_polygraph_ng/application/langgraph_durable.py",
+      "sha256": "dbfc2bedade2de2323d6bc025292a1e96ccf18b7ddcfa9b1ade3491776a75567"
+    },
+    {
+      "artifact_id": "concurrency_gate",
+      "path": "src/claim_polygraph_ng/evaluation/sqlite_concurrency.py",
+      "sha256": "a100bf9a0021772a6207da51166b791655cff35a88fb1be42758ea55d1dd472c"
+    },
+    {
+      "artifact_id": "evaluation_exports",
+      "path": "src/claim_polygraph_ng/evaluation/__init__.py",
+      "sha256": "84ecbc51ed027a3706e421ad34fc56898e65dfebbcdf72b7801d1dddac3724cd"
+    },
+    {
+      "artifact_id": "runner",
+      "path": "scripts/run_phase8_sqlite_concurrency_gate.py",
+      "sha256": "53cd51ce57c965d5a52d3baf4241fcb06bd975858851d3cd4e8071bb42c5fddc"
+    },
+    {
+      "artifact_id": "integration_test",
+      "path": "tests/integration/test_sqlite_concurrency_gate.py",
+      "sha256": "2559b741b79e774d5f7f9682d120129778e031ae948259301b6a176c9884ea5c"
+    },
+    {
+      "artifact_id": "measured_result",
+      "path": "artifacts/evaluations/phase8-stage8.10-sqlite-concurrency-v1.json",
+      "sha256": "83dfe7d0bb8119a748f0632a270f9053c18ff8c4fa34fd7df4162a784bf6fff7"
+    },
+    {
+      "artifact_id": "persistence_adr",
+      "path": "docs/adr/0016-retain-sqlite-wal-for-local-mvp.md",
+      "sha256": "05543e677599dcc475abefee0c0e6d1eea9383d0448e5592f91bf415af0abc37"
+    },
+    {
+      "artifact_id": "completion_report",
+      "path": "docs/PHASE_8_STAGE_8.10_COMPLETION_REPORT.md",
+      "sha256": "68f7393fda3bbae79be27d7dd74c70790017d2eeba9d3f17f552331637efdeba"
+    }
+  ],
+  "external_model_calls": 0,
+  "live_search_calls": 0,
+  "network_fetches": 0,
+  "pdf_downloads": 0
+}

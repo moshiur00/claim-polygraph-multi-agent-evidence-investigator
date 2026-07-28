@@ -1,7 +1,7 @@
 """Fail-closed deterministic assurance for structured report assertions."""
 
 import re
-from uuid import UUID
+from uuid import NAMESPACE_URL, UUID, uuid5
 
 from claim_polygraph_ng.domain.citation import (
     AssertionEvidenceLink,
@@ -9,12 +9,17 @@ from claim_polygraph_ng.domain.citation import (
     CitationAssurancePacket,
     CitationAssuranceStatus,
     CitationIssueCode,
+    CitationRevision,
+    FullReportCitationAssurance,
+    PublicationGateStatus,
+    ReportAssertionSection,
     StructuredReportAssertion,
 )
-from claim_polygraph_ng.domain.enums import EvidenceStance
-from claim_polygraph_ng.domain.models import Evidence
+from claim_polygraph_ng.domain.enums import EvidenceStance, VerdictLabel
+from claim_polygraph_ng.domain.models import Evidence, Verdict
 
 _NON_WORD = re.compile(r"[^\w]+", re.UNICODE)
+_SENTENCE_BOUNDARY = re.compile(r"(?<=[.!?])\s+")
 
 
 def audit_structured_assertions(
@@ -32,8 +37,7 @@ def audit_structured_assertions(
     approved = set(approved_evidence_ids)
     records = {item.evidence_id: item for item in evidence}
     findings = tuple(
-        _audit_one(assertion, approved=approved, records=records)
-        for assertion in assertions
+        _audit_one(assertion, approved=approved, records=records) for assertion in assertions
     )
     statuses = [item.status for item in findings]
     supported = statuses.count(CitationAssuranceStatus.SUPPORTED)
@@ -48,6 +52,227 @@ def audit_structured_assertions(
         out_of_packet_count=statuses.count(CitationAssuranceStatus.OUT_OF_PACKET),
         full_support_rate=supported / len(findings),
     )
+
+
+def assure_full_report(
+    *,
+    claim_id: UUID,
+    verdict: Verdict,
+    evidence: tuple[Evidence, ...],
+    approved_evidence_ids: tuple[UUID, ...],
+    maximum_revision_attempts: int = 2,
+) -> FullReportCitationAssurance:
+    """Inventory, audit, revise and gate every material narrative sentence."""
+    if verdict.claim_id != claim_id:
+        raise ValueError("verdict must match the assured report claim")
+    if maximum_revision_attempts < 0 or maximum_revision_attempts > 2:
+        raise ValueError("full-report revision attempts must be between zero and two")
+    approved = set(approved_evidence_ids)
+    records = tuple(item for item in evidence if item.evidence_id in approved)
+    if len(records) != len(approved):
+        raise ValueError("every approved evidence ID requires a supplied record")
+    original = _material_assertions(claim_id, verdict, records)
+    initial = audit_structured_assertions(
+        claim_id=claim_id,
+        assertions=original,
+        evidence=records,
+        approved_evidence_ids=approved_evidence_ids,
+    )
+    current = original
+    audit = initial
+    revisions: list[CitationRevision] = []
+    for attempt in range(1, maximum_revision_attempts + 1):
+        failed = {
+            item.assertion_id
+            for item in audit.findings
+            if item.material and item.status is not CitationAssuranceStatus.SUPPORTED
+        }
+        if not failed:
+            break
+        revised = tuple(
+            _revise_assertion(item, records, attempt, revisions)
+            if item.assertion_id in failed
+            else item
+            for item in current
+        )
+        if revised == current:
+            break
+        current = revised
+        audit = audit_structured_assertions(
+            claim_id=claim_id,
+            assertions=current,
+            evidence=records,
+            approved_evidence_ids=approved_evidence_ids,
+        )
+    critical_failures = sum(
+        item.critical and item.status is not CitationAssuranceStatus.SUPPORTED
+        for item in audit.findings
+    )
+    reasons = []
+    if critical_failures:
+        reasons.append(f"{critical_failures} critical material assertion(s) remain unsupported.")
+    if audit.full_support_rate < 0.95:
+        reasons.append(
+            "Full-report material sentence support remains below the 95% publication threshold."
+        )
+    material_count = sum(item.material for item in current)
+    return FullReportCitationAssurance(
+        claim_id=claim_id,
+        original_assertions=original,
+        final_assertions=current,
+        initial_audit=initial,
+        final_audit=audit,
+        revisions=tuple(revisions),
+        material_sentence_count=material_count,
+        audited_material_sentence_count=len([item for item in audit.findings if item.material]),
+        critical_failure_count=critical_failures,
+        publication_status=(
+            PublicationGateStatus.BLOCKED if reasons else PublicationGateStatus.READY
+        ),
+        blocking_reasons=tuple(reasons),
+        maximum_revision_attempts=maximum_revision_attempts,
+    )
+
+
+def _material_assertions(
+    claim_id: UUID,
+    verdict: Verdict,
+    evidence: tuple[Evidence, ...],
+) -> tuple[StructuredReportAssertion, ...]:
+    stance = _verdict_stance(verdict.label)
+    verdict_citations = tuple(
+        dict.fromkeys((*verdict.decisive_evidence_ids, *verdict.contradictory_evidence_ids))
+    )
+    records = {item.evidence_id: item for item in evidence}
+    assertions = []
+    for section, text, critical in (
+        (
+            ReportAssertionSection.VERDICT_SUMMARY,
+            verdict.concise_explanation,
+            True,
+        ),
+        (
+            ReportAssertionSection.DETAILED_REASONING,
+            verdict.detailed_reasoning,
+            False,
+        ),
+    ):
+        for ordinal, sentence in enumerate(_sentences(text)):
+            assertions.append(
+                StructuredReportAssertion(
+                    assertion_id=uuid5(
+                        NAMESPACE_URL,
+                        f"{claim_id}/{section.value}/{ordinal}/{sentence}",
+                    ),
+                    claim_id=claim_id,
+                    sentence=sentence,
+                    cited_evidence_ids=verdict_citations,
+                    asserted_stance=stance,
+                    required_phrases=(
+                        _required_phrase(
+                            sentence,
+                            tuple(records[item] for item in verdict_citations if item in records),
+                        ),
+                    ),
+                    critical=critical,
+                    section=section,
+                    ordinal=ordinal,
+                )
+            )
+    for ordinal, item in enumerate(
+        evidence_item
+        for evidence_item in evidence
+        if evidence_item.stance is not EvidenceStance.IRRELEVANT
+    ):
+        sentence = item.passage.strip()
+        assertions.append(
+            StructuredReportAssertion(
+                assertion_id=uuid5(
+                    NAMESPACE_URL,
+                    f"{claim_id}/evidence/{item.evidence_id}",
+                ),
+                claim_id=claim_id,
+                sentence=sentence,
+                cited_evidence_ids=(item.evidence_id,),
+                asserted_stance=item.stance,
+                required_phrases=(_passage_excerpt(sentence),),
+                section=ReportAssertionSection.EVIDENCE_FINDING,
+                ordinal=ordinal,
+            )
+        )
+    return tuple(assertions)
+
+
+def _revise_assertion(assertion, evidence, attempt, revisions):
+    candidates = tuple(item for item in evidence if item.stance is assertion.asserted_stance)
+    cited_candidates = tuple(
+        item for item in candidates if item.evidence_id in assertion.cited_evidence_ids
+    )
+    selected = cited_candidates or candidates
+    if not selected:
+        return assertion
+    item = selected[0]
+    excerpt = _passage_excerpt(item.passage)
+    revised_sentence = f"The approved evidence states: {excerpt}"
+    revised = assertion.model_copy(
+        update={
+            "sentence": revised_sentence,
+            "cited_evidence_ids": (item.evidence_id,),
+            "required_phrases": (excerpt,),
+        }
+    )
+    revisions.append(
+        CitationRevision(
+            assertion_id=assertion.assertion_id,
+            attempt_number=attempt,
+            original_sentence=assertion.sentence,
+            revised_sentence=revised_sentence,
+            cited_evidence_ids=(item.evidence_id,),
+            rationale=(
+                "Unsupported wording was narrowed to an exact approved passage "
+                "without changing the verdict label."
+            ),
+        )
+    )
+    return revised
+
+
+def _required_phrase(sentence: str, evidence: tuple[Evidence, ...]) -> str:
+    words = _normalize(sentence).split()
+    passages = tuple(_normalize(item.passage) for item in evidence)
+    for width in range(min(8, len(words)), 1, -1):
+        for start in range(len(words) - width + 1):
+            phrase = " ".join(words[start : start + width])
+            if any(phrase in passage for passage in passages):
+                return phrase
+    return " ".join(words[: min(5, len(words))])
+
+
+def _passage_excerpt(passage: str) -> str:
+    normalized = " ".join(passage.split())
+    if len(normalized) <= 240:
+        return normalized
+    return normalized[:240].rsplit(" ", 1)[0]
+
+
+def _sentences(text: str) -> tuple[str, ...]:
+    return tuple(
+        item.strip() for item in _SENTENCE_BOUNDARY.split(" ".join(text.split())) if item.strip()
+    )
+
+
+def _verdict_stance(label: VerdictLabel) -> EvidenceStance:
+    if label in {VerdictLabel.SUPPORTED, VerdictLabel.MOSTLY_SUPPORTED}:
+        return EvidenceStance.SUPPORTS
+    if label in {VerdictLabel.CONTRADICTED, VerdictLabel.UNSUPPORTED}:
+        return EvidenceStance.CONTRADICTS
+    if label in {
+        VerdictLabel.MIXED,
+        VerdictLabel.MISLEADING,
+        VerdictLabel.OUTDATED,
+    }:
+        return EvidenceStance.QUALIFIES
+    return EvidenceStance.CONTEXT
 
 
 def _audit_one(
@@ -72,9 +297,7 @@ def _audit_one(
             explanation="The assertion cites evidence outside the approved packet.",
         )
     missing_records = [
-        evidence_id
-        for evidence_id in assertion.cited_evidence_ids
-        if evidence_id not in records
+        evidence_id for evidence_id in assertion.cited_evidence_ids if evidence_id not in records
     ]
     if missing_records:
         return _finding(
@@ -119,8 +342,7 @@ def _audit_one(
             status=CitationAssuranceStatus.SUPPORTED,
             links=tuple(links),
             explanation=(
-                "Every required phrase occurs in an exact cited passage "
-                "with matching stance."
+                "Every required phrase occurs in an exact cited passage with matching stance."
             ),
         )
     if opposite is not None and all(item is opposite for item in stances):

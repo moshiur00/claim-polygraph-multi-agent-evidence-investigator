@@ -544,6 +544,14 @@ def _validate_task_invariants(
         _require_uuid(verdict.claim_id, inputs, "claim_id")
         evidence = cast(list[dict[str, JsonValue]], inputs.get("evidence", []))
         allowed = {UUID(str(item["evidence_id"])) for item in evidence}
+        ledger = cast(dict[str, JsonValue], inputs.get("argument_ledger", {}))
+        ledger_allowed = {
+            UUID(str(item)) for item in cast(list[str], ledger.get("approved_evidence_ids", []))
+        }
+        if ledger_allowed != allowed:
+            raise ModelOutputError(
+                "judge argument ledger does not match the approved evidence packet"
+            )
         referenced = set(verdict.decisive_evidence_ids) | set(verdict.contradictory_evidence_ids)
         if not referenced <= allowed:
             raise ModelOutputError("verdict referenced evidence outside the approved packet")

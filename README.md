@@ -10,10 +10,13 @@ multi-agent architecture only after the core evidence workflow is measurable.
 
 ## Current milestone
 
-Phase 7 is complete. LangGraph is the default API orchestrator, while
+Phase 8 implementation and automated closure gates are complete through Stage
+8.13. LangGraph is the default API orchestrator, while
 `InvestigationService` remains authoritative for evidence, verification and
-verdicts. Phase 8 is beginning with a locked, zero-cost baseline before genuine
-multi-agent research is integrated into the promoted graph.
+verdicts. Genuine concurrent multi-agent research, defender/challenger
+arguments, durable jobs and distributed trace continuity now run inside the
+promoted journey. Stage 8.14 approved multi-agent research as the default
+observational subgraph; its candidate evidence remains non-authoritative.
 
 | Capability | Current status |
 |---|---|
@@ -25,27 +28,73 @@ multi-agent research is integrated into the promoted graph.
 | LangGraph checkpoints, interruption and idempotent resume | Complete and promoted |
 | Append-only review, distinct approval and verdict revisions | Complete |
 | FastAPI, SSE and connected dashboard | Complete for local API/demo deployment |
-| Bounded Phase 4 multi-agent research | Experimental; not promoted |
-| Phase 8 genuine multi-agent subgraph | Planned/in progress |
-| Article-text and URL claim extraction | Planned for Phase 8 |
-| Empirically calibrated confidence | Not yet available |
-| Production concurrency, durable jobs and telemetry | Planned behind Phase 8 gates |
+| Bounded multi-agent research | Genuine concurrent LangGraph subgraph; candidate evidence observational |
+| Phase 8 controlled promotion experiment | Five-case pilot and ten-case comparison passed mechanical gates |
+| Article-text and URL claim extraction | Complete; deterministic selection gate |
+| Durable multi-agent LangGraph state | Complete; bounded ID/reference checkpoint |
+| Academic and fact-check specialist adapters | Complete; conditional, permission-bounded routing |
+| Concurrent LangGraph research fan-out | Complete; minimum team, cached map/reduce |
+| Empirically calibrated confidence | Unavailable by design; current dataset failed minimum support gate |
+| SQLite concurrency | Passed bounded single-host WAL gate; PostgreSQL preferred for multi-host production |
+| Durable jobs and backpressure | Complete for bounded database-backed queue |
+| Operational telemetry | W3C trace propagation, metrics and deterministic alerts complete locally |
+| Stage 8.14 targeted review | Approved; all five cases judged improved |
 
 The reviewed benchmark contains 20 citation-grounded cases. The authoritative
 workflow and promoted LangGraph wrapper both currently achieve 90% agreement
 with reviewed labels; CPNG-006 and CPNG-019 are disclosed disagreements.
 
+Atomic investigations enter through one `InvestigationOrchestrator` contract.
+The supported modes are `langgraph` (default), `direct` (rollback) and
+`multi_agent_experimental` (compatibility/experiment mode). The default
+LangGraph route now contains bounded multi-agent research and adversarial
+argument subgraphs while preserving `InvestigationService` authority.
+
 The mock providers deliberately return synthetic evidence. They validate
 orchestration, policy, persistence, and audit contracts; they do not perform
 real fact-checking.
 
-LangGraph coordinates durable graph state,
-review interruption, and resume while `InvestigationService` remains
-authoritative for evidence and verdicts. Set
+LangGraph coordinates durable graph state, concurrent role execution, review
+interruption, resume and recovery while `InvestigationService` remains
+authoritative for approved evidence and verdicts. Set
 `CLAIM_POLYGRAPH_ORCHESTRATOR=direct` to use the explicit rollback path.
 
 See the complete
 [project specification](docs/PROJECT_SPECIFICATION_AND_PLAN.md).
+
+## Local Docker application
+
+Start the API and dashboard together:
+
+```powershell
+docker compose up --build
+```
+
+Open `http://localhost:3000`. The API health endpoint is
+`http://localhost:8000/health`. SQLite investigations, reviews, research state,
+checkpoints and telemetry persist in the `claim_polygraph_data` Docker volume.
+
+The Docker deployment defaults to live Google retrieval through SerpAPI and
+schema-constrained OpenAI reasoning. Put `SERPAPI_API_KEY` and `OPENAI_API_KEY`
+only in the ignored `.env` file. The dashboard temporarily displays cumulative
+estimated OpenAI token cost from local telemetry; SerpAPI subscription or
+per-search charges remain external and are explicitly not included.
+
+To use the optional local SearXNG service later:
+
+```powershell
+$env:CLAIM_POLYGRAPH_SEARCH_PROVIDER = "searxng"
+docker compose --profile searxng up --build
+```
+
+Stop the application with `docker compose down`. Add `-v` only when you
+intentionally want to delete that persisted local data. To test the rollback
+orchestrator in PowerShell:
+
+```powershell
+$env:CLAIM_POLYGRAPH_ORCHESTRATOR = "direct"
+docker compose up --build
+```
 
 ## Development setup
 
@@ -66,10 +115,20 @@ the local deterministic or selected Ollama provider.
 ```powershell
 claim-polygraph investigate "The claim to investigate"
 claim-polygraph investigate --complex "A compound claim with two assertions"
+claim-polygraph extract-claims "An article containing factual statements."
+claim-polygraph extract-claims --url "https://example.org/public-article"
 claim-polygraph resume-complex ROOT_INVESTIGATION_ID
 claim-polygraph list
 claim-polygraph show INVESTIGATION_ID
 ```
+
+`extract-claims` accepts pasted article text or a public URL and returns ranked
+factual-claim candidates with exact character offsets and surrounding context.
+Extraction makes no truth judgment and starts no investigation or model call.
+For URLs, the existing safe fetch boundary enforces public-network, redirect,
+content-type, response-size and timeout rules; PDF retrieval remains blocked
+unless its host is explicitly approved. The dashboard exposes the same
+selection-first workflow.
 
 To opt into real retrieval through a trusted SearXNG instance whose JSON output
 is enabled:

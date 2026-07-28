@@ -1,0 +1,29 @@
+{
+  "total": 3,
+  "offset": 0,
+  "next": 2,
+  "data": [
+    {
+      "paperId": "S2-PAPER-1",
+      "title": "Independent academic evidence for the intervention",
+      "url": "https://www.semanticscholar.org/paper/S2-PAPER-1",
+      "abstract": "A recorded abstract used only as candidate metadata in fixture tests.",
+      "authors": [{"name": "Scholar One"}, {"name": "Scholar Two"}],
+      "year": 2025,
+      "publicationDate": "2025-04-10",
+      "journal": {"name": "Fixture Science"},
+      "externalIds": {"DOI": "10.1000/semantic.fixture"}
+    },
+    {
+      "paperId": "S2-PAPER-2",
+      "title": "Replication evidence from another cohort",
+      "url": "https://www.semanticscholar.org/paper/S2-PAPER-2",
+      "abstract": null,
+      "authors": [{"name": "Scholar Three"}],
+      "year": 2024,
+      "publicationDate": null,
+      "journal": {"name": "Fixture Replications"},
+      "externalIds": {}
+    }
+  ]
+}

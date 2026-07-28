@@ -16,6 +16,7 @@ from claim_polygraph_ng.domain import (
     ContextVerification,
     Evidence,
     EvidenceStance,
+    FullReportCitationAssurance,
     IndependenceAnalysis,
     InvestigationProvenance,
     InvestigationReport,
@@ -23,6 +24,8 @@ from claim_polygraph_ng.domain import (
     JudgmentPolicyTrace,
     JudgmentReadiness,
     MultiAgentInvestigationReport,
+    PublicationGateStatus,
+    ReportAssertionSection,
     SentenceAudit,
     Source,
     TraceEvent,
@@ -40,6 +43,10 @@ class InvestigationNotFoundError(LookupError):
 
 class IncompleteInvestigationError(LookupError):
     """Raised when a complete report cannot be reconstructed."""
+
+
+class PublicationBlockedError(RuntimeError):
+    """Raised when critical or excessive material citation failures remain."""
 
 
 @dataclass(frozen=True)
@@ -98,6 +105,11 @@ def load_report(
     )
     verdicts = repository.list_artifacts(investigation_id, ArtifactType.VERDICT, Verdict)
     audits = repository.list_artifacts(investigation_id, ArtifactType.AUDIT, SentenceAudit)
+    full_report_assurance = repository.list_artifacts(
+        investigation_id,
+        ArtifactType.FULL_REPORT_ASSURANCE,
+        FullReportCitationAssurance,
+    )
 
     missing = [
         name
@@ -129,6 +141,7 @@ def load_report(
         context_verification=(context_verification[-1] if context_verification else None),
         verdict=verdicts[-1],
         audits=audits,
+        full_report_assurance=(full_report_assurance[-1] if full_report_assurance else None),
     )
 
 
@@ -161,6 +174,11 @@ def load_complex_report(
     )
     verdicts = repository.list_artifacts(investigation_id, ArtifactType.VERDICT, Verdict)
     audits = repository.list_artifacts(investigation_id, ArtifactType.AUDIT, SentenceAudit)
+    assurance = repository.list_artifacts(
+        investigation_id,
+        ArtifactType.FULL_REPORT_ASSURANCE,
+        FullReportCitationAssurance,
+    )
     if not all((decompositions, checkpoints, coverages, verdicts, audits)):
         raise IncompleteInvestigationError(
             "completed complex investigation is missing required parent artifacts"
@@ -176,6 +194,7 @@ def load_complex_report(
         coverage=coverages[-1],
         verdict=verdicts[-1],
         audits=audits,
+        full_report_assurance=assurance[-1] if assurance else None,
     )
 
 
@@ -185,6 +204,7 @@ def export_report(
     output_root: str | Path,
 ) -> ExportedReportPaths:
     """Write JSON, Markdown, and trace artifacts atomically enough for local use."""
+    publishable_markdown = render_publishable_markdown(report, events)
     directory = Path(output_root) / str(report.investigation.investigation_id)
     directory.mkdir(parents=True, exist_ok=True)
 
@@ -197,7 +217,7 @@ def export_report(
         encoding="utf-8",
     )
     report_markdown.write_text(
-        render_markdown(report, events),
+        publishable_markdown,
         encoding="utf-8",
     )
     trace_json.write_text(
@@ -224,6 +244,7 @@ def export_complex_report(
     output_root: str | Path,
 ) -> ExportedReportPaths:
     """Write a complex parent report and trace without flattening components."""
+    publishable_markdown = render_publishable_complex_markdown(report)
     directory = Path(output_root) / str(report.investigation.investigation_id)
     directory.mkdir(parents=True, exist_ok=True)
     report_json = directory / "report.json"
@@ -233,7 +254,7 @@ def export_complex_report(
         json.dumps(report.model_dump(mode="json"), indent=2, ensure_ascii=False) + "\n",
         encoding="utf-8",
     )
-    report_markdown.write_text(render_complex_markdown(report), encoding="utf-8")
+    report_markdown.write_text(publishable_markdown, encoding="utf-8")
     trace_json.write_text(
         json.dumps(
             [event.model_dump(mode="json") for event in events],
@@ -249,6 +270,28 @@ def export_complex_report(
         report_markdown=report_markdown,
         trace_json=trace_json,
     )
+
+
+def render_publishable_complex_markdown(report: ComplexInvestigationReport) -> str:
+    """Require parent and every completed component to pass publication."""
+    assurance = report.full_report_assurance
+    if assurance is None or assurance.publication_status is PublicationGateStatus.BLOCKED:
+        reasons = (
+            assurance.blocking_reasons
+            if assurance
+            else ("parent full-report citation assurance is missing",)
+        )
+        raise PublicationBlockedError("complex publication blocked: " + " ".join(reasons))
+    for component in report.component_reports:
+        component_assurance = component.full_report_assurance
+        if (
+            component_assurance is None
+            or component_assurance.publication_status is PublicationGateStatus.BLOCKED
+        ):
+            raise PublicationBlockedError(
+                f"complex publication blocked by component {component.claim.claim_id}"
+            )
+    return render_complex_markdown(report)
 
 
 def render_complex_markdown(report: ComplexInvestigationReport) -> str:
@@ -342,6 +385,23 @@ def render_multi_agent_markdown(report: MultiAgentInvestigationReport) -> str:
     return "\n".join(lines)
 
 
+def render_publishable_markdown(
+    report: InvestigationReport,
+    events: tuple[TraceEvent, ...],
+) -> str:
+    """Render only after the complete material-sentence publication gate passes."""
+    assurance = report.full_report_assurance
+    if assurance is None:
+        raise PublicationBlockedError(
+            "full-report citation assurance is missing; publication is blocked"
+        )
+    if assurance.publication_status is PublicationGateStatus.BLOCKED:
+        raise PublicationBlockedError(
+            "publication blocked: " + " ".join(assurance.blocking_reasons)
+        )
+    return render_markdown(report, events)
+
+
 def render_markdown(
     report: InvestigationReport,
     events: tuple[TraceEvent, ...],
@@ -426,8 +486,7 @@ def render_markdown(
                 f"{provenance.possible_independent_upper_bound}",
                 f"- **Required families:** {provenance.required_independent_families}",
                 f"- **Requirement state:** {provenance.requirement_state.value}",
-                f"- **Unresolved source relationships:** "
-                f"{provenance.unresolved_dependency_count}",
+                f"- **Unresolved source relationships:** {provenance.unresolved_dependency_count}",
                 f"- **Inferred families:** {len(provenance.families)}",
                 "",
             ]
@@ -491,8 +550,7 @@ def render_markdown(
         )
         for argument in ledger.arguments:
             lines.append(
-                f"- **Proposition `{argument.proposition_id}`:** "
-                f"{argument.resolution.value}"
+                f"- **Proposition `{argument.proposition_id}`:** {argument.resolution.value}"
             )
         lines.append("")
 
@@ -519,27 +577,39 @@ def render_markdown(
                 "",
                 f"- **State:** {readiness.state.value}",
                 f"- **Material coverage:** {readiness.material_coverage:.2%}",
-                f"- **Verification completeness:** "
-                f"{readiness.verification_completeness:.2%}",
+                f"- **Verification completeness:** {readiness.verification_completeness:.2%}",
                 f"- **Citation audit complete:** "
                 f"{'yes' if readiness.citation_audit_complete else 'no'}",
-                f"- **Reason codes:** "
-                f"{_joined(item.value for item in readiness.reason_codes)}",
+                f"- **Reason codes:** {_joined(item.value for item in readiness.reason_codes)}",
                 "",
             ]
         )
 
     decisive = _evidence_references(report.verdict.decisive_evidence_ids, evidence_labels)
     contradictory = _evidence_references(report.verdict.contradictory_evidence_ids, evidence_labels)
+    summary = report.verdict.concise_explanation
+    detailed = report.verdict.detailed_reasoning
+    if report.full_report_assurance is not None:
+        final_assertions = report.full_report_assurance.final_assertions
+        summary = " ".join(
+            _assured_sentence(item, evidence_labels)
+            for item in final_assertions
+            if item.section is ReportAssertionSection.VERDICT_SUMMARY
+        )
+        detailed = " ".join(
+            _assured_sentence(item, evidence_labels)
+            for item in final_assertions
+            if item.section is ReportAssertionSection.DETAILED_REASONING
+        )
     lines.extend(
         [
             "## Provisional verdict",
             "",
             f"**{report.verdict.label.value.replace('_', ' ').title()}**",
             "",
-            _inline(report.verdict.concise_explanation),
+            _inline(summary),
             "",
-            _inline(report.verdict.detailed_reasoning),
+            _inline(detailed),
             "",
             f"- **Decisive evidence:** {decisive}",
             f"- **Contradictory evidence:** {contradictory}",
@@ -582,6 +652,23 @@ def render_markdown(
                 )
             )
             + " |"
+        )
+    if report.full_report_assurance is not None:
+        assurance = report.full_report_assurance
+        lines.extend(
+            [
+                "",
+                "## Full-report citation assurance",
+                "",
+                f"- **Publication status:** {assurance.publication_status.value}",
+                f"- **Material sentences audited:** "
+                f"{assurance.audited_material_sentence_count}/"
+                f"{assurance.material_sentence_count}",
+                f"- **Final full-support rate:** {assurance.final_audit.full_support_rate:.2%}",
+                f"- **Critical failures:** {assurance.critical_failure_count}",
+                f"- **Bounded revisions:** {len(assurance.revisions)}",
+                "",
+            ]
         )
 
     provider_events = tuple(
@@ -687,6 +774,15 @@ def _evidence_references(
 ) -> str:
     references = [f"[{labels[value]}]" for value in identifiers if value in labels]
     return ", ".join(references) if references else "none"
+
+
+def _assured_sentence(assertion, labels: dict[UUID, str]) -> str:
+    references = _evidence_references(assertion.cited_evidence_ids, labels)
+    return (
+        f"{assertion.sentence} [Citations: {references}]"
+        if references != "none"
+        else assertion.sentence
+    )
 
 
 def _bullet_items(items: tuple[str, ...]) -> list[str]:

@@ -49,6 +49,11 @@ artifacts/evaluations/*
 !artifacts/evaluations/phase7-stage7.3-assurance-routing-v1.json
 !artifacts/evaluations/phase7-stage7.7-recovery-v1.json
 !artifacts/evaluations/phase7-stage7.9-targeted-calibration-v1.json
+!artifacts/evaluations/phase8-stage8.1-orchestrator-v1.json
+!artifacts/evaluations/phase8-stage8.2-claim-extraction-v1.json
+!artifacts/evaluations/phase8-stage8.3-durable-research-state-v1.json
+!artifacts/evaluations/phase8-stage8.4-specialist-adapters-v1.json
+!artifacts/evaluations/phase8-stage8.5-concurrent-fanout-v1.json
 
 
 docs/private/

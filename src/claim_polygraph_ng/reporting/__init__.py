@@ -15,6 +15,7 @@ from claim_polygraph_ng.reporting.reports import (
     ExportedReportPaths,
     IncompleteInvestigationError,
     InvestigationNotFoundError,
+    PublicationBlockedError,
     export_complex_report,
     export_report,
     load_complex_report,
@@ -22,6 +23,8 @@ from claim_polygraph_ng.reporting.reports import (
     render_complex_markdown,
     render_markdown,
     render_multi_agent_markdown,
+    render_publishable_complex_markdown,
+    render_publishable_markdown,
 )
 
 __all__ = [
@@ -33,6 +36,7 @@ __all__ = [
     "InvestigationNotFoundError",
     "ProvenanceInspectionReport",
     "ProvenanceSourceSummary",
+    "PublicationBlockedError",
     "SourceQualityReportEntry",
     "build_component_provenance_report",
     "export_complex_report",
@@ -44,4 +48,6 @@ __all__ = [
     "render_markdown",
     "render_multi_agent_markdown",
     "render_provenance_markdown",
+    "render_publishable_complex_markdown",
+    "render_publishable_markdown",
 ]

@@ -6,7 +6,7 @@ from uuid import uuid4
 import httpx
 
 from claim_polygraph_ng.api import ApiDependencies, create_app
-from claim_polygraph_ng.application import InvestigationService
+from claim_polygraph_ng.application import ClaimExtractionService, InvestigationService
 from claim_polygraph_ng.domain import (
     FixtureGraphRequest,
     ReviewDecision,
@@ -39,9 +39,40 @@ def _client(tmp_path):
             reviews=ledger,
             graph_checkpoint_path=tmp_path / "graph.db",
             investigate=service.investigate,
+            extract_claims=ClaimExtractionService().extract,
         )
     )
     return app, report
+
+
+def test_article_extraction_returns_candidates_without_starting_investigation(tmp_path) -> None:
+    app, existing = _client(tmp_path)
+    before = asyncio.run(_request(app, "GET", "/api/investigations")).json()
+    extracted = asyncio.run(
+        _request(
+            app,
+            "POST",
+            "/api/claim-inputs/extract",
+            json={
+                "kind": "article_text",
+                "title": "Example report",
+                "text": (
+                    "Background information introduces the report. "
+                    "The agency reported 42 cases in 2025."
+                ),
+            },
+        )
+    )
+    after = asyncio.run(_request(app, "GET", "/api/investigations")).json()
+
+    assert extracted.status_code == 200
+    assert extracted.json()["candidates"][0]["text"] == (
+        "The agency reported 42 cases in 2025."
+    )
+    assert not extracted.json()["automatic_investigation_started"]
+    assert [item["investigation_id"] for item in before] == [
+        item["investigation_id"] for item in after
+    ] == [str(existing.investigation.investigation_id)]
 
 
 async def _request(app, method: str, url: str, **kwargs):
@@ -56,6 +87,7 @@ def test_investigation_evidence_report_and_sse_are_exposed(tmp_path) -> None:
     investigation_id = report.investigation.investigation_id
 
     listed = asyncio.run(_request(app, "GET", "/api/investigations"))
+    health = asyncio.run(_request(app, "GET", "/health"))
     evidence = asyncio.run(_request(app, "GET", f"/api/investigations/{investigation_id}/evidence"))
     machine_report = asyncio.run(
         _request(app, "GET", f"/api/investigations/{investigation_id}/report")
@@ -76,6 +108,8 @@ def test_investigation_evidence_report_and_sse_are_exposed(tmp_path) -> None:
     )
 
     assert listed.status_code == evidence.status_code == machine_report.status_code == 200
+    assert health.json()["orchestrator"] == "direct"
+    assert health.json()["authoritative_service"] == "InvestigationService"
     assert listed.json()[0]["investigation_id"] == str(investigation_id)
     assert len(evidence.json()) == 3
     assert machine_report.json()["verdict"]["label"] == "mixed"
@@ -251,6 +285,8 @@ def test_create_investigation_and_provider_failure_are_stable(tmp_path) -> None:
         )
     )
     assert created.status_code == 201
+    assert created.headers["x-claim-polygraph-orchestrator"] == "direct"
+    assert created.headers["x-claim-polygraph-authority"] == "InvestigationService"
     assert created.json()["investigation"]["status"] == "completed"
 
     async def fail(_claim: str):

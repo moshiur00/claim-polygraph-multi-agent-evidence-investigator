@@ -5,11 +5,13 @@ import asyncio
 import httpx
 
 from claim_polygraph_ng.api import ApiDependencies, create_app
+from claim_polygraph_ng.application.claim_extraction import ClaimExtractionService
 from claim_polygraph_ng.domain.investigation import InvestigationReport
 from claim_polygraph_ng.persistence import (
     SQLiteInvestigationRepository,
     SQLiteReviewLedger,
 )
+from claim_polygraph_ng.retrieval import SafeHttpFetcher
 
 
 async def _call(app, method: str, path: str, **kwargs):
@@ -29,6 +31,7 @@ def _app(tmp_path):
             reviews=SQLiteReviewLedger(tmp_path / "reviews.db"),
             graph_checkpoint_path=tmp_path / "graph.db",
             investigate=fail,
+            extract_claims=ClaimExtractionService(SafeHttpFetcher().fetch).extract,
         )
     )
 
@@ -80,3 +83,17 @@ def test_cors_allows_declared_dashboard_but_not_arbitrary_origin(tmp_path) -> No
     assert trusted.headers["access-control-allow-origin"] == "http://localhost:3000"
     assert "access-control-allow-origin" not in untrusted.headers
     assert trusted.headers["access-control-allow-origin"] != "*"
+
+
+def test_public_url_claim_extraction_rejects_loopback_without_fetching(tmp_path) -> None:
+    response = asyncio.run(
+        _call(
+            _app(tmp_path),
+            "POST",
+            "/api/claim-inputs/extract",
+            json={"kind": "public_url", "url": "http://127.0.0.1/private"},
+        )
+    )
+
+    assert response.status_code == 422
+    assert response.json()["detail"] == "claim extraction failed: UnsafeUrlError"

@@ -63,6 +63,47 @@ def route_research_roles(request: ResearchRoutingRequest) -> ResearchRoute:
     )
 
 
+def route_targeted_research_roles(
+    request: ResearchRoutingRequest,
+    roles: tuple[ResearchRole, ...],
+    *,
+    remaining_activation_slots: int,
+) -> ResearchRoute:
+    """Create only requirement-directed continuation assignments."""
+    active_roles = roles[: max(0, remaining_activation_slots)]
+    deferred_roles = roles[len(active_roles) :]
+    rationale = [
+        (
+            f"Round {request.round_number} activates {role.value} only for "
+            "requirements still missing after deterministic assessment."
+        )
+        for role in active_roles
+    ]
+    if deferred_roles:
+        rationale.append("Additional targeted roles were deferred by the hard activation budget.")
+    assignments = tuple(
+        ResearchAssignment(
+            investigation_id=request.investigation_id,
+            parent_claim_id=request.parent_claim_id,
+            component_id=request.component_id,
+            claim_text=request.claim_text,
+            retained_context=request.retained_context,
+            role=role,
+            round_number=request.round_number,
+            requirement_ids=_requirements_for_role(request.requirements, role),
+            permissions=ROLE_PERMISSIONS[role],
+            query_limit=request.budget.maximum_queries_per_role_per_round,
+            candidate_limit_per_query=request.budget.maximum_candidates_per_query,
+        )
+        for role in active_roles
+    )
+    return ResearchRoute(
+        assignments=assignments,
+        deferred_roles=tuple(deferred_roles),
+        rationale=tuple(rationale),
+    )
+
+
 def _requires_academic(request: ResearchRoutingRequest) -> bool:
     if request.claim_types & {ClaimType.SCIENTIFIC, ClaimType.CAUSAL}:
         return True

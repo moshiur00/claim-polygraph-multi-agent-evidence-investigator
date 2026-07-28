@@ -1,7 +1,7 @@
 # Phase 8: Promoted LangGraph and Genuine Multi-Agent Research
 
 Date: 28 July 2026  
-Status: Planned  
+Status: In progress — Stages 8.0–8.9 complete  
 Default orchestrator: LangGraph  
 Authoritative research and verdict service: `InvestigationService`  
 Rollback: `CLAIM_POLYGRAPH_ORCHESTRATOR=direct`
@@ -103,6 +103,8 @@ Cost: zero model/search calls.
 
 ## Stage 8.1 — one promoted orchestration contract
 
+Status: **complete for the atomic contract on 28 July 2026**
+
 1. Define a typed `InvestigationOrchestrator` protocol.
 2. Put promoted LangGraph and direct rollback behind that protocol.
 3. Make CLI, API and dashboard declare the selected orchestrator in output.
@@ -123,6 +125,10 @@ Exit:
 Cost: zero model/search calls.
 
 ## Stage 8.2 — article text and public-URL claim extraction
+
+Status: **Complete on 28 July 2026.** The implementation remained
+deterministic and used no model, search or PDF calls. See
+`PHASE_8_STAGE_8.2_COMPLETION_REPORT.md`.
 
 1. Add a typed input union: manual claim, article text, or public article URL.
 2. Reuse the safe fetcher for URL input with SSRF, redirect, size, type and
@@ -146,6 +152,11 @@ Cost: at most one approved model smoke call after fixtures pass.
 
 ## Stage 8.3 — durable multi-agent graph state
 
+Status: **Complete on 28 July 2026.** The promoted LangGraph checkpoint now
+persists a bounded, cross-reference-validated multi-agent research state and
+reconstructs it without provider calls. See
+`PHASE_8_STAGE_8.3_COMPLETION_REPORT.md`.
+
 1. Add parent investigation, component, requirement, assignment, result,
    evidence-family, consumption and unresolved-question fields to graph state.
 2. Persist only identifiers and bounded summaries in checkpoints.
@@ -157,6 +168,11 @@ Exit: graph state can reconstruct a research round without provider calls.
 Cost: zero model/search calls.
 
 ## Stage 8.4 — dedicated academic and fact-check adapters
+
+Status: **Complete on 28 July 2026.** PubMed, Semantic Scholar and Google Fact
+Check now implement fixture-proven specialist contracts with distinct metadata,
+bounded rates and safe candidate normalization. See
+`PHASE_8_STAGE_8.4_COMPLETION_REPORT.md`.
 
 1. Define provider-neutral `AcademicSearchProvider` and
    `FactCheckSearchProvider` protocols.
@@ -183,6 +199,11 @@ Exit:
 Cost: maximum three live search calls for the stage; no full benchmark run.
 
 ## Stage 8.5 — concurrent research fan-out
+
+Status: **Complete on 28 July 2026.** The promoted LangGraph path now runs a
+concurrent, cached and restart-safe research map/reduce subgraph while keeping
+candidate evidence outside the authoritative packet. See
+`PHASE_8_STAGE_8.5_COMPLETION_REPORT.md`.
 
 1. Route the minimum useful role set from typed claim requirements.
 2. Execute compatible roles concurrently with per-role and global budgets.

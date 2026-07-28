@@ -1,0 +1,77 @@
+{
+  "audit_id": "phase8-stage8.14-closure-audit-v1",
+  "date": "2026-07-28",
+  "automated_gates": {
+    "full_python_test_suite": {
+      "status": "passed",
+      "tests": 450,
+      "warnings": 1,
+      "warning_disposition": "Existing Starlette TestClient deprecation; no functional failure."
+    },
+    "python_lint": {
+      "status": "passed"
+    },
+    "python_security_restart_concurrency_job_trace_tests": {
+      "status": "passed",
+      "tests": 35
+    },
+    "dashboard_lint": {
+      "status": "passed"
+    },
+    "dashboard_production_build": {
+      "status": "passed"
+    },
+    "dashboard_render_and_accessibility_tests": {
+      "status": "passed",
+      "tests": 2
+    },
+    "dashboard_nested_git_repository": {
+      "status": "passed",
+      "observed": false
+    },
+    "targeted_review_packet": {
+      "status": "passed",
+      "cases": 5,
+      "candidate_passages": 15,
+      "synthetic_fixture_disclosed": true
+    },
+    "readme_reconciled": {
+      "status": "passed"
+    },
+    "architecture_and_api_operations_reconciled": {
+      "status": "passed"
+    }
+  },
+  "human_gates": {
+    "targeted_evidence_quality_review": {
+      "status": "approved",
+      "reviewer_identity": "Md Moshiur Rahman",
+      "review_date": "2026-07-28",
+      "decision": "promote_observational_default",
+      "case_judgments": {
+        "improved": 5,
+        "unchanged": 0,
+        "worse": 0
+      },
+      "packet": "benchmarks/review_packets/phase8_stage8_14_targeted_review.md"
+    },
+    "distinct_approval": {
+      "status": "approved",
+      "approver_identity": "Md Rashedul Islam",
+      "approval_date": "2026-07-28",
+      "decision": "approve"
+    },
+    "final_promotion_adr": {
+      "status": "accepted",
+      "path": "docs/adr/0020-final-multi-agent-promotion-decision.md"
+    }
+  },
+  "multi_agent_execution_is_genuine": true,
+  "multi_agent_candidate_evidence_is_authoritative": false,
+  "phase8_complete": true,
+  "closure_status": "complete",
+  "external_model_calls": 0,
+  "live_search_calls": 0,
+  "network_fetches": 0,
+  "pdf_downloads": 0
+}

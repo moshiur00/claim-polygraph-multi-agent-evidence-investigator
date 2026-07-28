@@ -8,6 +8,7 @@ from pydantic import AnyHttpUrl, Field, JsonValue, model_validator
 
 from claim_polygraph_ng.domain.argument import ArgumentLedger
 from claim_polygraph_ng.domain.base import DomainModel
+from claim_polygraph_ng.domain.citation import FullReportCitationAssurance
 from claim_polygraph_ng.domain.enums import ResearchPath, SourceType
 from claim_polygraph_ng.domain.judgment import JudgmentPolicyTrace
 from claim_polygraph_ng.domain.models import (
@@ -94,6 +95,7 @@ class ArtifactType(StrEnum):
     CONTEXT_VERIFICATION = "context_verification"
     VERDICT = "verdict"
     AUDIT = "audit"
+    FULL_REPORT_ASSURANCE = "full_report_assurance"
     DECOMPOSITION = "decomposition"
     COVERAGE = "coverage"
     CHECKPOINT = "checkpoint"
@@ -273,6 +275,7 @@ class InvestigationReport(DomainModel):
     context_verification: ContextVerification | None = None
     verdict: Verdict
     audits: tuple[SentenceAudit, ...]
+    full_report_assurance: FullReportCitationAssurance | None = None
 
 
 class ComplexInvestigationReport(DomainModel):
@@ -284,6 +287,7 @@ class ComplexInvestigationReport(DomainModel):
     coverage: "ClaimCoverage"
     verdict: Verdict
     audits: tuple[SentenceAudit, ...]
+    full_report_assurance: FullReportCitationAssurance | None = None
 
 
 from claim_polygraph_ng.domain.models import ClaimCoverage, ClaimDecomposition  # noqa: E402

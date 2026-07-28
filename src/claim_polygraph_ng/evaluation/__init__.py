@@ -6,7 +6,15 @@ from claim_polygraph_ng.evaluation.ai_review import (
     review_benchmark_cases,
 )
 from claim_polygraph_ng.evaluation.candidate_provider import RetrievalCandidateSearchProvider
+from claim_polygraph_ng.evaluation.confidence_calibration import (
+    evaluate_confidence_calibration,
+)
 from claim_polygraph_ng.evaluation.evidence_provider import BenchmarkEvidenceSearchProvider
+from claim_polygraph_ng.evaluation.job_backend import (
+    JobBackendGateResult,
+    JobBackendTarget,
+    run_job_backend_gate,
+)
 from claim_polygraph_ng.evaluation.models import (
     AIAssistedReviewRecord,
     AIReviewAnnotation,
@@ -227,6 +235,13 @@ from claim_polygraph_ng.evaluation.phase7_recovery import (
     evaluate_phase7_recovery,
     export_phase7_recovery,
 )
+from claim_polygraph_ng.evaluation.phase8_promotion import (
+    FROZEN_PROMOTION_CLAIMS,
+    LargerComparisonSummary,
+    PromotionCaseResult,
+    Stage813PromotionEvaluation,
+    evaluate_stage8_13_promotion,
+)
 from claim_polygraph_ng.evaluation.retrieval import (
     export_retrieval_evaluation,
     load_retrieval_evaluation,
@@ -253,14 +268,24 @@ from claim_polygraph_ng.evaluation.semantic_passages import (
     load_semantic_passage_evaluation,
     run_semantic_passage_evaluation,
 )
+from claim_polygraph_ng.evaluation.sqlite_concurrency import (
+    SQLiteConcurrencyGateResult,
+    SQLiteMvpConcurrencyTarget,
+    run_sqlite_concurrency_gate,
+)
 from claim_polygraph_ng.evaluation.stability import (
     compare_complex_evaluations,
     export_complex_stability,
     load_complex_evaluation,
 )
+from claim_polygraph_ng.evaluation.telemetry_gate import (
+    TelemetryGateResult,
+    run_telemetry_gate,
+)
 
 __all__ = [
     "AI_REVIEW_PROMPT_VERSION",
+    "FROZEN_PROMOTION_CLAIMS",
     "AIAssistedReviewRecord",
     "AIReviewAnnotation",
     "AIReviewCritique",
@@ -289,6 +314,9 @@ __all__ = [
     "GateState",
     "IndependenceFeatureCaseResult",
     "IndependenceFeatureEvaluation",
+    "JobBackendGateResult",
+    "JobBackendTarget",
+    "LargerComparisonSummary",
     "ManifestVerification",
     "NearDuplicateEvaluation",
     "NearDuplicatePairResult",
@@ -341,6 +369,7 @@ __all__ = [
     "Phase7RecoveryEvaluation",
     "Phase7ReleaseManifest",
     "PilotGate",
+    "PromotionCaseResult",
     "ProvenanceBenchmark",
     "ProvenanceFixtureCase",
     "ProvenanceFixtureRelationship",
@@ -362,6 +391,8 @@ __all__ = [
     "RetrievalSnapshotCandidate",
     "RetrievalSnapshotQuery",
     "RiskLevel",
+    "SQLiteConcurrencyGateResult",
+    "SQLiteMvpConcurrencyTarget",
     "SemanticPassageEvaluationSummary",
     "SemanticPassageJudgment",
     "SemanticPassageReferenceResult",
@@ -371,6 +402,8 @@ __all__ = [
     "SourceQualityCalibrationSet",
     "SourceQualityEvaluation",
     "SourceQualityFixtureResult",
+    "Stage813PromotionEvaluation",
+    "TelemetryGateResult",
     "TemporalFactFixture",
     "TemporalRelationBenchmark",
     "TemporalRelationCaseResult",
@@ -387,6 +420,7 @@ __all__ = [
     "build_targeted_review",
     "compare_complex_evaluations",
     "evaluate_canonicalization",
+    "evaluate_confidence_calibration",
     "evaluate_evidence_families",
     "evaluate_exact_duplicates",
     "evaluate_independence_features",
@@ -398,6 +432,7 @@ __all__ = [
     "evaluate_provenance_links",
     "evaluate_source_quality_calibration",
     "evaluate_source_quality_structure",
+    "evaluate_stage8_13_promotion",
     "evaluate_temporal_benchmark",
     "export_ambiguous_classifier_artifact",
     "export_benchmark",
@@ -445,11 +480,14 @@ __all__ = [
     "review_benchmark_cases",
     "run_complex_evaluation",
     "run_evaluation",
+    "run_job_backend_gate",
     "run_page_fetch_evaluation",
     "run_phase4_structural_dry_run",
     "run_phase6_frozen_ablation",
     "run_retrieval_evaluation",
     "run_semantic_passage_evaluation",
+    "run_sqlite_concurrency_gate",
+    "run_telemetry_gate",
     "validate_initial_benchmark",
     "verify_closure_audit",
     "verify_phase4_manifest",

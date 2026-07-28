@@ -1,0 +1,88 @@
+{
+  "manifest_id": "phase8-stage8.4-release-manifest-v1",
+  "artifacts": [
+    {
+      "artifact_id": "specialist_contracts",
+      "path": "src/claim_polygraph_ng/domain/specialist.py",
+      "sha256": "fe4e83492dab08d11e4e865e7a0b7b98d58c0a64fe9c9ba6200df4b36af3c6cd"
+    },
+    {
+      "artifact_id": "provider_protocols",
+      "path": "src/claim_polygraph_ng/providers/base.py",
+      "sha256": "cf28ef745958dc6fd379285e8514d57646912662d7b876a8773c4c0fb812538d"
+    },
+    {
+      "artifact_id": "provider_exports",
+      "path": "src/claim_polygraph_ng/providers/__init__.py",
+      "sha256": "9534b00020b5b7aa71f453774905015c993b65ea464f052d336131f0dd5f80e3"
+    },
+    {
+      "artifact_id": "rate_gate",
+      "path": "src/claim_polygraph_ng/providers/rate_limit.py",
+      "sha256": "494053371e70fc1e21932d4c553bf9c15df3b01c1b6b2fccd474eb29ca663c00"
+    },
+    {
+      "artifact_id": "pubmed_adapter",
+      "path": "src/claim_polygraph_ng/providers/pubmed.py",
+      "sha256": "c24e7701ba5ea521c88410034ce429e07edb5c8c2dfc03faf04657a8b77ba9a7"
+    },
+    {
+      "artifact_id": "semantic_scholar_adapter",
+      "path": "src/claim_polygraph_ng/providers/semantic_scholar.py",
+      "sha256": "31b104640d953e4ec6391967f0cbcccaa85f4ab29eeea71bec3b877e0dedcdbd"
+    },
+    {
+      "artifact_id": "fact_check_adapter",
+      "path": "src/claim_polygraph_ng/providers/factcheck.py",
+      "sha256": "2ed7a3463735ee74253e4fa25e498470ed7707aaefec944aa3c98fd1d17be952"
+    },
+    {
+      "artifact_id": "specialist_tests",
+      "path": "tests/unit/test_specialist_providers.py",
+      "sha256": "ab21eb580a15fcb716ff1361fc20b911026fb49e0b8b13bf275fcd7ad74c58d1"
+    },
+    {
+      "artifact_id": "pubmed_search_fixture",
+      "path": "tests/fixtures/providers/pubmed_esearch_page1.json",
+      "sha256": "9c8cc0be93ff8b53a8b0c2a6e1ab247cdb410a85db6172ae04b3efed0d79ce54"
+    },
+    {
+      "artifact_id": "pubmed_summary_fixture",
+      "path": "tests/fixtures/providers/pubmed_esummary_page1.json",
+      "sha256": "6fe9c8a2005cd893df95d2e4bb6043832366926494b27b9c187fed25a56ddb00"
+    },
+    {
+      "artifact_id": "pubmed_empty_fixture",
+      "path": "tests/fixtures/providers/pubmed_esearch_empty.json",
+      "sha256": "aae054d63c010a04610e7d11e800a3f91ef2f3e8b4b36806b0f19374e780e56f"
+    },
+    {
+      "artifact_id": "semantic_scholar_fixture",
+      "path": "tests/fixtures/providers/semantic_scholar_page1.json",
+      "sha256": "15f065f4fcb7f32de3bc2ecb07b2d188d31ea363c787fae4a29891baad25210a"
+    },
+    {
+      "artifact_id": "fact_check_fixture",
+      "path": "tests/fixtures/providers/factcheck_page1.json",
+      "sha256": "f9bd08d84b8fb04d4cfa55a42c1abf719283c3a5d6b9f0581a3ed47242ba3428"
+    },
+    {
+      "artifact_id": "fact_check_empty_fixture",
+      "path": "tests/fixtures/providers/factcheck_empty.json",
+      "sha256": "6a3801a542abf8cd917c226f560b82bca5adc200e86050a90950c331ea755fd8"
+    },
+    {
+      "artifact_id": "evaluation",
+      "path": "artifacts/evaluations/phase8-stage8.4-specialist-adapters-v1.json",
+      "sha256": "59908068ccb3ecf583f2c2e2163f1c717bb77c28fab3ba1bb48665bd8cc9ed49"
+    },
+    {
+      "artifact_id": "completion_report",
+      "path": "docs/PHASE_8_STAGE_8.4_COMPLETION_REPORT.md",
+      "sha256": "4084d63cfc43b2bd32d774d59ddb76bcb423b08760d8d0c1214aec36e58b31fe"
+    }
+  ],
+  "external_model_calls": 0,
+  "live_search_calls": 0,
+  "pdf_downloads": 0
+}

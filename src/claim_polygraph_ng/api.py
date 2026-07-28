@@ -6,9 +6,10 @@ import os
 from collections.abc import Awaitable, Callable
 from dataclasses import dataclass
 from pathlib import Path
+from time import perf_counter
 from uuid import UUID
 
-from fastapi import FastAPI, Header, HTTPException, Query
+from fastapi import FastAPI, Header, HTTPException, Query, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import PlainTextResponse, StreamingResponse
 
@@ -18,6 +19,7 @@ from claim_polygraph_ng.application.langgraph_durable import (
     ExistingGraphThreadError,
     GraphResumeError,
 )
+from claim_polygraph_ng.application.orchestrator import OrchestratorMode
 from claim_polygraph_ng.domain.api import (
     ApiStatus,
     CreateInvestigationRequest,
@@ -29,6 +31,7 @@ from claim_polygraph_ng.domain.api import (
     SubmitRevisionRequest,
 )
 from claim_polygraph_ng.domain.graph import DurableGraphSnapshot
+from claim_polygraph_ng.domain.input import ClaimExtractionPacket, InvestigationInput
 from claim_polygraph_ng.domain.investigation import (
     ArtifactType,
     Investigation,
@@ -41,6 +44,13 @@ from claim_polygraph_ng.domain.review import (
     ReviewerDecisionRecord,
     ReviewRequest,
 )
+from claim_polygraph_ng.domain.telemetry import (
+    AlertRule,
+    MetricName,
+    SpanKind,
+    TelemetrySnapshot,
+    TelemetrySpan,
+)
 from claim_polygraph_ng.persistence.base import InvestigationRepository
 from claim_polygraph_ng.persistence.review import (
     ReviewConcurrencyError,
@@ -51,8 +61,14 @@ from claim_polygraph_ng.persistence.review import (
 from claim_polygraph_ng.reporting import (
     IncompleteInvestigationError,
     InvestigationNotFoundError,
+    PublicationBlockedError,
     load_report,
-    render_markdown,
+    render_publishable_markdown,
+)
+from claim_polygraph_ng.telemetry import (
+    DEFAULT_ALERT_RULES,
+    TelemetryCollector,
+    parse_traceparent,
 )
 
 
@@ -65,6 +81,13 @@ class ApiDependencies:
     graph_checkpoint_path: Path
     graph_enabled: bool = True
     investigate: Callable[[str], Awaitable[InvestigationReport]] | None = None
+    orchestrator_mode: OrchestratorMode = OrchestratorMode.DIRECT
+    extract_claims: Callable[[InvestigationInput], Awaitable[ClaimExtractionPacket]] | None = None
+    telemetry: TelemetryCollector | None = None
+    telemetry_rules: tuple[AlertRule, ...] = DEFAULT_ALERT_RULES
+    retrieval_provider: str = "deterministic"
+    live_research: bool = False
+    model_provider: str = "deterministic"
 
 
 def create_app(dependencies: ApiDependencies) -> FastAPI:
@@ -92,13 +115,104 @@ def create_app(dependencies: ApiDependencies) -> FastAPI:
         allow_headers=["Content-Type", "X-Reviewer-Identity"],
     )
 
+    @app.get("/")
+    def root() -> dict[str, str]:
+        return {
+            "name": "Claim Polygraph NG API",
+            "status": "ok",
+            "health": "/health",
+            "documentation": "/docs",
+            "dashboard": "http://localhost:3000",
+        }
+
+    if dependencies.telemetry is not None:
+        dependencies.telemetry.initialize()
+
+        @app.middleware("http")
+        async def observe_request(request: Request, call_next):
+            started = perf_counter()
+            parent = parse_traceparent(request.headers.get("traceparent"))
+            route_kind = (
+                SpanKind.REVIEW
+                if "/reviews" in request.url.path
+                else SpanKind.LANGGRAPH
+                if "/graph-runs" in request.url.path
+                else SpanKind.API
+            )
+            with dependencies.telemetry.span(
+                f"http.{request.method.casefold()}",
+                SpanKind.API,
+                parent=parent,
+                attributes={
+                    "http.method": request.method,
+                    "http.route_group": route_kind.value,
+                },
+            ) as api_context:
+                with dependencies.telemetry.span(
+                    f"{route_kind.value}.request",
+                    route_kind,
+                    attributes={"http.method": request.method},
+                ):
+                    response = await call_next(request)
+                response.headers["traceparent"] = api_context.traceparent
+                dependencies.telemetry.metric(
+                    MetricName.API_LATENCY_MS,
+                    (perf_counter() - started) * 1_000,
+                    "ms",
+                    attributes={
+                        "http.method": request.method,
+                        "http.status_code": response.status_code,
+                        "http.route_group": route_kind.value,
+                    },
+                )
+                return response
+
     @app.get("/health", response_model=ApiStatus)
     def health() -> ApiStatus:
-        return ApiStatus(status="ok")
+        return ApiStatus(
+            status="ok",
+            orchestrator=dependencies.orchestrator_mode.value,
+            retrieval_provider=dependencies.retrieval_provider,
+            live_research=dependencies.live_research,
+            model_provider=dependencies.model_provider,
+        )
 
     @app.get("/api/investigations", response_model=list[Investigation])
     def list_investigations() -> list[Investigation]:
         return list(dependencies.investigations.list_investigations())
+
+    @app.get("/api/operations/telemetry", response_model=TelemetrySnapshot)
+    def get_telemetry() -> TelemetrySnapshot:
+        if dependencies.telemetry is None:
+            raise HTTPException(status_code=503, detail="telemetry is not configured")
+        return dependencies.telemetry.snapshot(dependencies.telemetry_rules)
+
+    @app.get("/api/operations/traces/{trace_id}", response_model=list[TelemetrySpan])
+    def get_trace(trace_id: str) -> list[TelemetrySpan]:
+        if dependencies.telemetry is None:
+            raise HTTPException(status_code=503, detail="telemetry is not configured")
+        invalid_hex = any(
+            character not in "0123456789abcdef" for character in trace_id
+        )
+        if len(trace_id) != 32 or invalid_hex:
+            raise HTTPException(status_code=422, detail="trace ID must be 32 lowercase hex digits")
+        return list(dependencies.telemetry.trace(trace_id))
+
+    @app.post(
+        "/api/claim-inputs/extract",
+        response_model=ClaimExtractionPacket,
+        status_code=200,
+    )
+    async def extract_claims(payload: InvestigationInput) -> ClaimExtractionPacket:
+        if dependencies.extract_claims is None:
+            raise HTTPException(status_code=503, detail="claim extraction is not configured")
+        try:
+            return await dependencies.extract_claims(payload)
+        except Exception as error:
+            raise HTTPException(
+                status_code=422,
+                detail=f"claim extraction failed: {type(error).__name__}",
+            ) from error
 
     @app.post(
         "/api/investigations",
@@ -107,11 +221,17 @@ def create_app(dependencies: ApiDependencies) -> FastAPI:
     )
     async def create_investigation(
         payload: CreateInvestigationRequest,
+        response: Response,
     ) -> InvestigationReport:
         if dependencies.investigate is None:
             raise HTTPException(status_code=503, detail="investigation runner is not configured")
         try:
-            return await dependencies.investigate(payload.claim)
+            report = await dependencies.investigate(payload.claim)
+            response.headers["X-Claim-Polygraph-Orchestrator"] = (
+                dependencies.orchestrator_mode.value
+            )
+            response.headers["X-Claim-Polygraph-Authority"] = "InvestigationService"
+            return report
         except Exception as error:
             raise HTTPException(
                 status_code=502,
@@ -147,7 +267,10 @@ def create_app(dependencies: ApiDependencies) -> FastAPI:
             raise HTTPException(status_code=409, detail=str(error)) from error
         if format == "markdown":
             events = dependencies.investigations.list_events(investigation_id)
-            return PlainTextResponse(render_markdown(report, events))
+            try:
+                return PlainTextResponse(render_publishable_markdown(report, events))
+            except PublicationBlockedError as error:
+                raise HTTPException(status_code=409, detail=str(error)) from error
         if format != "json":
             raise HTTPException(status_code=422, detail="format must be json or markdown")
         return report
@@ -364,7 +487,9 @@ def create_app(dependencies: ApiDependencies) -> FastAPI:
 
 def _workflow(dependencies: ApiDependencies) -> DurableFixtureLangGraphWorkflow:
     return DurableFixtureLangGraphWorkflow(
-        dependencies.graph_checkpoint_path, enabled=dependencies.graph_enabled
+        dependencies.graph_checkpoint_path,
+        enabled=dependencies.graph_enabled,
+        telemetry=dependencies.telemetry,
     )
 
 

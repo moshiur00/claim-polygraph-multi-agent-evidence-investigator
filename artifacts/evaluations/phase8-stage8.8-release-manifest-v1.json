@@ -1,0 +1,84 @@
+{
+  "manifest_id": "phase8-stage8.8-release-manifest-v1",
+  "artifacts": [
+    {
+      "artifact_id": "citation_contracts",
+      "path": "src/claim_polygraph_ng/domain/citation.py",
+      "sha256": "501a8cbcbc2dd5588739950aa9729f6879ce57a04c75b448191727dc0086a652"
+    },
+    {
+      "artifact_id": "investigation_contracts",
+      "path": "src/claim_polygraph_ng/domain/investigation.py",
+      "sha256": "98c4f33c33fd62f8ba91466150ccf92398428812471806dc06ee3054fba38467"
+    },
+    {
+      "artifact_id": "domain_exports",
+      "path": "src/claim_polygraph_ng/domain/__init__.py",
+      "sha256": "97b3c441da3edd08d1046e5a3662b1dc4694a0cc5c779a323b1abeea8b08faa7"
+    },
+    {
+      "artifact_id": "full_report_assurance",
+      "path": "src/claim_polygraph_ng/analysis/citation_assurance.py",
+      "sha256": "e114c72c82e9c90b21d9effa517ca2b8468fbd55113b99da86e6a5904db208bd"
+    },
+    {
+      "artifact_id": "analysis_exports",
+      "path": "src/claim_polygraph_ng/analysis/__init__.py",
+      "sha256": "9ba3f26b7ad697a68ef4971a66e353bd5c8110e3e70cbe4168251cab511b28e1"
+    },
+    {
+      "artifact_id": "atomic_workflow_integration",
+      "path": "src/claim_polygraph_ng/application/investigation_service.py",
+      "sha256": "5ef7f0a62fc0cf3b3ef9305aa21f062aeed2c6666a4f14f3e4aeb1fdad9a5326"
+    },
+    {
+      "artifact_id": "complex_workflow_integration",
+      "path": "src/claim_polygraph_ng/application/complex_investigation_service.py",
+      "sha256": "e236dc999613bcfecf9f890a40e67dee4842f10362a328ae6eaadf02910299b2"
+    },
+    {
+      "artifact_id": "publication_gate",
+      "path": "src/claim_polygraph_ng/reporting/reports.py",
+      "sha256": "48bcfc3547037e19bace24b1cdbae10118d44e02267b222c1c26b714adf615c9"
+    },
+    {
+      "artifact_id": "reporting_exports",
+      "path": "src/claim_polygraph_ng/reporting/__init__.py",
+      "sha256": "4f688ef404738fdd108ac4188d6b369f7a08e75c2e1cdd6d792cb9607fe5cc26"
+    },
+    {
+      "artifact_id": "api_publication_boundary",
+      "path": "src/claim_polygraph_ng/api.py",
+      "sha256": "650a578ea84ec72c01a8fa5f9aac698bb8d99d29822a10a2ac9511ab309cdd6f"
+    },
+    {
+      "artifact_id": "assurance_and_blocking_tests",
+      "path": "tests/unit/test_full_report_assurance.py",
+      "sha256": "ba0e8aab1e9ebaf9a73dd8a7e0c58c57fd799a1d3e5d52289ec59881f11123c9"
+    },
+    {
+      "artifact_id": "promoted_fixture_pilot",
+      "path": "tests/integration/test_phase8_5_frozen_pilot.py",
+      "sha256": "a489c221d4f3e697b35a190708c19f23c8f0693c7f83b7cd4def0c96de71bbd6"
+    },
+    {
+      "artifact_id": "evaluation",
+      "path": "artifacts/evaluations/phase8-stage8.8-full-report-assurance-v1.json",
+      "sha256": "ae349382aa3b1085aa5ca747e87d0422112f3713629bf7f8c6f88773b99773f0"
+    },
+    {
+      "artifact_id": "completion_report",
+      "path": "docs/PHASE_8_STAGE_8.8_COMPLETION_REPORT.md",
+      "sha256": "28f1cfa8492bb47266ffb760d819488a6f9699f4b7ae28a47b7d93854b27f91c"
+    },
+    {
+      "artifact_id": "phase_plan",
+      "path": "docs/PHASE_8_TRUE_MULTI_AGENT_EXECUTION_PLAN.md",
+      "sha256": "fed2e50549aac178acd511b833c3b2c75ba431f38c19e103eb697faf51cbbe4f"
+    }
+  ],
+  "external_model_calls": 0,
+  "live_search_calls": 0,
+  "network_fetches": 0,
+  "pdf_downloads": 0
+}

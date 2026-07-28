@@ -1,0 +1,89 @@
+{
+  "manifest_id": "phase8-stage8.7-release-manifest-v1",
+  "artifacts": [
+    {
+      "artifact_id": "adversarial_contracts",
+      "path": "src/claim_polygraph_ng/domain/adversarial.py",
+      "sha256": "10da40f8eaff002db7ce7a495c5e97ab28286b3d44c9529c5b98206a18e90b1d"
+    },
+    {
+      "artifact_id": "existing_argument_ledger_contract",
+      "path": "src/claim_polygraph_ng/domain/argument.py",
+      "sha256": "735bf99a9bbd8c66db644ddcd4c4cde5ed590af2d044a68420d781b752a106fc"
+    },
+    {
+      "artifact_id": "durable_graph_contract",
+      "path": "src/claim_polygraph_ng/domain/graph.py",
+      "sha256": "dc783264c4405c5273acabe52e992b089b1e733324e600f526dafbba8728ee81"
+    },
+    {
+      "artifact_id": "domain_exports",
+      "path": "src/claim_polygraph_ng/domain/__init__.py",
+      "sha256": "e7eb92b70a9607a4658b6293015c112e22b887e5399448b22b8e803e0cdc72a4"
+    },
+    {
+      "artifact_id": "langgraph_argument_subgraph",
+      "path": "src/claim_polygraph_ng/application/langgraph_argument.py",
+      "sha256": "76ae3a26fede6d8bca2f152c5f254203a3cf9876ab009f7d226726ebdea5ce0f"
+    },
+    {
+      "artifact_id": "promoted_orchestrator",
+      "path": "src/claim_polygraph_ng/application/orchestrator.py",
+      "sha256": "3224a2736bfef0c1707dd54c7ce333e59a8fadf9853c5bf3c5a996dc5c419848"
+    },
+    {
+      "artifact_id": "authoritative_service",
+      "path": "src/claim_polygraph_ng/application/investigation_service.py",
+      "sha256": "19a927f8280d4cfa324eb7cdc160272c3027e2814d5cca88f36660d3579bcba0"
+    },
+    {
+      "artifact_id": "application_exports",
+      "path": "src/claim_polygraph_ng/application/__init__.py",
+      "sha256": "5be231ff5937b8e5c30ce9859c285c627be4364ad2dec1f9d5e2460cf4e94480"
+    },
+    {
+      "artifact_id": "argument_persistence",
+      "path": "src/claim_polygraph_ng/persistence/research.py",
+      "sha256": "5a1c4eb3c31c2ebbbfdc8f11d274d08212281102024f5ab94da8849d97d2115f"
+    },
+    {
+      "artifact_id": "judge_packet_invariant",
+      "path": "src/claim_polygraph_ng/providers/ollama.py",
+      "sha256": "784b01e9750e38596b0eb0444abcfe065d8cb5bf949f086d9fe1a5408e3c2cce"
+    },
+    {
+      "artifact_id": "development_wiring",
+      "path": "src/claim_polygraph_ng/api_server.py",
+      "sha256": "07245601648fcccdd5edbe8b96ca7c36cfc498c727e15cd3b7cec09813000dcf"
+    },
+    {
+      "artifact_id": "argument_integration_tests",
+      "path": "tests/integration/test_langgraph_adversarial_argument.py",
+      "sha256": "d0415d710703457538141060f35aa4eeff03a6f1f56481401ef1977c051a3110"
+    },
+    {
+      "artifact_id": "promoted_fixture_pilot",
+      "path": "tests/integration/test_phase8_5_frozen_pilot.py",
+      "sha256": "8e45f13e3c5e48492db9b06952e6253151cc8f02d5d2db9bc25e7b15e2311d7a"
+    },
+    {
+      "artifact_id": "evaluation",
+      "path": "artifacts/evaluations/phase8-stage8.7-adversarial-arguments-v1.json",
+      "sha256": "242b0cbcea8672e6acf29ef8e045a6e67ff5760f562b3b46c035b92caf088d5c"
+    },
+    {
+      "artifact_id": "completion_report",
+      "path": "docs/PHASE_8_STAGE_8.7_COMPLETION_REPORT.md",
+      "sha256": "7c294283d947cb2eb19415b086ddd03063bc1214e296ececd5a4a1bef19c6424"
+    },
+    {
+      "artifact_id": "phase_plan",
+      "path": "docs/PHASE_8_TRUE_MULTI_AGENT_EXECUTION_PLAN.md",
+      "sha256": "e9ea55a9c552ce48e167d6f44dc9ddeb78c3fef6eaefcd9db1bd90d367fe58b7"
+    }
+  ],
+  "external_model_calls": 0,
+  "live_search_calls": 0,
+  "network_fetches": 0,
+  "pdf_downloads": 0
+}

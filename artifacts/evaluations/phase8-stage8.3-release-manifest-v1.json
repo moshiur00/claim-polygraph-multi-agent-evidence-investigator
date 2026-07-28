@@ -1,0 +1,53 @@
+{
+  "manifest_id": "phase8-stage8.3-release-manifest-v1",
+  "artifacts": [
+    {
+      "artifact_id": "durable_graph_contracts",
+      "path": "src/claim_polygraph_ng/domain/graph.py",
+      "sha256": "e420166cd1c66e5ed79ca6fb28a5948b3b98fef69dfbc3a444883c20a481f1dd"
+    },
+    {
+      "artifact_id": "domain_exports",
+      "path": "src/claim_polygraph_ng/domain/__init__.py",
+      "sha256": "df7f68de30355f14180e93ec30c3bdd8bb757be61ec44ff51769c89c5b41b4c4"
+    },
+    {
+      "artifact_id": "durable_langgraph",
+      "path": "src/claim_polygraph_ng/application/langgraph_durable.py",
+      "sha256": "0e2f6a0b43f53a6e5422d319fe97cd339f21263a9cf476e21b20cf064e422188"
+    },
+    {
+      "artifact_id": "promoted_orchestrator",
+      "path": "src/claim_polygraph_ng/application/orchestrator.py",
+      "sha256": "f49378cd3a94728d2676b249a9195fe23fe6814df322ab5c93329eb80b5cd9ca"
+    },
+    {
+      "artifact_id": "contract_tests",
+      "path": "tests/contracts/test_durable_multi_agent_graph_state.py",
+      "sha256": "443d5d781e98bdd340ce449a0bdaddaa6945430b166a3ce0082bcb2f382cb342"
+    },
+    {
+      "artifact_id": "restart_integration_test",
+      "path": "tests/integration/test_langgraph_research_state.py",
+      "sha256": "9b941935a6b37cab1dce0a983a65ed2fc6fc06db84e2828f04cfb6adeaf88c0d"
+    },
+    {
+      "artifact_id": "promoted_api_test",
+      "path": "tests/integration/test_promoted_orchestrator.py",
+      "sha256": "c55bfa6d7027da02be67239c12ff9bd310546ec709488a0d28da50db4414c04b"
+    },
+    {
+      "artifact_id": "evaluation",
+      "path": "artifacts/evaluations/phase8-stage8.3-durable-research-state-v1.json",
+      "sha256": "dfa3f36f776965c7f87fe26dfeba79d40953218041676517c2dcfe568d5665ee"
+    },
+    {
+      "artifact_id": "completion_report",
+      "path": "docs/PHASE_8_STAGE_8.3_COMPLETION_REPORT.md",
+      "sha256": "80e93c810f630fa32caad6aca4745599a7076a48f06ade85a8758b29797e8bb8"
+    }
+  ],
+  "external_model_calls": 0,
+  "network_calls": 0,
+  "pdf_downloads": 0
+}

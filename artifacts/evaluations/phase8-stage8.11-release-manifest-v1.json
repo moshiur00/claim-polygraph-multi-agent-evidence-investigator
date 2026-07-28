@@ -1,0 +1,24 @@
+{
+  "manifest_id": "phase8-stage8.11-release-manifest-v1",
+  "artifacts": [
+    {"artifact_id": "job_contracts", "path": "src/claim_polygraph_ng/domain/jobs.py", "sha256": "fbcbf8091f8696cf1f2f5fc06ef1a635437271f2c176425d42cf3db27570ce1e"},
+    {"artifact_id": "domain_exports", "path": "src/claim_polygraph_ng/domain/__init__.py", "sha256": "026973f1cb14be615b04ab9c325290181f94a3b98b315ec898194ab42fcc5872"},
+    {"artifact_id": "sqlite_job_queue", "path": "src/claim_polygraph_ng/persistence/jobs.py", "sha256": "c6dd5165abeea0dcef3660dc084ce6047dd9080d5df166bed89e93122d81afa4"},
+    {"artifact_id": "persistence_exports", "path": "src/claim_polygraph_ng/persistence/__init__.py", "sha256": "c46321f27bd189f914acc19e0d8ba4fabb5f4255d548641d080358cc39e3f04c"},
+    {"artifact_id": "durable_worker", "path": "src/claim_polygraph_ng/application/job_worker.py", "sha256": "151e6c08b2eddfe9312db320998298f505e3de0426459020c5a5280b5c0da2b7"},
+    {"artifact_id": "application_exports", "path": "src/claim_polygraph_ng/application/__init__.py", "sha256": "6aa8e1bebec9ec276a0cd9e59dd2f3ad691393c8162f947389d2675100b30002"},
+    {"artifact_id": "backend_gate", "path": "src/claim_polygraph_ng/evaluation/job_backend.py", "sha256": "f833f70a8ae0c1d1039f23f98d3ce1b26f689053137c87c48a8f2e62d76ae206"},
+    {"artifact_id": "evaluation_exports", "path": "src/claim_polygraph_ng/evaluation/__init__.py", "sha256": "0443a7f7f3a03444a26941aa4bda2b837cb5d112557d684c80bb92304fd59245"},
+    {"artifact_id": "runner", "path": "scripts/run_phase8_job_backend_gate.py", "sha256": "f55a53e7ca11444413e5d49e4359af18b01c085fdccda86e3f54412ee5138d7b"},
+    {"artifact_id": "queue_tests", "path": "tests/integration/test_durable_job_queue.py", "sha256": "b56d2fab9da837b868bb0b74e12b338264de5381db587b27fa123f14b66d6cfe"},
+    {"artifact_id": "worker_tests", "path": "tests/integration/test_durable_job_worker.py", "sha256": "af0c3ca0446a12d9fecf04881502711bcbfbf364cf991b64cdb9301f1ee01a08"},
+    {"artifact_id": "gate_test", "path": "tests/integration/test_job_backend_gate.py", "sha256": "877ca68cc345a26722373f29e108be4fb78183c68ee6296cdca92bbdf0a55002"},
+    {"artifact_id": "measured_result", "path": "artifacts/evaluations/phase8-stage8.11-job-backend-v1.json", "sha256": "5611d018d0b6f0fd904a5f1cf1b2867a864e29a873491488fc936b87528e8b60"},
+    {"artifact_id": "backend_adr", "path": "docs/adr/0017-database-backed-durable-job-queue.md", "sha256": "46ff8080496f7a0f3e1e261952726458bfc94acee8f90237862a8fb6daff1c5f"},
+    {"artifact_id": "completion_report", "path": "docs/PHASE_8_STAGE_8.11_COMPLETION_REPORT.md", "sha256": "469eb8af5f011277336d404179609115af02c36f7e80eefe87f0a8f7945c0f8d"}
+  ],
+  "external_model_calls": 0,
+  "live_search_calls": 0,
+  "network_fetches": 0,
+  "pdf_downloads": 0
+}

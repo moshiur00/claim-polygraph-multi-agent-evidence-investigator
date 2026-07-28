@@ -138,6 +138,57 @@ def test_budget_exhaustion_precedes_another_round() -> None:
     assert assessment.decision is SufficiencyDecision.STOP_BUDGET_EXHAUSTED
 
 
+def test_zero_model_and_cost_budgets_disable_paid_operations_without_stopping() -> None:
+    component_id = uuid4()
+    context = _context(
+        component_id,
+        (_requirement(component_id, ResearchRequirementKind.PRIMARY_SOURCE),),
+        consumption=ResearchConsumption(
+            completed_rounds=1,
+            role_activations=3,
+            search_calls=3,
+            fetched_pages=0,
+            model_calls=0,
+            estimated_cost_usd=0,
+        ),
+    )
+
+    assessment = assess_evidence_sufficiency(context)
+
+    assert assessment.decision is SufficiencyDecision.CONTINUE_MISSING_PRIMARY
+
+
+def test_token_and_duration_limits_are_hard_round_admission_gates() -> None:
+    component_id = uuid4()
+    requirement = _requirement(component_id, ResearchRequirementKind.PRIMARY_SOURCE)
+    budget = ResearchBudget(
+        maximum_total_tokens=100,
+        maximum_duration_seconds=10,
+    )
+    base = _context(component_id, (requirement,))
+    token_limited = base.model_copy(
+        update={
+            "budget": budget,
+            "consumption": base.consumption.model_copy(update={"total_tokens": 100}),
+        }
+    )
+    duration_limited = base.model_copy(
+        update={
+            "budget": budget,
+            "consumption": base.consumption.model_copy(update={"duration_seconds": 10}),
+        }
+    )
+
+    assert (
+        assess_evidence_sufficiency(token_limited).decision
+        is SufficiencyDecision.STOP_BUDGET_EXHAUSTED
+    )
+    assert (
+        assess_evidence_sufficiency(duration_limited).decision
+        is SufficiencyDecision.STOP_BUDGET_EXHAUSTED
+    )
+
+
 def test_zero_material_gain_stops_before_targeted_continuation() -> None:
     component_id = uuid4()
     context = _context(

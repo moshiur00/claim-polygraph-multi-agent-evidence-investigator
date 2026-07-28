@@ -1,0 +1,41 @@
+{
+  "evaluation_id": "phase8-stage8.5-concurrent-fanout-v1",
+  "date": "2026-07-28",
+  "langgraph_map_reduce_subgraph": true,
+  "minimum_roles": [
+    "primary_source",
+    "general_evidence",
+    "challenger"
+  ],
+  "typed_assignments_and_results": true,
+  "maximum_concurrency_observed": 3,
+  "identical_concurrent_search_requests": 3,
+  "coalesced_provider_calls": 1,
+  "fan_in_evidence_deduplication": true,
+  "durable_assignment_results": true,
+  "durable_role_metrics": true,
+  "complete_restart_duplicate_role_calls": 0,
+  "mid_round_completed_assignments": 1,
+  "mid_round_roles_reexecuted": 0,
+  "mid_round_unfinished_roles_executed": 2,
+  "partial_role_failure_isolated": true,
+  "candidate_and_approved_evidence_separated": true,
+  "authoritative_output_applied": false,
+  "frozen_pilot_cases": 3,
+  "frozen_pilot_role_activations": 9,
+  "frozen_pilot_terminal_results": 9,
+  "frozen_pilot_authority_containment_rate": 1.0,
+  "full_test_count": 409,
+  "research_model_calls": 0,
+  "live_search_calls": 0,
+  "network_fetches": 0,
+  "pdf_downloads": 0,
+  "estimated_research_cost_usd": 0,
+  "gate_passed": true,
+  "limitations": [
+    "The promoted development path uses deterministic fixture providers.",
+    "Academic and fact-check provider selection is not yet wired into conditional role execution.",
+    "Iterative sufficiency rounds and diminishing-return stopping remain Stage 8.6.",
+    "Candidate multi-agent evidence remains non-authoritative pending the later benchmark promotion gate."
+  ]
+}

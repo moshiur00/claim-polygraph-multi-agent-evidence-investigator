@@ -1,0 +1,74 @@
+{
+  "manifest_id": "phase8-stage8.6-release-manifest-v1",
+  "artifacts": [
+    {
+      "artifact_id": "research_contracts",
+      "path": "src/claim_polygraph_ng/domain/research.py",
+      "sha256": "2170aaf7cc266d69c2815d67928314af1849e5ecc45998f716c892fe668e65c5"
+    },
+    {
+      "artifact_id": "durable_graph_contracts",
+      "path": "src/claim_polygraph_ng/domain/graph.py",
+      "sha256": "d5248b121173a55cc30d5638bf04c416d652d215502f4e9dd7d7e5a680216210"
+    },
+    {
+      "artifact_id": "sufficiency_policy",
+      "path": "src/claim_polygraph_ng/analysis/sufficiency.py",
+      "sha256": "cc2f1b903edb3d9d424c67736fb85616ed0df68ed68ea15d1e2ab41603742806"
+    },
+    {
+      "artifact_id": "targeted_routing",
+      "path": "src/claim_polygraph_ng/analysis/research_routing.py",
+      "sha256": "1ed68fb38ae3f8b0850a5f9f002ee78ae7cbd680d3c6191739bec4309abc13b6"
+    },
+    {
+      "artifact_id": "iterative_langgraph_research",
+      "path": "src/claim_polygraph_ng/application/langgraph_research.py",
+      "sha256": "c83a3b8e8990e802a2315bee653617cfbcd114262d9ea51b3873922e4f3a860d"
+    },
+    {
+      "artifact_id": "promoted_orchestrator",
+      "path": "src/claim_polygraph_ng/application/orchestrator.py",
+      "sha256": "e274f37781ba27787aa0dcac66b1aec6c1662c526529919d7197792d7c2d779f"
+    },
+    {
+      "artifact_id": "domain_exports",
+      "path": "src/claim_polygraph_ng/domain/__init__.py",
+      "sha256": "f379fa5600182f77f6d85f4515646e02831795a39d99e40172c314b70b0d8378"
+    },
+    {
+      "artifact_id": "analysis_exports",
+      "path": "src/claim_polygraph_ng/analysis/__init__.py",
+      "sha256": "8d61d1b9324327264815bca7e7536b78859b8d9c194aedc1b272b52a4d16032d"
+    },
+    {
+      "artifact_id": "sufficiency_tests",
+      "path": "tests/unit/test_sufficiency.py",
+      "sha256": "6048d28860c8eb8457ee129478a6bc6b824781ca70e00807a9d5cf34b1f4c5fa"
+    },
+    {
+      "artifact_id": "iterative_recovery_tests",
+      "path": "tests/integration/test_langgraph_research_fanout.py",
+      "sha256": "53b5e63074b94cead3b121f3614348c7a641377200ff2650c99af860cb3f6be5"
+    },
+    {
+      "artifact_id": "evaluation",
+      "path": "artifacts/evaluations/phase8-stage8.6-iterative-sufficiency-v1.json",
+      "sha256": "54819be18e34ce6c18ff845403fd4d2fdc74e8d929cea1204eac9e9f1a665dd2"
+    },
+    {
+      "artifact_id": "completion_report",
+      "path": "docs/PHASE_8_STAGE_8.6_COMPLETION_REPORT.md",
+      "sha256": "0ccbfdb72040505c9389dc78e39fbc21b42fefbb1e62952103af002d52229372"
+    },
+    {
+      "artifact_id": "phase_plan",
+      "path": "docs/PHASE_8_TRUE_MULTI_AGENT_EXECUTION_PLAN.md",
+      "sha256": "acd45634f2c43c66be05d9ba11dda2fb30f3a17064cea077e5b2f4870bf66362"
+    }
+  ],
+  "external_model_calls": 0,
+  "live_search_calls": 0,
+  "network_fetches": 0,
+  "pdf_downloads": 0
+}

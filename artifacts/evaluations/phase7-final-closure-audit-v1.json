@@ -4,7 +4,7 @@
   "phase_complete": true,
   "langgraph_default_promoted": true,
   "promotion_approval_status": "approved",
-  "manifest_sha256": "fb8276402b7fc4b15a7b0ee9ac87c287b90363c9be49f109a6562a06c74ac00c",
+  "manifest_sha256": "1b207bbf770ff0e95be401e5dbc44b9288dbfc1411ef22cc80afeb76878366bb",
   "gates": [
     {
       "gate_id": "frozen_comparison",

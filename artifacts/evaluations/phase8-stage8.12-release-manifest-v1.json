@@ -1,0 +1,28 @@
+{
+  "manifest_id": "phase8-stage8.12-release-manifest-v1",
+  "artifacts": [
+    {"artifact_id": "telemetry_contracts", "path": "src/claim_polygraph_ng/domain/telemetry.py", "sha256": "54e38476e7ded195720de6b04cc79f9f803dd2897e3d343d4c082fcf3bb3680e"},
+    {"artifact_id": "job_trace_contract", "path": "src/claim_polygraph_ng/domain/jobs.py", "sha256": "66461c918520f62156b3b8462ee71f4a9036f1002b7fb1c6bfb232ac7e559b72"},
+    {"artifact_id": "domain_exports", "path": "src/claim_polygraph_ng/domain/__init__.py", "sha256": "e543a3c5db1502833f180d7ae0c636b1c9c645ca2b70c6ef4b7394c6375a5dc8"},
+    {"artifact_id": "local_collector", "path": "src/claim_polygraph_ng/telemetry.py", "sha256": "dbf985f238c733e1a7c0fd7a7843373e2feb52e049b5d818a082b6dcd504e93e"},
+    {"artifact_id": "typed_api", "path": "src/claim_polygraph_ng/api.py", "sha256": "d97122946992ca538a8c4f69d8f18ce6a5274ab9d190f52619da15a3b9066dfd"},
+    {"artifact_id": "development_wiring", "path": "src/claim_polygraph_ng/api_server.py", "sha256": "9c2c3248aa768bc9763beee69af30f82a8514eb583cbd648a0196d02cc33915e"},
+    {"artifact_id": "job_instrumentation", "path": "src/claim_polygraph_ng/application/job_worker.py", "sha256": "b57e21f20cb79a11a8d1a383f5db917e59990a08b00ae0524ef65920b4448207"},
+    {"artifact_id": "langgraph_instrumentation", "path": "src/claim_polygraph_ng/application/langgraph_durable.py", "sha256": "2203102da90d32c72cb6e86ecc5c4ae74a6a0158c4a9bdee1c533a903434130d"},
+    {"artifact_id": "research_graph_instrumentation", "path": "src/claim_polygraph_ng/application/langgraph_research.py", "sha256": "0d657819a90724590b1d5c8f0dd2a13e2089f460e86a73a9da6f17cf48845efc"},
+    {"artifact_id": "agent_provider_instrumentation", "path": "src/claim_polygraph_ng/application/research_executor.py", "sha256": "954abab1ffd243a07bebdc380097e3fc98dd57f2287341af8eb58c1a6d5cb88a"},
+    {"artifact_id": "telemetry_gate", "path": "src/claim_polygraph_ng/evaluation/telemetry_gate.py", "sha256": "c77047af923da4831f6f1039d7ac48faf3e6aaacbfaed134df494b88967034bd"},
+    {"artifact_id": "evaluation_exports", "path": "src/claim_polygraph_ng/evaluation/__init__.py", "sha256": "14304ca74ffffc8cab8032b62a2deb6ce88751cf734cb7c07de508b298cf92f5"},
+    {"artifact_id": "runner", "path": "scripts/run_phase8_telemetry_gate.py", "sha256": "3282e7f280991ca0f710060dc918f9cae89bd423363047d9d71a1a29c1136b2d"},
+    {"artifact_id": "contract_tests", "path": "tests/unit/test_telemetry.py", "sha256": "01fbf5fa4602071051d03ae6c8d130d29b2bd000ad4b7e73f4cf0062982e429a"},
+    {"artifact_id": "propagation_tests", "path": "tests/integration/test_telemetry_propagation.py", "sha256": "19cb20fea57f32b8e36344a0dfac63cce2325e3fe7071ec6e2ff90c615a5ac19"},
+    {"artifact_id": "gate_test", "path": "tests/integration/test_telemetry_gate.py", "sha256": "2359d24093f03fc6b55c0cc5d3e3f0243da86926a79c32866d24ea69cd819335"},
+    {"artifact_id": "measured_result", "path": "artifacts/evaluations/phase8-stage8.12-telemetry-v1.json", "sha256": "39bc0405b0f98ff2912413cc3d7dd99e96ea8d0d00bcb071f911ce897d5a6063"},
+    {"artifact_id": "observability_adr", "path": "docs/adr/0018-local-opentelemetry-compatible-observability.md", "sha256": "b6f9eef2c06768a967debff379ab5624626b408f940a8b4ce0858abb87479a18"},
+    {"artifact_id": "completion_report", "path": "docs/PHASE_8_STAGE_8.12_COMPLETION_REPORT.md", "sha256": "5d12e8b51b30d584716444ad01a9665e14582d04de5931c9cfbf4f9b960d2f0e"}
+  ],
+  "external_model_calls": 0,
+  "live_search_calls": 0,
+  "network_fetches": 0,
+  "pdf_downloads": 0
+}
