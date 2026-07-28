@@ -1,0 +1,116 @@
+{
+  "evaluation_id": "phase7-stage7.3-assurance-routing-v1",
+  "dataset_id": "phase7-citation-routing-v1",
+  "dataset_version": 1,
+  "case_count": 10,
+  "citation_accuracy": 1.0,
+  "critical_route_recall": 1.0,
+  "route_accuracy": 1.0,
+  "unsupported_marked_supported_count": 0,
+  "results": [
+    {
+      "case_id": "P7CR-001",
+      "expected_status": "supported",
+      "observed_status": "supported",
+      "citation_correct": true,
+      "expected_review": false,
+      "observed_review": false,
+      "route_correct": true,
+      "critical_route_required": false
+    },
+    {
+      "case_id": "P7CR-002",
+      "expected_status": "unsupported",
+      "observed_status": "unsupported",
+      "citation_correct": true,
+      "expected_review": true,
+      "observed_review": true,
+      "route_correct": true,
+      "critical_route_required": true
+    },
+    {
+      "case_id": "P7CR-003",
+      "expected_status": "out_of_packet",
+      "observed_status": "out_of_packet",
+      "citation_correct": true,
+      "expected_review": true,
+      "observed_review": true,
+      "route_correct": true,
+      "critical_route_required": true
+    },
+    {
+      "case_id": "P7CR-004",
+      "expected_status": "contradictory",
+      "observed_status": "contradictory",
+      "citation_correct": true,
+      "expected_review": true,
+      "observed_review": true,
+      "route_correct": true,
+      "critical_route_required": true
+    },
+    {
+      "case_id": "P7CR-005",
+      "expected_status": "partial",
+      "observed_status": "partial",
+      "citation_correct": true,
+      "expected_review": true,
+      "observed_review": true,
+      "route_correct": true,
+      "critical_route_required": true
+    },
+    {
+      "case_id": "P7CR-006",
+      "expected_status": "supported",
+      "observed_status": "supported",
+      "citation_correct": true,
+      "expected_review": true,
+      "observed_review": true,
+      "route_correct": true,
+      "critical_route_required": true
+    },
+    {
+      "case_id": "P7CR-007",
+      "expected_status": "supported",
+      "observed_status": "supported",
+      "citation_correct": true,
+      "expected_review": true,
+      "observed_review": true,
+      "route_correct": true,
+      "critical_route_required": true
+    },
+    {
+      "case_id": "P7CR-008",
+      "expected_status": "supported",
+      "observed_status": "supported",
+      "citation_correct": true,
+      "expected_review": true,
+      "observed_review": true,
+      "route_correct": true,
+      "critical_route_required": true
+    },
+    {
+      "case_id": "P7CR-009",
+      "expected_status": "supported",
+      "observed_status": "supported",
+      "citation_correct": true,
+      "expected_review": true,
+      "observed_review": true,
+      "route_correct": true,
+      "critical_route_required": true
+    },
+    {
+      "case_id": "P7CR-010",
+      "expected_status": "supported",
+      "observed_status": "supported",
+      "citation_correct": true,
+      "expected_review": false,
+      "observed_review": false,
+      "route_correct": true,
+      "critical_route_required": false
+    }
+  ],
+  "promotion_gate_passed": true,
+  "model_calls": 0,
+  "network_calls": 0,
+  "pdf_downloads": 0
+}

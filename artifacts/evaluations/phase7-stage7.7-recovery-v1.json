@@ -1,0 +1,117 @@
+{
+  "evaluation_id": "phase7-stage7.7-recovery-v1",
+  "journeys": [
+    {
+      "journey_id": "automatic_completion",
+      "expected_outcome": "completed",
+      "observed_outcome": "completed",
+      "passed": true,
+      "checkpoint_reconstructed": false,
+      "audit_chain_valid": true,
+      "duplicate_operations": 0,
+      "assertions": [
+        "No review record created.",
+        "Authoritative verdict preserved."
+      ]
+    },
+    {
+      "journey_id": "review_approval",
+      "expected_outcome": "completed",
+      "observed_outcome": "completed",
+      "passed": true,
+      "checkpoint_reconstructed": false,
+      "audit_chain_valid": true,
+      "duplicate_operations": 0,
+      "assertions": [
+        "Decision attributed.",
+        "Audit chain verified."
+      ]
+    },
+    {
+      "journey_id": "verdict_revision",
+      "expected_outcome": "approved_revision_appended",
+      "observed_outcome": "approved_revision_appended",
+      "passed": true,
+      "checkpoint_reconstructed": false,
+      "audit_chain_valid": true,
+      "duplicate_operations": 0,
+      "assertions": [
+        "Distinct approval enforced.",
+        "Original verdict retained."
+      ]
+    },
+    {
+      "journey_id": "request_more_evidence",
+      "expected_outcome": "more_evidence_required",
+      "observed_outcome": "more_evidence_required",
+      "passed": true,
+      "checkpoint_reconstructed": false,
+      "audit_chain_valid": true,
+      "duplicate_operations": 0,
+      "assertions": [
+        "Decision attributed.",
+        "Audit chain verified."
+      ]
+    },
+    {
+      "journey_id": "review_rejection",
+      "expected_outcome": "rejected",
+      "observed_outcome": "rejected",
+      "passed": true,
+      "checkpoint_reconstructed": false,
+      "audit_chain_valid": true,
+      "duplicate_operations": 0,
+      "assertions": [
+        "Decision attributed.",
+        "Audit chain verified."
+      ]
+    },
+    {
+      "journey_id": "provider_failure",
+      "expected_outcome": "sanitized_502",
+      "observed_outcome": "502:investigation provider failed: RuntimeError",
+      "passed": true,
+      "checkpoint_reconstructed": false,
+      "audit_chain_valid": true,
+      "duplicate_operations": 0,
+      "assertions": [
+        "Provider exception sanitized.",
+        "API remains responsive."
+      ]
+    },
+    {
+      "journey_id": "process_restart",
+      "expected_outcome": "checkpoint_reconstructed_and_completed",
+      "observed_outcome": "checkpoint_reconstructed_and_completed",
+      "passed": true,
+      "checkpoint_reconstructed": true,
+      "audit_chain_valid": true,
+      "duplicate_operations": 0,
+      "assertions": [
+        "Fresh application instance used.",
+        "Pre-review nodes not repeated."
+      ]
+    },
+    {
+      "journey_id": "idempotent_resume",
+      "expected_outcome": "identical_response_single_decision",
+      "observed_outcome": "identical_response_single_decision",
+      "passed": true,
+      "checkpoint_reconstructed": false,
+      "audit_chain_valid": true,
+      "duplicate_operations": 0,
+      "assertions": [
+        "Identical decision replay accepted.",
+        "One decision record retained."
+      ]
+    }
+  ],
+  "passed_count": 8,
+  "failed_count": 0,
+  "all_paths_passed": true,
+  "model_calls": 0,
+  "search_calls": 0,
+  "network_calls": 0,
+  "pdf_downloads": 0,
+  "estimated_cost_usd": 0.0
+}

@@ -1,0 +1,100 @@
+{
+  "dataset_id": "initial_claims",
+  "dataset_version": 1,
+  "provider_mode": "deterministic",
+  "started_at": "2026-07-26T15:28:18.452252Z",
+  "duration_seconds": 0.956876,
+  "case_count": 5,
+  "reviewed_case_count": 0,
+  "completed_case_count": 5,
+  "completion_rate": 1.0,
+  "mean_sources_per_completed_case": 3.0,
+  "mean_evidence_per_completed_case": 3.0,
+  "citation_full_rate": 1.0,
+  "verdict_accuracy": null,
+  "verdict_distribution": {
+    "mixed": 5
+  },
+  "results": [
+    {
+      "case_id": "CPNG-001",
+      "completed": true,
+      "investigation_id": "8a3df9d4-a040-4f37-83a6-3bcc356b3ce4",
+      "verdict_label": "mixed",
+      "expected_verdict": null,
+      "verdict_matches": null,
+      "source_count": 3,
+      "evidence_count": 3,
+      "full_audit_count": 1,
+      "audit_count": 1,
+      "duration_seconds": 0.198739,
+      "error_type": null,
+      "error_message": null
+    },
+    {
+      "case_id": "CPNG-002",
+      "completed": true,
+      "investigation_id": "f4c091b1-c048-4dd2-92f5-7c42bc28b23a",
+      "verdict_label": "mixed",
+      "expected_verdict": null,
+      "verdict_matches": null,
+      "source_count": 3,
+      "evidence_count": 3,
+      "full_audit_count": 1,
+      "audit_count": 1,
+      "duration_seconds": 0.183583,
+      "error_type": null,
+      "error_message": null
+    },
+    {
+      "case_id": "CPNG-003",
+      "completed": true,
+      "investigation_id": "93ff39fd-4560-44a4-a25a-c8edec8e8b67",
+      "verdict_label": "mixed",
+      "expected_verdict": null,
+      "verdict_matches": null,
+      "source_count": 3,
+      "evidence_count": 3,
+      "full_audit_count": 1,
+      "audit_count": 1,
+      "duration_seconds": 0.188027,
+      "error_type": null,
+      "error_message": null
+    },
+    {
+      "case_id": "CPNG-004",
+      "completed": true,
+      "investigation_id": "4df4990c-9bf2-477b-865d-9d68b3b3524f",
+      "verdict_label": "mixed",
+      "expected_verdict": null,
+      "verdict_matches": null,
+      "source_count": 3,
+      "evidence_count": 3,
+      "full_audit_count": 1,
+      "audit_count": 1,
+      "duration_seconds": 0.19929,
+      "error_type": null,
+      "error_message": null
+    },
+    {
+      "case_id": "CPNG-005",
+      "completed": true,
+      "investigation_id": "74bb7222-eb02-4949-8c77-08e0af985fc1",
+      "verdict_label": "mixed",
+      "expected_verdict": null,
+      "verdict_matches": null,
+      "source_count": 3,
+      "evidence_count": 3,
+      "full_audit_count": 1,
+      "audit_count": 1,
+      "duration_seconds": 0.187064,
+      "error_type": null,
+      "error_message": null
+    }
+  ],
+  "limitations": [
+    "Draft cases do not contribute to verdict accuracy.",
+    "Structural citation status does not measure semantic citation entailment.",
+    "Deterministic provider verdicts are workflow baselines, not factual conclusions."
+  ]
+}

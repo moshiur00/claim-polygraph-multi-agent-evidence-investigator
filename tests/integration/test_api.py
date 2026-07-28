@@ -1,0 +1,277 @@
+"""Stage 7.5 typed API and persisted SSE integration tests."""
+
+import asyncio
+from uuid import uuid4
+
+import httpx
+
+from claim_polygraph_ng.api import ApiDependencies, create_app
+from claim_polygraph_ng.application import InvestigationService
+from claim_polygraph_ng.domain import (
+    FixtureGraphRequest,
+    ReviewDecision,
+    ReviewDecisionKind,
+    VerdictLabel,
+)
+from claim_polygraph_ng.domain.investigation import Investigation
+from claim_polygraph_ng.persistence import (
+    SQLiteInvestigationRepository,
+    SQLiteReviewLedger,
+)
+from claim_polygraph_ng.providers import (
+    DeterministicModelProvider,
+    DeterministicSearchProvider,
+)
+
+
+def _client(tmp_path):
+    repository = SQLiteInvestigationRepository(tmp_path / "investigations.db")
+    service = InvestigationService(
+        repository=repository,
+        model_provider=DeterministicModelProvider(),
+        search_provider=DeterministicSearchProvider(),
+    )
+    report = asyncio.run(service.investigate("The example policy reduced emissions."))
+    ledger = SQLiteReviewLedger(tmp_path / "reviews.db")
+    app = create_app(
+        ApiDependencies(
+            investigations=repository,
+            reviews=ledger,
+            graph_checkpoint_path=tmp_path / "graph.db",
+            investigate=service.investigate,
+        )
+    )
+    return app, report
+
+
+async def _request(app, method: str, url: str, **kwargs):
+    async with httpx.AsyncClient(
+        transport=httpx.ASGITransport(app=app), base_url="http://test"
+    ) as client:
+        return await client.request(method, url, **kwargs)
+
+
+def test_investigation_evidence_report_and_sse_are_exposed(tmp_path) -> None:
+    app, report = _client(tmp_path)
+    investigation_id = report.investigation.investigation_id
+
+    listed = asyncio.run(_request(app, "GET", "/api/investigations"))
+    evidence = asyncio.run(_request(app, "GET", f"/api/investigations/{investigation_id}/evidence"))
+    machine_report = asyncio.run(
+        _request(app, "GET", f"/api/investigations/{investigation_id}/report")
+    )
+    markdown = asyncio.run(
+        _request(
+            app,
+            "GET",
+            f"/api/investigations/{investigation_id}/report?format=markdown",
+        )
+    )
+    events = asyncio.run(
+        _request(
+            app,
+            "GET",
+            f"/api/investigations/{investigation_id}/events?follow=false",
+        )
+    )
+
+    assert listed.status_code == evidence.status_code == machine_report.status_code == 200
+    assert listed.json()[0]["investigation_id"] == str(investigation_id)
+    assert len(evidence.json()) == 3
+    assert machine_report.json()["verdict"]["label"] == "mixed"
+    assert markdown.headers["content-type"].startswith("text/plain")
+    assert "# Claim Polygraph NG Investigation" in markdown.text
+    assert events.headers["content-type"].startswith("text/event-stream")
+    assert "event: investigation_completed" in events.text
+    assert "data: {" in events.text
+
+
+def test_graph_review_resume_is_typed_durable_and_idempotent(tmp_path) -> None:
+    app, report = _client(tmp_path)
+    graph_id = uuid4()
+    graph_request = FixtureGraphRequest(
+        graph_run_id=graph_id,
+        claim_text=report.claim.text,
+        approved_evidence_ids=tuple(item.evidence_id for item in report.evidence),
+        authoritative_verdict=report.verdict.label,
+        review_required=True,
+        review_reason="A reviewer must confirm this fixture verdict.",
+    )
+    started = asyncio.run(
+        _request(
+            app,
+            "POST",
+            "/api/graph-runs",
+            json={
+                "investigation_id": str(report.investigation.investigation_id),
+                "claim_id": str(report.claim.claim_id),
+                "graph": graph_request.model_dump(mode="json"),
+            },
+        )
+    )
+    assert started.status_code == 201
+    request_id = started.json()["review"]["request_id"]
+    assert started.json()["graph"]["status"] == "review_required"
+    progress = asyncio.run(
+        _request(
+            app,
+            "GET",
+            f"/api/graph-runs/{graph_id}/events?follow=false",
+            headers={"Origin": "http://localhost:3000"},
+        )
+    )
+    assert progress.status_code == 200
+    assert "event: graph_node" in progress.text
+    assert "event: graph_state" in progress.text
+    assert progress.headers["access-control-allow-origin"] == "http://localhost:3000"
+
+    decision = ReviewDecision(
+        kind=ReviewDecisionKind.APPROVE,
+        reviewer_identity="Md Moshiur Rahman",
+        rationale="The reviewed evidence supports the provisional verdict.",
+    )
+    decision_body = {
+        "expected_sequence": 1,
+        "decision": decision.model_dump(mode="json"),
+    }
+    completed = asyncio.run(
+        _request(
+            app,
+            "POST",
+            f"/api/reviews/{request_id}/decisions",
+            json=decision_body,
+            headers={"X-Reviewer-Identity": "Md Moshiur Rahman"},
+        )
+    )
+    replayed = asyncio.run(
+        _request(
+            app,
+            "POST",
+            f"/api/reviews/{request_id}/decisions",
+            json=decision_body,
+            headers={"X-Reviewer-Identity": "Md Moshiur Rahman"},
+        )
+    )
+    reconstructed = asyncio.run(_request(app, "GET", f"/api/graph-runs/{graph_id}"))
+
+    assert completed.status_code == replayed.status_code == 200
+    assert completed.json() == replayed.json()
+    assert completed.json()["graph"]["status"] == "completed"
+    assert len(completed.json()["review"]["decisions"]) == 1
+    assert reconstructed.json()["applied_decision_id"] == str(decision.decision_id)
+
+
+def test_stale_or_unattributed_decision_does_not_resume_graph(tmp_path) -> None:
+    app, report = _client(tmp_path)
+    graph_id = uuid4()
+    request = FixtureGraphRequest(
+        graph_run_id=graph_id,
+        claim_text=report.claim.text,
+        approved_evidence_ids=(report.evidence[0].evidence_id,),
+        authoritative_verdict=VerdictLabel.MIXED,
+        review_required=True,
+        review_reason="Review is required for this fixture.",
+    )
+    started = asyncio.run(
+        _request(
+            app,
+            "POST",
+            "/api/graph-runs",
+            json={
+                "investigation_id": str(report.investigation.investigation_id),
+                "claim_id": str(report.claim.claim_id),
+                "graph": request.model_dump(mode="json"),
+            },
+        )
+    ).json()
+    decision = ReviewDecision(
+        kind=ReviewDecisionKind.APPROVE,
+        reviewer_identity="Md Moshiur Rahman",
+        rationale="This should only apply with a current attributed request.",
+    )
+    endpoint = f"/api/reviews/{started['review']['request_id']}/decisions"
+    forbidden = asyncio.run(
+        _request(
+            app,
+            "POST",
+            endpoint,
+            json={"expected_sequence": 1, "decision": decision.model_dump(mode="json")},
+        )
+    )
+    stale = asyncio.run(
+        _request(
+            app,
+            "POST",
+            endpoint,
+            json={"expected_sequence": 99, "decision": decision.model_dump(mode="json")},
+            headers={"X-Reviewer-Identity": "Md Moshiur Rahman"},
+        )
+    )
+    graph = asyncio.run(_request(app, "GET", f"/api/graph-runs/{graph_id}"))
+
+    assert forbidden.status_code == 403
+    assert stale.status_code == 409
+    assert graph.json()["status"] == "review_required"
+
+
+def test_missing_and_incomplete_resources_have_stable_errors(tmp_path) -> None:
+    app, _ = _client(tmp_path)
+    missing = asyncio.run(_request(app, "GET", f"/api/investigations/{uuid4()}"))
+    assert missing.status_code == 404
+
+    repository = SQLiteInvestigationRepository(tmp_path / "incomplete.db")
+    repository.initialize()
+    investigation = Investigation(input_claim="An unfinished claim.")
+    repository.save_investigation(investigation)
+    incomplete_app = create_app(
+        ApiDependencies(
+            investigations=repository,
+            reviews=SQLiteReviewLedger(tmp_path / "incomplete-reviews.db"),
+            graph_checkpoint_path=tmp_path / "incomplete-graph.db",
+        )
+    )
+    incomplete = asyncio.run(
+        _request(
+            incomplete_app,
+            "GET",
+            f"/api/investigations/{investigation.investigation_id}/report",
+        )
+    )
+    assert incomplete.status_code == 409
+
+
+def test_create_investigation_and_provider_failure_are_stable(tmp_path) -> None:
+    app, _ = _client(tmp_path)
+    created = asyncio.run(
+        _request(
+            app,
+            "POST",
+            "/api/investigations",
+            json={"claim": "A newly submitted factual claim."},
+        )
+    )
+    assert created.status_code == 201
+    assert created.json()["investigation"]["status"] == "completed"
+
+    async def fail(_claim: str):
+        raise RuntimeError("secret provider details")
+
+    repository = SQLiteInvestigationRepository(tmp_path / "failed.db")
+    failed_app = create_app(
+        ApiDependencies(
+            investigations=repository,
+            reviews=SQLiteReviewLedger(tmp_path / "failed-reviews.db"),
+            graph_checkpoint_path=tmp_path / "failed-graph.db",
+            investigate=fail,
+        )
+    )
+    failed = asyncio.run(
+        _request(
+            failed_app,
+            "POST",
+            "/api/investigations",
+            json={"claim": "A provider failure fixture."},
+        )
+    )
+    assert failed.status_code == 502
+    assert failed.json()["detail"] == "investigation provider failed: RuntimeError"

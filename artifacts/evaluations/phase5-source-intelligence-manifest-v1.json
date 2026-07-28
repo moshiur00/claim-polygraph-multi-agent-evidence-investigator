@@ -1,0 +1,38 @@
+{
+  "manifest_id": "phase5-source-intelligence-v1",
+  "schema_version": 1,
+  "provenance_dataset_id": "phase5_provenance_fixtures",
+  "provenance_dataset_version": 1,
+  "fixture_case_ids": [
+    "PROV-001", "PROV-002", "PROV-003", "PROV-004",
+    "PROV-005", "PROV-006", "PROV-007", "PROV-008",
+    "PROV-009", "PROV-010", "PROV-011", "PROV-012"
+  ],
+  "artifacts": [
+    {
+      "artifact_id": "provenance_benchmark",
+      "path": "benchmarks/phase5_provenance_fixtures_v1.json",
+      "sha256": "6e56793bfa263e5a8c5f979ff03b39a9b9039f076403dc1f741f04d9ffabb70f"
+    },
+    {
+      "artifact_id": "phase4_gate_audit",
+      "path": "artifacts/evaluations/phase4-final-gate-audit.json",
+      "sha256": "f98af0c1f976477eeaa61ace304a9688c9f355fcca2df11668ba12d4a8154953"
+    }
+  ],
+  "thresholds": {
+    "canonical_precision": 1.0,
+    "exact_duplicate_precision": 1.0,
+    "exact_duplicate_recall": 1.0,
+    "derivative_precision": 0.95,
+    "derivative_recall": 0.9,
+    "family_accuracy": 0.9,
+    "maximum_false_independent_rate": 0.05,
+    "maximum_verdict_regressions": 0,
+    "minimum_citation_full_rate": 0.95,
+    "maximum_added_latency_ratio": 0.2,
+    "maximum_added_model_cost_usd": 0.005
+  },
+  "paid_model_calls_authorized": false,
+  "pdf_downloads_authorized": false
+}

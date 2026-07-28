@@ -28,7 +28,29 @@ venv/
 !.env.example
 
 # Local artifacts
-artifacts/
+# Generated investigation artifacts
+artifacts/*
+!artifacts/evaluations/
+
+# Ignore evaluation output by default
+artifacts/evaluations/*
+
+# Preserve release and phase-gate evidence
+!artifacts/evaluations/*manifest*.json
+!artifacts/evaluations/*baseline*.json
+!artifacts/evaluations/*closure*.json
+!artifacts/evaluations/*gate-audit*.json
+!artifacts/evaluations/*routing-controls*.json
+!artifacts/evaluations/*frozen-comparison*.json
+# Preserve artifacts required by release manifests
+!artifacts/evaluations/*release-audit*.json
+!artifacts/evaluations/phase7-stage7.1-fixture-graph-v1.json
+!artifacts/evaluations/phase7-stage7.2-durable-resume-v1.json
+!artifacts/evaluations/phase7-stage7.3-assurance-routing-v1.json
+!artifacts/evaluations/phase7-stage7.7-recovery-v1.json
+!artifacts/evaluations/phase7-stage7.9-targeted-calibration-v1.json
+
+
 docs/private/
 data/*.db
 *.db-wal
@@ -49,3 +71,5 @@ data/*.db
 .DS_Store
 Desktop.ini
 Thumbs.db
+
+tmp/

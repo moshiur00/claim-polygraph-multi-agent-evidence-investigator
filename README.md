@@ -10,30 +10,39 @@ multi-agent architecture only after the core evidence workflow is measurable.
 
 ## Current milestone
 
-The repository now contains the executable atomic workflow plus the Phase 3
-complex-claim coordinator:
+Phase 7 is complete. LangGraph is the default API orchestrator, while
+`InvestigationService` remains authoritative for evidence, verification and
+verdicts. Phase 8 is beginning with a locked, zero-cost baseline before genuine
+multi-agent research is integrated into the promoted graph.
 
-- claims and investigation plans;
-- sources, evidence, and source assessments;
-- verdicts and sentence-level citation audits;
-- execution budgets and operating-mode policies.
-- asynchronous model and search provider protocols;
-- deterministic providers for reproducible development;
-- SQLite persistence for investigations, artifacts, and trace events;
-- an end-to-end claim-to-audited-verdict application service.
-- a local CLI with JSON, Markdown, and trace exports.
-- bounded document chunks with exact source-relative offsets;
-- deterministic BM25-style claim-passage ranking and top passage selection.
-- selective, typed claim decomposition with protected parent context;
-- one durable child investigation per material component;
-- component-coverage accounting and constrained parent aggregation;
-- resumable SQLite checkpoints that reuse completed work;
-- complex-run evaluation metrics for decomposition, context, coverage,
-  citations, verdicts, and cost.
+| Capability | Current status |
+|---|---|
+| Atomic and selectively decomposed complex claims | Complete and authoritative |
+| SerpAPI/SearXNG retrieval, safe fetch and bounded passages | Complete |
+| Source quality, duplicates, provenance families and independence | Complete |
+| Numerical/temporal verification and argument ledger | Complete; diagnostic artifacts |
+| Deterministic judgment policy | Observational only; not promoted after regression |
+| LangGraph checkpoints, interruption and idempotent resume | Complete and promoted |
+| Append-only review, distinct approval and verdict revisions | Complete |
+| FastAPI, SSE and connected dashboard | Complete for local API/demo deployment |
+| Bounded Phase 4 multi-agent research | Experimental; not promoted |
+| Phase 8 genuine multi-agent subgraph | Planned/in progress |
+| Article-text and URL claim extraction | Planned for Phase 8 |
+| Empirically calibrated confidence | Not yet available |
+| Production concurrency, durable jobs and telemetry | Planned behind Phase 8 gates |
+
+The reviewed benchmark contains 20 citation-grounded cases. The authoritative
+workflow and promoted LangGraph wrapper both currently achieve 90% agreement
+with reviewed labels; CPNG-006 and CPNG-019 are disclosed disagreements.
 
 The mock providers deliberately return synthetic evidence. They validate
 orchestration, policy, persistence, and audit contracts; they do not perform
 real fact-checking.
+
+LangGraph coordinates durable graph state,
+review interruption, and resume while `InvestigationService` remains
+authoritative for evidence and verdicts. Set
+`CLAIM_POLYGRAPH_ORCHESTRATOR=direct` to use the explicit rollback path.
 
 See the complete
 [project specification](docs/PROJECT_SPECIFICATION_AND_PLAN.md).
@@ -187,10 +196,9 @@ The end-to-end behavior is demonstrated in
 ## Evaluation baseline
 
 The repository includes a versioned twenty-claim benchmark covering the claim
-categories required by the project specification. CPNG-001 through CPNG-010
-have two-person human-reviewed labels. CPNG-011 through CPNG-020 contain 21
-mapped material components and transparent AI-review records, but remain
-non-gold until genuine annotation and distinct approval. Run a
+categories required by the project specification. CPNG-001 through CPNG-020
+have citation-grounded labels checked by Md Moshiur Rahman and distinctly
+approved by Md Rashedul Islam. Run a
 deterministic workflow baseline with:
 
 ```powershell

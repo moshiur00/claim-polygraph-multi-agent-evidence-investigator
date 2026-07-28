@@ -1,0 +1,390 @@
+"""FastAPI surface for persisted investigations and durable fixture graphs."""
+
+import asyncio
+import json
+import os
+from collections.abc import Awaitable, Callable
+from dataclasses import dataclass
+from pathlib import Path
+from uuid import UUID
+
+from fastapi import FastAPI, Header, HTTPException, Query
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import PlainTextResponse, StreamingResponse
+
+from claim_polygraph_ng.application.langgraph_durable import (
+    DuplicateReviewDecisionError,
+    DurableFixtureLangGraphWorkflow,
+    ExistingGraphThreadError,
+    GraphResumeError,
+)
+from claim_polygraph_ng.domain.api import (
+    ApiStatus,
+    CreateInvestigationRequest,
+    StartGraphRunRequest,
+    StartGraphRunResponse,
+    SubmitApprovalRequest,
+    SubmitDecisionRequest,
+    SubmitDecisionResponse,
+    SubmitRevisionRequest,
+)
+from claim_polygraph_ng.domain.graph import DurableGraphSnapshot
+from claim_polygraph_ng.domain.investigation import (
+    ArtifactType,
+    Investigation,
+    InvestigationReport,
+    InvestigationStatus,
+)
+from claim_polygraph_ng.domain.models import Evidence
+from claim_polygraph_ng.domain.review import (
+    ReviewAuditTrail,
+    ReviewerDecisionRecord,
+    ReviewRequest,
+)
+from claim_polygraph_ng.persistence.base import InvestigationRepository
+from claim_polygraph_ng.persistence.review import (
+    ReviewConcurrencyError,
+    ReviewLedgerError,
+    ReviewPolicyError,
+    SQLiteReviewLedger,
+)
+from claim_polygraph_ng.reporting import (
+    IncompleteInvestigationError,
+    InvestigationNotFoundError,
+    load_report,
+    render_markdown,
+)
+
+
+@dataclass(frozen=True)
+class ApiDependencies:
+    """Explicit resources used by the API; production and tests can wire separately."""
+
+    investigations: InvestigationRepository
+    reviews: SQLiteReviewLedger
+    graph_checkpoint_path: Path
+    graph_enabled: bool = True
+    investigate: Callable[[str], Awaitable[InvestigationReport]] | None = None
+
+
+def create_app(dependencies: ApiDependencies) -> FastAPI:
+    """Build the Stage 7.5 API without global mutable service state."""
+    dependencies.investigations.initialize()
+    dependencies.reviews.initialize()
+    app = FastAPI(title="Claim Polygraph NG API", version="7.5")
+    allowed_origins = tuple(
+        origin.strip()
+        for origin in os.getenv(
+            "CLAIM_POLYGRAPH_DASHBOARD_ORIGINS",
+            (
+                "http://localhost:3000,http://127.0.0.1:3000,"
+                "http://localhost:5173,http://127.0.0.1:5173,"
+                "https://claim-polygraph-review.moshiur-mishuk00.chatgpt.site"
+            ),
+        ).split(",")
+        if origin.strip()
+    )
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=list(allowed_origins),
+        allow_credentials=False,
+        allow_methods=["GET", "POST"],
+        allow_headers=["Content-Type", "X-Reviewer-Identity"],
+    )
+
+    @app.get("/health", response_model=ApiStatus)
+    def health() -> ApiStatus:
+        return ApiStatus(status="ok")
+
+    @app.get("/api/investigations", response_model=list[Investigation])
+    def list_investigations() -> list[Investigation]:
+        return list(dependencies.investigations.list_investigations())
+
+    @app.post(
+        "/api/investigations",
+        response_model=InvestigationReport,
+        status_code=201,
+    )
+    async def create_investigation(
+        payload: CreateInvestigationRequest,
+    ) -> InvestigationReport:
+        if dependencies.investigate is None:
+            raise HTTPException(status_code=503, detail="investigation runner is not configured")
+        try:
+            return await dependencies.investigate(payload.claim)
+        except Exception as error:
+            raise HTTPException(
+                status_code=502,
+                detail=f"investigation provider failed: {type(error).__name__}",
+            ) from error
+
+    @app.get("/api/investigations/{investigation_id}", response_model=Investigation)
+    def get_investigation(investigation_id: UUID) -> Investigation:
+        investigation = dependencies.investigations.get_investigation(investigation_id)
+        if investigation is None:
+            raise HTTPException(status_code=404, detail="investigation not found")
+        return investigation
+
+    @app.get(
+        "/api/investigations/{investigation_id}/evidence",
+        response_model=list[Evidence],
+    )
+    def get_evidence(investigation_id: UUID) -> list[Evidence]:
+        _require_investigation(dependencies.investigations, investigation_id)
+        return list(
+            dependencies.investigations.list_artifacts(
+                investigation_id, ArtifactType.EVIDENCE, Evidence
+            )
+        )
+
+    @app.get("/api/investigations/{investigation_id}/report")
+    def get_report(investigation_id: UUID, format: str = Query(default="json")):
+        try:
+            report = load_report(dependencies.investigations, investigation_id)
+        except InvestigationNotFoundError as error:
+            raise HTTPException(status_code=404, detail=str(error)) from error
+        except IncompleteInvestigationError as error:
+            raise HTTPException(status_code=409, detail=str(error)) from error
+        if format == "markdown":
+            events = dependencies.investigations.list_events(investigation_id)
+            return PlainTextResponse(render_markdown(report, events))
+        if format != "json":
+            raise HTTPException(status_code=422, detail="format must be json or markdown")
+        return report
+
+    @app.post("/api/graph-runs", response_model=StartGraphRunResponse, status_code=201)
+    def start_graph(payload: StartGraphRunRequest) -> StartGraphRunResponse:
+        _require_investigation(dependencies.investigations, payload.investigation_id)
+        with _workflow(dependencies) as workflow:
+            try:
+                snapshot = workflow.start(payload.graph)
+            except ExistingGraphThreadError as error:
+                raise HTTPException(status_code=409, detail=str(error)) from error
+        review = None
+        if snapshot.interrupt is not None:
+            review = ReviewRequest(
+                investigation_id=payload.investigation_id,
+                graph_thread_id=snapshot.thread_id,
+                claim_id=payload.claim_id,
+                reason=snapshot.interrupt.route_reason,
+                created_by=payload.review_created_by,
+            )
+            dependencies.reviews.create_request(review)
+        return StartGraphRunResponse(graph=snapshot, review=review)
+
+    @app.get("/api/graph-runs/{thread_id}", response_model=DurableGraphSnapshot)
+    def get_graph(thread_id: str) -> DurableGraphSnapshot:
+        with _workflow(dependencies) as workflow:
+            try:
+                return workflow.snapshot(thread_id)
+            except GraphResumeError as error:
+                raise HTTPException(status_code=404, detail=str(error)) from error
+
+    @app.get("/api/graph-runs/{thread_id}/events")
+    async def stream_graph_events(
+        thread_id: str,
+        after: int = Query(default=0, ge=0),
+        follow: bool = Query(default=True),
+    ) -> StreamingResponse:
+        with _workflow(dependencies) as workflow:
+            try:
+                workflow.snapshot(thread_id)
+            except GraphResumeError as error:
+                raise HTTPException(status_code=404, detail=str(error)) from error
+
+        async def generate():
+            cursor = after
+            while True:
+                with _workflow(dependencies) as workflow:
+                    snapshot = workflow.snapshot(thread_id)
+                for sequence, node in enumerate(snapshot.completed_nodes, 1):
+                    if sequence <= cursor:
+                        continue
+                    data = json.dumps(
+                        {"thread_id": thread_id, "node": node.value},
+                        separators=(",", ":"),
+                    )
+                    yield f"id: {sequence}\nevent: graph_node\ndata: {data}\n\n"
+                    cursor = sequence
+                data = json.dumps(snapshot.model_dump(mode="json"), separators=(",", ":"))
+                yield f"event: graph_state\ndata: {data}\n\n"
+                if not follow or snapshot.status.value != "review_required":
+                    break
+                yield ": keep-alive\n\n"
+                await asyncio.sleep(0.25)
+
+        return StreamingResponse(
+            generate(),
+            media_type="text/event-stream",
+            headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
+        )
+
+    @app.get("/api/reviews", response_model=list[ReviewRequest])
+    def list_reviews() -> list[ReviewRequest]:
+        return list(dependencies.reviews.list_requests())
+
+    @app.get("/api/reviews/{request_id}", response_model=ReviewAuditTrail)
+    def get_review(request_id: UUID) -> ReviewAuditTrail:
+        return _load_review(dependencies.reviews, request_id)
+
+    @app.post(
+        "/api/reviews/{request_id}/decisions",
+        response_model=SubmitDecisionResponse,
+    )
+    def submit_decision(
+        request_id: UUID,
+        payload: SubmitDecisionRequest,
+        x_reviewer_identity: str | None = Header(default=None),
+    ) -> SubmitDecisionResponse:
+        history = _load_review(dependencies.reviews, request_id)
+        _require_identity(x_reviewer_identity, payload.decision.reviewer_identity)
+        if not history.decisions and len(history.events) != payload.expected_sequence:
+            raise HTTPException(
+                status_code=409,
+                detail=(
+                    f"stale review version: expected {payload.expected_sequence}, "
+                    f"current {len(history.events)}"
+                ),
+            )
+        if history.request.graph_thread_id == "":
+            raise HTTPException(status_code=409, detail="review has no graph thread")
+        with _workflow(dependencies) as workflow:
+            try:
+                snapshot = workflow.resume(history.request.graph_thread_id, payload.decision)
+            except DuplicateReviewDecisionError as error:
+                raise HTTPException(status_code=409, detail=str(error)) from error
+            except GraphResumeError as error:
+                raise HTTPException(status_code=409, detail=str(error)) from error
+        record = ReviewerDecisionRecord(
+            decision_id=payload.decision.decision_id,
+            request_id=request_id,
+            kind=payload.decision.kind,
+            reviewer_identity=payload.decision.reviewer_identity,
+            rationale=payload.decision.rationale,
+            proposed_verdict=payload.decision.revised_verdict,
+        )
+        try:
+            dependencies.reviews.record_decision(
+                record, expected_sequence=payload.expected_sequence
+            )
+        except (ReviewConcurrencyError, ReviewPolicyError) as error:
+            raise HTTPException(status_code=409, detail=str(error)) from error
+        return SubmitDecisionResponse(graph=snapshot, review=dependencies.reviews.load(request_id))
+
+    @app.post(
+        "/api/reviews/{request_id}/approvals",
+        response_model=ReviewAuditTrail,
+    )
+    def submit_approval(
+        request_id: UUID,
+        payload: SubmitApprovalRequest,
+        x_reviewer_identity: str | None = Header(default=None),
+    ) -> ReviewAuditTrail:
+        if payload.approval.request_id != request_id:
+            raise HTTPException(status_code=422, detail="request ID mismatch")
+        _require_identity(x_reviewer_identity, payload.approval.approver_identity)
+        try:
+            dependencies.reviews.record_approval(
+                payload.approval, expected_sequence=payload.expected_sequence
+            )
+        except (ReviewConcurrencyError, ReviewPolicyError, ReviewLedgerError) as error:
+            raise HTTPException(status_code=409, detail=str(error)) from error
+        return dependencies.reviews.load(request_id)
+
+    @app.post(
+        "/api/reviews/{request_id}/revisions",
+        response_model=ReviewAuditTrail,
+    )
+    def submit_revision(
+        request_id: UUID,
+        payload: SubmitRevisionRequest,
+        x_reviewer_identity: str | None = Header(default=None),
+    ) -> ReviewAuditTrail:
+        if payload.revision.request_id != request_id:
+            raise HTTPException(status_code=422, detail="request ID mismatch")
+        history = _load_review(dependencies.reviews, request_id)
+        approval = next(
+            (
+                item
+                for item in history.approvals
+                if item.approval_id == payload.revision.approval_id
+            ),
+            None,
+        )
+        if approval is None:
+            raise HTTPException(status_code=409, detail="approval not found")
+        _require_identity(x_reviewer_identity, approval.approver_identity)
+        try:
+            dependencies.reviews.record_revision(
+                payload.revision, expected_sequence=payload.expected_sequence
+            )
+        except (ReviewConcurrencyError, ReviewPolicyError, ReviewLedgerError) as error:
+            raise HTTPException(status_code=409, detail=str(error)) from error
+        return dependencies.reviews.load(request_id)
+
+    @app.get("/api/investigations/{investigation_id}/events")
+    async def stream_events(
+        investigation_id: UUID,
+        after: int = Query(default=0, ge=0),
+        follow: bool = Query(default=True),
+    ) -> StreamingResponse:
+        _require_investigation(dependencies.investigations, investigation_id)
+
+        async def generate():
+            cursor = after
+            while True:
+                investigation = _require_investigation(
+                    dependencies.investigations, investigation_id
+                )
+                events = dependencies.investigations.list_events(investigation_id)
+                for sequence, event in enumerate(events, 1):
+                    if sequence <= cursor:
+                        continue
+                    data = json.dumps(event.model_dump(mode="json"), separators=(",", ":"))
+                    yield f"id: {sequence}\nevent: {event.event_type.value}\ndata: {data}\n\n"
+                    cursor = sequence
+                terminal = investigation.status in {
+                    InvestigationStatus.COMPLETED,
+                    InvestigationStatus.FAILED,
+                    InvestigationStatus.CANCELLED,
+                }
+                if not follow or terminal:
+                    break
+                yield ": keep-alive\n\n"
+                await asyncio.sleep(0.25)
+
+        return StreamingResponse(
+            generate(),
+            media_type="text/event-stream",
+            headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
+        )
+
+    return app
+
+
+def _workflow(dependencies: ApiDependencies) -> DurableFixtureLangGraphWorkflow:
+    return DurableFixtureLangGraphWorkflow(
+        dependencies.graph_checkpoint_path, enabled=dependencies.graph_enabled
+    )
+
+
+def _require_investigation(
+    repository: InvestigationRepository, investigation_id: UUID
+) -> Investigation:
+    investigation = repository.get_investigation(investigation_id)
+    if investigation is None:
+        raise HTTPException(status_code=404, detail="investigation not found")
+    return investigation
+
+
+def _load_review(ledger: SQLiteReviewLedger, request_id: UUID) -> ReviewAuditTrail:
+    try:
+        return ledger.load(request_id)
+    except ReviewLedgerError as error:
+        raise HTTPException(status_code=404, detail=str(error)) from error
+
+
+def _require_identity(header: str | None, body_identity: str) -> None:
+    """Stage 7.5 authorization placeholder: bind actor header to signed body later."""
+    if header is None or header.casefold() != body_identity.casefold():
+        raise HTTPException(status_code=403, detail="reviewer identity header mismatch")

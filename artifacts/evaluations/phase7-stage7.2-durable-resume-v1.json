@@ -1,0 +1,107 @@
+{
+  "evaluation_id": "phase7-stage7.2-durable-resume-v1",
+  "checkpoint_reconstructed": true,
+  "pre_interrupt_operations_reused": true,
+  "idempotent_decision_replay": true,
+  "provider_usage": {
+    "model_calls": 0,
+    "search_calls": 0,
+    "network_calls": 0,
+    "estimated_cost_usd": 0.0
+  },
+  "paused": {
+    "thread_id": "03d9619c-7e85-5549-b866-721727201a84",
+    "status": "review_required",
+    "authoritative_verdict": "contradicted",
+    "final_verdict": null,
+    "approved_evidence_ids": [
+      "149aa1b3-46b0-5075-a89d-95bb9d6f812e",
+      "a0e3f1d4-05d3-5db0-9d2e-8441eda468ad",
+      "e045ded3-2a84-5900-b140-ea639bcaafef"
+    ],
+    "completed_nodes": [
+      "normalize",
+      "research",
+      "consolidate",
+      "verify_context",
+      "build_argument_ledger",
+      "draft_verdict",
+      "audit_citations",
+      "assess_readiness",
+      "route_review"
+    ],
+    "operation_counts": {
+      "normalize": 1,
+      "research": 1,
+      "consolidate": 1,
+      "verify_context": 1,
+      "build_argument_ledger": 1,
+      "draft_verdict": 1,
+      "audit_citations": 1,
+      "assess_readiness": 1,
+      "route_review": 1
+    },
+    "interrupt": {
+      "thread_id": "03d9619c-7e85-5549-b866-721727201a84",
+      "question": "Confirm the final verdict or choose another review action.",
+      "claim_text": "The Great Wall is visible from the Moon with the unaided eye.",
+      "provisional_verdict": "contradicted",
+      "approved_evidence_ids": [
+        "149aa1b3-46b0-5075-a89d-95bb9d6f812e",
+        "a0e3f1d4-05d3-5db0-9d2e-8441eda468ad",
+        "e045ded3-2a84-5900-b140-ea639bcaafef"
+      ],
+      "route_reason": "The absolute statement requires explicit human confirmation.",
+      "allowed_decisions": [
+        "approve",
+        "revise",
+        "request_evidence",
+        "reject"
+      ]
+    },
+    "applied_decision_id": null,
+    "reviewer_identity": null,
+    "checkpointed": true
+  },
+  "completed": {
+    "thread_id": "03d9619c-7e85-5549-b866-721727201a84",
+    "status": "completed",
+    "authoritative_verdict": "contradicted",
+    "final_verdict": "contradicted",
+    "approved_evidence_ids": [
+      "149aa1b3-46b0-5075-a89d-95bb9d6f812e",
+      "a0e3f1d4-05d3-5db0-9d2e-8441eda468ad",
+      "e045ded3-2a84-5900-b140-ea639bcaafef"
+    ],
+    "completed_nodes": [
+      "normalize",
+      "research",
+      "consolidate",
+      "verify_context",
+      "build_argument_ledger",
+      "draft_verdict",
+      "audit_citations",
+      "assess_readiness",
+      "route_review",
+      "interrupt_for_review",
+      "finalize"
+    ],
+    "operation_counts": {
+      "normalize": 1,
+      "research": 1,
+      "consolidate": 1,
+      "verify_context": 1,
+      "build_argument_ledger": 1,
+      "draft_verdict": 1,
+      "audit_citations": 1,
+      "assess_readiness": 1,
+      "route_review": 1,
+      "interrupt_for_review": 1,
+      "finalize": 1
+    },
+    "interrupt": null,
+    "applied_decision_id": "95f3480c-f6f2-5e8f-ac2a-76c28ac77b85",
+    "reviewer_identity": "Stage 7.2 deterministic fixture reviewer",
+    "checkpointed": true
+  }
+}

@@ -11,10 +11,11 @@ evidence excerpts. These remain proposals and do not count as ground truth.
 Only `expected_verdict` values on human-reviewed cases contribute to accuracy.
 The intermediate `ai_reviewed` status is explicitly non-scoring.
 
-Dataset version 2 contains approved human-reviewed labels for `CPNG-001`
-through `CPNG-005`. Md Moshiur Rahman completed the annotation pass and
-Md Rashedul Islam independently approved the evidence and verdicts on
-26 July 2026.
+Dataset version 5 contains approved human-reviewed labels for `CPNG-001`
+through `CPNG-020`. Md Moshiur Rahman completed the annotation pass and
+Md Rashedul Islam distinctly approved the evidence and verdicts. The dataset
+records the applicable review dates and preserves the earlier AI-assisted
+records as transparent preparation provenance rather than human ground truth.
 
 ## Annotation workflow
 

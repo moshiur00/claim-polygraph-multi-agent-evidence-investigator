@@ -1,0 +1,185 @@
+{
+  "dataset_id": "initial_claims",
+  "dataset_version": 4,
+  "generated_at": "2026-07-27T16:00:40.106290Z",
+  "release_ready": false,
+  "passed_count": 7,
+  "failed_count": 0,
+  "pending_count": 15,
+  "gates": [
+    {
+      "gate_id": "human_reviewed_benchmark",
+      "state": "pending",
+      "requirement": "CPNG-001 through CPNG-020 reviewed with typed, distinct approval",
+      "observed": "10/20 reviewed; 10/20 distinctly approved",
+      "evidence": [
+        "benchmark dataset"
+      ]
+    },
+    {
+      "gate_id": "complex_case_representation",
+      "state": "pending",
+      "requirement": "At least 5 reviewed cases have 2+ material components",
+      "observed": "0 reviewed complex cases",
+      "evidence": [
+        "benchmark dataset"
+      ]
+    },
+    {
+      "gate_id": "live_query_completion",
+      "state": "passed",
+      "requirement": "At least 90% live query completion",
+      "observed": "100.00%",
+      "evidence": [
+        "retrieval evaluation"
+      ]
+    },
+    {
+      "gate_id": "live_candidate_coverage",
+      "state": "passed",
+      "requirement": "At least 90% of cases have a live candidate",
+      "observed": "100.00%",
+      "evidence": [
+        "retrieval evaluation"
+      ]
+    },
+    {
+      "gate_id": "component_query_completion",
+      "state": "passed",
+      "requirement": "At least 90% component query completion",
+      "observed": "100.00%",
+      "evidence": [
+        "retrieval evaluation"
+      ]
+    },
+    {
+      "gate_id": "component_candidate_coverage",
+      "state": "passed",
+      "requirement": "At least 90% of material components have a candidate",
+      "observed": "100.00%",
+      "evidence": [
+        "retrieval evaluation"
+      ]
+    },
+    {
+      "gate_id": "reviewed_passage_recall",
+      "state": "passed",
+      "requirement": "At least 80% combined reviewed-passage recall",
+      "observed": "80.85%",
+      "evidence": [
+        "page evaluation",
+        "lexical-only pass"
+      ]
+    },
+    {
+      "gate_id": "first_ten_retrieval_regression",
+      "state": "passed",
+      "requirement": "First-ten recall no more than 3 points below Phase 2",
+      "observed": "Phase 3 86.96% vs Phase 2 82.61%",
+      "evidence": [
+        "page evaluation",
+        "Phase 2 semantic baseline"
+      ]
+    },
+    {
+      "gate_id": "rights_compliance",
+      "state": "passed",
+      "requirement": "Zero unapproved PDF downloads",
+      "observed": "0 fetched PDF candidates",
+      "evidence": [
+        "page evaluation"
+      ]
+    },
+    {
+      "gate_id": "declared_run_1_completion",
+      "state": "pending",
+      "requirement": "At least 90% end-to-end completion",
+      "observed": "declared run artifact not supplied",
+      "evidence": []
+    },
+    {
+      "gate_id": "declared_run_1_accuracy",
+      "state": "pending",
+      "requirement": "At least 85% verdict accuracy",
+      "observed": "declared run artifact not supplied",
+      "evidence": []
+    },
+    {
+      "gate_id": "declared_run_1_parent_citations",
+      "state": "pending",
+      "requirement": "At least 95% full parent citation support",
+      "observed": "declared run artifact not supplied",
+      "evidence": []
+    },
+    {
+      "gate_id": "declared_run_1_decomposition",
+      "state": "pending",
+      "requirement": "100% parent linkage and context-contract validity",
+      "observed": "declared run artifact not supplied",
+      "evidence": []
+    },
+    {
+      "gate_id": "declared_run_1_material_coverage",
+      "state": "pending",
+      "requirement": "At least 90% material-component coverage",
+      "observed": "declared run artifact not supplied",
+      "evidence": []
+    },
+    {
+      "gate_id": "declared_run_1_cost",
+      "state": "pending",
+      "requirement": "At most $0.02 per completed component",
+      "observed": "declared run artifact not supplied",
+      "evidence": []
+    },
+    {
+      "gate_id": "declared_run_2_completion",
+      "state": "pending",
+      "requirement": "At least 90% end-to-end completion",
+      "observed": "declared run artifact not supplied",
+      "evidence": []
+    },
+    {
+      "gate_id": "declared_run_2_accuracy",
+      "state": "pending",
+      "requirement": "At least 85% verdict accuracy",
+      "observed": "declared run artifact not supplied",
+      "evidence": []
+    },
+    {
+      "gate_id": "declared_run_2_parent_citations",
+      "state": "pending",
+      "requirement": "At least 95% full parent citation support",
+      "observed": "declared run artifact not supplied",
+      "evidence": []
+    },
+    {
+      "gate_id": "declared_run_2_decomposition",
+      "state": "pending",
+      "requirement": "100% parent linkage and context-contract validity",
+      "observed": "declared run artifact not supplied",
+      "evidence": []
+    },
+    {
+      "gate_id": "declared_run_2_material_coverage",
+      "state": "pending",
+      "requirement": "At least 90% material-component coverage",
+      "observed": "declared run artifact not supplied",
+      "evidence": []
+    },
+    {
+      "gate_id": "declared_run_2_cost",
+      "state": "pending",
+      "requirement": "At most $0.02 per completed component",
+      "observed": "declared run artifact not supplied",
+      "evidence": []
+    },
+    {
+      "gate_id": "exact_repeated_label_stability",
+      "state": "pending",
+      "requirement": "At least 90% exact repeated-label stability",
+      "observed": "both declared run artifacts are required",
+      "evidence": []
+    }
+  ]
+}

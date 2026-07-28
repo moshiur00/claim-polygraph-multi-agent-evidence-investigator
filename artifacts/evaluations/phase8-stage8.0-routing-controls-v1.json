@@ -1,0 +1,130 @@
+{
+  "case_count": 10,
+  "required_review_count": 5,
+  "automatic_count": 5,
+  "true_positive": 5,
+  "true_negative": 5,
+  "false_positive": 0,
+  "false_negative": 0,
+  "recall": 1.0,
+  "specificity": 1.0,
+  "precision": 1.0,
+  "route_accuracy": 1.0,
+  "gate_passed": true,
+  "assurance": {
+    "evaluation_id": "phase7-stage7.3-assurance-routing-v1",
+    "dataset_id": "phase8-review-routing-controls-v1",
+    "dataset_version": 1,
+    "case_count": 10,
+    "citation_accuracy": 1.0,
+    "critical_route_recall": 1.0,
+    "route_accuracy": 1.0,
+    "unsupported_marked_supported_count": 0,
+    "results": [
+      {
+        "case_id": "P8RR-001",
+        "expected_status": "supported",
+        "observed_status": "supported",
+        "citation_correct": true,
+        "expected_review": false,
+        "observed_review": false,
+        "route_correct": true,
+        "critical_route_required": false
+      },
+      {
+        "case_id": "P8RR-002",
+        "expected_status": "supported",
+        "observed_status": "supported",
+        "citation_correct": true,
+        "expected_review": false,
+        "observed_review": false,
+        "route_correct": true,
+        "critical_route_required": false
+      },
+      {
+        "case_id": "P8RR-003",
+        "expected_status": "supported",
+        "observed_status": "supported",
+        "citation_correct": true,
+        "expected_review": false,
+        "observed_review": false,
+        "route_correct": true,
+        "critical_route_required": false
+      },
+      {
+        "case_id": "P8RR-004",
+        "expected_status": "supported",
+        "observed_status": "supported",
+        "citation_correct": true,
+        "expected_review": false,
+        "observed_review": false,
+        "route_correct": true,
+        "critical_route_required": false
+      },
+      {
+        "case_id": "P8RR-005",
+        "expected_status": "supported",
+        "observed_status": "supported",
+        "citation_correct": true,
+        "expected_review": false,
+        "observed_review": false,
+        "route_correct": true,
+        "critical_route_required": false
+      },
+      {
+        "case_id": "P8RR-006",
+        "expected_status": "contradictory",
+        "observed_status": "contradictory",
+        "citation_correct": true,
+        "expected_review": true,
+        "observed_review": true,
+        "route_correct": true,
+        "critical_route_required": true
+      },
+      {
+        "case_id": "P8RR-007",
+        "expected_status": "unsupported",
+        "observed_status": "unsupported",
+        "citation_correct": true,
+        "expected_review": true,
+        "observed_review": true,
+        "route_correct": true,
+        "critical_route_required": true
+      },
+      {
+        "case_id": "P8RR-008",
+        "expected_status": "supported",
+        "observed_status": "supported",
+        "citation_correct": true,
+        "expected_review": true,
+        "observed_review": true,
+        "route_correct": true,
+        "critical_route_required": true
+      },
+      {
+        "case_id": "P8RR-009",
+        "expected_status": "supported",
+        "observed_status": "supported",
+        "citation_correct": true,
+        "expected_review": true,
+        "observed_review": true,
+        "route_correct": true,
+        "critical_route_required": true
+      },
+      {
+        "case_id": "P8RR-010",
+        "expected_status": "out_of_packet",
+        "observed_status": "out_of_packet",
+        "citation_correct": true,
+        "expected_review": true,
+        "observed_review": true,
+        "route_correct": true,
+        "critical_route_required": true
+      }
+    ],
+    "promotion_gate_passed": true,
+    "model_calls": 0,
+    "network_calls": 0,
+    "pdf_downloads": 0
+  }
+}

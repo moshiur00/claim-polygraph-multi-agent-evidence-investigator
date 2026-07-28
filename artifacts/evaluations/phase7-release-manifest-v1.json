@@ -1,0 +1,80 @@
+{
+  "manifest_id": "phase7-release-manifest-v1",
+  "artifacts": [
+    {
+      "artifact_id": "benchmark",
+      "path": "benchmarks/initial_claims_v1.json",
+      "sha256": "44270e74e3b20028d66dc907036ed3fd8236372d8e1bb8c65fadbcad7598b8a3"
+    },
+    {
+      "artifact_id": "citation_routing_benchmark",
+      "path": "benchmarks/phase7_citation_routing_v1.json",
+      "sha256": "46ea846cfe26b7c9b2beff3dc4bdf479fd50bef3fad64db80175f8792ad09a96"
+    },
+    {
+      "artifact_id": "fixture_graph",
+      "path": "artifacts/evaluations/phase7-stage7.1-fixture-graph-v1.json",
+      "sha256": "30ab29bd3df0de2bfb758e742f3d9fb404eedad18ffc2591ee1c3e7e819580d8"
+    },
+    {
+      "artifact_id": "durable_resume",
+      "path": "artifacts/evaluations/phase7-stage7.2-durable-resume-v1.json",
+      "sha256": "415cd9bc4652ba660968cd77ba9794005ef77426a4b0f5247005d17b4c9cc40f"
+    },
+    {
+      "artifact_id": "citation_assurance",
+      "path": "artifacts/evaluations/phase7-stage7.3-assurance-routing-v1.json",
+      "sha256": "de7384087b7454f6a72fe3fd11905d9fff2cc184ecaeec0a5dc1755dceb24ebd"
+    },
+    {
+      "artifact_id": "recovery",
+      "path": "artifacts/evaluations/phase7-stage7.7-recovery-v1.json",
+      "sha256": "e59730eaa727d0da9be53401a082602b34ed0a77d589d0c12c5d79b0dff604ba"
+    },
+    {
+      "artifact_id": "frozen_comparison",
+      "path": "artifacts/evaluations/phase7-stage7.8-frozen-comparison-v1.json",
+      "sha256": "2cbe6c8005214040fe9aec629d583ad990f1dba8d7dc43593467ebc5ed14625e"
+    },
+    {
+      "artifact_id": "targeted_calibration",
+      "path": "artifacts/evaluations/phase7-stage7.9-targeted-calibration-v1.json",
+      "sha256": "5b48786b77bfb17fcf578daad0823b0f85ee6b07c00e1bf24d9d11af995f9ff2"
+    },
+    {
+      "artifact_id": "execution_plan",
+      "path": "docs/PHASE_7_EXECUTION_PLAN.md",
+      "sha256": "28e62a728c4bcf7d91d926d2da3978c6e3a6136fb63f269b9d16fa80ec678362"
+    },
+    {
+      "artifact_id": "promotion_adr",
+      "path": "docs/adr/0014-promote-langgraph-as-default-orchestrator.md",
+      "sha256": "0e1dace79136ec189c1defc31507d17571cf202ed8c635656e45dca99d23355c"
+    },
+    {
+      "artifact_id": "completion_report",
+      "path": "docs/PHASE_7_COMPLETION_REPORT.md",
+      "sha256": "2a96731412fad4ce9f475ff770747dcac335ca04b6a123eb63052c4c77297e31"
+    },
+    {
+      "artifact_id": "api",
+      "path": "src/claim_polygraph_ng/api.py",
+      "sha256": "dfeb85f79e75e0bbbeade975fbfd674862532ad73008ab0c8a5e4eee0d3b244f"
+    },
+    {
+      "artifact_id": "dashboard",
+      "path": "dashboard/app/page.tsx",
+      "sha256": "34ffc0d50c2645e248b0d6983c537d6d589f5035d17620a65b6226de9d7fa334"
+    },
+    {
+      "artifact_id": "api_security",
+      "path": "tests/security/test_api_security.py",
+      "sha256": "0150eb3c1ec92b803e09a0639d9c708904800e279e50aad146dbfccd50061a1a"
+    },
+    {
+      "artifact_id": "dashboard_accessibility",
+      "path": "dashboard/tests/accessibility.test.mjs",
+      "sha256": "938141a5c51175086d516b232095f795945f451a49fffe95b9358ec6510daae0"
+    }
+  ]
+}
