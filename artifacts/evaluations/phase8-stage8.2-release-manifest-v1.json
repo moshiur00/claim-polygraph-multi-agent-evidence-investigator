@@ -1,0 +1,83 @@
+{
+  "manifest_id": "phase8-stage8.2-release-manifest-v1",
+  "artifacts": [
+    {
+      "artifact_id": "input_contracts",
+      "path": "src/claim_polygraph_ng/domain/input.py",
+      "sha256": "27fa9b8e8536aa2ff87fe1921bedf68018364f644c6bb83bfcfbb7377f9a5cdb"
+    },
+    {
+      "artifact_id": "domain_exports",
+      "path": "src/claim_polygraph_ng/domain/__init__.py",
+      "sha256": "df7f68de30355f14180e93ec30c3bdd8bb757be61ec44ff51769c89c5b41b4c4"
+    },
+    {
+      "artifact_id": "extraction_service",
+      "path": "src/claim_polygraph_ng/application/claim_extraction.py",
+      "sha256": "f0336b320ad70bac310607e21525bcdf2569e1d837ef36f904657cb0bdb59da0"
+    },
+    {
+      "artifact_id": "application_exports",
+      "path": "src/claim_polygraph_ng/application/__init__.py",
+      "sha256": "f55eee8a3d318e8896da0ad130c6cfcd869a5e2d69fe4d4d3fecc87f042f6fb8"
+    },
+    {
+      "artifact_id": "api",
+      "path": "src/claim_polygraph_ng/api.py",
+      "sha256": "9a356087af2143fb918e4e6bc1c59bf1d7779c84f7863267a6d13a0518094388"
+    },
+    {
+      "artifact_id": "api_server",
+      "path": "src/claim_polygraph_ng/api_server.py",
+      "sha256": "15f7ae1aa0f687d5eb6c5d68b2fdfc078778a008a26d6af08f475bde5bc10c60"
+    },
+    {
+      "artifact_id": "cli",
+      "path": "src/claim_polygraph_ng/cli.py",
+      "sha256": "c5d6b06ab4a58daf2d667ff5040cf1af165ba82431ed7b79ab6565cc6c27b3e0"
+    },
+    {
+      "artifact_id": "dashboard",
+      "path": "dashboard/app/page.tsx",
+      "sha256": "acfe82ac4748c35d64318e451a9aa887ca43edb338d3389c701a1e2a0e034111"
+    },
+    {
+      "artifact_id": "contract_tests",
+      "path": "tests/contracts/test_input_contracts.py",
+      "sha256": "28b5dd8115dd0fbee2dab663d0d9513dc3c785acaa464d9c1bd199dc47d904a1"
+    },
+    {
+      "artifact_id": "extraction_tests",
+      "path": "tests/unit/test_claim_extraction.py",
+      "sha256": "6d7a431ca95c499b77b079d0d0d3cc6078ecd0e842be20367f583df5ec451268"
+    },
+    {
+      "artifact_id": "api_tests",
+      "path": "tests/integration/test_api.py",
+      "sha256": "98016b9b2f145612c47ec95844fb00667f46c12de06bf6f3f6effe6a880af307"
+    },
+    {
+      "artifact_id": "cli_tests",
+      "path": "tests/integration/test_cli.py",
+      "sha256": "69f2b94e796f6887030e1c507f1787e4443b0005735c79731737058ac3868945"
+    },
+    {
+      "artifact_id": "security_tests",
+      "path": "tests/security/test_api_security.py",
+      "sha256": "518ff63270e778da69786c08da7e2d0283b1c08e8001d382f4f3da474e53f132"
+    },
+    {
+      "artifact_id": "evaluation",
+      "path": "artifacts/evaluations/phase8-stage8.2-claim-extraction-v1.json",
+      "sha256": "32e7f811417348a7b5a0f401bcc850cc4e21b919636c6a44b473e35baf3f8959"
+    },
+    {
+      "artifact_id": "completion_report",
+      "path": "docs/PHASE_8_STAGE_8.2_COMPLETION_REPORT.md",
+      "sha256": "9e4da727c7268eee2bef02435dab2a42914ddae98e0b890a6d5d75cfd2a9f62d"
+    }
+  ],
+  "external_model_calls": 0,
+  "network_calls": 0,
+  "pdf_downloads": 0
+}

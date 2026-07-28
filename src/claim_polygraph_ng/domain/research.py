@@ -59,6 +59,8 @@ class ResearchBudget(DomainModel):
     maximum_candidates_per_query: int = Field(default=10, ge=1, le=50)
     maximum_pages_per_component: int = Field(default=12, ge=1, le=100)
     maximum_model_calls: int = Field(default=12, ge=0, le=100)
+    maximum_total_tokens: int = Field(default=0, ge=0, le=10_000_000)
+    maximum_duration_seconds: float = Field(default=300.0, gt=0, le=86_400)
     maximum_cost_usd: float = Field(default=0.0, ge=0.0, le=1_000.0)
 
 
@@ -171,6 +173,7 @@ class ResearchResult(DomainModel):
     search_call_count: int = Field(ge=0)
     fetch_call_count: int = Field(ge=0)
     model_call_count: int = Field(ge=0)
+    token_count: int = Field(default=0, ge=0)
     estimated_cost_usd: float = Field(ge=0.0)
     duration_seconds: float = Field(ge=0.0)
     failure_reason: str | None = Field(default=None, max_length=2_000)
@@ -259,7 +262,82 @@ class ResearchConsumption(DomainModel):
     search_calls: int = Field(ge=0)
     fetched_pages: int = Field(ge=0)
     model_calls: int = Field(ge=0)
+    total_tokens: int = Field(default=0, ge=0)
+    duration_seconds: float = Field(default=0.0, ge=0.0)
     estimated_cost_usd: float = Field(ge=0.0)
+
+
+class ResearchRoundAudit(DomainModel):
+    """Immutable controller record for one completed and assessed round."""
+
+    round_id: UUID = Field(default_factory=uuid4)
+    round_number: int = Field(ge=1, le=5)
+    assignment_ids: tuple[UUID, ...] = Field(min_length=1)
+    result_ids: tuple[UUID, ...] = Field(min_length=1)
+    progress: EvidenceProgressSnapshot
+    gain: EvidenceGain
+    consumption: ResearchConsumption
+    assessment: SufficiencyAssessment
+    routing_rationale: tuple[str, ...] = ()
+
+
+class RoleResearchMetric(DomainModel):
+    """Per-role material gain, usage and latency from one fan-out."""
+
+    assignment_id: UUID
+    role: ResearchRole
+    successful: bool
+    source_count: int = Field(ge=0)
+    evidence_count: int = Field(ge=0)
+    retained_evidence_count: int = Field(ge=0)
+    independent_family_gain: int = Field(ge=0)
+    search_calls: int = Field(ge=0)
+    fetch_calls: int = Field(ge=0)
+    model_calls: int = Field(ge=0)
+    token_count: int = Field(default=0, ge=0)
+    estimated_cost_usd: float = Field(ge=0)
+    duration_seconds: float = Field(ge=0)
+
+
+class MultiAgentFanOutReport(DomainModel):
+    """Authority-isolated output of the LangGraph research map/reduce subgraph."""
+
+    investigation_id: UUID
+    parent_claim_id: UUID
+    component_id: UUID
+    assignments: tuple[ResearchAssignment, ...] = Field(min_length=1, max_length=35)
+    results: tuple[ResearchResult, ...] = Field(min_length=1, max_length=35)
+    consolidation: EvidenceConsolidation
+    role_metrics: tuple[RoleResearchMetric, ...] = Field(min_length=1, max_length=35)
+    consumption: ResearchConsumption
+    rounds: tuple[ResearchRoundAudit, ...] = Field(min_length=1, max_length=5)
+    final_assessment: SufficiencyAssessment
+    human_review_required: bool
+    human_review_reason: str | None = Field(default=None, max_length=2_000)
+    unresolved_requirement_ids: tuple[UUID, ...] = ()
+    duplicate_result_references_removed: int = Field(ge=0)
+    authoritative_output_applied: bool = False
+
+    @model_validator(mode="after")
+    def validate_fan_out_identity(self) -> "MultiAgentFanOutReport":
+        assignment_ids = {item.assignment_id for item in self.assignments}
+        if len(assignment_ids) != len(self.assignments):
+            raise ValueError("fan-out assignment IDs must be unique")
+        if {item.assignment_id for item in self.results} != assignment_ids:
+            raise ValueError("fan-out requires exactly one terminal result per assignment")
+        if {item.assignment_id for item in self.role_metrics} != assignment_ids:
+            raise ValueError("fan-out requires exactly one metric per assignment")
+        if self.rounds[-1].assessment != self.final_assessment:
+            raise ValueError("final assessment must equal the last round assessment")
+        if self.human_review_required != (
+            self.final_assessment.decision is not SufficiencyDecision.SUFFICIENT
+        ):
+            raise ValueError("human-review escalation must reflect terminal sufficiency")
+        if self.human_review_required != bool(self.human_review_reason):
+            raise ValueError("human-review escalation requires exactly one reason")
+        if self.authoritative_output_applied:
+            raise ValueError("research fan-out cannot apply an authoritative output")
+        return self
 
 
 class SufficiencyContext(DomainModel):
@@ -370,6 +448,10 @@ class MultiAgentWorkflowCheckpoint(DomainModel):
     stage: MultiAgentWorkflowStage
     assignments: tuple[ResearchAssignment, ...]
     results: tuple[ResearchResult, ...] = ()
+    rounds: tuple[ResearchRoundAudit, ...] = ()
+    pending_routing_rationale: tuple[str, ...] = ()
+    role_metrics: tuple[RoleResearchMetric, ...] = ()
+    duplicate_result_references_removed: int = Field(default=0, ge=0)
     consolidation: EvidenceConsolidation | None = None
     assessment: SufficiencyAssessment | None = None
     verdict: Verdict | None = None

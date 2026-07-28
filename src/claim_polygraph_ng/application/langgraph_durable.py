@@ -1,9 +1,9 @@
 """SQLite-backed LangGraph interruption and idempotent resume for Stage 7.2."""
 
-import sqlite3
 from collections.abc import Callable
 from itertools import pairwise
 from pathlib import Path
+from time import perf_counter
 from typing import Any, TypedDict
 
 from langgraph.checkpoint.serde.jsonplus import JsonPlusSerializer
@@ -15,6 +15,7 @@ from claim_polygraph_ng.domain.citation import ReviewRoutingDecision
 from claim_polygraph_ng.domain.graph import (
     DurableGraphSnapshot,
     DurableGraphStatus,
+    DurableMultiAgentGraphState,
     FixtureGraphRequest,
     GraphNode,
     ReviewDecision,
@@ -22,6 +23,9 @@ from claim_polygraph_ng.domain.graph import (
     ReviewInterruptPayload,
 )
 from claim_polygraph_ng.domain.models import VerdictLabel
+from claim_polygraph_ng.domain.telemetry import MetricName, SpanKind
+from claim_polygraph_ng.persistence.sqlite_runtime import connect_sqlite, enable_wal
+from claim_polygraph_ng.telemetry import TelemetryCollector
 
 
 class ExistingGraphThreadError(RuntimeError):
@@ -51,6 +55,7 @@ class _DurableState(TypedDict):
     decision_kind: str | None
     applied_decision_id: str | None
     reviewer_identity: str | None
+    research_state: dict[str, Any] | None
 
 
 _PRE_REVIEW_NODES = (
@@ -69,14 +74,29 @@ _PRE_REVIEW_NODES = (
 class DurableFixtureLangGraphWorkflow:
     """Own one strict SQLite checkpointer and a compiled durable fixture graph."""
 
-    def __init__(self, checkpoint_path: str | Path, *, enabled: bool = False) -> None:
+    def __init__(
+        self,
+        checkpoint_path: str | Path,
+        *,
+        enabled: bool = False,
+        telemetry: TelemetryCollector | None = None,
+    ) -> None:
         self._enabled = enabled
         self._path = Path(checkpoint_path)
+        self._telemetry = telemetry
         self._path.parent.mkdir(parents=True, exist_ok=True)
-        self._connection = sqlite3.connect(str(self._path), check_same_thread=False)
-        serializer = JsonPlusSerializer(allowed_msgpack_modules=())
-        self._checkpointer = SqliteSaver(self._connection, serde=serializer)
-        self._graph = _build_durable_graph(self._checkpointer)
+        self._connection = connect_sqlite(
+            str(self._path),
+            check_same_thread=False,
+        )
+        try:
+            enable_wal(self._connection)
+            serializer = JsonPlusSerializer(allowed_msgpack_modules=())
+            self._checkpointer = SqliteSaver(self._connection, serde=serializer)
+            self._graph = _build_durable_graph(self._checkpointer, telemetry)
+        except Exception:
+            self._connection.close()
+            raise
 
     def __enter__(self) -> "DurableFixtureLangGraphWorkflow":
         return self
@@ -124,6 +144,11 @@ class DurableFixtureLangGraphWorkflow:
             "decision_kind": None,
             "applied_decision_id": None,
             "reviewer_identity": None,
+            "research_state": (
+                request.research_state.model_dump(mode="json")
+                if request.research_state is not None
+                else None
+            ),
         }
         self._graph.invoke(initial, config=config)
         return self.snapshot(thread_id)
@@ -167,15 +192,26 @@ class DurableFixtureLangGraphWorkflow:
             )
 
 
-def _build_durable_graph(checkpointer: SqliteSaver):
+def _build_durable_graph(
+    checkpointer: SqliteSaver, telemetry: TelemetryCollector | None = None
+):
     builder = StateGraph(_DurableState)
     for node in _PRE_REVIEW_NODES:
         handler = _route_review if node is GraphNode.ROUTE_REVIEW else _record(node)
-        builder.add_node(node.value, handler)
+        builder.add_node(node.value, _observed_node(node, handler, telemetry))
     builder.add_node(GraphNode.INTERRUPT_FOR_REVIEW.value, _human_review)
-    builder.add_node(GraphNode.FINALIZE.value, _finalize)
-    builder.add_node(GraphNode.REQUEST_MORE_EVIDENCE.value, _request_evidence)
-    builder.add_node(GraphNode.REJECT.value, _reject)
+    builder.add_node(
+        GraphNode.FINALIZE.value,
+        _observed_node(GraphNode.FINALIZE, _finalize, telemetry),
+    )
+    builder.add_node(
+        GraphNode.REQUEST_MORE_EVIDENCE.value,
+        _observed_node(GraphNode.REQUEST_MORE_EVIDENCE, _request_evidence, telemetry),
+    )
+    builder.add_node(
+        GraphNode.REJECT.value,
+        _observed_node(GraphNode.REJECT, _reject, telemetry),
+    )
     builder.add_edge(START, GraphNode.NORMALIZE.value)
     for current, following in pairwise(_PRE_REVIEW_NODES):
         builder.add_edge(current.value, following.value)
@@ -200,6 +236,34 @@ def _build_durable_graph(checkpointer: SqliteSaver):
     builder.add_edge(GraphNode.REQUEST_MORE_EVIDENCE.value, END)
     builder.add_edge(GraphNode.REJECT.value, END)
     return builder.compile(checkpointer=checkpointer)
+
+
+def _observed_node(
+    node: GraphNode,
+    handler: Callable[[_DurableState], dict[str, Any]],
+    telemetry: TelemetryCollector | None,
+) -> Callable[[_DurableState], dict[str, Any]]:
+    if telemetry is None:
+        return handler
+
+    def observed(state: _DurableState) -> dict[str, Any]:
+        started = perf_counter()
+        try:
+            with telemetry.span(
+                f"langgraph.{node.value}",
+                SpanKind.LANGGRAPH,
+                attributes={"graph.node": node.value},
+            ):
+                return handler(state)
+        finally:
+            telemetry.metric(
+                MetricName.LANGGRAPH_NODE_LATENCY_MS,
+                (perf_counter() - started) * 1_000,
+                "ms",
+                attributes={"graph.node": node.value},
+            )
+
+    return observed
 
 
 def _record(node: GraphNode) -> Callable[[_DurableState], dict[str, Any]]:
@@ -318,4 +382,9 @@ def _to_snapshot(state: StateSnapshot) -> DurableGraphSnapshot:
         interrupt=interrupt_payload,
         applied_decision_id=values.get("applied_decision_id"),
         reviewer_identity=values.get("reviewer_identity"),
+        research_state=(
+            DurableMultiAgentGraphState.model_validate(values["research_state"])
+            if values.get("research_state") is not None
+            else None
+        ),
     )

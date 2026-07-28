@@ -3,6 +3,7 @@
 import asyncio
 import hashlib
 import json
+import time
 from typing import Protocol
 from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
@@ -12,9 +13,11 @@ from claim_polygraph_ng.domain import (
     SearchRequest,
     SearchResult,
 )
+from claim_polygraph_ng.domain.telemetry import MetricName, SpanKind
 from claim_polygraph_ng.persistence.research import SQLiteResearchRepository
 from claim_polygraph_ng.providers import SearchProvider
 from claim_polygraph_ng.retrieval import ContentFetcher, FetchedDocument
+from claim_polygraph_ng.telemetry import TelemetryCollector
 
 
 class ResearchWorker(Protocol):
@@ -36,10 +39,12 @@ class SharedResearchOperations:
         repository: SQLiteResearchRepository,
         search_provider: SearchProvider,
         fetcher: ContentFetcher,
+        telemetry: TelemetryCollector | None = None,
     ) -> None:
         self._repository = repository
         self._search_provider = search_provider
         self._fetcher = fetcher
+        self._telemetry = telemetry
         self._search_tasks: dict[str, asyncio.Task[tuple[SearchResult, ...]]] = {}
         self._fetch_tasks: dict[str, asyncio.Task[FetchedDocument]] = {}
         self._task_lock = asyncio.Lock()
@@ -73,7 +78,36 @@ class SharedResearchOperations:
         cache_key: str,
         request: SearchRequest,
     ) -> tuple[SearchResult, ...]:
-        results = await self._search_provider.search(request)
+        started = time.perf_counter()
+        try:
+            if self._telemetry is None:
+                results = await self._search_provider.search(request)
+            else:
+                with self._telemetry.span(
+                    "provider.search",
+                    SpanKind.PROVIDER,
+                    attributes={
+                        "provider.id": self._search_provider.provider_id,
+                        "research.path": request.research_path.value,
+                    },
+                ):
+                    results = await self._search_provider.search(request)
+        except Exception:
+            if self._telemetry is not None:
+                self._telemetry.metric(
+                    MetricName.PROVIDER_FAILURE,
+                    1,
+                    "failure",
+                    attributes={"provider.id": self._search_provider.provider_id},
+                )
+            raise
+        if self._telemetry is not None:
+            self._telemetry.metric(
+                MetricName.PROVIDER_LATENCY_MS,
+                (time.perf_counter() - started) * 1_000,
+                "ms",
+                attributes={"provider.id": self._search_provider.provider_id},
+            )
         self._repository.save_search(cache_key, results)
         return results
 
@@ -102,6 +136,7 @@ class ResearchExecutor:
         operations: SharedResearchOperations,
         worker: ResearchWorker,
         maximum_concurrency: int,
+        telemetry: TelemetryCollector | None = None,
     ) -> None:
         if maximum_concurrency < 1:
             raise ValueError("maximum_concurrency must be positive")
@@ -109,6 +144,7 @@ class ResearchExecutor:
         self._operations = operations
         self._worker = worker
         self._semaphore = asyncio.Semaphore(maximum_concurrency)
+        self._telemetry = telemetry
 
     async def execute(
         self,
@@ -123,14 +159,29 @@ class ResearchExecutor:
         if stored is not None:
             return stored
         async with self._semaphore:
+            started = time.perf_counter()
             try:
-                result = await self._worker.run(assignment, self._operations)
+                if self._telemetry is None:
+                    result = await self._worker.run(assignment, self._operations)
+                else:
+                    with self._telemetry.span(
+                        "agent.research",
+                        SpanKind.AGENT,
+                        attributes={
+                            "agent.role": assignment.role.value,
+                            "agent.round": assignment.round_number,
+                        },
+                    ):
+                        result = await self._worker.run(assignment, self._operations)
                 if (
                     result.assignment_id != assignment.assignment_id
                     or result.role is not assignment.role
                     or result.component_id != assignment.component_id
                 ):
                     raise ValueError("worker result does not match its assignment identity")
+                result = result.model_copy(
+                    update={"duration_seconds": time.perf_counter() - started}
+                )
             except Exception as exc:
                 result = ResearchResult(
                     assignment_id=assignment.assignment_id,
@@ -141,10 +192,17 @@ class ResearchExecutor:
                     fetch_call_count=0,
                     model_call_count=0,
                     estimated_cost_usd=0.0,
-                    duration_seconds=0.0,
+                    duration_seconds=time.perf_counter() - started,
                     failure_reason=f"{type(exc).__name__}: {exc}",
                 )
             self._repository.save_result(result)
+            if self._telemetry is not None:
+                self._telemetry.metric(
+                    MetricName.EVIDENCE_YIELD,
+                    len(result.evidence_ids),
+                    "evidence",
+                    attributes={"agent.role": assignment.role.value},
+                )
             return result
 
 

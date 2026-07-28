@@ -5,7 +5,7 @@ from collections.abc import Callable
 from datetime import UTC, datetime
 from uuid import UUID
 
-from claim_polygraph_ng.analysis import aggregate_component_label
+from claim_polygraph_ng.analysis import aggregate_component_label, assure_full_report
 from claim_polygraph_ng.application.investigation_service import (
     InvestigationService,
     _anchor_claim_to_user_text,
@@ -24,6 +24,7 @@ from claim_polygraph_ng.domain import (
     ComponentFailure,
     ComponentOutcome,
     ComponentStatus,
+    FullReportCitationAssurance,
     Investigation,
     InvestigationReport,
     InvestigationStage,
@@ -454,6 +455,30 @@ class ComplexInvestigationService:
             if interrupt_after is ComplexCheckpointStage.AUDITED:
                 raise ComplexWorkflowInterrupted("interrupted after audit checkpoint")
 
+        stored_assurance = self._repository.list_artifacts(
+            root.investigation_id,
+            ArtifactType.FULL_REPORT_ASSURANCE,
+            FullReportCitationAssurance,
+        )
+        if stored_assurance:
+            full_report_assurance = stored_assurance[-1]
+        else:
+            component_evidence = tuple(
+                item for report in ordered_reports for item in report.evidence
+            )
+            full_report_assurance = assure_full_report(
+                claim_id=decomposition.root_claim.claim_id,
+                verdict=parent_verdict,
+                evidence=component_evidence,
+                approved_evidence_ids=evidence_ids,
+            )
+            self._repository.save_artifact(
+                root.investigation_id,
+                ArtifactType.FULL_REPORT_ASSURANCE,
+                decomposition.root_claim.claim_id,
+                full_report_assurance,
+            )
+
         root = self._transition(
             root,
             status=InvestigationStatus.COMPLETED,
@@ -477,6 +502,7 @@ class ComplexInvestigationService:
             coverage=coverage,
             verdict=parent_verdict,
             audits=(audit,),
+            full_report_assurance=full_report_assurance,
         )
 
     async def _generate(self, task, response_model, inputs):

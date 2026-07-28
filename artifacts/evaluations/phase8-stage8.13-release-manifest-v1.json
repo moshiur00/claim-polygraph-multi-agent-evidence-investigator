@@ -1,0 +1,59 @@
+{
+  "manifest_id": "phase8-stage8.13-release-manifest-v1",
+  "artifacts": [
+    {
+      "artifact_id": "orchestrator_trace_integration",
+      "path": "src/claim_polygraph_ng/application/orchestrator.py",
+      "sha256": "74eaf8f3c4c7b434a1c2242c26f226ad0d14f399bc2e9637c076332596cdc277"
+    },
+    {
+      "artifact_id": "development_integration",
+      "path": "src/claim_polygraph_ng/api_server.py",
+      "sha256": "6eb730d555492e5dabcb0474788a71a9488585b6405f0efab1d906a2b4ad7027"
+    },
+    {
+      "artifact_id": "promotion_evaluator",
+      "path": "src/claim_polygraph_ng/evaluation/phase8_promotion.py",
+      "sha256": "8f72101280837cee839e762598bb513aa9e6c0f7d7cce344de9953065d842f53"
+    },
+    {
+      "artifact_id": "evaluation_exports",
+      "path": "src/claim_polygraph_ng/evaluation/__init__.py",
+      "sha256": "322bbe9ba506fe80551837267f74ac5dc9109decc5bd3293e1fefe8018b73faf"
+    },
+    {
+      "artifact_id": "runner",
+      "path": "scripts/run_phase8_promotion_experiment.py",
+      "sha256": "16645ffcb6b87d7395ffcf85846063e5d7f1bae107fa97555a6e249183a09df6"
+    },
+    {
+      "artifact_id": "integration_test",
+      "path": "tests/integration/test_phase8_promotion.py",
+      "sha256": "20d3a13aa225512a433f3d5af7e94ce59dbea6aeee2ba85007b42ef79721ade7"
+    },
+    {
+      "artifact_id": "frozen_benchmark",
+      "path": "benchmarks/initial_claims_v1.json",
+      "sha256": "44270e74e3b20028d66dc907036ed3fd8236372d8e1bb8c65fadbcad7598b8a3"
+    },
+    {
+      "artifact_id": "measured_result",
+      "path": "artifacts/evaluations/phase8-stage8.13-controlled-promotion-v1.json",
+      "sha256": "266cfad5ada90febd61058d8e16b37b122ea11a16c40674f6f97cecd272f805a"
+    },
+    {
+      "artifact_id": "promotion_adr",
+      "path": "docs/adr/0019-hold-multi-agent-authority-promotion-pending-human-review.md",
+      "sha256": "102f7f130a602efe03351625a29dff5134d2132d68e9b26d573eeba0ba5aad08"
+    },
+    {
+      "artifact_id": "completion_report",
+      "path": "docs/PHASE_8_STAGE_8.13_COMPLETION_REPORT.md",
+      "sha256": "46e7bc17d82f822be499172633dc055108cbdfcb0f48cedad97d37bac9e22fe0"
+    }
+  ],
+  "external_model_calls": 0,
+  "live_search_calls": 0,
+  "network_fetches": 0,
+  "pdf_downloads": 0
+}

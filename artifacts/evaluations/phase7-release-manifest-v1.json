@@ -59,17 +59,17 @@
     {
       "artifact_id": "api",
       "path": "src/claim_polygraph_ng/api.py",
-      "sha256": "dfeb85f79e75e0bbbeade975fbfd674862532ad73008ab0c8a5e4eee0d3b244f"
+      "sha256": "9a356087af2143fb918e4e6bc1c59bf1d7779c84f7863267a6d13a0518094388"
     },
     {
       "artifact_id": "dashboard",
       "path": "dashboard/app/page.tsx",
-      "sha256": "34ffc0d50c2645e248b0d6983c537d6d589f5035d17620a65b6226de9d7fa334"
+      "sha256": "acfe82ac4748c35d64318e451a9aa887ca43edb338d3389c701a1e2a0e034111"
     },
     {
       "artifact_id": "api_security",
       "path": "tests/security/test_api_security.py",
-      "sha256": "0150eb3c1ec92b803e09a0639d9c708904800e279e50aad146dbfccd50061a1a"
+      "sha256": "518ff63270e778da69786c08da7e2d0283b1c08e8001d382f4f3da474e53f132"
     },
     {
       "artifact_id": "dashboard_accessibility",

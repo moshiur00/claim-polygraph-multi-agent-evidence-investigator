@@ -1,0 +1,32 @@
+{
+  "evaluation_id": "phase8-stage8.3-durable-research-state-v1",
+  "date": "2026-07-28",
+  "schema_version": 1,
+  "parent_investigation_represented": true,
+  "components_represented": true,
+  "requirements_represented": true,
+  "assignments_represented": true,
+  "results_represented": true,
+  "evidence_families_represented": true,
+  "budget_and_consumption_represented": true,
+  "unresolved_questions_represented": true,
+  "identifiers_and_bounded_summaries_only": true,
+  "cross_reference_validation": true,
+  "approved_evidence_containment": true,
+  "provider_free_reconstruction": true,
+  "restart_state_equivalence": true,
+  "duplicate_graph_operations_after_restart": 0,
+  "backward_compatible_optional_payload": true,
+  "direct_rollback_graph_state_created": false,
+  "authoritative_service": "InvestigationService",
+  "full_test_count": 399,
+  "external_model_calls": 0,
+  "network_calls": 0,
+  "pdf_downloads": 0,
+  "gate_passed": true,
+  "limitations": [
+    "The durable state enables later multi-agent execution but does not itself execute specialist agents.",
+    "Atomic authoritative reports currently project one material component; typed complex graph execution remains a later integration.",
+    "Provider adapters remain outside the graph until Stage 8.4 and concurrent fan-out remains Stage 8.5."
+  ]
+}

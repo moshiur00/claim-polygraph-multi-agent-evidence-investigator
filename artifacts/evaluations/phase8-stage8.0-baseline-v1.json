@@ -47,7 +47,7 @@
     {
       "artifact_id": "phase7_closure",
       "path": "artifacts/evaluations/phase7-final-closure-audit-v1.json",
-      "sha256": "66ede56adfddf4d4540c0e084d11b0daf203f26e3c78f5c8c0596c0b083d6da2"
+      "sha256": "c8b86f1c5729d42cf665cc006f3f65921748335da351cde32dfab6ca3718b6e7"
     },
     {
       "artifact_id": "phase7_frozen",
@@ -92,7 +92,7 @@
     {
       "artifact_id": "readme",
       "path": "README.md",
-      "sha256": "f3f4a33bb74d7a5092a3b44f321b5ea65f58ac86a28f44f2597b07c0300daa93"
+      "sha256": "b3693f7cc76f12cfa5a369bcce126d0b6187c721a0dba24939a9b16973dbcba7"
     },
     {
       "artifact_id": "benchmark_readme",
@@ -102,7 +102,7 @@
     {
       "artifact_id": "phase8_plan",
       "path": "docs/PHASE_8_TRUE_MULTI_AGENT_EXECUTION_PLAN.md",
-      "sha256": "0d4bbb3be098dd48deba36c964191b9f5f58d52837d0a1386b7cada7d00b3856"
+      "sha256": "a6752a751ac34e73ab704fa2cc7f6f18f4402176989f2ddda67d007ece91a119"
     },
     {
       "artifact_id": "stage8_0_report",

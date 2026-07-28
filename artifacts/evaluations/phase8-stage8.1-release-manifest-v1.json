@@ -1,0 +1,53 @@
+{
+  "manifest_id": "phase8-stage8.1-release-manifest-v1",
+  "artifacts": [
+    {
+      "artifact_id": "orchestrator_contract",
+      "path": "src/claim_polygraph_ng/application/orchestrator.py",
+      "sha256": "f49378cd3a94728d2676b249a9195fe23fe6814df322ab5c93329eb80b5cd9ca"
+    },
+    {
+      "artifact_id": "api",
+      "path": "src/claim_polygraph_ng/api.py",
+      "sha256": "9a356087af2143fb918e4e6bc1c59bf1d7779c84f7863267a6d13a0518094388"
+    },
+    {
+      "artifact_id": "api_server",
+      "path": "src/claim_polygraph_ng/api_server.py",
+      "sha256": "15f7ae1aa0f687d5eb6c5d68b2fdfc078778a008a26d6af08f475bde5bc10c60"
+    },
+    {
+      "artifact_id": "cli",
+      "path": "src/claim_polygraph_ng/cli.py",
+      "sha256": "c5d6b06ab4a58daf2d667ff5040cf1af165ba82431ed7b79ab6565cc6c27b3e0"
+    },
+    {
+      "artifact_id": "dashboard",
+      "path": "dashboard/app/page.tsx",
+      "sha256": "acfe82ac4748c35d64318e451a9aa887ca43edb338d3389c701a1e2a0e034111"
+    },
+    {
+      "artifact_id": "environment_example",
+      "path": ".env.example",
+      "sha256": "a586a3a59ab4a73b63b1be9af175e47314f4c663e5d88c919e145008d41c8873"
+    },
+    {
+      "artifact_id": "integration_test",
+      "path": "tests/integration/test_promoted_orchestrator.py",
+      "sha256": "c55bfa6d7027da02be67239c12ff9bd310546ec709488a0d28da50db4414c04b"
+    },
+    {
+      "artifact_id": "evaluation",
+      "path": "artifacts/evaluations/phase8-stage8.1-orchestrator-v1.json",
+      "sha256": "e35f0a7300768f8df1250642fa485c363a58f1a793f6710178d49cee412869e3"
+    },
+    {
+      "artifact_id": "completion_report",
+      "path": "docs/PHASE_8_STAGE_8.1_COMPLETION_REPORT.md",
+      "sha256": "ca8871c6e1e4751934110973bc8c155187c9c1d7751451dbad9c25bf9d9624b2"
+    }
+  ],
+  "external_model_calls": 0,
+  "network_calls": 0,
+  "pdf_downloads": 0
+}

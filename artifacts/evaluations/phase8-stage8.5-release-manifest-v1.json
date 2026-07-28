@@ -1,0 +1,79 @@
+{
+  "manifest_id": "phase8-stage8.5-release-manifest-v1",
+  "artifacts": [
+    {
+      "artifact_id": "research_contracts",
+      "path": "src/claim_polygraph_ng/domain/research.py",
+      "sha256": "2b8fde053df812d430d12658b95d9ffb7a1ffc61e459e9745fc7d90ff54aeacd"
+    },
+    {
+      "artifact_id": "durable_graph_contracts",
+      "path": "src/claim_polygraph_ng/domain/graph.py",
+      "sha256": "e420166cd1c66e5ed79ca6fb28a5948b3b98fef69dfbc3a444883c20a481f1dd"
+    },
+    {
+      "artifact_id": "research_executor",
+      "path": "src/claim_polygraph_ng/application/research_executor.py",
+      "sha256": "c33cff8d2acba8e9390c2df93b12e7c854d92d419fc09b09245706362e5ea76a"
+    },
+    {
+      "artifact_id": "langgraph_research_subgraph",
+      "path": "src/claim_polygraph_ng/application/langgraph_research.py",
+      "sha256": "cb365edd04246058ca2e8d975d938d97fb6d287aa78ea51d0ab89c5b33693ddd"
+    },
+    {
+      "artifact_id": "application_exports",
+      "path": "src/claim_polygraph_ng/application/__init__.py",
+      "sha256": "f55eee8a3d318e8896da0ad130c6cfcd869a5e2d69fe4d4d3fecc87f042f6fb8"
+    },
+    {
+      "artifact_id": "domain_exports",
+      "path": "src/claim_polygraph_ng/domain/__init__.py",
+      "sha256": "df7f68de30355f14180e93ec30c3bdd8bb757be61ec44ff51769c89c5b41b4c4"
+    },
+    {
+      "artifact_id": "promoted_orchestrator",
+      "path": "src/claim_polygraph_ng/application/orchestrator.py",
+      "sha256": "f49378cd3a94728d2676b249a9195fe23fe6814df322ab5c93329eb80b5cd9ca"
+    },
+    {
+      "artifact_id": "development_wiring",
+      "path": "src/claim_polygraph_ng/api_server.py",
+      "sha256": "15f7ae1aa0f687d5eb6c5d68b2fdfc078778a008a26d6af08f475bde5bc10c60"
+    },
+    {
+      "artifact_id": "research_persistence",
+      "path": "src/claim_polygraph_ng/persistence/research.py",
+      "sha256": "e3d4ab75b46c560751129b104e4ead60d9c850bdd94a1e11085c1d804930dd36"
+    },
+    {
+      "artifact_id": "fanout_recovery_tests",
+      "path": "tests/integration/test_langgraph_research_fanout.py",
+      "sha256": "f1e8ff51c13e79e841899cc7aac2cc1f68e3aaebb68082b6c4f300adea7b5bb9"
+    },
+    {
+      "artifact_id": "promoted_path_test",
+      "path": "tests/integration/test_promoted_orchestrator.py",
+      "sha256": "c55bfa6d7027da02be67239c12ff9bd310546ec709488a0d28da50db4414c04b"
+    },
+    {
+      "artifact_id": "three_case_pilot",
+      "path": "tests/integration/test_phase8_5_frozen_pilot.py",
+      "sha256": "392b1367785084d77b7ccd99869d9946273f1d597a519941b944daf453196541"
+    },
+    {
+      "artifact_id": "evaluation",
+      "path": "artifacts/evaluations/phase8-stage8.5-concurrent-fanout-v1.json",
+      "sha256": "8966612da1afb272ecab672253ddefb72d6efef0b05815cdf9d81715bbf5efb5"
+    },
+    {
+      "artifact_id": "completion_report",
+      "path": "docs/PHASE_8_STAGE_8.5_COMPLETION_REPORT.md",
+      "sha256": "5dca4b1bc9d41ca0eb2efe4800b41bce449882a3cf81d6c87af2803127e4b3fd"
+    }
+  ],
+  "external_model_calls": 0,
+  "live_search_calls": 0,
+  "network_fetches": 0,
+  "pdf_downloads": 0
+}

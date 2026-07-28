@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 /* eslint-disable react-hooks/set-state-in-effect */
 
 import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
@@ -33,6 +33,33 @@ type ReviewHistory = {
   events: Array<{ sequence: number; action: string; actor_identity: string }>;
   chain_valid: boolean;
 };
+type ApiStatus = {
+  status: string;
+  api_version: string;
+  orchestrator: "langgraph" | "direct" | "multi_agent_experimental";
+  authoritative_service: string;
+  retrieval_provider?: string;
+  live_research?: boolean;
+  model_provider?: string;
+};
+type TelemetrySnapshot = {
+  spans: number;
+  traces: number;
+  metrics: Array<{ name: string; count: number; total: number; unit?: string }>;
+};
+type ClaimCandidate = {
+  candidate_id: string;
+  text: string;
+  checkworthiness: number;
+  rank: number;
+  context_before: string;
+  context_after: string;
+};
+type ClaimExtractionPacket = {
+  input_kind: string;
+  candidates: ClaimCandidate[];
+  automatic_investigation_started: boolean;
+};
 
 const graphOrder = ["normalize", "research", "consolidate", "verify_context", "build_argument_ledger", "draft_verdict", "audit_citations", "assess_readiness", "route_review", "interrupt_for_review", "finalize"] as const;
 const graphLabels: Record<string, string> = {
@@ -57,6 +84,8 @@ export default function Home() {
   const [section, setSection] = useState("Evidence");
   const [selectedEvidence, setSelectedEvidence] = useState(0);
   const [claim, setClaim] = useState("");
+  const [inputMode, setInputMode] = useState<"manual_claim" | "article_text" | "public_url">("manual_claim");
+  const [claimCandidates, setClaimCandidates] = useState<ClaimCandidate[]>([]);
   const [decisionKind, setDecisionKind] = useState("approve");
   const [revisedVerdict, setRevisedVerdict] = useState("mixed");
   const [rationale, setRationale] = useState("The cited evidence supports this review decision.");
@@ -64,6 +93,8 @@ export default function Home() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [connected, setConnected] = useState(false);
+  const [apiStatus, setApiStatus] = useState<ApiStatus | null>(null);
+  const [telemetry, setTelemetry] = useState<TelemetrySnapshot | null>(null);
 
   const request = useCallback(async <T,>(path: string, init?: RequestInit): Promise<T> => {
     const response = await fetch(`${apiBase}${path}`, {
@@ -78,18 +109,27 @@ export default function Home() {
 
   const loadInvestigations = useCallback(async () => {
     try {
-      const items = await request<Investigation[]>("/api/investigations");
+      const [items, status] = await Promise.all([
+        request<Investigation[]>("/api/investigations"),
+        request<ApiStatus>("/health"),
+      ]);
+      setApiStatus(status);
+      request<TelemetrySnapshot>("/api/operations/telemetry")
+        .then(setTelemetry)
+        .catch(() => setTelemetry(null));
       setInvestigations(items); setConnected(true); setError(null);
       if (!selectedId && items.length) setSelectedId(items.at(-1)!.investigation_id);
     } catch {
       setConnected(false);
-      setError("The evidence API is offline. Start it locally or change the API address.");
+      setError(`The evidence API could not be reached at ${apiBase}.`);
     }
-  }, [request, selectedId]);
+  }, [apiBase, request, selectedId]);
 
   useEffect(() => {
-    const stored = window.localStorage.getItem("claim-polygraph-api");
-    if (stored) { setApiBase(stored); setApiDraft(stored); }
+    const inferred = `${window.location.protocol}//${window.location.hostname}:8000`;
+    window.localStorage.setItem("claim-polygraph-api", inferred);
+    setApiBase(inferred);
+    setApiDraft(inferred);
   }, []);
   useEffect(() => { void loadInvestigations(); }, [loadInvestigations]);
   useEffect(() => {
@@ -120,11 +160,36 @@ export default function Home() {
   async function submitClaim(event: FormEvent) {
     event.preventDefault(); if (!claim.trim()) return; setBusy(true);
     try {
-      const created = await request<Report>("/api/investigations", { method: "POST", body: JSON.stringify({ claim }) });
+      if (inputMode !== "manual_claim") {
+        const extracted = await request<ClaimExtractionPacket>("/api/claim-inputs/extract", {
+          method: "POST",
+          body: JSON.stringify(inputMode === "public_url"
+            ? { kind: "public_url", url: claim }
+            : { kind: "article_text", text: claim }),
+        });
+        setClaimCandidates(extracted.candidates);
+        setError(null);
+        return;
+      }
+      await investigateCandidate(claim);
+    } catch (reason) { setError((reason as Error).message); } finally { setBusy(false); }
+  }
+
+  async function investigateCandidate(selectedClaim: string) {
+      const created = await request<Report>("/api/investigations", { method: "POST", body: JSON.stringify({ claim: selectedClaim }) });
       setInvestigations((items) => [...items, created.investigation]);
       setSelectedId(created.investigation.investigation_id); setReport(created);
-      setClaim(""); setGraph(null); setReview(null); setError(null);
-    } catch (reason) { setError((reason as Error).message); } finally { setBusy(false); }
+      if (apiStatus?.orchestrator !== "direct") {
+        const snapshot = await request<GraphSnapshot>(`/api/graph-runs/${created.investigation.investigation_id}`);
+        setGraph(snapshot);
+        const requests = await request<ReviewRequest[]>("/api/reviews");
+        const pending = requests.find((item) => item.investigation_id === created.investigation.investigation_id);
+        setReview(pending ? await request<ReviewHistory>(`/api/reviews/${pending.request_id}`) : null);
+      } else {
+        setGraph(null); setReview(null);
+      }
+      setClaim(""); setClaimCandidates([]); setError(null);
+      setTelemetry(await request<TelemetrySnapshot>("/api/operations/telemetry"));
   }
 
   async function startReview() {
@@ -173,6 +238,10 @@ export default function Home() {
     setApiBase(normalized); setError(null);
   }
 
+  const modelCost = telemetry?.metrics.find((metric) => metric.name === "model.cost_usd")?.total ?? 0;
+  const modelTokens = telemetry?.metrics.find((metric) => metric.name === "model.tokens")?.total ?? 0;
+  const externalSearchPricing = apiStatus?.retrieval_provider?.startsWith("serpapi") ?? false;
+
   return (
     <main className="app-shell">
       <aside className="sidebar">
@@ -190,7 +259,7 @@ export default function Home() {
             </button>
           ))}
         </div>
-        <div className="phase-card"><span>PHASE 7 · CONNECTED</span><strong>LangGraph review workflow</strong><div className="meter"><i /></div><small>Stage 7.6 · Typed live data</small></div>
+        <div className="phase-card"><span>{apiStatus?.live_research ? "LIVE WEB RESEARCH" : "FIXTURE RESEARCH"}</span><strong>{titleCase(apiStatus?.orchestrator ?? "connecting")} orchestrator</strong><div className="meter"><i /></div><small>Retrieval · {apiStatus?.retrieval_provider ?? "Not reported"}</small><small>Reasoning · {apiStatus?.model_provider ?? "Not reported"}</small></div>
         <div className="profile"><div className="avatar">MR</div><div><strong>Md Moshiur Rahman</strong><span>Reviewer</span></div><span className={connected ? "connection online" : "connection"}>{connected ? "LIVE" : "OFFLINE"}</span></div>
       </aside>
 
@@ -198,15 +267,36 @@ export default function Home() {
         <header className="topbar">
           <div><p>{report ? `INVESTIGATION · ${shortId(report.investigation.investigation_id)}` : "NEW INVESTIGATION"}</p><h1>{report?.claim.text ?? "Investigate a factual claim"}</h1></div>
           <div className="top-actions">
+            <div className="cost-chip" aria-label="Temporary usage and cost estimate">
+              <span>LOCAL COST TOTAL</span>
+              <strong>${modelCost.toFixed(6)}</strong>
+              <small>{Math.round(modelTokens).toLocaleString()} model tokens · {externalSearchPricing ? "search billed by SerpAPI plan" : "search $0 API fee"}</small>
+            </div>
             <span className={graph?.status === "completed" ? "status complete" : "status"}><i /> {graph ? titleCase(graph.status) : report ? titleCase(report.investigation.status) : "Ready"}</span>
             {report && <a className="ghost" href={`${apiBase}/api/investigations/${report.investigation.investigation_id}/report?format=markdown`} target="_blank">Export</a>}
           </div>
         </header>
 
         <form className="claim-bar" onSubmit={submitClaim}>
-          <label htmlFor="claim-input">CLAIM TO INVESTIGATE</label>
-          <div><input id="claim-input" value={claim} onChange={(event) => setClaim(event.target.value)} placeholder="Enter a checkable factual claim…" /><button className="primary" disabled={busy || !connected || claim.trim().length < 3}>Investigate</button></div>
+          <label htmlFor="input-mode">INPUT TYPE</label>
+          <select id="input-mode" value={inputMode} onChange={(event) => { setInputMode(event.target.value as typeof inputMode); setClaimCandidates([]); }}>
+            <option value="manual_claim">Manual claim</option>
+            <option value="article_text">Article text</option>
+            <option value="public_url">Public URL</option>
+          </select>
+          <label htmlFor="claim-input">{inputMode === "manual_claim" ? "CLAIM TO INVESTIGATE" : inputMode === "article_text" ? "ARTICLE TEXT" : "PUBLIC ARTICLE URL"}</label>
+          <div>{inputMode === "article_text"
+            ? <textarea id="claim-input" value={claim} onChange={(event) => setClaim(event.target.value)} placeholder="Paste article text. Extraction will not start an investigation." />
+            : <input id="claim-input" value={claim} onChange={(event) => setClaim(event.target.value)} placeholder={inputMode === "public_url" ? "https://example.org/article" : "Enter a checkable factual claim…"} />}
+            <button className="primary" disabled={busy || !connected || claim.trim().length < 3}>{inputMode === "manual_claim" ? "Investigate" : "Extract claims"}</button></div>
         </form>
+        {claimCandidates.length > 0 && <section className="record-list" aria-label="Extracted claim candidates">
+          {claimCandidates.map((candidate) => <article key={candidate.candidate_id}>
+            <b>{candidate.rank}. {candidate.text}</b>
+            <span>Check-worthiness {Math.round(candidate.checkworthiness * 100)}%</span>
+            <button className="ghost" disabled={busy} onClick={() => { setBusy(true); void investigateCandidate(candidate.text).catch((reason: Error) => setError(reason.message)).finally(() => setBusy(false)); }}>Investigate this claim</button>
+          </article>)}
+        </section>}
         {error && <div className="error-banner" role="alert">{error}</div>}
 
         {!report ? (
@@ -225,7 +315,7 @@ export default function Home() {
               <div><span>EVIDENCE ITEMS</span><strong>{evidence.length}</strong></div>
             </div>
             <div className="graph-card">
-              <div className="card-heading"><div><span>LIVE LANGGRAPH PATH</span><h2>{graph ? titleCase(graph.status) : "Ready to start durable review"}</h2></div>{graph ? <span className="checkpoint">Checkpoint saved · SQLite</span> : <button className="ghost" onClick={startReview} disabled={busy || !evidence.length}>Start review workflow</button>}</div>
+              <div className="card-heading"><div><span>LIVE LANGGRAPH PATH</span><h2>{graph ? titleCase(graph.status) : apiStatus?.orchestrator === "direct" ? "Direct rollback selected" : "Awaiting graph state"}</h2></div>{graph ? <span className="checkpoint">Checkpoint saved · SQLite</span> : apiStatus?.orchestrator === "direct" ? <button className="ghost" onClick={startReview} disabled={busy || !evidence.length}>Start review workflow</button> : null}</div>
               <div className="graph">
                 {graphOrder.map((node, index) => {
                   const done = graph?.completed_nodes.includes(node);
@@ -268,3 +358,4 @@ export default function Home() {
     </main>
   );
 }
+

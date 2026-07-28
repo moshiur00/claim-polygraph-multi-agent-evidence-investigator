@@ -35,6 +35,8 @@ def test_cli_investigate_list_and_show(tmp_path, capsys) -> None:
 
     assert exit_code == 0
     assert "Status: completed" in investigate_output.out
+    assert "Orchestrator: langgraph" in investigate_output.out
+    assert "Authority: InvestigationService" in investigate_output.out
     assert "deterministic development provider" in investigate_output.out
 
     id_line = next(
@@ -78,6 +80,30 @@ def test_cli_reports_missing_investigation(tmp_path, capsys) -> None:
 
     assert exit_code == 1
     assert "investigation not found" in output.err
+
+
+def test_cli_extracts_article_claims_without_creating_investigation(
+    tmp_path, capsys
+) -> None:
+    database = tmp_path / "extraction.sqlite3"
+    result = main(
+        [
+            "--database",
+            str(database),
+            "extract-claims",
+            (
+                "Background information introduces the report. "
+                "The agency reported 42 cases in 2025."
+            ),
+        ]
+    )
+    output = capsys.readouterr()
+
+    assert result == 0
+    assert "Input type: article_text" in output.out
+    assert "The agency reported 42 cases in 2025." in output.out
+    assert "Investigation started: no" in output.out
+    assert not database.exists()
 
 
 def test_cli_runs_complex_investigation_and_exports_coverage(tmp_path, capsys) -> None:

@@ -52,7 +52,12 @@ class SubmitRevisionRequest(DomainModel):
 
 class ApiStatus(DomainModel):
     status: str
-    api_version: str = "7.5"
+    api_version: str = "8.1"
+    orchestrator: str
+    authoritative_service: str = "InvestigationService"
+    retrieval_provider: str = "deterministic"
+    live_research: bool = False
+    model_provider: str = "deterministic"
 
 
 class CreateInvestigationRequest(DomainModel):

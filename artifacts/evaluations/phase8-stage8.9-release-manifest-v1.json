@@ -1,0 +1,69 @@
+{
+  "manifest_id": "phase8-stage8.9-release-manifest-v1",
+  "artifacts": [
+    {
+      "artifact_id": "confidence_contracts",
+      "path": "src/claim_polygraph_ng/domain/confidence.py",
+      "sha256": "1e470d72f49d278bf7532b989f4cdead65c6f757f7c7a634141f063cabcf2f5f"
+    },
+    {
+      "artifact_id": "separate_readiness_contract",
+      "path": "src/claim_polygraph_ng/domain/readiness.py",
+      "sha256": "da1ef0a7eca6e2e0b5bf65c4fe49ac74444d4e322339bb9b53c022ac7e92681a"
+    },
+    {
+      "artifact_id": "domain_exports",
+      "path": "src/claim_polygraph_ng/domain/__init__.py",
+      "sha256": "d98d9c8729b1098d0220fb316708c611f7ffc257b41ab60ed88ef39dcabb5696"
+    },
+    {
+      "artifact_id": "calibration_evaluator",
+      "path": "src/claim_polygraph_ng/evaluation/confidence_calibration.py",
+      "sha256": "9264ca60886428730910c61ec5ab0d08de7c2e67e642f7cd0d882ba9367d692e"
+    },
+    {
+      "artifact_id": "evaluation_exports",
+      "path": "src/claim_polygraph_ng/evaluation/__init__.py",
+      "sha256": "ae4a898fa577dccf0be81ee293a3f2fe366f51576e1ed56b71ec2b41108cf39d"
+    },
+    {
+      "artifact_id": "reproducible_runner",
+      "path": "scripts/run_phase8_confidence_calibration.py",
+      "sha256": "c619d8c9f143fa0537084e109ce1459c98c5d252fb3642b9f36ae2a48f4a35c8"
+    },
+    {
+      "artifact_id": "eligible_dataset",
+      "path": "benchmarks/phase8_confidence_calibration_eligible_v1.json",
+      "sha256": "9182d94095211a8c5525ea9fd2dce530730a4546f77cea149833b7f88108f3f3"
+    },
+    {
+      "artifact_id": "calibration_tests",
+      "path": "tests/unit/test_confidence_calibration.py",
+      "sha256": "06e789f41c30391f2c426a0e9535112fd0a359984567c68a3703d9750911fdf8"
+    },
+    {
+      "artifact_id": "null_confidence_pilot",
+      "path": "tests/integration/test_phase8_5_frozen_pilot.py",
+      "sha256": "19c19591d9ac2553f8473833098b4b19be4833ad93cdd439724cfe2e0b6a674e"
+    },
+    {
+      "artifact_id": "evaluation",
+      "path": "artifacts/evaluations/phase8-stage8.9-confidence-calibration-v1.json",
+      "sha256": "fb9233050d0922e556c25f0f0318d9692a5932fe22f8c5dff973b371762b3153"
+    },
+    {
+      "artifact_id": "completion_report",
+      "path": "docs/PHASE_8_STAGE_8.9_COMPLETION_REPORT.md",
+      "sha256": "e86ff3043df07d24464a47269ad36f3261ce910e43a85f2b993dd78860989923"
+    },
+    {
+      "artifact_id": "phase_plan",
+      "path": "docs/PHASE_8_TRUE_MULTI_AGENT_EXECUTION_PLAN.md",
+      "sha256": "eed4e87d580ecf609193790246c75ac028753f108512d470fc6a29a909067098"
+    }
+  ],
+  "external_model_calls": 0,
+  "live_search_calls": 0,
+  "network_fetches": 0,
+  "pdf_downloads": 0
+}

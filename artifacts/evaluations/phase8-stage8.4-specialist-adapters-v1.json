@@ -1,0 +1,36 @@
+{
+  "evaluation_id": "phase8-stage8.4-specialist-adapters-v1",
+  "date": "2026-07-28",
+  "academic_provider_protocol": true,
+  "fact_check_provider_protocol": true,
+  "adapters": [
+    "ncbi:pubmed",
+    "semantic-scholar:graph",
+    "google:fact-check-tools"
+  ],
+  "distinct_academic_metadata": true,
+  "distinct_fact_check_metadata": true,
+  "correction_and_retraction_metadata": true,
+  "opaque_pagination": true,
+  "empty_results_typed": true,
+  "rate_limit_failures_typed": true,
+  "process_local_rate_gates": true,
+  "provider_operation_budgets": true,
+  "global_research_budget_preserved": true,
+  "role_permissions_enforced": true,
+  "candidate_inline_content_retained": false,
+  "safe_fetch_required_before_evidence": true,
+  "rights_default": "unknown",
+  "content_retention": "evidence_passages_only",
+  "recorded_fixture_files": 6,
+  "full_test_count": 405,
+  "external_model_calls": 0,
+  "live_search_calls": 0,
+  "pdf_downloads": 0,
+  "gate_passed": true,
+  "limitations": [
+    "Adapters are implemented and fixture-proven but are not activated in concurrent LangGraph fan-out until Stage 8.5.",
+    "Provider-local rate gates are process-local; production-wide distributed quotas remain a later infrastructure concern.",
+    "No live provider smoke call was executed."
+  ]
+}

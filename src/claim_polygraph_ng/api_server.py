@@ -1,4 +1,4 @@
-"""Runnable zero-cost development API for the Phase 7 dashboard."""
+"""Runnable local API with explicit deterministic or live retrieval."""
 
 import os
 from pathlib import Path
@@ -7,17 +7,100 @@ import uvicorn
 
 from claim_polygraph_ng.api import ApiDependencies, create_app
 from claim_polygraph_ng.application import (
+    ClaimExtractionService,
+    DeterministicResearchWorker,
+    DirectInvestigationOrchestrator,
+    ExperimentalMultiAgentInvestigationOrchestrator,
     InvestigationService,
+    LangGraphAdversarialArgumentWorkflow,
     LangGraphInvestigationOrchestrator,
+    LangGraphResearchFanOutWorkflow,
+    MultiAgentInvestigationService,
+    SharedResearchOperations,
+    parse_orchestrator_mode,
 )
+from claim_polygraph_ng.domain.telemetry import MetricName
 from claim_polygraph_ng.persistence import (
     SQLiteInvestigationRepository,
+    SQLiteResearchRepository,
     SQLiteReviewLedger,
 )
 from claim_polygraph_ng.providers import (
     DeterministicModelProvider,
     DeterministicSearchProvider,
+    OpenAIStructuredModelProvider,
+    SearXNGSearchProvider,
+    SerpAPISearchProvider,
 )
+from claim_polygraph_ng.retrieval import FetchedDocument, SafeHttpFetcher, UrlSafetyPolicy
+from claim_polygraph_ng.telemetry import TelemetryCollector
+
+
+class _InlineOnlyFetcher:
+    """Fail closed if a deterministic development search result lacks inline text."""
+
+    provider_id = "inline-only"
+
+    async def fetch(self, url: str) -> FetchedDocument:
+        raise RuntimeError(f"deterministic development result requires inline content: {url}")
+
+
+def _configured_search():
+    """Select retrieval explicitly; never silently fall back from a live mode."""
+    mode = os.getenv("CLAIM_POLYGRAPH_SEARCH_PROVIDER", "deterministic").strip().casefold()
+    if mode == "deterministic":
+        return DeterministicSearchProvider(), _InlineOnlyFetcher(), False
+    if mode == "searxng":
+        base_url = os.getenv("SEARXNG_BASE_URL", "http://searxng:8080")
+        engines = tuple(
+            value.strip()
+            for value in os.getenv("SEARXNG_ENGINES", "").split(",")
+            if value.strip()
+        )
+        return (
+            SearXNGSearchProvider(base_url, engines=engines),
+            SafeHttpFetcher(policy=UrlSafetyPolicy()),
+            True,
+        )
+    if mode == "serpapi":
+        api_key = os.getenv("SERPAPI_API_KEY", "").strip()
+        if not api_key:
+            raise RuntimeError(
+                "CLAIM_POLYGRAPH_SEARCH_PROVIDER=serpapi requires SERPAPI_API_KEY"
+            )
+        return (
+            SerpAPISearchProvider(
+                api_key=api_key,
+                engine=os.getenv("SERPAPI_ENGINE", "google"),
+                language=os.getenv("SERPAPI_LANGUAGE", "en"),
+                country=os.getenv("SERPAPI_COUNTRY", "us"),
+                timeout_seconds=float(os.getenv("SERPAPI_TIMEOUT_SECONDS", "15")),
+            ),
+            SafeHttpFetcher(policy=UrlSafetyPolicy()),
+            True,
+        )
+    raise RuntimeError(
+        "CLAIM_POLYGRAPH_SEARCH_PROVIDER must be deterministic, searxng, or serpapi"
+    )
+
+
+def _configured_model():
+    mode = os.getenv("CLAIM_POLYGRAPH_MODEL_PROVIDER", "deterministic").strip().casefold()
+    if mode == "deterministic":
+        return DeterministicModelProvider()
+    if mode == "openai":
+        api_key = os.getenv("OPENAI_API_KEY", "").strip()
+        if not api_key:
+            raise RuntimeError(
+                "CLAIM_POLYGRAPH_MODEL_PROVIDER=openai requires OPENAI_API_KEY"
+            )
+        return OpenAIStructuredModelProvider(
+            api_key=api_key,
+            model=os.getenv("OPENAI_MODEL", "gpt-5.4-mini"),
+            fast_model=os.getenv("OPENAI_FAST_MODEL", "gpt-4o-mini"),
+            timeout_seconds=float(os.getenv("OPENAI_TIMEOUT_SECONDS", "60")),
+        )
+    raise RuntimeError("CLAIM_POLYGRAPH_MODEL_PROVIDER must be deterministic or openai")
 
 
 def build_development_app(
@@ -28,33 +111,103 @@ def build_development_app(
     """Wire the API to deterministic providers and local SQLite databases."""
     root = Path(data_directory)
     root.mkdir(parents=True, exist_ok=True)
+    search_provider, content_fetcher, live_research = _configured_search()
+    model_provider = _configured_model()
+    telemetry = TelemetryCollector(root / "telemetry.db")
     repository = SQLiteInvestigationRepository(root / "investigations.db")
     service = InvestigationService(
         repository=repository,
-        model_provider=DeterministicModelProvider(),
-        search_provider=DeterministicSearchProvider(),
+        model_provider=model_provider,
+        search_provider=search_provider,
+        content_fetcher=content_fetcher if live_research else None,
     )
     reviews = SQLiteReviewLedger(root / "reviews.db")
     checkpoint_path = root / "langgraph-checkpoints.db"
-    selected = (
+
+    async def investigate_authoritatively(claim: str):
+        try:
+            return await service.investigate(claim)
+        finally:
+            for usage in service.model_usage:
+                telemetry.metric(
+                    MetricName.MODEL_TOKENS,
+                    usage.input_tokens + usage.output_tokens,
+                    "tokens",
+                    attributes={"provider.id": model_provider.provider_id, "model": usage.model},
+                )
+                if usage.estimated_cost_usd is not None:
+                    telemetry.metric(
+                        MetricName.MODEL_COST_USD,
+                        usage.estimated_cost_usd,
+                        "usd",
+                        attributes={
+                            "provider.id": model_provider.provider_id,
+                            "model": usage.model,
+                        },
+                    )
+    selected = parse_orchestrator_mode(
         orchestrator or os.getenv("CLAIM_POLYGRAPH_ORCHESTRATOR", "langgraph")
-    ).strip().casefold()
-    if selected == "langgraph":
-        investigate = LangGraphInvestigationOrchestrator(
-            investigate_authoritatively=service.investigate,
+    )
+    if selected.value == "langgraph":
+        research_repository = SQLiteResearchRepository(root / "research.db")
+        operations = SharedResearchOperations(
+            repository=research_repository,
+            search_provider=search_provider,
+            fetcher=content_fetcher,
+            telemetry=telemetry,
+        )
+        selected_orchestrator = LangGraphInvestigationOrchestrator(
+            investigate_authoritatively=investigate_authoritatively,
             checkpoint_path=checkpoint_path,
             reviews=reviews,
-        ).investigate
-    elif selected == "direct":
-        investigate = service.investigate
+            argument_workflow=LangGraphAdversarialArgumentWorkflow(
+                repository=research_repository,
+            ),
+            research_fan_out=LangGraphResearchFanOutWorkflow(
+                repository=research_repository,
+                operations=operations,
+                worker=DeterministicResearchWorker(research_repository),
+                telemetry=telemetry,
+            ),
+            telemetry=telemetry,
+        )
+    elif selected.value == "direct":
+        selected_orchestrator = DirectInvestigationOrchestrator(investigate_authoritatively)
     else:
-        raise ValueError("CLAIM_POLYGRAPH_ORCHESTRATOR must be 'langgraph' or 'direct'")
+        research_repository = SQLiteResearchRepository(root / "research.db")
+        operations = SharedResearchOperations(
+            repository=research_repository,
+            search_provider=search_provider,
+            fetcher=content_fetcher,
+            telemetry=telemetry,
+        )
+        durable_authoritative = LangGraphInvestigationOrchestrator(
+            investigate_authoritatively=investigate_authoritatively,
+            checkpoint_path=checkpoint_path,
+            reviews=reviews,
+            telemetry=telemetry,
+        )
+        selected_orchestrator = ExperimentalMultiAgentInvestigationOrchestrator(
+            investigate_authoritatively=durable_authoritative.investigate,
+            multi_agent_service=MultiAgentInvestigationService(
+                repository=research_repository,
+                operations=operations,
+            ),
+        )
     return create_app(
         ApiDependencies(
             investigations=repository,
             reviews=reviews,
             graph_checkpoint_path=checkpoint_path,
-            investigate=investigate,
+            investigate=selected_orchestrator.investigate,
+            orchestrator_mode=selected_orchestrator.mode,
+            extract_claims=ClaimExtractionService(
+                SafeHttpFetcher(policy=UrlSafetyPolicy()).fetch
+            ).extract,
+            telemetry=telemetry,
+            retrieval_provider=search_provider.provider_id,
+            live_research=live_research,
+            model_provider=model_provider.provider_id,
         )
     )
 

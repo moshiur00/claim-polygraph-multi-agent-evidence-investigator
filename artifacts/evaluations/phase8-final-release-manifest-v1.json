@@ -1,0 +1,1289 @@
+{
+  "artifact_count": 319,
+  "artifacts": [
+    {
+      "path": ".env.example",
+      "sha256": "a586a3a59ab4a73b63b1be9af175e47314f4c663e5d88c919e145008d41c8873"
+    },
+    {
+      "path": ".gitignore",
+      "sha256": "dacfdc7fd3dcc0c41247dee4afadeebe0fe6cbffa5c583e29bb392a8597636f9"
+    },
+    {
+      "path": "README.md",
+      "sha256": "9ad668a5fed3e569fe0c8998a60d41597b8d694e42cb14c41e51784672d3b1f5"
+    },
+    {
+      "path": "artifacts/evaluations/phase8-stage8.0-baseline-v1.json",
+      "sha256": "9309e3aa5d4c5bb518d0dd491bfe6d3b0cb4d5dc7bf101a6b3ab4d3fb7e2ca19"
+    },
+    {
+      "path": "artifacts/evaluations/phase8-stage8.0-routing-controls-v1.json",
+      "sha256": "d43c38ad645232fb466916b381dfe6015cc307d019e32c2c4184982d0d398d9e"
+    },
+    {
+      "path": "artifacts/evaluations/phase8-stage8.1-orchestrator-v1.json",
+      "sha256": "e35f0a7300768f8df1250642fa485c363a58f1a793f6710178d49cee412869e3"
+    },
+    {
+      "path": "artifacts/evaluations/phase8-stage8.1-release-manifest-v1.json",
+      "sha256": "ba08fb666e9bd035875392858b960e7cb5c3abce706da7e11b5708790a8190df"
+    },
+    {
+      "path": "artifacts/evaluations/phase8-stage8.10-release-manifest-v1.json",
+      "sha256": "2c0c8528dbc1add0dd8b17de0ac54c96e4ecb75dc375b22a9495078b0fffc147"
+    },
+    {
+      "path": "artifacts/evaluations/phase8-stage8.10-sqlite-concurrency-v1.json",
+      "sha256": "83dfe7d0bb8119a748f0632a270f9053c18ff8c4fa34fd7df4162a784bf6fff7"
+    },
+    {
+      "path": "artifacts/evaluations/phase8-stage8.11-job-backend-v1.json",
+      "sha256": "5611d018d0b6f0fd904a5f1cf1b2867a864e29a873491488fc936b87528e8b60"
+    },
+    {
+      "path": "artifacts/evaluations/phase8-stage8.11-release-manifest-v1.json",
+      "sha256": "0711fdf05103dec62c25c90c5dfb7c0684dce2655e2ff54ec623af6cce28cc96"
+    },
+    {
+      "path": "artifacts/evaluations/phase8-stage8.12-release-manifest-v1.json",
+      "sha256": "e6ee709643d82ddd0d160985bb35828b7c1e0d30db1a02c78a20079cb423832f"
+    },
+    {
+      "path": "artifacts/evaluations/phase8-stage8.12-telemetry-v1.json",
+      "sha256": "39bc0405b0f98ff2912413cc3d7dd99e96ea8d0d00bcb071f911ce897d5a6063"
+    },
+    {
+      "path": "artifacts/evaluations/phase8-stage8.13-controlled-promotion-v1.json",
+      "sha256": "266cfad5ada90febd61058d8e16b37b122ea11a16c40674f6f97cecd272f805a"
+    },
+    {
+      "path": "artifacts/evaluations/phase8-stage8.13-release-manifest-v1.json",
+      "sha256": "6cb9b7c14d830b4be4b2281d5d4d18b7bf467de3113e833b6afbb4618c6f19b5"
+    },
+    {
+      "path": "artifacts/evaluations/phase8-stage8.14-closure-audit-v1.json",
+      "sha256": "d45712954a79ac9653d2a6b1a082979214f8497befb7c32becd3111f5b25c4fe"
+    },
+    {
+      "path": "artifacts/evaluations/phase8-stage8.14-targeted-review-v1.json",
+      "sha256": "358faaf5f50adc03148e196b3a8a4dff42831b9c514c979f34f15cabdca5fadf"
+    },
+    {
+      "path": "artifacts/evaluations/phase8-stage8.2-claim-extraction-v1.json",
+      "sha256": "32e7f811417348a7b5a0f401bcc850cc4e21b919636c6a44b473e35baf3f8959"
+    },
+    {
+      "path": "artifacts/evaluations/phase8-stage8.2-release-manifest-v1.json",
+      "sha256": "c3a08f2510961760bac7352091b148020fb62ab293f0b2a8fe4f3c4f3511f8bc"
+    },
+    {
+      "path": "artifacts/evaluations/phase8-stage8.3-durable-research-state-v1.json",
+      "sha256": "dfa3f36f776965c7f87fe26dfeba79d40953218041676517c2dcfe568d5665ee"
+    },
+    {
+      "path": "artifacts/evaluations/phase8-stage8.3-release-manifest-v1.json",
+      "sha256": "55a68cdc4ce7c93b3f6daddb44ff181f999ad2b43f573cb00adeac8605228b9a"
+    },
+    {
+      "path": "artifacts/evaluations/phase8-stage8.4-release-manifest-v1.json",
+      "sha256": "0722e4f49e72155cecd1c4d0bf3407ae81a42522917a455222c94ccc5a960337"
+    },
+    {
+      "path": "artifacts/evaluations/phase8-stage8.4-specialist-adapters-v1.json",
+      "sha256": "59908068ccb3ecf583f2c2e2163f1c717bb77c28fab3ba1bb48665bd8cc9ed49"
+    },
+    {
+      "path": "artifacts/evaluations/phase8-stage8.5-concurrent-fanout-v1.json",
+      "sha256": "8966612da1afb272ecab672253ddefb72d6efef0b05815cdf9d81715bbf5efb5"
+    },
+    {
+      "path": "artifacts/evaluations/phase8-stage8.5-release-manifest-v1.json",
+      "sha256": "c9c7664394ae1d6fc1e86589f2a15dfe326112fab65ddeaa3c66829ba21ab65c"
+    },
+    {
+      "path": "artifacts/evaluations/phase8-stage8.6-iterative-sufficiency-v1.json",
+      "sha256": "54819be18e34ce6c18ff845403fd4d2fdc74e8d929cea1204eac9e9f1a665dd2"
+    },
+    {
+      "path": "artifacts/evaluations/phase8-stage8.6-release-manifest-v1.json",
+      "sha256": "d694554241c1f4c786cfb4425455791584c52ea0304df659f15badb0cf785f73"
+    },
+    {
+      "path": "artifacts/evaluations/phase8-stage8.7-adversarial-arguments-v1.json",
+      "sha256": "242b0cbcea8672e6acf29ef8e045a6e67ff5760f562b3b46c035b92caf088d5c"
+    },
+    {
+      "path": "artifacts/evaluations/phase8-stage8.7-release-manifest-v1.json",
+      "sha256": "796100b89f3f3f4cfad9a677ea9e463805da8b79d05d5fb34920ebd6adbfef3b"
+    },
+    {
+      "path": "artifacts/evaluations/phase8-stage8.8-full-report-assurance-v1.json",
+      "sha256": "ae349382aa3b1085aa5ca747e87d0422112f3713629bf7f8c6f88773b99773f0"
+    },
+    {
+      "path": "artifacts/evaluations/phase8-stage8.8-release-manifest-v1.json",
+      "sha256": "dd1c16db395fb6d7fe9536e3f43b46db6c96ba16cd1a7d7e3deb1a3f7995b951"
+    },
+    {
+      "path": "artifacts/evaluations/phase8-stage8.9-confidence-calibration-v1.json",
+      "sha256": "fb9233050d0922e556c25f0f0318d9692a5932fe22f8c5dff973b371762b3153"
+    },
+    {
+      "path": "artifacts/evaluations/phase8-stage8.9-release-manifest-v1.json",
+      "sha256": "9cd7f637850492f30cf57507cf3814714e4330b7fb2e3ce32c252249fb90b47d"
+    },
+    {
+      "path": "benchmarks/initial_claims_v1.json",
+      "sha256": "44270e74e3b20028d66dc907036ed3fd8236372d8e1bb8c65fadbcad7598b8a3"
+    },
+    {
+      "path": "benchmarks/phase8_confidence_calibration_eligible_v1.json",
+      "sha256": "9182d94095211a8c5525ea9fd2dce530730a4546f77cea149833b7f88108f3f3"
+    },
+    {
+      "path": "benchmarks/review_packets/phase8_stage8_14_targeted_review.md",
+      "sha256": "3a47d8b5d4a45e2ec8693560c0b5b8839b3adb1ea05c785be11467f17a98d197"
+    },
+    {
+      "path": "dashboard/app/page.tsx",
+      "sha256": "acfe82ac4748c35d64318e451a9aa887ca43edb338d3389c701a1e2a0e034111"
+    },
+    {
+      "path": "dashboard/package-lock.json",
+      "sha256": "48beebec556e139a212f2d5b9d4f11e827f6a122f05a480f689d6218009ff3dc"
+    },
+    {
+      "path": "dashboard/package.json",
+      "sha256": "71d4d259c19de1cf149d26c565b1a2b47b34d00ad550277c74b73121403cb110"
+    },
+    {
+      "path": "dashboard/tests/accessibility.test.mjs",
+      "sha256": "938141a5c51175086d516b232095f795945f451a49fffe95b9358ec6510daae0"
+    },
+    {
+      "path": "dashboard/tests/rendered-html.test.mjs",
+      "sha256": "1d4a6daaa1c471c2aa52c5159d79c6e2fd79236c0249ebe7a5be5cfcb142dc2f"
+    },
+    {
+      "path": "docs/PHASE_8_ARCHITECTURE_AND_OPERATIONS.md",
+      "sha256": "9b66a260639ef3e1da32de95dbfcda193b22014162b2b4ac799195d58fd8cc3f"
+    },
+    {
+      "path": "docs/PHASE_8_COMPLETION_REPORT.md",
+      "sha256": "9fdbc31311f6c66e02f9c4e98fbe861202a888781e589dc5ac099f1f602f3acf"
+    },
+    {
+      "path": "docs/PHASE_8_STAGE_8.0_COMPLETION_REPORT.md",
+      "sha256": "23a36c8d68f5948dae42a0fb66c775177b1ce1ee5b559a4d82c19c79f8ce8c7a"
+    },
+    {
+      "path": "docs/PHASE_8_STAGE_8.0_DASHBOARD_INVENTORY.md",
+      "sha256": "5717820915c93737232357a6418656ecf0b1d57ab04ae5eedbfbbd8ee1ec6d60"
+    },
+    {
+      "path": "docs/PHASE_8_STAGE_8.10_COMPLETION_REPORT.md",
+      "sha256": "68f7393fda3bbae79be27d7dd74c70790017d2eeba9d3f17f552331637efdeba"
+    },
+    {
+      "path": "docs/PHASE_8_STAGE_8.11_COMPLETION_REPORT.md",
+      "sha256": "469eb8af5f011277336d404179609115af02c36f7e80eefe87f0a8f7945c0f8d"
+    },
+    {
+      "path": "docs/PHASE_8_STAGE_8.12_COMPLETION_REPORT.md",
+      "sha256": "5d12e8b51b30d584716444ad01a9665e14582d04de5931c9cfbf4f9b960d2f0e"
+    },
+    {
+      "path": "docs/PHASE_8_STAGE_8.13_COMPLETION_REPORT.md",
+      "sha256": "46e7bc17d82f822be499172633dc055108cbdfcb0f48cedad97d37bac9e22fe0"
+    },
+    {
+      "path": "docs/PHASE_8_STAGE_8.1_COMPLETION_REPORT.md",
+      "sha256": "ca8871c6e1e4751934110973bc8c155187c9c1d7751451dbad9c25bf9d9624b2"
+    },
+    {
+      "path": "docs/PHASE_8_STAGE_8.2_COMPLETION_REPORT.md",
+      "sha256": "9e4da727c7268eee2bef02435dab2a42914ddae98e0b890a6d5d75cfd2a9f62d"
+    },
+    {
+      "path": "docs/PHASE_8_STAGE_8.3_COMPLETION_REPORT.md",
+      "sha256": "80e93c810f630fa32caad6aca4745599a7076a48f06ade85a8758b29797e8bb8"
+    },
+    {
+      "path": "docs/PHASE_8_STAGE_8.4_COMPLETION_REPORT.md",
+      "sha256": "4084d63cfc43b2bd32d774d59ddb76bcb423b08760d8d0c1214aec36e58b31fe"
+    },
+    {
+      "path": "docs/PHASE_8_STAGE_8.5_COMPLETION_REPORT.md",
+      "sha256": "5dca4b1bc9d41ca0eb2efe4800b41bce449882a3cf81d6c87af2803127e4b3fd"
+    },
+    {
+      "path": "docs/PHASE_8_STAGE_8.6_COMPLETION_REPORT.md",
+      "sha256": "0ccbfdb72040505c9389dc78e39fbc21b42fefbb1e62952103af002d52229372"
+    },
+    {
+      "path": "docs/PHASE_8_STAGE_8.7_COMPLETION_REPORT.md",
+      "sha256": "7c294283d947cb2eb19415b086ddd03063bc1214e296ececd5a4a1bef19c6424"
+    },
+    {
+      "path": "docs/PHASE_8_STAGE_8.8_COMPLETION_REPORT.md",
+      "sha256": "28f1cfa8492bb47266ffb760d819488a6f9699f4b7ae28a47b7d93854b27f91c"
+    },
+    {
+      "path": "docs/PHASE_8_STAGE_8.9_COMPLETION_REPORT.md",
+      "sha256": "e86ff3043df07d24464a47269ad36f3261ce910e43a85f2b993dd78860989923"
+    },
+    {
+      "path": "docs/PHASE_8_TRUE_MULTI_AGENT_EXECUTION_PLAN.md",
+      "sha256": "eed4e87d580ecf609193790246c75ac028753f108512d470fc6a29a909067098"
+    },
+    {
+      "path": "docs/adr/0001-lightweight-first-architecture.md",
+      "sha256": "04697447dc06ab669bc0493fefbcbfcc06cbe3b86d8ae9f59a1a3f1fc1d03d77"
+    },
+    {
+      "path": "docs/adr/0002-safe-retrieval-and-searxng.md",
+      "sha256": "b132e681b6e8a1d9d5013a2699cc047d4730dc118d4b5a6a09c26fb24be0a453"
+    },
+    {
+      "path": "docs/adr/0003-deterministic-passage-ranking.md",
+      "sha256": "54b6466ba437ebb9b5b10ab7c6d48efb6d4b19a3849cb1c2177f04db6fef1d41"
+    },
+    {
+      "path": "docs/adr/0003-rights-provenance-and-context-checks.md",
+      "sha256": "553df6dccf344e4aa8968f1c44523a402d6d62c6a9aa80286672802f62d49626"
+    },
+    {
+      "path": "docs/adr/0004-local-ollama-structured-model-provider.md",
+      "sha256": "ae191ef2cb473c5bc4b6883ca850cd14d9cbff532f48e6a6a210b6da1bffd3e0"
+    },
+    {
+      "path": "docs/adr/0005-opt-in-openai-structured-provider.md",
+      "sha256": "0d4a685ac01b4fa9c3e77be3428adcdd36516e417c408d30be7556e48cb8cc17"
+    },
+    {
+      "path": "docs/adr/0006-cost-first-openai-model-selection.md",
+      "sha256": "3c95e976c6e0283b7b08356fa642bb5240a0a97783507a2d9e547c132e067f21"
+    },
+    {
+      "path": "docs/adr/0007-task-based-openai-model-routing.md",
+      "sha256": "a79fd1d2f8aa1b5ea246136e2b89bda9214d4677cb675eafda0106f092f8460c"
+    },
+    {
+      "path": "docs/adr/0008-model-usage-telemetry-and-human-review-gate.md",
+      "sha256": "ccf0984d05cb13f30ce63f4af05ac8eff933681e52de7e53724a2bc2c322ec3b"
+    },
+    {
+      "path": "docs/adr/0009-transparent-ai-assisted-benchmark-review.md",
+      "sha256": "1a1fa3a086ac492f95a0a31b82c36d356fc0ac18baaad55b745d16e928b3e0f3"
+    },
+    {
+      "path": "docs/adr/0010-serpapi-for-phase-2-live-search.md",
+      "sha256": "e817ec7ddc8018e103d5a949c529cb2ba43c650e23b806b14ef188b674822041"
+    },
+    {
+      "path": "docs/adr/0011-complex-claim-state-before-multi-agent.md",
+      "sha256": "97be5a2af8a194d70b511a0695e6f6e148361573bf2ded81bb1691a2b66b8126"
+    },
+    {
+      "path": "docs/adr/0012-phase4-multi-agent-not-promoted.md",
+      "sha256": "8575ec340788a90c5da00ce6f1869b6773b6ef9261a9e0a3b4655487780028d5"
+    },
+    {
+      "path": "docs/adr/0013-phase6-policy-not-promoted.md",
+      "sha256": "e4de2278cddbec66ffa2096110859e655c8998fe3818703039b85f7ff81fe2d9"
+    },
+    {
+      "path": "docs/adr/0014-promote-langgraph-as-default-orchestrator.md",
+      "sha256": "0e1dace79136ec189c1defc31507d17571cf202ed8c635656e45dca99d23355c"
+    },
+    {
+      "path": "docs/adr/0015-dashboard-root-monorepo.md",
+      "sha256": "05e3c6cf407b0fd65197830c4a0828f2fd4bc6017302028e7bd729ceefc70824"
+    },
+    {
+      "path": "docs/adr/0016-retain-sqlite-wal-for-local-mvp.md",
+      "sha256": "05543e677599dcc475abefee0c0e6d1eea9383d0448e5592f91bf415af0abc37"
+    },
+    {
+      "path": "docs/adr/0017-database-backed-durable-job-queue.md",
+      "sha256": "46ff8080496f7a0f3e1e261952726458bfc94acee8f90237862a8fb6daff1c5f"
+    },
+    {
+      "path": "docs/adr/0018-local-opentelemetry-compatible-observability.md",
+      "sha256": "b6f9eef2c06768a967debff379ab5624626b408f940a8b4ce0858abb87479a18"
+    },
+    {
+      "path": "docs/adr/0019-hold-multi-agent-authority-promotion-pending-human-review.md",
+      "sha256": "89c83e990c1a1c469290523a671f0885e546efd5183fc0b1937d6b0a0af6d158"
+    },
+    {
+      "path": "docs/adr/0020-final-multi-agent-promotion-decision.md",
+      "sha256": "8165ed16ee429724889eef10070c0ab4d210a418622216858cb8efb974dc45ac"
+    },
+    {
+      "path": "pyproject.toml",
+      "sha256": "a2ba6b51e8362e3e1a98edaddb29306839e10cccaba180172556ec916dccb58a"
+    },
+    {
+      "path": "scripts/build_phase8_release_manifest.py",
+      "sha256": "27f5782248351468ec1c3103a4c5811762a4d0f76ce2ec92bde536919383fa74"
+    },
+    {
+      "path": "scripts/build_phase8_targeted_review_packet.py",
+      "sha256": "ceecc97c420bb2be5aa7d956d90d6299c6f3927a45080753fbef59fd5f3d67fc"
+    },
+    {
+      "path": "scripts/run_phase8_baseline.py",
+      "sha256": "ffb394cfd9e81b550c6c44aa2d3bd0f336a0aed5caa23c6dd781cbba8866ae57"
+    },
+    {
+      "path": "scripts/run_phase8_confidence_calibration.py",
+      "sha256": "c619d8c9f143fa0537084e109ce1459c98c5d252fb3642b9f36ae2a48f4a35c8"
+    },
+    {
+      "path": "scripts/run_phase8_job_backend_gate.py",
+      "sha256": "f55a53e7ca11444413e5d49e4359af18b01c085fdccda86e3f54412ee5138d7b"
+    },
+    {
+      "path": "scripts/run_phase8_promotion_experiment.py",
+      "sha256": "16645ffcb6b87d7395ffcf85846063e5d7f1bae107fa97555a6e249183a09df6"
+    },
+    {
+      "path": "scripts/run_phase8_sqlite_concurrency_gate.py",
+      "sha256": "53cd51ce57c965d5a52d3baf4241fcb06bd975858851d3cd4e8071bb42c5fddc"
+    },
+    {
+      "path": "scripts/run_phase8_telemetry_gate.py",
+      "sha256": "3282e7f280991ca0f710060dc918f9cae89bd423363047d9d71a1a29c1136b2d"
+    },
+    {
+      "path": "src/claim_polygraph_ng/__init__.py",
+      "sha256": "f1d9a8069808f6a7931bb283e49f81e24473946749eed845ba3852a493437139"
+    },
+    {
+      "path": "src/claim_polygraph_ng/analysis/__init__.py",
+      "sha256": "9ba3f26b7ad697a68ef4971a66e353bd5c8110e3e70cbe4168251cab511b28e1"
+    },
+    {
+      "path": "src/claim_polygraph_ng/analysis/aggregation.py",
+      "sha256": "17db08d2bf99a60875a90fb28d08284a8bd0a883a3a9e2699d6e6c8bd7a0179f"
+    },
+    {
+      "path": "src/claim_polygraph_ng/analysis/argument_ledger.py",
+      "sha256": "a09de9dd55173956f3067eae2069fb123cb343a820aa2ffb38f67bb4d240bed1"
+    },
+    {
+      "path": "src/claim_polygraph_ng/analysis/canonicalization.py",
+      "sha256": "6d5e606f076dc1d71b67f64b75d823b7deba2a50b6d38b651480c0d2adaf2655"
+    },
+    {
+      "path": "src/claim_polygraph_ng/analysis/citation_assurance.py",
+      "sha256": "e114c72c82e9c90b21d9effa517ca2b8468fbd55113b99da86e6a5904db208bd"
+    },
+    {
+      "path": "src/claim_polygraph_ng/analysis/consolidation.py",
+      "sha256": "cc579cf4583724e8c840fef8d0a1b107729c2f45fb375f2b0ec863a7ba02fc40"
+    },
+    {
+      "path": "src/claim_polygraph_ng/analysis/context.py",
+      "sha256": "adee1913a4d45c54d4e0b992ed293fb6ff12748a023d41e5c4ed47cbd938efed"
+    },
+    {
+      "path": "src/claim_polygraph_ng/analysis/evidence_families.py",
+      "sha256": "e50d024965347472a0380664611eeac9f9032c56efa2d4fff390432ab0b63661"
+    },
+    {
+      "path": "src/claim_polygraph_ng/analysis/exact_duplicates.py",
+      "sha256": "fbe7f0800f8f84acfa39fc40dd2591b1bba5f2f3e858a076eaa9023c6e48891e"
+    },
+    {
+      "path": "src/claim_polygraph_ng/analysis/independence.py",
+      "sha256": "1307aa8fe0faafe288a6dcfb5a17e53640df0b68e4dd85b1818e220e523fbecc"
+    },
+    {
+      "path": "src/claim_polygraph_ng/analysis/independence_features.py",
+      "sha256": "ac16a667c24aa2c066207029ecc55f888c7ed3d827a2577f380a91e2157e32d1"
+    },
+    {
+      "path": "src/claim_polygraph_ng/analysis/investigation_provenance.py",
+      "sha256": "97b766a83fb358f942f39ca7db21518cc24aaa79b3e7e1e720f40e8662720fee"
+    },
+    {
+      "path": "src/claim_polygraph_ng/analysis/judgment_policy.py",
+      "sha256": "b80a939011b148a132a1dd04ace86e7c473e1d0d6aae7fa2bab8f872a5607d81"
+    },
+    {
+      "path": "src/claim_polygraph_ng/analysis/near_duplicates.py",
+      "sha256": "6f6d075efea588c06f2529131b7dc05bef8643f92147a4cfde8e250e43f18bb0"
+    },
+    {
+      "path": "src/claim_polygraph_ng/analysis/numerical_verification.py",
+      "sha256": "6c0470d97550234c724ac96202322c15c46e9af38dc43ac85a22f0ecb04b1508"
+    },
+    {
+      "path": "src/claim_polygraph_ng/analysis/provenance_links.py",
+      "sha256": "2956abe014409f782d4e79238b78ca93791164609cf15ecedbe0ebb437069d5a"
+    },
+    {
+      "path": "src/claim_polygraph_ng/analysis/readiness.py",
+      "sha256": "02bbb9c95827dfe6ef380d640a4fc32714f30196f94d970edcfef400aadec9ec"
+    },
+    {
+      "path": "src/claim_polygraph_ng/analysis/research_routing.py",
+      "sha256": "1ed68fb38ae3f8b0850a5f9f002ee78ae7cbd680d3c6191739bec4309abc13b6"
+    },
+    {
+      "path": "src/claim_polygraph_ng/analysis/review_routing.py",
+      "sha256": "7c4df204ea3ed3f21a56082bc75f8284e3ebaf5ef295328b9a0f5151a91ef2f5"
+    },
+    {
+      "path": "src/claim_polygraph_ng/analysis/source_quality.py",
+      "sha256": "7fdae36007529ececca4a3ba67127fe393d2ad623bf4dc55e729cb622f30c9ef"
+    },
+    {
+      "path": "src/claim_polygraph_ng/analysis/sufficiency.py",
+      "sha256": "cc2f1b903edb3d9d424c67736fb85616ed0df68ed68ea15d1e2ab41603742806"
+    },
+    {
+      "path": "src/claim_polygraph_ng/analysis/temporal_verification.py",
+      "sha256": "0539d11cd411100cb02bba2c02862792cf51a4c52e29245fbca7feca54c76e7e"
+    },
+    {
+      "path": "src/claim_polygraph_ng/analysis/verification_bridge.py",
+      "sha256": "17264562dd6437a79e78307a938231629318621af8aa9c8cfa860316e67dde7c"
+    },
+    {
+      "path": "src/claim_polygraph_ng/api.py",
+      "sha256": "d97122946992ca538a8c4f69d8f18ce6a5274ab9d190f52619da15a3b9066dfd"
+    },
+    {
+      "path": "src/claim_polygraph_ng/api_server.py",
+      "sha256": "6eb730d555492e5dabcb0474788a71a9488585b6405f0efab1d906a2b4ad7027"
+    },
+    {
+      "path": "src/claim_polygraph_ng/application/__init__.py",
+      "sha256": "6aa8e1bebec9ec276a0cd9e59dd2f3ad691393c8162f947389d2675100b30002"
+    },
+    {
+      "path": "src/claim_polygraph_ng/application/claim_extraction.py",
+      "sha256": "f0336b320ad70bac310607e21525bcdf2569e1d837ef36f904657cb0bdb59da0"
+    },
+    {
+      "path": "src/claim_polygraph_ng/application/complex_investigation_service.py",
+      "sha256": "e236dc999613bcfecf9f890a40e67dee4842f10362a328ae6eaadf02910299b2"
+    },
+    {
+      "path": "src/claim_polygraph_ng/application/investigation_service.py",
+      "sha256": "5ef7f0a62fc0cf3b3ef9305aa21f062aeed2c6666a4f14f3e4aeb1fdad9a5326"
+    },
+    {
+      "path": "src/claim_polygraph_ng/application/job_worker.py",
+      "sha256": "b57e21f20cb79a11a8d1a383f5db917e59990a08b00ae0524ef65920b4448207"
+    },
+    {
+      "path": "src/claim_polygraph_ng/application/langgraph_argument.py",
+      "sha256": "76ae3a26fede6d8bca2f152c5f254203a3cf9876ab009f7d226726ebdea5ce0f"
+    },
+    {
+      "path": "src/claim_polygraph_ng/application/langgraph_durable.py",
+      "sha256": "2203102da90d32c72cb6e86ecc5c4ae74a6a0158c4a9bdee1c533a903434130d"
+    },
+    {
+      "path": "src/claim_polygraph_ng/application/langgraph_fixture.py",
+      "sha256": "ae120fdc9002d77c4f3fc4a564314fd3cd6d24b74db72ffb9642b95735473ff9"
+    },
+    {
+      "path": "src/claim_polygraph_ng/application/langgraph_research.py",
+      "sha256": "0d657819a90724590b1d5c8f0dd2a13e2089f460e86a73a9da6f17cf48845efc"
+    },
+    {
+      "path": "src/claim_polygraph_ng/application/multi_agent_service.py",
+      "sha256": "185cc5bdff8d25c7c44e3d71d40c4e2a5d79ed95d013e1b952eae048c2ce5a5c"
+    },
+    {
+      "path": "src/claim_polygraph_ng/application/orchestrator.py",
+      "sha256": "74eaf8f3c4c7b434a1c2242c26f226ad0d14f399bc2e9637c076332596cdc277"
+    },
+    {
+      "path": "src/claim_polygraph_ng/application/research_executor.py",
+      "sha256": "954abab1ffd243a07bebdc380097e3fc98dd57f2287341af8eb58c1a6d5cb88a"
+    },
+    {
+      "path": "src/claim_polygraph_ng/cli.py",
+      "sha256": "c5d6b06ab4a58daf2d667ff5040cf1af165ba82431ed7b79ab6565cc6c27b3e0"
+    },
+    {
+      "path": "src/claim_polygraph_ng/config/__init__.py",
+      "sha256": "e7300e20d7a164779f2e05da2a8c248e7262df2e996dc94cc3d68ed65f5d3108"
+    },
+    {
+      "path": "src/claim_polygraph_ng/config/models.py",
+      "sha256": "9cd44f8b2d6b7c1805ed2272081bf6a27d8886b398dfd7de30a09aefb5fa2b96"
+    },
+    {
+      "path": "src/claim_polygraph_ng/domain/__init__.py",
+      "sha256": "e543a3c5db1502833f180d7ae0c636b1c9c645ca2b70c6ef4b7394c6375a5dc8"
+    },
+    {
+      "path": "src/claim_polygraph_ng/domain/adversarial.py",
+      "sha256": "10da40f8eaff002db7ce7a495c5e97ab28286b3d44c9529c5b98206a18e90b1d"
+    },
+    {
+      "path": "src/claim_polygraph_ng/domain/api.py",
+      "sha256": "95d37ef109322ac068988c1e5910f1f8e5f287764b41e56f258f60d405d7a953"
+    },
+    {
+      "path": "src/claim_polygraph_ng/domain/argument.py",
+      "sha256": "735bf99a9bbd8c66db644ddcd4c4cde5ed590af2d044a68420d781b752a106fc"
+    },
+    {
+      "path": "src/claim_polygraph_ng/domain/base.py",
+      "sha256": "c1831dccafe2f4dc32c255cc824261d04a9a10c36c4e50046237f227e99b0d65"
+    },
+    {
+      "path": "src/claim_polygraph_ng/domain/citation.py",
+      "sha256": "501a8cbcbc2dd5588739950aa9729f6879ce57a04c75b448191727dc0086a652"
+    },
+    {
+      "path": "src/claim_polygraph_ng/domain/confidence.py",
+      "sha256": "1e470d72f49d278bf7532b989f4cdead65c6f757f7c7a634141f063cabcf2f5f"
+    },
+    {
+      "path": "src/claim_polygraph_ng/domain/enums.py",
+      "sha256": "5104a2905ff9eea4a903c5085980b225ee7801a91c75cd491d1665f33d85bd34"
+    },
+    {
+      "path": "src/claim_polygraph_ng/domain/graph.py",
+      "sha256": "dc783264c4405c5273acabe52e992b089b1e733324e600f526dafbba8728ee81"
+    },
+    {
+      "path": "src/claim_polygraph_ng/domain/input.py",
+      "sha256": "27fa9b8e8536aa2ff87fe1921bedf68018364f644c6bb83bfcfbb7377f9a5cdb"
+    },
+    {
+      "path": "src/claim_polygraph_ng/domain/investigation.py",
+      "sha256": "98c4f33c33fd62f8ba91466150ccf92398428812471806dc06ee3054fba38467"
+    },
+    {
+      "path": "src/claim_polygraph_ng/domain/jobs.py",
+      "sha256": "66461c918520f62156b3b8462ee71f4a9036f1002b7fb1c6bfb232ac7e559b72"
+    },
+    {
+      "path": "src/claim_polygraph_ng/domain/judgment.py",
+      "sha256": "1fb29ebada61de0173ade67ae6d064a71ff550f1ae1ed5a7180ef59fe7b6f5c5"
+    },
+    {
+      "path": "src/claim_polygraph_ng/domain/models.py",
+      "sha256": "ee01c949f5fd4600f609b4fbcd179285d2a7cfc664001730e8721cc0f816bac6"
+    },
+    {
+      "path": "src/claim_polygraph_ng/domain/provenance.py",
+      "sha256": "972e8731b3bf9c8bbb1c2c8a60d32763c2293ecd07f40b2cd6fee7d355ba723e"
+    },
+    {
+      "path": "src/claim_polygraph_ng/domain/readiness.py",
+      "sha256": "da1ef0a7eca6e2e0b5bf65c4fe49ac74444d4e322339bb9b53c022ac7e92681a"
+    },
+    {
+      "path": "src/claim_polygraph_ng/domain/research.py",
+      "sha256": "2170aaf7cc266d69c2815d67928314af1849e5ecc45998f716c892fe668e65c5"
+    },
+    {
+      "path": "src/claim_polygraph_ng/domain/review.py",
+      "sha256": "746a602242fce4ebb44e696fe0389f93d5d278437c201d1c271c0cdf67eae6f4"
+    },
+    {
+      "path": "src/claim_polygraph_ng/domain/specialist.py",
+      "sha256": "fe4e83492dab08d11e4e865e7a0b7b98d58c0a64fe9c9ba6200df4b36af3c6cd"
+    },
+    {
+      "path": "src/claim_polygraph_ng/domain/telemetry.py",
+      "sha256": "54e38476e7ded195720de6b04cc79f9f803dd2897e3d343d4c082fcf3bb3680e"
+    },
+    {
+      "path": "src/claim_polygraph_ng/domain/verification.py",
+      "sha256": "14e43880766fa14d64744599b52abed5b6e3ba435ba3c8ff1d5d0ef6e67b3da5"
+    },
+    {
+      "path": "src/claim_polygraph_ng/evaluation/__init__.py",
+      "sha256": "322bbe9ba506fe80551837267f74ac5dc9109decc5bd3293e1fefe8018b73faf"
+    },
+    {
+      "path": "src/claim_polygraph_ng/evaluation/ai_review.py",
+      "sha256": "4cf9ef46edb832e9d188ab51d7ccda753d283dcea34fbc6859bb6c148a93485e"
+    },
+    {
+      "path": "src/claim_polygraph_ng/evaluation/candidate_provider.py",
+      "sha256": "ce0cef44d060b8d5d1f76c9319de32a8871fb44a6945cb727cd50b508bed02c6"
+    },
+    {
+      "path": "src/claim_polygraph_ng/evaluation/confidence_calibration.py",
+      "sha256": "9264ca60886428730910c61ec5ab0d08de7c2e67e642f7cd0d882ba9367d692e"
+    },
+    {
+      "path": "src/claim_polygraph_ng/evaluation/evidence_provider.py",
+      "sha256": "af394f9ec0cb99bc79698d4fdb086e023420942e736a82002cea59b061db4f75"
+    },
+    {
+      "path": "src/claim_polygraph_ng/evaluation/job_backend.py",
+      "sha256": "f833f70a8ae0c1d1039f23f98d3ce1b26f689053137c87c48a8f2e62d76ae206"
+    },
+    {
+      "path": "src/claim_polygraph_ng/evaluation/models.py",
+      "sha256": "44816ccdc66604dfd7de1b7616423e0a783664a209ed44823485409eebaf6077"
+    },
+    {
+      "path": "src/claim_polygraph_ng/evaluation/page_evaluation.py",
+      "sha256": "a20b09717c8c765295e6b8a5d23a2f31d3a8a5c06a941b68ea6fd9e8b3fa50ca"
+    },
+    {
+      "path": "src/claim_polygraph_ng/evaluation/phase3_gates.py",
+      "sha256": "7101437c018ce8334dc40038559237e1f7b702a930963de39f918b0e86fcc8a4"
+    },
+    {
+      "path": "src/claim_polygraph_ng/evaluation/phase4_gates.py",
+      "sha256": "4363c16e72d9363a95ed40d84abebae046932d2e5d41f06cac2659faf14b626a"
+    },
+    {
+      "path": "src/claim_polygraph_ng/evaluation/phase4_manifest.py",
+      "sha256": "67774fd627a5376043dccb54c36deec7fae3490940dba01ac9d7e09a8e058986"
+    },
+    {
+      "path": "src/claim_polygraph_ng/evaluation/phase4_pilot.py",
+      "sha256": "95727a2483f0a7a872e77a9e650d762e5783c93ca985af3094e45e788ced0b65"
+    },
+    {
+      "path": "src/claim_polygraph_ng/evaluation/phase5_ambiguous_classifier.py",
+      "sha256": "12307ce2b319aee10bab315977411a9a97d0a351407a8e9ade52a6645ddbeb88"
+    },
+    {
+      "path": "src/claim_polygraph_ng/evaluation/phase5_canonicalization.py",
+      "sha256": "97b1cff131f22b9d742a93318f890438ed416d2449a858d637dae18eca7af3c8"
+    },
+    {
+      "path": "src/claim_polygraph_ng/evaluation/phase5_evidence_families.py",
+      "sha256": "ba49c2f2933c6f77dbd4c7fe16a06a281234105b67d5d1568cceaf742a56c531"
+    },
+    {
+      "path": "src/claim_polygraph_ng/evaluation/phase5_exact_duplicates.py",
+      "sha256": "a3664f15ef4579c708d27ad7d39a620026138c94ae6c1ce6747c1912b59a7f8f"
+    },
+    {
+      "path": "src/claim_polygraph_ng/evaluation/phase5_independence_features.py",
+      "sha256": "7803dd92cc920b1d8bf051ec640f6262fbcd73189d31647de6c15f99338151a3"
+    },
+    {
+      "path": "src/claim_polygraph_ng/evaluation/phase5_manifest.py",
+      "sha256": "238133c229bbc3e1874195bcb4d2617f046a5cf8059e2ddc84a5de045182be75"
+    },
+    {
+      "path": "src/claim_polygraph_ng/evaluation/phase5_near_duplicates.py",
+      "sha256": "79528cd314b7e91b494d2163c269cad10360fb1e3807f6c64280f82d6acdb622"
+    },
+    {
+      "path": "src/claim_polygraph_ng/evaluation/phase5_provenance_links.py",
+      "sha256": "43c74ed034a999953723478ceed191100a8dd67918c7f8f96541b6e653802e65"
+    },
+    {
+      "path": "src/claim_polygraph_ng/evaluation/phase5_quality_calibration.py",
+      "sha256": "c68544aa6b84fc02b8d192362305ae0030b1476d80dc7d872cb32dc22ce8c85f"
+    },
+    {
+      "path": "src/claim_polygraph_ng/evaluation/phase5_source_quality.py",
+      "sha256": "302a9e0baedd3d7f08e9e6fd2ee6b4e9c138b11aa484d354279c1791ba9b9c11"
+    },
+    {
+      "path": "src/claim_polygraph_ng/evaluation/phase6_ablation.py",
+      "sha256": "01490f9400b35850f27eba322321e08333797224a9c74be2ba55f7a23adbaa3d"
+    },
+    {
+      "path": "src/claim_polygraph_ng/evaluation/phase6_closure.py",
+      "sha256": "a45195780df03f5cd164b8d05b476a7116ac32d5f79edd5ea3794b1d884ea5ac"
+    },
+    {
+      "path": "src/claim_polygraph_ng/evaluation/phase6_manifest.py",
+      "sha256": "3f96883a9bcdc9d7feacd0eb8d5361a71725e3a912ac9d841abfa7b09d3fa1e8"
+    },
+    {
+      "path": "src/claim_polygraph_ng/evaluation/phase6_numerical.py",
+      "sha256": "c7940f923611bbae9d09dbf16ba0fc2e891d1287162e5d538c77b2a6f09649ae"
+    },
+    {
+      "path": "src/claim_polygraph_ng/evaluation/phase6_temporal.py",
+      "sha256": "2ce3de78c0b19be1278431a79e6684fbb76657989d5c633ac51551dd3cbbdcc4"
+    },
+    {
+      "path": "src/claim_polygraph_ng/evaluation/phase7_assurance.py",
+      "sha256": "0e73dc067de1f8592d2ba7f261a7a81a5e24981d09ce3aa6a94cd61c3a9c74a1"
+    },
+    {
+      "path": "src/claim_polygraph_ng/evaluation/phase7_closure.py",
+      "sha256": "2c28b048f36cba6f83c8053ea06f9fd741a41a775375329ed9fa1ad3dcd7e504"
+    },
+    {
+      "path": "src/claim_polygraph_ng/evaluation/phase7_frozen.py",
+      "sha256": "01e97445def38329eec22e8dcd6714a2d2fff045de9c2fdd6ab61b500132b482"
+    },
+    {
+      "path": "src/claim_polygraph_ng/evaluation/phase7_recovery.py",
+      "sha256": "2c679ca66286c0f825574ec3094abf2b40c0ebc5dfa4c05662edf098e30069f1"
+    },
+    {
+      "path": "src/claim_polygraph_ng/evaluation/phase8_baseline.py",
+      "sha256": "1b04f5a10292b34e503ba0259f4d1e1ca2c89b67b35ce6fe6ea059d0b51d9e24"
+    },
+    {
+      "path": "src/claim_polygraph_ng/evaluation/phase8_promotion.py",
+      "sha256": "8f72101280837cee839e762598bb513aa9e6c0f7d7cce344de9953065d842f53"
+    },
+    {
+      "path": "src/claim_polygraph_ng/evaluation/retrieval.py",
+      "sha256": "e3e07fa95c472e746e9144e75f29fbbc4613c43575222a38b1bfd9159c7347b9"
+    },
+    {
+      "path": "src/claim_polygraph_ng/evaluation/retrieval_snapshot.py",
+      "sha256": "c328a00c87052a7e0ba9772d7846406c72e9fae9436012a1ec4ce027ad92a2dc"
+    },
+    {
+      "path": "src/claim_polygraph_ng/evaluation/runner.py",
+      "sha256": "df7f57f0dc12b304b7b75cfc036ed55f209da5880a1bd0b5c0e140c45de50c39"
+    },
+    {
+      "path": "src/claim_polygraph_ng/evaluation/semantic_passages.py",
+      "sha256": "7535f63a79a0f073ea683eb3031a91dc0e331be8ad157d7e2b51e4e134b2798b"
+    },
+    {
+      "path": "src/claim_polygraph_ng/evaluation/sqlite_concurrency.py",
+      "sha256": "a100bf9a0021772a6207da51166b791655cff35a88fb1be42758ea55d1dd472c"
+    },
+    {
+      "path": "src/claim_polygraph_ng/evaluation/stability.py",
+      "sha256": "9ffc9d556d0f377f8992ed1711be9390d8aa4e742e711cc155ddfb55b86ce078"
+    },
+    {
+      "path": "src/claim_polygraph_ng/evaluation/telemetry_gate.py",
+      "sha256": "c77047af923da4831f6f1039d7ac48faf3e6aaacbfaed134df494b88967034bd"
+    },
+    {
+      "path": "src/claim_polygraph_ng/persistence/__init__.py",
+      "sha256": "c46321f27bd189f914acc19e0d8ba4fabb5f4255d548641d080358cc39e3f04c"
+    },
+    {
+      "path": "src/claim_polygraph_ng/persistence/base.py",
+      "sha256": "1259715622a9fa83559217e2e08232744e5fbe4ec43f11c084121a52f8f9f266"
+    },
+    {
+      "path": "src/claim_polygraph_ng/persistence/jobs.py",
+      "sha256": "c6dd5165abeea0dcef3660dc084ce6047dd9080d5df166bed89e93122d81afa4"
+    },
+    {
+      "path": "src/claim_polygraph_ng/persistence/research.py",
+      "sha256": "f2dd86d58cf8f07c9ec3da536086020a527936cd37fae9036809c53743b69c24"
+    },
+    {
+      "path": "src/claim_polygraph_ng/persistence/review.py",
+      "sha256": "6e6ccd4c8d60f0355ef36532f65a9fea4266a74239ce404153e6341b614edf81"
+    },
+    {
+      "path": "src/claim_polygraph_ng/persistence/sqlite.py",
+      "sha256": "f446201e48db4473e08baa3907714abf9fb8eb56bb9a59ea7c56db39fa4cb021"
+    },
+    {
+      "path": "src/claim_polygraph_ng/persistence/sqlite_runtime.py",
+      "sha256": "01bd2061b2da5fb08396f07496944cbf70d8f6a61e20b15933deabdde1c5ce40"
+    },
+    {
+      "path": "src/claim_polygraph_ng/providers/__init__.py",
+      "sha256": "9534b00020b5b7aa71f453774905015c993b65ea464f052d336131f0dd5f80e3"
+    },
+    {
+      "path": "src/claim_polygraph_ng/providers/base.py",
+      "sha256": "cf28ef745958dc6fd379285e8514d57646912662d7b876a8773c4c0fb812538d"
+    },
+    {
+      "path": "src/claim_polygraph_ng/providers/factcheck.py",
+      "sha256": "2ed7a3463735ee74253e4fa25e498470ed7707aaefec944aa3c98fd1d17be952"
+    },
+    {
+      "path": "src/claim_polygraph_ng/providers/mock.py",
+      "sha256": "45d39dc33de7f324d0a9775020e73e9d24d2e9d78d4783bd4f8a507ce01076c9"
+    },
+    {
+      "path": "src/claim_polygraph_ng/providers/ollama.py",
+      "sha256": "784b01e9750e38596b0eb0444abcfe065d8cb5bf949f086d9fe1a5408e3c2cce"
+    },
+    {
+      "path": "src/claim_polygraph_ng/providers/openai.py",
+      "sha256": "236542022004bb7def4b7ab455133eda0977310c98890864143c35827e5432ef"
+    },
+    {
+      "path": "src/claim_polygraph_ng/providers/pubmed.py",
+      "sha256": "c24e7701ba5ea521c88410034ce429e07edb5c8c2dfc03faf04657a8b77ba9a7"
+    },
+    {
+      "path": "src/claim_polygraph_ng/providers/rate_limit.py",
+      "sha256": "494053371e70fc1e21932d4c553bf9c15df3b01c1b6b2fccd474eb29ca663c00"
+    },
+    {
+      "path": "src/claim_polygraph_ng/providers/searxng.py",
+      "sha256": "06712f05decccb85dce66e45145de5230c2ddcb9efc6a2e0a6458dc1cbc485e5"
+    },
+    {
+      "path": "src/claim_polygraph_ng/providers/semantic_scholar.py",
+      "sha256": "31b104640d953e4ec6391967f0cbcccaa85f4ab29eeea71bec3b877e0dedcdbd"
+    },
+    {
+      "path": "src/claim_polygraph_ng/providers/serpapi.py",
+      "sha256": "6266d58db7299a9fe48d71476676b171820002683abf2d1939d0aa3d096e8394"
+    },
+    {
+      "path": "src/claim_polygraph_ng/reporting/__init__.py",
+      "sha256": "4f688ef404738fdd108ac4188d6b369f7a08e75c2e1cdd6d792cb9607fe5cc26"
+    },
+    {
+      "path": "src/claim_polygraph_ng/reporting/provenance.py",
+      "sha256": "6251a2dddb331dcb8218a80c94ab36f8bdea0537d01a996b0eb9e685d0b3a62b"
+    },
+    {
+      "path": "src/claim_polygraph_ng/reporting/reports.py",
+      "sha256": "48bcfc3547037e19bace24b1cdbae10118d44e02267b222c1c26b714adf615c9"
+    },
+    {
+      "path": "src/claim_polygraph_ng/retrieval/__init__.py",
+      "sha256": "86155988f7d6bca05196cd1fb3026aa18bff48c8cbdc5c3738d991689b5c98c1"
+    },
+    {
+      "path": "src/claim_polygraph_ng/retrieval/fetcher.py",
+      "sha256": "561f09f574cc5a6bb188c69b0f455529e1f22a414ee955933bf24572dbe50208"
+    },
+    {
+      "path": "src/claim_polygraph_ng/retrieval/models.py",
+      "sha256": "bba396f23392c82dd912a893d27b49d6017df547b548942af0801f33471c56d5"
+    },
+    {
+      "path": "src/claim_polygraph_ng/retrieval/passages.py",
+      "sha256": "d99ec69231f50e177adf12c7b58f43640998134ff7ffc674d47a7938ce4c467f"
+    },
+    {
+      "path": "src/claim_polygraph_ng/retrieval/pdf.py",
+      "sha256": "4d29885d0622cc8872a3b8847a6fcb8a36efb1c371536f0a5cde57e05e6ad2be"
+    },
+    {
+      "path": "src/claim_polygraph_ng/retrieval/text.py",
+      "sha256": "bf826242c4dc1546e0d2aa66988a76313320a7848bc63ba2bc96a3334bcb0b7b"
+    },
+    {
+      "path": "src/claim_polygraph_ng/telemetry.py",
+      "sha256": "dbf985f238c733e1a7c0fd7a7843373e2feb52e049b5d818a082b6dcd504e93e"
+    },
+    {
+      "path": "tests/contracts/test_durable_multi_agent_graph_state.py",
+      "sha256": "443d5d781e98bdd340ce449a0bdaddaa6945430b166a3ce0082bcb2f382cb342"
+    },
+    {
+      "path": "tests/contracts/test_graph_contracts.py",
+      "sha256": "75147ffa16d10c7aa7c8a053cef50ae8b0d5f66ce2905936382b55587ca91b6c"
+    },
+    {
+      "path": "tests/contracts/test_input_contracts.py",
+      "sha256": "28b5dd8115dd0fbee2dab663d0d9513dc3c785acaa464d9c1bd199dc47d904a1"
+    },
+    {
+      "path": "tests/contracts/test_research_contracts.py",
+      "sha256": "9412de797db72e8e54e0093e17f8741fe756cc7ed62675fbce8e819a25de429e"
+    },
+    {
+      "path": "tests/contracts/test_review_contracts.py",
+      "sha256": "2adb1d6e20b9324fc31dabdf3cdd007cf7d6e4b6d4137be36d43f72f6a511ae3"
+    },
+    {
+      "path": "tests/contracts/test_serialization_contracts.py",
+      "sha256": "9c9a54868a918b9b2ed73812e38a7f94a109b379038d1359b80d45acd3890b32"
+    },
+    {
+      "path": "tests/contracts/test_verification_contracts.py",
+      "sha256": "c3e57c6b4bfa8d9ca3c443178510220c1b292905daa3da8d1d259f120e0b8da5"
+    },
+    {
+      "path": "tests/integration/test_api.py",
+      "sha256": "98016b9b2f145612c47ec95844fb00667f46c12de06bf6f3f6effe6a880af307"
+    },
+    {
+      "path": "tests/integration/test_cli.py",
+      "sha256": "69f2b94e796f6887030e1c507f1787e4443b0005735c79731737058ac3868945"
+    },
+    {
+      "path": "tests/integration/test_complex_investigation.py",
+      "sha256": "686bbd8d5812ea74e1b13891190ee8e99f49851ad3babfffd97785363275018e"
+    },
+    {
+      "path": "tests/integration/test_durable_job_queue.py",
+      "sha256": "b56d2fab9da837b868bb0b74e12b338264de5381db587b27fa123f14b66d6cfe"
+    },
+    {
+      "path": "tests/integration/test_durable_job_worker.py",
+      "sha256": "af0c3ca0446a12d9fecf04881502711bcbfbf364cf991b64cdb9301f1ee01a08"
+    },
+    {
+      "path": "tests/integration/test_investigation_lifecycle.py",
+      "sha256": "0bceeaeb0d1193770db5a11dd4e0889f2a57a6af65f3dc9d25e1fac67a5156e8"
+    },
+    {
+      "path": "tests/integration/test_job_backend_gate.py",
+      "sha256": "877ca68cc345a26722373f29e108be4fb78183c68ee6296cdca92bbdf0a55002"
+    },
+    {
+      "path": "tests/integration/test_langgraph_adversarial_argument.py",
+      "sha256": "d0415d710703457538141060f35aa4eeff03a6f1f56481401ef1977c051a3110"
+    },
+    {
+      "path": "tests/integration/test_langgraph_durable.py",
+      "sha256": "71e7db171e8f953bce103c93f27ad8fb754dd5cc5342b15dbc4dc4e0d083a9af"
+    },
+    {
+      "path": "tests/integration/test_langgraph_fixture.py",
+      "sha256": "995c51067882fa8cf428f593fec738075829e41bc69279df3d7f413a493910a7"
+    },
+    {
+      "path": "tests/integration/test_langgraph_research_fanout.py",
+      "sha256": "53b5e63074b94cead3b121f3614348c7a641377200ff2650c99af860cb3f6be5"
+    },
+    {
+      "path": "tests/integration/test_langgraph_research_state.py",
+      "sha256": "9b941935a6b37cab1dce0a983a65ed2fc6fc06db84e2828f04cfb6adeaf88c0d"
+    },
+    {
+      "path": "tests/integration/test_multi_agent_service.py",
+      "sha256": "67af8e91d46f40302d40e2591cee45ab0f7c0e5282fa3b7295093e2a57d47baf"
+    },
+    {
+      "path": "tests/integration/test_phase7_frozen.py",
+      "sha256": "dbed57e767268681a55c4fa58edb2386245eaa19aadcb313c8d6a0f8884b7cf2"
+    },
+    {
+      "path": "tests/integration/test_phase7_recovery.py",
+      "sha256": "3dc788b6a2dab10767fff3a9835fbce912db7c54b4a0f4336da7792dda0c60c4"
+    },
+    {
+      "path": "tests/integration/test_phase8_5_frozen_pilot.py",
+      "sha256": "19c19591d9ac2553f8473833098b4b19be4833ad93cdd439724cfe2e0b6a674e"
+    },
+    {
+      "path": "tests/integration/test_phase8_promotion.py",
+      "sha256": "20d3a13aa225512a433f3d5af7e94ce59dbea6aeee2ba85007b42ef79721ade7"
+    },
+    {
+      "path": "tests/integration/test_promoted_orchestrator.py",
+      "sha256": "c55bfa6d7027da02be67239c12ff9bd310546ec709488a0d28da50db4414c04b"
+    },
+    {
+      "path": "tests/integration/test_real_retrieval_path.py",
+      "sha256": "202fb7ba566efae7b775e1d2d3059f27c4eab7546fd4024f48e7440741075900"
+    },
+    {
+      "path": "tests/integration/test_research_executor.py",
+      "sha256": "9e4066ccea4f666db28f7232d8df766f8f8d5a1587669cad4f40a926d018c6e7"
+    },
+    {
+      "path": "tests/integration/test_review_ledger.py",
+      "sha256": "49bc311ecff902d441dfae6bf90ef353b2f35f1f36bafabc09655d6438b46df0"
+    },
+    {
+      "path": "tests/integration/test_sqlite_concurrency_gate.py",
+      "sha256": "2559b741b79e774d5f7f9682d120129778e031ae948259301b6a176c9884ea5c"
+    },
+    {
+      "path": "tests/integration/test_telemetry_gate.py",
+      "sha256": "2359d24093f03fc6b55c0cc5d3e3f0243da86926a79c32866d24ea69cd819335"
+    },
+    {
+      "path": "tests/integration/test_telemetry_propagation.py",
+      "sha256": "19cb20fea57f32b8e36344a0dfac63cce2325e3fe7071ec6e2ff90c615a5ac19"
+    },
+    {
+      "path": "tests/security/test_api_security.py",
+      "sha256": "518ff63270e778da69786c08da7e2d0283b1c08e8001d382f4f3da474e53f132"
+    },
+    {
+      "path": "tests/security/test_safe_fetcher.py",
+      "sha256": "1cab56b02dfa7bc135f405310ecf4130bf6d788d221b81f8af180224a7065b12"
+    },
+    {
+      "path": "tests/unit/test_aggregation.py",
+      "sha256": "95a6c3266550803c13b9d5e5757f3eff13dd22d097a64d6a11f99378fc668549"
+    },
+    {
+      "path": "tests/unit/test_argument_ledger.py",
+      "sha256": "be56fd560132cb59bfada139ce7c6092ba9ddd66fa761f675a778d2ca306e838"
+    },
+    {
+      "path": "tests/unit/test_candidate_provider.py",
+      "sha256": "0647affe31c88644a6be341eb02a29b5c9eca18e794e180d92b97f6a954f38e0"
+    },
+    {
+      "path": "tests/unit/test_canonicalization.py",
+      "sha256": "9d0eae2beb14c9250a658330bcfd7e4d68236f8e05053c32ea80dbf1471b614e"
+    },
+    {
+      "path": "tests/unit/test_citation_assurance.py",
+      "sha256": "ab762bd6a8479bf27261c140e6fabf042042fec04d32e847cdcd7fc9dc2b1def"
+    },
+    {
+      "path": "tests/unit/test_claim_extraction.py",
+      "sha256": "6d7a431ca95c499b77b079d0d0d3cc6078ecd0e842be20367f583df5ec451268"
+    },
+    {
+      "path": "tests/unit/test_complex_benchmark_contract.py",
+      "sha256": "b653154b57397ec869d77707482e7312e2067011679a58eccd80f09bf0bd5ff2"
+    },
+    {
+      "path": "tests/unit/test_confidence_calibration.py",
+      "sha256": "06e789f41c30391f2c426a0e9535112fd0a359984567c68a3703d9750911fdf8"
+    },
+    {
+      "path": "tests/unit/test_context_verification.py",
+      "sha256": "f8e6b9f0ff8b275429d74c8d4e688e66e6e702297f0f90a9e1d9c5087fb00474"
+    },
+    {
+      "path": "tests/unit/test_domain_models.py",
+      "sha256": "fd51ce007a6dfcba7ebc8dadf086a3648f170a791f205fd1664c5d170a5641ac"
+    },
+    {
+      "path": "tests/unit/test_evaluation.py",
+      "sha256": "71d07359f1ebc449610b20ee002acf32941385d9c8678b0fec5f24cbd2e52d0d"
+    },
+    {
+      "path": "tests/unit/test_evidence_consolidation.py",
+      "sha256": "2bc0d7d684c6f8e78c67969d6ee31cd3a95d88c817796f39a3fa38f6e009ef70"
+    },
+    {
+      "path": "tests/unit/test_evidence_families.py",
+      "sha256": "c59f02269b1a2347f62d476f68c45725cef4cb3f65c8e4cb6615d65226811c11"
+    },
+    {
+      "path": "tests/unit/test_exact_duplicates.py",
+      "sha256": "14840a0b0d015ee7f250422576258bf59032b323b25913ccb682a06d548f190f"
+    },
+    {
+      "path": "tests/unit/test_full_report_assurance.py",
+      "sha256": "ba0e8aab1e9ebaf9a73dd8a7e0c58c57fd799a1d3e5d52289ec59881f11123c9"
+    },
+    {
+      "path": "tests/unit/test_independence.py",
+      "sha256": "07fcc25efd1e50ee0671343b8ae12842f23cb302c8d9842187bf8b74088442d3"
+    },
+    {
+      "path": "tests/unit/test_independence_features.py",
+      "sha256": "fe1a77b608c8535e72583f3d3c0ddc044adf36fddd0186bb27cf0a2ccfcc7580"
+    },
+    {
+      "path": "tests/unit/test_judgment_policy.py",
+      "sha256": "6ec8437f684d79d357e6d9431a2a343db403ce7096da377a67f2cbfe685a0fd0"
+    },
+    {
+      "path": "tests/unit/test_near_duplicates.py",
+      "sha256": "b4883d510c8747ab37eec7818d769c8fb9531e61ee21f0241fca5b3ee35b681b"
+    },
+    {
+      "path": "tests/unit/test_numerical_verification.py",
+      "sha256": "35ac33febb9f5333bdad645182c72fca041c5ff5e87b95b030b14ce716921d26"
+    },
+    {
+      "path": "tests/unit/test_ollama_provider.py",
+      "sha256": "256dbf9f028d4df086b500ee1d9e51a460cd5f95c0ab72b0c6b505f7e4892d92"
+    },
+    {
+      "path": "tests/unit/test_openai_provider.py",
+      "sha256": "06878d88680f608209a90b22273d952ae0d16313e4296d61b7742cace87e33ba"
+    },
+    {
+      "path": "tests/unit/test_page_evaluation.py",
+      "sha256": "3d6cf2cdac54b86d3b0e81acc49dd6f025385df6cb3c457c56b43945b78da22f"
+    },
+    {
+      "path": "tests/unit/test_passage_retrieval.py",
+      "sha256": "f14b494a6f3381d17616d732a3dc2dee3726870caad0602ec03a3f3722b5b3ec"
+    },
+    {
+      "path": "tests/unit/test_pdf_extraction.py",
+      "sha256": "06133cdb6a4d228abeb9184ff307e8eb983880bef2833169b7c30cc429e1be3e"
+    },
+    {
+      "path": "tests/unit/test_phase3_gates.py",
+      "sha256": "740dca4c6dabd496db027ed9be4d1fd098b15c58a89c22f103dcfd02ca0fd900"
+    },
+    {
+      "path": "tests/unit/test_phase4_gates.py",
+      "sha256": "f7bafcc6655773cb996839203a99cf9f60f70c8087809b208f4eb32b2041b519"
+    },
+    {
+      "path": "tests/unit/test_phase4_manifest.py",
+      "sha256": "b314d287faa788bff8be17569b6c04b5d9d4fc801dd7617a1beecd45108be429"
+    },
+    {
+      "path": "tests/unit/test_phase4_pilot.py",
+      "sha256": "c6e3ad13b2c735b7b39170ed4b38c66a2b12a641770ae61fbbdaf2d68605080a"
+    },
+    {
+      "path": "tests/unit/test_phase5_ambiguous_classifier.py",
+      "sha256": "b7f4c8c71e857746a3acfec5203528e5bdcc9e21c483a78a4e44939ab025cefc"
+    },
+    {
+      "path": "tests/unit/test_phase5_canonicalization.py",
+      "sha256": "d995232394bdd5ab62438aa2b1e02daf3a2327bb21201a65e965c12b061f442b"
+    },
+    {
+      "path": "tests/unit/test_phase5_evidence_families.py",
+      "sha256": "fa7ebddfaa06df579939367b7269989a06d60d46d89c10fe38e9a9b9d8094a60"
+    },
+    {
+      "path": "tests/unit/test_phase5_exact_duplicates.py",
+      "sha256": "cec120f2a18a1ac2127ff8066687ae1807a5cdae94165cbdd6807440b0f9074f"
+    },
+    {
+      "path": "tests/unit/test_phase5_independence_features.py",
+      "sha256": "38e7866352c207f9a3dc7564aedd60495584601bf3141ce60d44d10721242218"
+    },
+    {
+      "path": "tests/unit/test_phase5_manifest.py",
+      "sha256": "7c7e8c54e265e76bd6302e53b06575023f3f05a0d84ad07cc2e165583399bfc7"
+    },
+    {
+      "path": "tests/unit/test_phase5_near_duplicates.py",
+      "sha256": "f9f18e0b9f38963e9b77390042c1ee8ba3fe2f400774aa9c9a1ecbe9bf760099"
+    },
+    {
+      "path": "tests/unit/test_phase5_provenance_links.py",
+      "sha256": "040e21c542471a115cefa4bd3a04f1e16cd888253e471eb853b5c251aadd3359"
+    },
+    {
+      "path": "tests/unit/test_phase5_quality_calibration.py",
+      "sha256": "4a54f8d05165d349e90dffed8758a0a8397a9f6f0aa3d907926c177208aeda15"
+    },
+    {
+      "path": "tests/unit/test_phase5_source_quality.py",
+      "sha256": "ebd9e41b108b68c8a6203d7c1ec62766c201946c83d1f8e2b7553fac123e4b06"
+    },
+    {
+      "path": "tests/unit/test_phase6_ablation.py",
+      "sha256": "7e2f9d5be75345475be39fd1aa832436ebc01b2820ff3b12ab817b1164f75a6e"
+    },
+    {
+      "path": "tests/unit/test_phase6_closure.py",
+      "sha256": "ed74241c3da1f54054234b9b770735908124010538df77834ede4ae585d2ae26"
+    },
+    {
+      "path": "tests/unit/test_phase6_manifest.py",
+      "sha256": "477d70b5939486a67ade06410320471f7bf8f33f02409002183d0bb62e336cf7"
+    },
+    {
+      "path": "tests/unit/test_phase6_numerical.py",
+      "sha256": "2067e76b43d7722fde6881e1619fe7fc33814ac7eea66ffe6f722fef62a881e5"
+    },
+    {
+      "path": "tests/unit/test_phase6_temporal.py",
+      "sha256": "e1ec1607f59efb43fa8d0842b6f4b8a58fc4b0d296bbb3aed45d3ada10c8a6b4"
+    },
+    {
+      "path": "tests/unit/test_phase7_assurance.py",
+      "sha256": "ec2e4aaa220cf61992e69c3d99205d329b4e3417e7eac28ca17575359df76157"
+    },
+    {
+      "path": "tests/unit/test_phase7_closure.py",
+      "sha256": "942d85b9de485bf4e8faade403f4bdbf7bccccc6778044f772a43bd92f84b4c5"
+    },
+    {
+      "path": "tests/unit/test_phase8_baseline.py",
+      "sha256": "f7f1ca766864df054d454f2f012f61e78049569985893227cb4f2c1bf78c4197"
+    },
+    {
+      "path": "tests/unit/test_phase8_targeted_review_packet.py",
+      "sha256": "0dbb5b9670eb8e9ea946bd48ee60bc6cf49f87e214267831696e1856d46a679a"
+    },
+    {
+      "path": "tests/unit/test_provenance_links.py",
+      "sha256": "2226b619b5de7d6d777133010b2fdaa2175f66663345999002ecdb2d740c94c6"
+    },
+    {
+      "path": "tests/unit/test_provenance_reporting.py",
+      "sha256": "ac8ce3708353cc371f49bf410e073c44816099f95265182e243c91c780ee2148"
+    },
+    {
+      "path": "tests/unit/test_readiness.py",
+      "sha256": "de17cb77c1fdf009204be86cb4854ea62697badb74dce5aa25f43ff5e6fd82e3"
+    },
+    {
+      "path": "tests/unit/test_reporting.py",
+      "sha256": "c54d03ba71212337cbe113b8c2eb573c1bce1a587a79d2ba6f47d2e571050b1a"
+    },
+    {
+      "path": "tests/unit/test_research_operation_cache.py",
+      "sha256": "e1cca6027aa3c174143240d82d356db7edf8ada86d737f5ad083f6d7b672412d"
+    },
+    {
+      "path": "tests/unit/test_research_routing.py",
+      "sha256": "8a022164ccae4d1efa8ba1a4c6004ee6deba5cdb3a1cc1f4918487a71d0deacd"
+    },
+    {
+      "path": "tests/unit/test_retrieval_evaluation.py",
+      "sha256": "89a3c3e2fa072f35f7dfc060fa12f7b0f0d598a2f502d4c9d6e1942b36e57f28"
+    },
+    {
+      "path": "tests/unit/test_retrieval_snapshot.py",
+      "sha256": "f71ff5ce0cebf21a1a82650a8b961e4f856c752990cb5a5762fd9213432b1ae3"
+    },
+    {
+      "path": "tests/unit/test_review_routing.py",
+      "sha256": "208d2a61e7643a99b9c9b3bc44d8ddbd9da8de7523acacac4ec680b906a09775"
+    },
+    {
+      "path": "tests/unit/test_runtime_policy.py",
+      "sha256": "082c406e153a9b5fd41dcfa232ac51bd2595da150a8d35fcc6b185524ad0e3e6"
+    },
+    {
+      "path": "tests/unit/test_searxng_provider.py",
+      "sha256": "2a7e454a2dbf306b9c17348eae9b1f0096c1b00172cffa0498afefa63338e62a"
+    },
+    {
+      "path": "tests/unit/test_semantic_passages.py",
+      "sha256": "cf5488d1bc2a1780bf1be49e6c6d206c95e0fde771d036100017ecf85d915cfb"
+    },
+    {
+      "path": "tests/unit/test_serpapi_provider.py",
+      "sha256": "11107596501567e7c4def6d658864d676a068b8eb07ef1873232e0f5d8271caf"
+    },
+    {
+      "path": "tests/unit/test_source_quality.py",
+      "sha256": "1c74fa345673252f7701e4e11730f425b82b5708ff776ee940ab40efae4d79b6"
+    },
+    {
+      "path": "tests/unit/test_specialist_providers.py",
+      "sha256": "ab21eb580a15fcb716ff1361fc20b911026fb49e0b8b13bf275fcd7ad74c58d1"
+    },
+    {
+      "path": "tests/unit/test_stability.py",
+      "sha256": "7423dffb784225d744af589a8ac65b66440c460c1c215688cdb253bb2a3a91ff"
+    },
+    {
+      "path": "tests/unit/test_sufficiency.py",
+      "sha256": "6048d28860c8eb8457ee129478a6bc6b824781ca70e00807a9d5cf34b1f4c5fa"
+    },
+    {
+      "path": "tests/unit/test_telemetry.py",
+      "sha256": "01fbf5fa4602071051d03ae6c8d130d29b2bd000ad4b7e73f4cf0062982e429a"
+    },
+    {
+      "path": "tests/unit/test_temporal_verification.py",
+      "sha256": "823e71302fd6c7017c01d314c8a11511e1174ded6a9c97a7e6ec4253d317c97e"
+    }
+  ],
+  "external_model_calls": 0,
+  "human_review_complete": true,
+  "live_search_calls": 0,
+  "manifest_id": "phase8-final-release-manifest-v1",
+  "network_fetches": 0,
+  "pdf_downloads": 0,
+  "phase8_complete": true,
+  "status": "complete"
+}

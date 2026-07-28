@@ -11,6 +11,7 @@ from pydantic import JsonValue
 
 from claim_polygraph_ng.analysis import (
     analyze_source_independence,
+    assure_full_report,
     build_argument_ledger,
     calculate_judgment_readiness,
     enforce_judgment_policy,
@@ -384,6 +385,8 @@ class InvestigationService:
                     "evidence": [item.model_dump(mode="json") for item in evidence_items],
                     "independence_analysis": independence.model_dump(mode="json"),
                     "context_verification": context_verification.model_dump(mode="json"),
+                    "verification_packet": verification_packet.model_dump(mode="json"),
+                    "argument_ledger": argument_ledger.model_dump(mode="json"),
                     "taxonomy_guidance": _taxonomy_guidance(context_verification),
                 },
             )
@@ -394,9 +397,7 @@ class InvestigationService:
                 temporal_status=context_verification.temporal.status.value,
             )
             verdict = _enforce_evidence_label_consistency(verdict, evidence_items)
-            _policy_candidate, judgment_policy = enforce_judgment_policy(
-                verdict, argument_ledger
-            )
+            _policy_candidate, judgment_policy = enforce_judgment_policy(verdict, argument_ledger)
             judgment_policy = judgment_policy.model_copy(update={"applied": False})
             self._save_artifact(
                 investigation,
@@ -458,6 +459,18 @@ class InvestigationService:
                 audit.sentence_id,
                 audit,
             )
+            full_report_assurance = assure_full_report(
+                claim_id=claim.claim_id,
+                verdict=verdict,
+                evidence=evidence_items,
+                approved_evidence_ids=tuple(item.evidence_id for item in evidence_items),
+            )
+            self._save_artifact(
+                investigation,
+                ArtifactType.FULL_REPORT_ASSURANCE,
+                claim.claim_id,
+                full_report_assurance,
+            )
             readiness = calculate_judgment_readiness(
                 ledger=argument_ledger,
                 verification=verification_packet,
@@ -503,6 +516,7 @@ class InvestigationService:
                 context_verification=context_verification,
                 verdict=verdict,
                 audits=(audit,),
+                full_report_assurance=full_report_assurance,
             )
         except Exception as error:
             failed = investigation.model_copy(

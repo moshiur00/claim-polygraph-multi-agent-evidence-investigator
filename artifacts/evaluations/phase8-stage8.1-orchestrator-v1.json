@@ -1,0 +1,32 @@
+{
+  "evaluation_id": "phase8-stage8.1-orchestrator-v1",
+  "date": "2026-07-28",
+  "contract": "InvestigationOrchestrator",
+  "default_mode": "langgraph",
+  "rollback_mode": "direct",
+  "experimental_mode": "multi_agent_experimental",
+  "authoritative_service": "InvestigationService",
+  "modes_checked": 3,
+  "contract_conformance_rate": 1.0,
+  "authoritative_verdict_equivalence_rate": 1.0,
+  "automatic_graph_checkpoint_modes": [
+    "langgraph",
+    "multi_agent_experimental"
+  ],
+  "direct_graph_created": false,
+  "duplicate_graph_runs_on_idempotent_replay": 0,
+  "duplicate_review_requests_on_idempotent_replay": 0,
+  "experimental_output_applied_to_authoritative_report": false,
+  "api_declares_orchestrator": true,
+  "cli_declares_orchestrator": true,
+  "dashboard_displays_orchestrator": true,
+  "external_model_calls": 0,
+  "network_calls": 0,
+  "pdf_downloads": 0,
+  "gate_passed": true,
+  "limitations": [
+    "The experimental multi-agent adapter runs bounded research but cannot replace the authoritative report.",
+    "The CLI exposes LangGraph and direct modes; experimental multi-agent selection is API/configuration-only.",
+    "Complex CLI investigations continue through ComplexInvestigationService and declare the direct coordinator until a typed complex graph adapter is implemented."
+  ]
+}

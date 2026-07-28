@@ -1,5 +1,20 @@
 # Claim Polygraph NG: Project Progress and Architecture Review
 
+> **Phase 8 reconciliation — 28 July 2026:** This document originally captured
+> the pre-Phase-8 architecture. Its historical analysis remains useful, but
+> statements that LangGraph and multi-agent research are separate, SQLite
+> concurrency is untested, durable jobs are absent, telemetry is absent, or the
+> dashboard is a nested repository are now superseded. Stages 8.0–8.13 unified
+> orchestration, added typed durable multi-agent state, specialist adapters,
+> concurrent research and adversarial subgraphs, full-report citation
+> assurance, measured SQLite WAL concurrency, bounded durable jobs, W3C trace
+> continuity and a controlled promotion experiment. LangGraph is the default;
+> `InvestigationService` remains authoritative; multi-agent candidate evidence
+> is promoted as the default observational research subgraph following Stage
+> 8.14 human review; InvestigationService remains authoritative. See
+> `PHASE_8_ARCHITECTURE_AND_OPERATIONS.md` and the Stage 8 completion reports
+> for the current released design.
+
 Date: 28 July 2026  
 Review basis: original 28-page project plan, repository implementation, ADRs,
 phase closure artifacts, benchmark artifacts, tests, API, LangGraph workflow,

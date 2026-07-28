@@ -1,0 +1,21 @@
+use_default_settings: true
+
+general:
+  instance_name: "Claim Polygraph Local Search"
+
+search:
+  safe_search: 2
+  formats:
+    - html
+    - json
+
+server:
+  bind_address: "0.0.0.0"
+  port: 8080
+  secret_key: "claim-polygraph-local-development-only"
+  limiter: false
+  image_proxy: false
+
+engines:
+  - name: wikidata
+    disabled: true

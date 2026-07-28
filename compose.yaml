@@ -1,0 +1,60 @@
+name: claim-polygraph
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      CLAIM_POLYGRAPH_API_HOST: "0.0.0.0"
+      CLAIM_POLYGRAPH_API_PORT: "8000"
+      CLAIM_POLYGRAPH_DATA_DIR: "/app/data"
+      CLAIM_POLYGRAPH_ORCHESTRATOR: "${CLAIM_POLYGRAPH_ORCHESTRATOR:-langgraph}"
+      CLAIM_POLYGRAPH_SEARCH_PROVIDER: "${CLAIM_POLYGRAPH_SEARCH_PROVIDER:-serpapi}"
+      CLAIM_POLYGRAPH_MODEL_PROVIDER: "${CLAIM_POLYGRAPH_MODEL_PROVIDER:-openai}"
+      CLAIM_POLYGRAPH_DASHBOARD_ORIGINS: "http://localhost:3000,http://127.0.0.1:3000"
+      # Container-to-container address; host-side localhost settings must not override it.
+      SEARXNG_BASE_URL: "http://searxng:8080"
+      SEARXNG_ENGINES: "${SEARXNG_ENGINES:-duckduckgo,bing,mojeek}"
+      SERPAPI_API_KEY: "${SERPAPI_API_KEY:-}"
+      SERPAPI_ENGINE: "${SERPAPI_ENGINE:-google}"
+      SERPAPI_LANGUAGE: "${SERPAPI_LANGUAGE:-en}"
+      SERPAPI_COUNTRY: "${SERPAPI_COUNTRY:-us}"
+      SERPAPI_TIMEOUT_SECONDS: "${SERPAPI_TIMEOUT_SECONDS:-15}"
+      OPENAI_API_KEY: "${OPENAI_API_KEY:-}"
+      OPENAI_MODEL: "${OPENAI_MODEL:-gpt-5.4-mini}"
+      OPENAI_FAST_MODEL: "${OPENAI_FAST_MODEL:-gpt-4o-mini}"
+      OPENAI_TIMEOUT_SECONDS: "${OPENAI_TIMEOUT_SECONDS:-90}"
+    ports:
+      - "8000:8000"
+    volumes:
+      - claim_polygraph_data:/app/data
+    restart: unless-stopped
+  searxng:
+    image: searxng/searxng:latest
+    profiles: ["searxng"]
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./deploy/searxng/settings.yml:/etc/searxng/settings.yml:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "-", "http://127.0.0.1:8080/healthz"]
+      interval: 10s
+      timeout: 3s
+      start_period: 15s
+      retries: 8
+
+  dashboard:
+    build:
+      context: ./dashboard
+      dockerfile: Dockerfile
+    depends_on:
+      api:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+
+volumes:
+  claim_polygraph_data:

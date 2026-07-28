@@ -21,6 +21,7 @@ from claim_polygraph_ng.domain.review import (
     ReviewRequest,
     VerdictRevision,
 )
+from claim_polygraph_ng.persistence.sqlite_runtime import connect_sqlite, enable_wal
 
 T = TypeVar("T", bound=DomainModel)
 
@@ -53,10 +54,11 @@ class SQLiteReviewLedger:
         self._path = str(database_path)
 
     @contextmanager
-    def _connect(self) -> Iterator[sqlite3.Connection]:
-        connection = sqlite3.connect(self._path)
-        connection.execute("PRAGMA foreign_keys = ON")
+    def _connect(self, *, immediate: bool = False) -> Iterator[sqlite3.Connection]:
+        connection = connect_sqlite(self._path)
         try:
+            if immediate:
+                connection.execute("BEGIN IMMEDIATE")
             yield connection
             connection.commit()
         except Exception:
@@ -67,6 +69,7 @@ class SQLiteReviewLedger:
 
     def initialize(self) -> None:
         with self._connect() as connection:
+            enable_wal(connection)
             connection.executescript(
                 """
                 CREATE TABLE IF NOT EXISTS review_requests (
@@ -115,7 +118,7 @@ class SQLiteReviewLedger:
                 )
 
     def create_request(self, request: ReviewRequest) -> ReviewRequest:
-        with self._connect() as connection:
+        with self._connect(immediate=True) as connection:
             connection.execute(
                 "INSERT INTO review_requests VALUES (?, ?, ?)",
                 (str(request.request_id), str(request.request_id), request.model_dump_json()),
@@ -131,7 +134,7 @@ class SQLiteReviewLedger:
         return request
 
     def add_finding(self, finding: ReviewFinding, *, expected_sequence: int) -> ReviewFinding:
-        with self._connect() as connection:
+        with self._connect(immediate=True) as connection:
             self._check_sequence(connection, finding.request_id, expected_sequence)
             connection.execute(
                 "INSERT INTO review_findings VALUES (?, ?, ?)",
@@ -150,7 +153,7 @@ class SQLiteReviewLedger:
     def record_decision(
         self, decision: ReviewerDecisionRecord, *, expected_sequence: int
     ) -> ReviewerDecisionRecord:
-        with self._connect() as connection:
+        with self._connect(immediate=True) as connection:
             existing = connection.execute(
                 "SELECT payload FROM reviewer_decisions WHERE decision_id = ?",
                 (str(decision.decision_id),),
@@ -193,7 +196,7 @@ class SQLiteReviewLedger:
     def record_approval(
         self, approval: ApprovalRecord, *, expected_sequence: int
     ) -> ApprovalRecord:
-        with self._connect() as connection:
+        with self._connect(immediate=True) as connection:
             self._check_sequence(connection, approval.request_id, expected_sequence)
             decision = self._one(
                 connection,
@@ -229,7 +232,7 @@ class SQLiteReviewLedger:
     def record_revision(
         self, revision: VerdictRevision, *, expected_sequence: int
     ) -> VerdictRevision:
-        with self._connect() as connection:
+        with self._connect(immediate=True) as connection:
             self._check_sequence(connection, revision.request_id, expected_sequence)
             decision = self._one(
                 connection,

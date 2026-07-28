@@ -1,0 +1,24 @@
+{
+  "header": {"type": "esummary", "version": "0.3"},
+  "result": {
+    "uids": ["11111111", "22222222"],
+    "11111111": {
+      "uid": "11111111",
+      "title": "Population-level outcome after the intervention",
+      "fulljournalname": "Journal of Recorded Fixtures",
+      "pubdate": "2025 Jan",
+      "authors": [{"name": "River A"}, {"name": "Stone B"}],
+      "pubtype": ["Journal Article", "Meta-Analysis"],
+      "articleids": [{"idtype": "doi", "value": "10.1000/fixture.1"}]
+    },
+    "22222222": {
+      "uid": "22222222",
+      "title": "Correction: Population-level outcome",
+      "fulljournalname": "Journal of Recorded Fixtures",
+      "pubdate": "2025 Mar",
+      "authors": [{"name": "River A"}],
+      "pubtype": ["Published Erratum"],
+      "articleids": []
+    }
+  }
+}

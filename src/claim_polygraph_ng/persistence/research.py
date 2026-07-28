@@ -1,14 +1,21 @@
 """Durable Phase 4 operation caches and assignment checkpoints."""
 
 import json
-import sqlite3
 from collections.abc import Iterator
 from contextlib import contextmanager
 from pathlib import Path
 from uuid import UUID
 
-from claim_polygraph_ng.domain import Evidence, ResearchResult, SearchResult, Source
+from claim_polygraph_ng.domain import (
+    AdversarialArgumentCheckpoint,
+    ArgumentRoleResult,
+    Evidence,
+    ResearchResult,
+    SearchResult,
+    Source,
+)
 from claim_polygraph_ng.domain.research import MultiAgentWorkflowCheckpoint
+from claim_polygraph_ng.persistence.sqlite_runtime import connect_sqlite, enable_wal
 from claim_polygraph_ng.retrieval import FetchedDocument
 
 
@@ -19,8 +26,8 @@ class SQLiteResearchRepository:
         self._database_path = str(database_path)
 
     @contextmanager
-    def _connect(self) -> Iterator[sqlite3.Connection]:
-        connection = sqlite3.connect(self._database_path)
+    def _connect(self) -> Iterator:
+        connection = connect_sqlite(self._database_path)
         try:
             yield connection
             connection.commit()
@@ -32,6 +39,7 @@ class SQLiteResearchRepository:
 
     def initialize(self) -> None:
         with self._connect() as connection:
+            enable_wal(connection)
             connection.executescript(
                 """
                 CREATE TABLE IF NOT EXISTS research_search_cache (
@@ -55,6 +63,14 @@ class SQLiteResearchRepository:
                     payload TEXT NOT NULL
                 );
                 CREATE TABLE IF NOT EXISTS research_workflows (
+                    investigation_id TEXT PRIMARY KEY,
+                    payload TEXT NOT NULL
+                );
+                CREATE TABLE IF NOT EXISTS argument_role_results (
+                    assignment_id TEXT PRIMARY KEY,
+                    payload TEXT NOT NULL
+                );
+                CREATE TABLE IF NOT EXISTS argument_workflows (
                     investigation_id TEXT PRIMARY KEY,
                     payload TEXT NOT NULL
                 );
@@ -149,6 +165,38 @@ class SQLiteResearchRepository:
             "investigation_id",
             investigation_id,
             MultiAgentWorkflowCheckpoint,
+        )
+
+    def get_argument_result(self, assignment_id: UUID) -> ArgumentRoleResult | None:
+        return self._load_model(
+            "argument_role_results",
+            "assignment_id",
+            assignment_id,
+            ArgumentRoleResult,
+        )
+
+    def save_argument_result(self, result: ArgumentRoleResult) -> None:
+        self._put_payload(
+            "argument_role_results",
+            "assignment_id",
+            str(result.assignment_id),
+            result.model_dump_json(),
+        )
+
+    def get_argument_workflow(self, investigation_id: UUID) -> AdversarialArgumentCheckpoint | None:
+        return self._load_model(
+            "argument_workflows",
+            "investigation_id",
+            investigation_id,
+            AdversarialArgumentCheckpoint,
+        )
+
+    def save_argument_workflow(self, checkpoint: AdversarialArgumentCheckpoint) -> None:
+        self._put_payload(
+            "argument_workflows",
+            "investigation_id",
+            str(checkpoint.investigation_id),
+            checkpoint.model_dump_json(),
         )
 
     def _load_model(self, table, key_column, key, model):

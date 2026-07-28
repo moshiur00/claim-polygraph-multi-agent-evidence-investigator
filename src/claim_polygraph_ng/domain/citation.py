@@ -27,6 +27,12 @@ class CitationIssueCode(StrEnum):
     EVIDENCE_RECORD_MISSING = "evidence_record_missing"
 
 
+class ReportAssertionSection(StrEnum):
+    VERDICT_SUMMARY = "verdict_summary"
+    DETAILED_REASONING = "detailed_reasoning"
+    EVIDENCE_FINDING = "evidence_finding"
+
+
 class StructuredReportAssertion(DomainModel):
     """One material report sentence with deterministic support expectations."""
 
@@ -38,6 +44,8 @@ class StructuredReportAssertion(DomainModel):
     required_phrases: tuple[str, ...] = Field(min_length=1, max_length=20)
     material: bool = True
     critical: bool = False
+    section: ReportAssertionSection = ReportAssertionSection.EVIDENCE_FINDING
+    ordinal: int = Field(default=0, ge=0)
 
     @model_validator(mode="after")
     def validate_required_phrases(self) -> "StructuredReportAssertion":
@@ -108,6 +116,68 @@ class CitationAssurancePacket(DomainModel):
             raise ValueError("citation assurance counts do not match findings")
         if abs(self.full_support_rate - self.supported_count / len(self.findings)) > 1e-9:
             raise ValueError("full support rate does not match findings")
+        return self
+
+
+class CitationRevision(DomainModel):
+    """One bounded wording change that must be re-audited."""
+
+    assertion_id: UUID
+    attempt_number: int = Field(ge=1, le=2)
+    original_sentence: str = Field(min_length=3, max_length=5_000)
+    revised_sentence: str = Field(min_length=3, max_length=5_000)
+    cited_evidence_ids: tuple[UUID, ...] = Field(min_length=1)
+    rationale: str = Field(min_length=10, max_length=1_000)
+    verdict_label_changed: bool = False
+
+
+class PublicationGateStatus(StrEnum):
+    READY = "ready"
+    BLOCKED = "blocked"
+
+
+class FullReportCitationAssurance(DomainModel):
+    """Complete material-sentence inventory, revisions and publication decision."""
+
+    claim_id: UUID
+    original_assertions: tuple[StructuredReportAssertion, ...] = Field(min_length=1)
+    final_assertions: tuple[StructuredReportAssertion, ...] = Field(min_length=1)
+    initial_audit: CitationAssurancePacket
+    final_audit: CitationAssurancePacket
+    revisions: tuple[CitationRevision, ...] = ()
+    material_sentence_count: int = Field(ge=1)
+    audited_material_sentence_count: int = Field(ge=1)
+    critical_failure_count: int = Field(ge=0)
+    publication_status: PublicationGateStatus
+    blocking_reasons: tuple[str, ...] = ()
+    maximum_revision_attempts: int = Field(default=2, ge=0, le=2)
+
+    @model_validator(mode="after")
+    def validate_full_report_gate(self) -> "FullReportCitationAssurance":
+        original_ids = {item.assertion_id for item in self.original_assertions}
+        final_ids = {item.assertion_id for item in self.final_assertions}
+        if original_ids != final_ids:
+            raise ValueError("revision cannot add or remove report assertions")
+        material = sum(item.material for item in self.final_assertions)
+        if material != self.material_sentence_count:
+            raise ValueError("material sentence count does not match assertion inventory")
+        if self.audited_material_sentence_count != material:
+            raise ValueError("every material sentence must enter the final audit")
+        if len(self.final_audit.findings) != len(self.final_assertions):
+            raise ValueError("every final assertion requires exactly one finding")
+        critical_failures = sum(
+            item.critical and item.status is not CitationAssuranceStatus.SUPPORTED
+            for item in self.final_audit.findings
+        )
+        if critical_failures != self.critical_failure_count:
+            raise ValueError("critical failure count does not match final findings")
+        blocked = critical_failures > 0 or self.final_audit.full_support_rate < 0.95
+        if (self.publication_status is PublicationGateStatus.BLOCKED) != blocked:
+            raise ValueError("publication status does not match assurance thresholds")
+        if blocked != bool(self.blocking_reasons):
+            raise ValueError("blocked publication requires one or more reasons")
+        if any(item.verdict_label_changed for item in self.revisions):
+            raise ValueError("citation revision cannot change the verdict label")
         return self
 
 

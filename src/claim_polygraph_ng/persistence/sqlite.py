@@ -1,6 +1,5 @@
 """SQLite persistence for the lightweight investigation lifecycle."""
 
-import sqlite3
 from collections.abc import Iterator
 from contextlib import contextmanager
 from pathlib import Path
@@ -9,6 +8,7 @@ from uuid import UUID
 
 from claim_polygraph_ng.domain.base import DomainModel
 from claim_polygraph_ng.domain.investigation import ArtifactType, Investigation, TraceEvent
+from claim_polygraph_ng.persistence.sqlite_runtime import connect_sqlite, enable_wal
 
 StoredArtifact = TypeVar("StoredArtifact", bound=DomainModel)
 
@@ -20,9 +20,8 @@ class SQLiteInvestigationRepository:
         self._database_path = str(database_path)
 
     @contextmanager
-    def _connect(self) -> Iterator[sqlite3.Connection]:
-        connection = sqlite3.connect(self._database_path)
-        connection.execute("PRAGMA foreign_keys = ON")
+    def _connect(self) -> Iterator:
+        connection = connect_sqlite(self._database_path)
         try:
             yield connection
             connection.commit()
@@ -35,6 +34,7 @@ class SQLiteInvestigationRepository:
     def initialize(self) -> None:
         """Create the minimal durable schema idempotently."""
         with self._connect() as connection:
+            enable_wal(connection)
             connection.executescript(
                 """
                 CREATE TABLE IF NOT EXISTS investigations (

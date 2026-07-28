@@ -12,8 +12,17 @@ from uuid import UUID
 from pydantic import SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-from claim_polygraph_ng.application import ComplexInvestigationService, InvestigationService
+from claim_polygraph_ng.application import (
+    ClaimExtractionService,
+    ComplexInvestigationService,
+    DirectInvestigationOrchestrator,
+    InvestigationService,
+    LangGraphInvestigationOrchestrator,
+    OrchestratorMode,
+    parse_orchestrator_mode,
+)
 from claim_polygraph_ng.domain import ArtifactType, ClaimDecomposition, InvestigationStatus
+from claim_polygraph_ng.domain.input import ArticleTextInput, PublicUrlInput
 from claim_polygraph_ng.evaluation import (
     BenchmarkEvidenceSearchProvider,
     RecordingSearchProvider,
@@ -49,7 +58,7 @@ from claim_polygraph_ng.evaluation import (
     validate_initial_benchmark,
     verify_phase4_manifest,
 )
-from claim_polygraph_ng.persistence import SQLiteInvestigationRepository
+from claim_polygraph_ng.persistence import SQLiteInvestigationRepository, SQLiteReviewLedger
 from claim_polygraph_ng.providers import (
     DeterministicModelProvider,
     DeterministicSearchProvider,
@@ -135,6 +144,15 @@ def build_parser() -> argparse.ArgumentParser:
         type=Path,
         default=DEFAULT_ARTIFACTS,
         help=f"Report output directory (default: {DEFAULT_ARTIFACTS}).",
+    )
+    parser.add_argument(
+        "--orchestrator",
+        choices=(OrchestratorMode.LANGGRAPH.value, OrchestratorMode.DIRECT.value),
+        default=os.getenv("CLAIM_POLYGRAPH_ORCHESTRATOR", OrchestratorMode.LANGGRAPH.value),
+        help=(
+            "Investigation orchestrator (default: langgraph). "
+            "Use direct as the explicit rollback path."
+        ),
     )
     parser.add_argument(
         "--searxng-url",
@@ -248,6 +266,17 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Selectively decompose the claim and produce a component-coverage report.",
     )
+    extract_claims = subparsers.add_parser(
+        "extract-claims",
+        help="Extract ranked claim candidates without starting an investigation.",
+    )
+    extract_claims.add_argument("input", help="Article text or a public HTTP(S) URL.")
+    extract_claims.add_argument(
+        "--url",
+        action="store_true",
+        help="Treat input as a public URL and apply the safe-fetch policy.",
+    )
+    extract_claims.add_argument("--title", help="Optional title for supplied article text.")
     resume_complex = subparsers.add_parser(
         "resume-complex",
         help="Resume a checkpointed complex investigation.",
@@ -562,6 +591,13 @@ def main(argv: Sequence[str] | None = None) -> int:
                 args.critic_model,
                 args.openai_timeout,
             )
+        if args.command == "extract-claims":
+            return _extract_claims(
+                args.input,
+                is_url=args.url,
+                title=args.title,
+                allowed_pdf_hosts=tuple(args.allow_pdf_host),
+            )
         if args.command == "compare-complex-runs":
             return _compare_complex_runs(args.first, args.second, args.output)
         if args.command == "merge-complex-runs":
@@ -641,6 +677,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 args.openai_timeout,
                 tuple(args.allow_pdf_host),
                 args.complex,
+                args.orchestrator,
             )
         if args.command == "resume-complex":
             return _resume_complex(
@@ -690,6 +727,32 @@ def main(argv: Sequence[str] | None = None) -> int:
     raise RuntimeError(f"unsupported command: {args.command}")
 
 
+def _extract_claims(
+    value: str,
+    *,
+    is_url: bool,
+    title: str | None,
+    allowed_pdf_hosts: tuple[str, ...],
+) -> int:
+    if is_url:
+        fetcher = _safe_fetcher(allowed_pdf_hosts)
+        supplied = PublicUrlInput(url=value)
+        service = ClaimExtractionService(fetcher.fetch)
+    else:
+        supplied = ArticleTextInput(text=value, title=title)
+        service = ClaimExtractionService()
+    packet = asyncio.run(service.extract(supplied))
+    print(f"Input type: {packet.input_kind.value}")
+    print(f"Candidates: {len(packet.candidates)}")
+    print("Investigation started: no")
+    for candidate in packet.candidates:
+        print(
+            f"{candidate.rank}. [{candidate.checkworthiness:.2f}] "
+            f"{candidate.text}"
+        )
+    return 0
+
+
 def _repository(database: Path) -> SQLiteInvestigationRepository:
     database.parent.mkdir(parents=True, exist_ok=True)
     repository = SQLiteInvestigationRepository(database)
@@ -712,6 +775,7 @@ def _investigate(
     openai_timeout: float,
     allowed_pdf_hosts: tuple[str, ...],
     complex_mode: bool,
+    orchestrator_mode: str,
 ) -> int:
     if searxng_url or serpapi.enabled:
         search_provider = _configured_search_provider(
@@ -752,6 +816,8 @@ def _investigate(
         print(f"Verdict: {complex_report.verdict.label.value}")
         print(f"Components: {len(complex_report.component_reports)}")
         print(f"Coverage: {complex_report.coverage.material_coverage_rate:.2%}")
+        print("Orchestrator: direct")
+        print("Authority: ComplexInvestigationService")
         print(f"Report: {exported.report_markdown}")
         print(f"{retrieval_message} {model_message}")
         return 0
@@ -762,13 +828,26 @@ def _investigate(
         search_provider=search_provider,
         content_fetcher=content_fetcher,
     )
-    report = asyncio.run(service.investigate(claim))
+    selected_mode = parse_orchestrator_mode(orchestrator_mode)
+    if selected_mode is OrchestratorMode.LANGGRAPH:
+        state = artifacts / ".state"
+        state.mkdir(parents=True, exist_ok=True)
+        orchestrator = LangGraphInvestigationOrchestrator(
+            investigate_authoritatively=service.investigate,
+            checkpoint_path=state / "langgraph-checkpoints.db",
+            reviews=SQLiteReviewLedger(state / "reviews.db"),
+        )
+    else:
+        orchestrator = DirectInvestigationOrchestrator(service.investigate)
+    report = asyncio.run(orchestrator.investigate(claim))
     events = repository.list_events(report.investigation.investigation_id)
     exported = export_report(report, events, artifacts)
 
     print(f"Investigation ID: {report.investigation.investigation_id}")
     print(f"Status: {report.investigation.status.value}")
     print(f"Verdict: {report.verdict.label.value}")
+    print(f"Orchestrator: {orchestrator.mode.value}")
+    print(f"Authority: {orchestrator.authoritative_service}")
     print(f"Report: {exported.report_markdown}")
     print(f"{retrieval_message} {model_message}")
     return 0

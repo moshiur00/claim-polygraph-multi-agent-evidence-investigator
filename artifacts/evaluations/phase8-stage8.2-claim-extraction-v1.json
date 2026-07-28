@@ -1,0 +1,31 @@
+{
+  "evaluation_id": "phase8-stage8.2-claim-extraction-v1",
+  "date": "2026-07-28",
+  "input_kinds": [
+    "manual_claim",
+    "article_text",
+    "public_url"
+  ],
+  "typed_discriminated_input": true,
+  "exact_source_offsets": true,
+  "surrounding_context_preserved": true,
+  "duplicate_candidates_removed": true,
+  "canonical_url_recorded": true,
+  "retrieval_time_recorded": true,
+  "content_hash_recorded": true,
+  "rights_status_recorded": true,
+  "retention_policy_recorded": true,
+  "unsafe_url_fails_closed": true,
+  "pdf_download_default": "denied_without_explicit_host_approval",
+  "user_selection_required": true,
+  "automatic_investigation_started": false,
+  "external_model_calls": 0,
+  "network_calls": 0,
+  "pdf_downloads": 0,
+  "gate_passed": true,
+  "limitations": [
+    "Candidate extraction and check-worthiness ranking are deterministic heuristics, not model-calibrated probabilities.",
+    "Rights status defaults to unknown unless separately documented.",
+    "A selected candidate enters the existing atomic investigation path; durable complex graph state remains Stage 8.3."
+  ]
+}

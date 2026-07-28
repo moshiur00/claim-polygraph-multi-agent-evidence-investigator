@@ -1,8 +1,32 @@
 # Claim Polygraph Evidence Review Console
 
-A connected Phase 7 console for submitting claims, inspecting authoritative
+A connected Phase 8 console for submitting claims, inspecting authoritative
 evidence packets, following durable LangGraph execution, and recording
 append-only human-review decisions.
+
+## Docker Quick Start
+
+From the repository root:
+
+```powershell
+docker compose up --build
+```
+
+Open `http://localhost:3000`. The API health endpoint is available at
+`http://localhost:8000/health`. Investigation and checkpoint databases persist
+in the named `claim_polygraph_data` Docker volume.
+
+The temporary cost card is cumulative for the local telemetry database. It
+uses versioned OpenAI list-price estimates and does not include SerpAPI plan
+charges.
+
+Stop the application with:
+
+```powershell
+docker compose down
+```
+
+Add `-v` only when you intentionally want to delete the persisted local data.
 
 ## Prerequisites
 

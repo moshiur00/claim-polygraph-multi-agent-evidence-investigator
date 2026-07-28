@@ -1,0 +1,10 @@
+.git
+.npm-cache
+.wrangler
+node_modules
+dist
+outputs
+work
+dev.err.log
+dev.out.log
+*.log

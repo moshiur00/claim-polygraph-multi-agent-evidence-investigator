@@ -230,7 +230,14 @@ def _budget_exhausted(context: SufficiencyContext) -> bool:
         or consumption.role_activations >= budget.maximum_role_activations_per_component
         or consumption.search_calls >= budget.maximum_search_calls
         or consumption.fetched_pages >= budget.maximum_pages_per_component
-        or consumption.model_calls >= budget.maximum_model_calls
+        or (
+            consumption.model_calls >= budget.maximum_model_calls and budget.maximum_model_calls > 0
+        )
+        or (
+            consumption.total_tokens >= budget.maximum_total_tokens
+            and budget.maximum_total_tokens > 0
+        )
+        or consumption.duration_seconds >= budget.maximum_duration_seconds
         or (
             consumption.estimated_cost_usd >= budget.maximum_cost_usd
             and budget.maximum_cost_usd > 0
