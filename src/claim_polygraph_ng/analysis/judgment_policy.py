@@ -9,6 +9,7 @@ from claim_polygraph_ng.domain import (
     Verdict,
     VerdictLabel,
 )
+from claim_polygraph_ng.domain.social_constraints import SocialEvidencePolicyResult
 
 JUDGMENT_POLICY_VERSION = "judgment-policy-v1"
 
@@ -45,10 +46,13 @@ _INCOMPATIBLE_REASON = {
 def enforce_judgment_policy(
     proposed: Verdict,
     ledger: ArgumentLedger,
+    social_policy: SocialEvidencePolicyResult | None = None,
 ) -> tuple[Verdict, JudgmentPolicyTrace]:
     """Preserve valid proposals and constrain invalid label/evidence combinations."""
     if proposed.claim_id != ledger.claim_id:
         raise ValueError("verdict and argument ledger must reference the same claim")
+    if social_policy is not None and social_policy.claim_id != ledger.claim_id:
+        raise ValueError("social policy and argument ledger must reference the same claim")
     resolutions = {
         argument.resolution
         for argument in ledger.arguments
@@ -82,7 +86,10 @@ def enforce_judgment_policy(
     ]
     if blocking:
         reason_codes.append(JudgmentReasonCode.BLOCKING_CHALLENGE)
-    review_required = proposed.human_review_required or changed or blocking
+    social_review = bool(social_policy and social_policy.requires_human_review)
+    if social_review:
+        reason_codes.append(JudgmentReasonCode.SOCIAL_EVIDENCE_CONSTRAINT)
+    review_required = proposed.human_review_required or changed or blocking or social_review
     rationale_parts = []
     if changed:
         rationale_parts.append(
@@ -95,6 +102,10 @@ def enforce_judgment_policy(
         )
     if blocking:
         rationale_parts.append("At least one blocking challenger finding requires review.")
+    if social_review:
+        rationale_parts.append(
+            "Social-evidence use or corroboration constraints require review."
+        )
     rationale = " ".join(rationale_parts)
     review_reason = proposed.review_reason
     if review_required:

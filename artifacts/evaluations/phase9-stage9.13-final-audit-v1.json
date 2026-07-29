@@ -1,0 +1,57 @@
+{
+  "audit_id": "phase9-stage9.13-final-audit-v1",
+  "generated_at": "2026-07-29T15:43:12.139440+00:00",
+  "mechanical_gates_passed": true,
+  "human_approval_status": "approved",
+  "human_approval": {
+    "reviewer_identity": "Md Moshiur Rahman",
+    "review_date": "2026-07-29",
+    "decision": "approve",
+    "source": "explicit user approval of ADR 0021"
+  },
+  "recommended_decision": "promote_local_observational_default",
+  "checks": {
+    "phase5_manifest_valid": true,
+    "phase6_audit_valid": true,
+    "stage9_12b_remediation_valid": true,
+    "stage9_comparison_gates_pass": true,
+    "verdict_equivalence_100_percent": true,
+    "review_routing_recall_100_percent": true,
+    "citation_support_at_least_95_percent": true,
+    "challenger_gain_preserved": true,
+    "duplicate_paid_operations_zero": true,
+    "all_recovery_controls_pass": true,
+    "critical_test_suite_passed": true,
+    "dashboard_build_passed": true,
+    "dashboard_accessibility_passed": true,
+    "repository_lint_passed": true,
+    "sqlite_repeated_stress_passed": true
+  },
+  "metrics": {
+    "critical_tests_passed": 70,
+    "complete_python_tests_passed": 505,
+    "dashboard_accessibility_tests_passed": 2,
+    "sqlite_stress_runs_passed": 8,
+    "sqlite_stress_runs_attempted": 8,
+    "verdict_equivalence": 1.0,
+    "review_routing_recall": 1.0,
+    "reviewed_label_accuracy": 0.4,
+    "evidence_coverage": 1.0,
+    "challenger_material_gain_cases": 7,
+    "duplicate_paid_operations": 0
+  },
+  "promotion_scope": [
+    "local Docker deployment",
+    "bounded single-host SQLite workload",
+    "observational/default orchestration"
+  ],
+  "non_promoted_claims": [
+    "calibrated autonomous factual accuracy",
+    "unbounded distributed production traffic",
+    "autonomous publication without existing gates"
+  ],
+  "external_model_calls": 0,
+  "live_search_calls": 0,
+  "network_fetches": 0,
+  "pdf_downloads": 0
+}

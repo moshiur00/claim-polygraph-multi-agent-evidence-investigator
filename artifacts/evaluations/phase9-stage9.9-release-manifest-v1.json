@@ -1,0 +1,49 @@
+{
+  "manifest_id": "phase9-stage9.9-release-manifest-v1",
+  "artifacts": [
+    {
+      "artifact_id": "authoritative_graph",
+      "path": "src/claim_polygraph_ng/application/langgraph_authoritative.py",
+      "sha256": "d9d7639bbdd86c6263724dc2eac48f1e9a826d3d05197f99a04d86e5a371e2aa"
+    },
+    {
+      "artifact_id": "graph_transition_policy",
+      "path": "src/claim_polygraph_ng/application/authoritative_graph_state.py",
+      "sha256": "eb5b6242aae3098a5c63d4bdc884a2c77000343e73f592876bcc6ab3f966a990"
+    },
+    {
+      "artifact_id": "review_contracts",
+      "path": "src/claim_polygraph_ng/domain/review.py",
+      "sha256": "26da695a716ff6160635ecfd126148707279213034c184fcf374b0db2dd3d5a9"
+    },
+    {
+      "artifact_id": "review_repository",
+      "path": "src/claim_polygraph_ng/persistence/review.py",
+      "sha256": "bdf0c34ed8c65b146c61ed61f443d16a26dbf5908501b7080a295ff10e4bf848"
+    },
+    {
+      "artifact_id": "integration_tests",
+      "path": "tests/integration/test_authoritative_human_review.py",
+      "sha256": "68527d750ab57dc60d8a3f0cc6157d0789c63d6bf338c2b650121944b10cf456"
+    },
+    {
+      "artifact_id": "stage9_8_manifest",
+      "path": "artifacts/evaluations/phase9-stage9.8-release-manifest-v1.json",
+      "sha256": "1cff99f8c2942efee6ae3998631ad21a8e8a38db1c9756a47dcdf6c224a17b41"
+    },
+    {
+      "artifact_id": "stage9_9_gate",
+      "path": "artifacts/evaluations/phase9-stage9.9-authoritative-human-review-v1.json",
+      "sha256": "ca7aa0c010de23a8da2791a932b23eb49abf47f42d27ddea9943a3451ac6f72d"
+    },
+    {
+      "artifact_id": "stage9_9_report",
+      "path": "docs/PHASE_9_STAGE_9.9_COMPLETION_REPORT.md",
+      "sha256": "ba610d96b553eddb079c38cf6bfce84c2f5feb4470bed40e938d921f5cbf279e"
+    }
+  ],
+  "external_model_calls": 0,
+  "live_search_calls": 0,
+  "network_fetches": 0,
+  "pdf_downloads": 0
+}

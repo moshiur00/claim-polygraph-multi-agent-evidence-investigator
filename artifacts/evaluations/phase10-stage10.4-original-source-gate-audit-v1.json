@@ -1,0 +1,57 @@
+{
+  "audit_id": "phase10-stage10.4-original-source-gate-audit-v1",
+  "fixture_id": "phase10-original-source-resolution-v1",
+  "case_count": 4,
+  "exact_preflight_count": 4,
+  "allowed_count": 1,
+  "blocked_count": 3,
+  "resolved_pair_family_count": 1,
+  "resolved_pair_grouping_reason": "resolved_original_source",
+  "model_calls": 0,
+  "search_calls": 0,
+  "network_calls": 0,
+  "valid": true,
+  "errors": [],
+  "artifacts": [
+    {
+      "artifact_id": "fixtures",
+      "path": "benchmarks/phase10_original_source_resolution_fixtures_v1.json",
+      "sha256": "2fcfb1467c4be242aa4f6a67ef7c863cd105d4ad1250f33da42c4b016735e785"
+    },
+    {
+      "artifact_id": "contracts",
+      "path": "src/claim_polygraph_ng/domain/original_source.py",
+      "sha256": "c311939f0b3269bde48b3da95643ed064e381156a31b24f13e3898c0a23fd508"
+    },
+    {
+      "artifact_id": "social_contracts",
+      "path": "src/claim_polygraph_ng/domain/social.py",
+      "sha256": "34f30f8adde3c30e5e399619ded569820ffb552a9a0b8cba93eaf6e212feef64"
+    },
+    {
+      "artifact_id": "resolver",
+      "path": "src/claim_polygraph_ng/application/original_source_resolver.py",
+      "sha256": "d2fe963fd23685051e85440dce3330976f2f06c4c6ba015203bb9a11b6022e99"
+    },
+    {
+      "artifact_id": "persistence",
+      "path": "src/claim_polygraph_ng/persistence/research.py",
+      "sha256": "9b450ad4fa4d4b6bdf4e42c8dfc5ff0c8aeb6f4da6402445ceb7f6c82fa0622a"
+    },
+    {
+      "artifact_id": "independence",
+      "path": "src/claim_polygraph_ng/analysis/independence.py",
+      "sha256": "bbba29fa4a528635437246032391ddd2ab88e184cf7d6ccc69a356278e4b0951"
+    },
+    {
+      "artifact_id": "family_inference",
+      "path": "src/claim_polygraph_ng/analysis/evidence_families.py",
+      "sha256": "337c933cd3413d54a0e498b6dd92cb25d6fa9c3a238687d637ff72e96c1fd452"
+    },
+    {
+      "artifact_id": "provenance",
+      "path": "src/claim_polygraph_ng/analysis/investigation_provenance.py",
+      "sha256": "4f0b43536a4313ed1f67c7bbb8df97dda8b5a6be9c79f5ee1eacd332e9f9ff7b"
+    }
+  ]
+}

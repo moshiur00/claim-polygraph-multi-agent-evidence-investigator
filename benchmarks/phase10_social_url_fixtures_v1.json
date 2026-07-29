@@ -1,0 +1,142 @@
+{
+  "fixture_id": "phase10-social-url-normalization-v1",
+  "version": 1,
+  "network_calls_permitted": 0,
+  "cases": [
+    {
+      "case_id": "SOCURL-001",
+      "input_url": "https://twitter.com/WHO/status/1234567890?utm_source=test#fragment",
+      "platform": "x",
+      "url_kind": "post",
+      "canonical_url": "https://x.com/WHO/status/1234567890",
+      "account_handle": "WHO",
+      "platform_post_id": "1234567890"
+    },
+    {
+      "case_id": "SOCURL-002",
+      "input_url": "https://x.com/NASA/",
+      "platform": "x",
+      "url_kind": "account",
+      "canonical_url": "https://x.com/NASA",
+      "account_handle": "NASA",
+      "platform_post_id": null
+    },
+    {
+      "case_id": "SOCURL-003",
+      "input_url": "https://m.facebook.com/agency/posts/998877?fbclid=tracking",
+      "platform": "facebook",
+      "url_kind": "post",
+      "canonical_url": "https://www.facebook.com/agency/posts/998877",
+      "account_handle": "agency",
+      "platform_post_id": "998877"
+    },
+    {
+      "case_id": "SOCURL-004",
+      "input_url": "https://www.instagram.com/reel/ABC_def-12/?igshid=tracking",
+      "platform": "instagram",
+      "url_kind": "post",
+      "canonical_url": "https://www.instagram.com/reel/ABC_def-12",
+      "account_handle": null,
+      "platform_post_id": "ABC_def-12"
+    },
+    {
+      "case_id": "SOCURL-005",
+      "input_url": "https://www.threads.net/@institution/post/C123xyz",
+      "platform": "threads",
+      "url_kind": "post",
+      "canonical_url": "https://www.threads.net/@institution/post/C123xyz",
+      "account_handle": "institution",
+      "platform_post_id": "C123xyz"
+    },
+    {
+      "case_id": "SOCURL-006",
+      "input_url": "https://www.linkedin.com/feed/update/urn:li:activity:12345?utm_campaign=x",
+      "platform": "linkedin",
+      "url_kind": "post",
+      "canonical_url": "https://www.linkedin.com/feed/update/urn:li:activity:12345",
+      "account_handle": null,
+      "platform_post_id": "urn:li:activity:12345"
+    },
+    {
+      "case_id": "SOCURL-007",
+      "input_url": "https://youtu.be/dQw4w9WgXcQ?si=tracking",
+      "platform": "youtube",
+      "url_kind": "post",
+      "canonical_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+      "account_handle": null,
+      "platform_post_id": "dQw4w9WgXcQ"
+    },
+    {
+      "case_id": "SOCURL-008",
+      "input_url": "https://www.tiktok.com/@reporter/video/7461234567890",
+      "platform": "tiktok",
+      "url_kind": "post",
+      "canonical_url": "https://www.tiktok.com/@reporter/video/7461234567890",
+      "account_handle": "reporter",
+      "platform_post_id": "7461234567890"
+    },
+    {
+      "case_id": "SOCURL-009",
+      "input_url": "https://bsky.app/profile/example.org/post/3kxyz",
+      "platform": "bluesky",
+      "url_kind": "post",
+      "canonical_url": "https://bsky.app/profile/example.org/post/3kxyz",
+      "account_handle": "example.org",
+      "platform_post_id": "3kxyz"
+    },
+    {
+      "case_id": "SOCURL-010",
+      "input_url": "https://old.reddit.com/r/science/comments/abc123/title/?utm_medium=social",
+      "platform": "reddit",
+      "url_kind": "post",
+      "canonical_url": "https://www.reddit.com/r/science/comments/abc123",
+      "account_handle": "science",
+      "platform_post_id": "abc123"
+    },
+    {
+      "case_id": "SOCURL-011",
+      "input_url": "https://mastodon.social/@researcher/1122334455",
+      "platform": "mastodon",
+      "url_kind": "post",
+      "canonical_url": "https://mastodon.social/@researcher/1122334455",
+      "account_handle": "researcher",
+      "platform_post_id": "1122334455"
+    },
+    {
+      "case_id": "SOCURL-012",
+      "input_url": "https://www.facebook.com/permalink.php?id=42&story_fbid=99&utm_source=x",
+      "platform": "facebook",
+      "url_kind": "post",
+      "canonical_url": "https://www.facebook.com/permalink.php?story_fbid=99&id=42",
+      "account_handle": "42",
+      "platform_post_id": "99"
+    },
+    {
+      "case_id": "SOCURL-013",
+      "input_url": "https://x.com/i/flow/login",
+      "platform": "x",
+      "url_kind": "unknown",
+      "canonical_url": "https://x.com/i/flow/login",
+      "account_handle": null,
+      "platform_post_id": null
+    },
+    {
+      "case_id": "SOCURL-014",
+      "input_url": "https://example.org/report?utm_source=social",
+      "platform": null,
+      "url_kind": null,
+      "canonical_url": null,
+      "account_handle": null,
+      "platform_post_id": null
+    },
+    {
+      "case_id": "SOCURL-015",
+      "input_url": "https://x.com.evil.example/WHO/status/1234567890",
+      "platform": null,
+      "url_kind": null,
+      "canonical_url": null,
+      "account_handle": null,
+      "platform_post_id": null
+    }
+  ]
+}

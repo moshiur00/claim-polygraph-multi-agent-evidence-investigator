@@ -1,0 +1,640 @@
+{
+  "manifest_id": "phase9-stage9.0-baseline-v1",
+  "schema_version": 1,
+  "dataset_id": "initial_claims",
+  "dataset_version": 5,
+  "case_count": 20,
+  "generated_from_existing_artifacts_only": true,
+  "default_orchestrator": "langgraph",
+  "authoritative_domain_service": "InvestigationService",
+  "rollback_path": "direct",
+  "resource_policy": {
+    "model_calls": 0,
+    "search_calls": 0,
+    "network_calls": 0,
+    "pdf_downloads": 0
+  },
+  "cases": [
+    {
+      "case_id": "CPNG-001",
+      "expected_verdict": "misleading",
+      "annotation_status": "reviewed",
+      "evidence_count": 2,
+      "evidence_family_count": 2,
+      "search_calls": 0,
+      "model_calls": 2,
+      "input_tokens": 1835,
+      "output_tokens": 1034,
+      "estimated_cost_usd": 0.00442455,
+      "latency_seconds": 9.686188999999999,
+      "review_required": true,
+      "citation_support_rate": null
+    },
+    {
+      "case_id": "CPNG-002",
+      "expected_verdict": "misleading",
+      "annotation_status": "reviewed",
+      "evidence_count": 3,
+      "evidence_family_count": 3,
+      "search_calls": 0,
+      "model_calls": 2,
+      "input_tokens": 1735,
+      "output_tokens": 730,
+      "estimated_cost_usd": 0.00331965,
+      "latency_seconds": 7.492125,
+      "review_required": true,
+      "citation_support_rate": null
+    },
+    {
+      "case_id": "CPNG-003",
+      "expected_verdict": "misleading",
+      "annotation_status": "reviewed",
+      "evidence_count": 2,
+      "evidence_family_count": 2,
+      "search_calls": 0,
+      "model_calls": 2,
+      "input_tokens": 1742,
+      "output_tokens": 724,
+      "estimated_cost_usd": 0.0030129,
+      "latency_seconds": 7.914938,
+      "review_required": true,
+      "citation_support_rate": null
+    },
+    {
+      "case_id": "CPNG-004",
+      "expected_verdict": "outdated",
+      "annotation_status": "reviewed",
+      "evidence_count": 2,
+      "evidence_family_count": 2,
+      "search_calls": 0,
+      "model_calls": 2,
+      "input_tokens": 2028,
+      "output_tokens": 831,
+      "estimated_cost_usd": 0.0035811,
+      "latency_seconds": 7.497314,
+      "review_required": true,
+      "citation_support_rate": null
+    },
+    {
+      "case_id": "CPNG-005",
+      "expected_verdict": "contradicted",
+      "annotation_status": "reviewed",
+      "evidence_count": 3,
+      "evidence_family_count": 3,
+      "search_calls": 0,
+      "model_calls": 2,
+      "input_tokens": 1718,
+      "output_tokens": 604,
+      "estimated_cost_usd": 0.0026451,
+      "latency_seconds": 5.422319,
+      "review_required": true,
+      "citation_support_rate": null
+    },
+    {
+      "case_id": "CPNG-006",
+      "expected_verdict": "supported",
+      "annotation_status": "reviewed",
+      "evidence_count": 3,
+      "evidence_family_count": 3,
+      "search_calls": 0,
+      "model_calls": 2,
+      "input_tokens": 2397,
+      "output_tokens": 946,
+      "estimated_cost_usd": 0.00410505,
+      "latency_seconds": 9.070984,
+      "review_required": true,
+      "citation_support_rate": null
+    },
+    {
+      "case_id": "CPNG-007",
+      "expected_verdict": "supported",
+      "annotation_status": "reviewed",
+      "evidence_count": 2,
+      "evidence_family_count": 2,
+      "search_calls": 0,
+      "model_calls": 2,
+      "input_tokens": 2280,
+      "output_tokens": 853,
+      "estimated_cost_usd": 0.0036945,
+      "latency_seconds": 7.224308000000001,
+      "review_required": true,
+      "citation_support_rate": null
+    },
+    {
+      "case_id": "CPNG-008",
+      "expected_verdict": "supported",
+      "annotation_status": "reviewed",
+      "evidence_count": 2,
+      "evidence_family_count": 2,
+      "search_calls": 0,
+      "model_calls": 2,
+      "input_tokens": 2180,
+      "output_tokens": 715,
+      "estimated_cost_usd": 0.0032619000000000003,
+      "latency_seconds": 6.555674,
+      "review_required": true,
+      "citation_support_rate": null
+    },
+    {
+      "case_id": "CPNG-009",
+      "expected_verdict": "supported",
+      "annotation_status": "reviewed",
+      "evidence_count": 2,
+      "evidence_family_count": 2,
+      "search_calls": 0,
+      "model_calls": 2,
+      "input_tokens": 2229,
+      "output_tokens": 764,
+      "estimated_cost_usd": 0.00332895,
+      "latency_seconds": 6.661144,
+      "review_required": true,
+      "citation_support_rate": null
+    },
+    {
+      "case_id": "CPNG-010",
+      "expected_verdict": "misleading",
+      "annotation_status": "reviewed",
+      "evidence_count": 2,
+      "evidence_family_count": 2,
+      "search_calls": 0,
+      "model_calls": 2,
+      "input_tokens": 2351,
+      "output_tokens": 843,
+      "estimated_cost_usd": 0.00355545,
+      "latency_seconds": 7.676367000000001,
+      "review_required": true,
+      "citation_support_rate": null
+    },
+    {
+      "case_id": "CPNG-011",
+      "expected_verdict": "mixed",
+      "annotation_status": "reviewed",
+      "evidence_count": 2,
+      "evidence_family_count": 2,
+      "search_calls": 0,
+      "model_calls": 2,
+      "input_tokens": 2145,
+      "output_tokens": 354,
+      "estimated_cost_usd": 0.00053415,
+      "latency_seconds": 6.737088,
+      "review_required": true,
+      "citation_support_rate": null
+    },
+    {
+      "case_id": "CPNG-012",
+      "expected_verdict": "contradicted",
+      "annotation_status": "reviewed",
+      "evidence_count": 2,
+      "evidence_family_count": 2,
+      "search_calls": 0,
+      "model_calls": 2,
+      "input_tokens": 2096,
+      "output_tokens": 378,
+      "estimated_cost_usd": 0.0005411999999999999,
+      "latency_seconds": 47.691377,
+      "review_required": true,
+      "citation_support_rate": null
+    },
+    {
+      "case_id": "CPNG-013",
+      "expected_verdict": "contradicted",
+      "annotation_status": "reviewed",
+      "evidence_count": 3,
+      "evidence_family_count": 3,
+      "search_calls": 0,
+      "model_calls": 2,
+      "input_tokens": 2443,
+      "output_tokens": 371,
+      "estimated_cost_usd": 0.00058905,
+      "latency_seconds": 6.71421,
+      "review_required": true,
+      "citation_support_rate": null
+    },
+    {
+      "case_id": "CPNG-014",
+      "expected_verdict": "mixed",
+      "annotation_status": "reviewed",
+      "evidence_count": 2,
+      "evidence_family_count": 1,
+      "search_calls": 0,
+      "model_calls": 2,
+      "input_tokens": 2131,
+      "output_tokens": 517,
+      "estimated_cost_usd": 0.0006298499999999999,
+      "latency_seconds": 10.935373,
+      "review_required": true,
+      "citation_support_rate": null
+    },
+    {
+      "case_id": "CPNG-015",
+      "expected_verdict": "contradicted",
+      "annotation_status": "reviewed",
+      "evidence_count": 2,
+      "evidence_family_count": 2,
+      "search_calls": 0,
+      "model_calls": 2,
+      "input_tokens": 2128,
+      "output_tokens": 450,
+      "estimated_cost_usd": 0.0005892,
+      "latency_seconds": 6.756152999999999,
+      "review_required": true,
+      "citation_support_rate": null
+    },
+    {
+      "case_id": "CPNG-016",
+      "expected_verdict": "contradicted",
+      "annotation_status": "reviewed",
+      "evidence_count": 2,
+      "evidence_family_count": 2,
+      "search_calls": 0,
+      "model_calls": 2,
+      "input_tokens": 2073,
+      "output_tokens": 389,
+      "estimated_cost_usd": 0.00054435,
+      "latency_seconds": 11.388905000000001,
+      "review_required": true,
+      "citation_support_rate": null
+    },
+    {
+      "case_id": "CPNG-017",
+      "expected_verdict": "mixed",
+      "annotation_status": "reviewed",
+      "evidence_count": 2,
+      "evidence_family_count": 2,
+      "search_calls": 0,
+      "model_calls": 2,
+      "input_tokens": 2281,
+      "output_tokens": 522,
+      "estimated_cost_usd": 0.0006553500000000001,
+      "latency_seconds": 9.87903,
+      "review_required": true,
+      "citation_support_rate": null
+    },
+    {
+      "case_id": "CPNG-018",
+      "expected_verdict": "mixed",
+      "annotation_status": "reviewed",
+      "evidence_count": 3,
+      "evidence_family_count": 1,
+      "search_calls": 0,
+      "model_calls": 2,
+      "input_tokens": 2743,
+      "output_tokens": 534,
+      "estimated_cost_usd": 0.00073185,
+      "latency_seconds": 8.513092,
+      "review_required": true,
+      "citation_support_rate": null
+    },
+    {
+      "case_id": "CPNG-019",
+      "expected_verdict": "contradicted",
+      "annotation_status": "reviewed",
+      "evidence_count": 3,
+      "evidence_family_count": 3,
+      "search_calls": 0,
+      "model_calls": 2,
+      "input_tokens": 2497,
+      "output_tokens": 461,
+      "estimated_cost_usd": 0.0006511500000000001,
+      "latency_seconds": 7.087675,
+      "review_required": true,
+      "citation_support_rate": null
+    },
+    {
+      "case_id": "CPNG-020",
+      "expected_verdict": "misleading",
+      "annotation_status": "reviewed",
+      "evidence_count": 3,
+      "evidence_family_count": 3,
+      "search_calls": 0,
+      "model_calls": 2,
+      "input_tokens": 2560,
+      "output_tokens": 342,
+      "estimated_cost_usd": 0.0005892,
+      "latency_seconds": 6.471049,
+      "review_required": true,
+      "citation_support_rate": null
+    }
+  ],
+  "responsibilities": [
+    {
+      "operation": "create_investigation",
+      "current_owner": "InvestigationService.investigate",
+      "artifacts": [],
+      "database_writes": [
+        "investigations",
+        "trace_events"
+      ],
+      "paid_operation": false
+    },
+    {
+      "operation": "normalize_claim",
+      "current_owner": "InvestigationService.investigate/_generate",
+      "artifacts": [
+        "claim"
+      ],
+      "database_writes": [
+        "artifacts",
+        "trace_events"
+      ],
+      "paid_operation": true
+    },
+    {
+      "operation": "plan_investigation",
+      "current_owner": "InvestigationService.investigate/_generate",
+      "artifacts": [
+        "plan"
+      ],
+      "database_writes": [
+        "artifacts",
+        "trace_events"
+      ],
+      "paid_operation": true
+    },
+    {
+      "operation": "execute_research",
+      "current_owner": "InvestigationService._research/_search/_result_content",
+      "artifacts": [
+        "source",
+        "chunk",
+        "evidence",
+        "independence"
+      ],
+      "database_writes": [
+        "artifacts",
+        "trace_events"
+      ],
+      "paid_operation": true
+    },
+    {
+      "operation": "analyze_provenance",
+      "current_owner": "build_investigation_provenance",
+      "artifacts": [
+        "provenance"
+      ],
+      "database_writes": [
+        "artifacts",
+        "trace_events"
+      ],
+      "paid_operation": false
+    },
+    {
+      "operation": "verify_context",
+      "current_owner": "verify_claim_context/bridge_legacy_verification",
+      "artifacts": [
+        "context_verification",
+        "verification_packet"
+      ],
+      "database_writes": [
+        "artifacts",
+        "trace_events"
+      ],
+      "paid_operation": false
+    },
+    {
+      "operation": "build_argument_ledger",
+      "current_owner": "build_argument_ledger",
+      "artifacts": [
+        "argument_ledger"
+      ],
+      "database_writes": [
+        "artifacts",
+        "trace_events"
+      ],
+      "paid_operation": false
+    },
+    {
+      "operation": "draft_and_constrain_verdict",
+      "current_owner": "InvestigationService.investigate safeguards/judgment policy",
+      "artifacts": [
+        "judgment_policy",
+        "verdict"
+      ],
+      "database_writes": [
+        "artifacts",
+        "trace_events"
+      ],
+      "paid_operation": true
+    },
+    {
+      "operation": "audit_citations",
+      "current_owner": "InvestigationService.investigate/assure_full_report",
+      "artifacts": [
+        "audit",
+        "full_report_assurance"
+      ],
+      "database_writes": [
+        "artifacts",
+        "trace_events"
+      ],
+      "paid_operation": true
+    },
+    {
+      "operation": "assess_readiness",
+      "current_owner": "calculate_judgment_readiness",
+      "artifacts": [
+        "readiness"
+      ],
+      "database_writes": [
+        "artifacts",
+        "trace_events"
+      ],
+      "paid_operation": false
+    },
+    {
+      "operation": "finalize_or_fail",
+      "current_owner": "InvestigationService.investigate",
+      "artifacts": [],
+      "database_writes": [
+        "investigations",
+        "trace_events"
+      ],
+      "paid_operation": false
+    }
+  ],
+  "compatibility_contracts": [
+    {
+      "contract_id": "investigation_report_v1",
+      "surface": "POST /api/investigations and GET /api/investigations/{id}/report",
+      "fields": [
+        "investigation",
+        "claim",
+        "plan",
+        "sources",
+        "evidence",
+        "independence_analysis",
+        "provenance",
+        "verification_packet",
+        "argument_ledger",
+        "judgment_policy",
+        "readiness",
+        "context_verification",
+        "verdict",
+        "audits",
+        "full_report_assurance",
+        "publication_decision",
+        "social_evidence_policy"
+      ],
+      "compatibility_rule": "Existing fields remain readable and keep their meaning; additions are optional.",
+      "schema_sha256": "e89315cd0e4f4833bcb2f39577b258be502f0a554bde9d466c2bcaca608d2de5"
+    },
+    {
+      "contract_id": "investigation_status_v1",
+      "surface": "investigation list/detail and investigation SSE",
+      "fields": [
+        "investigation_id",
+        "parent_investigation_id",
+        "component_claim_id",
+        "input_claim",
+        "status",
+        "stage",
+        "created_at",
+        "updated_at",
+        "failure_reason"
+      ],
+      "compatibility_rule": "Persisted status/stage values and terminal-state semantics remain readable.",
+      "schema_sha256": "d9344490feb97cf9dab441fd00fa949fd33a8c71a15f263a54a0ef9439712537"
+    },
+    {
+      "contract_id": "evidence_v1",
+      "surface": "GET /api/investigations/{id}/evidence",
+      "fields": [
+        "evidence_id",
+        "claim_id",
+        "source_id",
+        "chunk_id",
+        "passage",
+        "passage_start_char",
+        "passage_end_char",
+        "context",
+        "stance",
+        "relevance_score",
+        "retrieval_score",
+        "entailment_score",
+        "extraction_status",
+        "temporal_compatibility",
+        "evidence_family_id",
+        "evidentiary_use"
+      ],
+      "compatibility_rule": "Evidence IDs, source/chunk links, stance and passage offsets remain stable.",
+      "schema_sha256": "5fb5dd23724d9fb8e23f61883ad3a63fd754c61e8fa09365c52fc0a5ffe2b5e0"
+    },
+    {
+      "contract_id": "report_markdown_v1",
+      "surface": "GET /api/investigations/{id}/report?format=markdown",
+      "fields": [
+        "title",
+        "development_notice",
+        "verdict",
+        "evidence",
+        "citations",
+        "audit"
+      ],
+      "compatibility_rule": "Publication blocking and citation-grounded sections must not weaken.",
+      "schema_sha256": null
+    },
+    {
+      "contract_id": "durable_job_sse_v1",
+      "surface": "POST/GET /api/investigation-jobs and /events",
+      "fields": [
+        "job",
+        "investigation_id",
+        "events",
+        "job_event",
+        "job_state"
+      ],
+      "compatibility_rule": "Existing clients can reconnect by sequence without resubmitting work.",
+      "schema_sha256": null
+    },
+    {
+      "contract_id": "review_graph_v1",
+      "surface": "/api/graph-runs and /api/reviews",
+      "fields": [
+        "graph",
+        "review",
+        "decision",
+        "approval",
+        "revision"
+      ],
+      "compatibility_rule": "Old graph/review records remain readable and review history stays append-only.",
+      "schema_sha256": null
+    }
+  ],
+  "artifacts": [
+    {
+      "artifact_id": "benchmark",
+      "path": "benchmarks/initial_claims_v1.json",
+      "sha256": "44270e74e3b20028d66dc907036ed3fd8236372d8e1bb8c65fadbcad7598b8a3"
+    },
+    {
+      "artifact_id": "review_001_005",
+      "path": "benchmarks/review_packets/cpng_001_005.md",
+      "sha256": "7582930276f38cc2ec24f1267117af2aa7386296ee15975002019e346e5c84a6"
+    },
+    {
+      "artifact_id": "review_006_010",
+      "path": "benchmarks/review_packets/cpng_006_010.md",
+      "sha256": "8f975863431f9ac0898ce5a276d29da73e6ac30167f56b78d2b6be33f3959381"
+    },
+    {
+      "artifact_id": "review_011_020",
+      "path": "benchmarks/review_packets/cpng_011_020.md",
+      "sha256": "b203b63a19d6e444be3eef493260133d03d872e603612834984f0dfd5f3dda43"
+    },
+    {
+      "artifact_id": "phase8_closure",
+      "path": "artifacts/evaluations/phase8-stage8.14-closure-audit-v1.json",
+      "sha256": "461851b049af053998cfbdb7a61b718e63f3428dd091ab1c2e29ec73065e9881"
+    },
+    {
+      "artifact_id": "phase8_promotion",
+      "path": "artifacts/evaluations/phase8-stage8.13-controlled-promotion-v1.json",
+      "sha256": "266cfad5ada90febd61058d8e16b37b122ea11a16c40674f6f97cecd272f805a"
+    },
+    {
+      "artifact_id": "phase8_release",
+      "path": "artifacts/evaluations/phase8-final-release-manifest-v1.json",
+      "sha256": "1b5b1d14a9e88a71fa2d1af8d35e2bc38e64da501735ee8370c202a5957fffaf"
+    },
+    {
+      "artifact_id": "investigation_service",
+      "path": "src/claim_polygraph_ng/application/investigation_service.py",
+      "sha256": "e4e6243295f7924a52c5080b7b5319fb06250c4175a345d0b80f4c5a837f143a"
+    },
+    {
+      "artifact_id": "orchestrator",
+      "path": "src/claim_polygraph_ng/application/orchestrator.py",
+      "sha256": "c87a6770c27763b3c817284ba6e72b418781a5a6638ac4a2a1b8d6c6ab02ed9a"
+    },
+    {
+      "artifact_id": "api",
+      "path": "src/claim_polygraph_ng/api.py",
+      "sha256": "4d705ba26e6d5e35e57ced2722dc0b26dfa777f324f3dbb901d3757b37f109db"
+    },
+    {
+      "artifact_id": "report_renderer",
+      "path": "src/claim_polygraph_ng/reporting/reports.py",
+      "sha256": "caf1422aa273955054eb45b0f50b1b3c2f1b263126538dbc830d4dd55fe59ceb"
+    },
+    {
+      "artifact_id": "dashboard_page",
+      "path": "dashboard/app/page.tsx",
+      "sha256": "1b5251d78aff0a5ce1586f36f5369a8517dd10eda3a839a8b2a2efba950a6759"
+    },
+    {
+      "artifact_id": "phase9_plan",
+      "path": "docs/PHASE_9_UNIFIED_AUTHORITATIVE_LANGGRAPH_PLAN.md",
+      "sha256": "cf1c81566c7f8db24be80ea1018f43757dd67fef51062aa8ed2ea4a67a800181"
+    },
+    {
+      "artifact_id": "responsibility_map",
+      "path": "docs/PHASE_9_CURRENT_WORKFLOW_RESPONSIBILITY_MAP.md",
+      "sha256": "4ea84acdd4e4f623ad9abdf3dc25c8cb35eaeaf412f7b9454956db25ec32c260"
+    },
+    {
+      "artifact_id": "compatibility_inventory",
+      "path": "docs/PHASE_9_COMPATIBILITY_CONTRACT_INVENTORY.md",
+      "sha256": "596379a1a86059ed0c2fe75240d7384cb38ac57f37cf79f94fbe8cba45b64185"
+    }
+  ]
+}

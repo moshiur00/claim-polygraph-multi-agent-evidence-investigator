@@ -146,11 +146,12 @@ class LangGraphResearchFanOutWorkflow:
     ) -> MultiAgentWorkflowCheckpoint:
         round_number = max(item.round_number for item in checkpoint.assignments)
         completed_ids = {item.assignment_id for item in checkpoint.results}
-        pending = tuple(
+        pending_assignments = tuple(
             item
             for item in checkpoint.assignments
             if item.round_number == round_number and item.assignment_id not in completed_ids
         )
+        pending = _apply_shared_candidate_budget(checkpoint, pending_assignments)
         output: dict[str, Any] = {"unique_results": []}
         if pending:
             executor = ResearchExecutor(
@@ -169,6 +170,20 @@ class LangGraphResearchFanOutWorkflow:
         new_results = tuple(
             ResearchResult.model_validate(item) for item in output.get("unique_results", [])
         )
+        admitted_ids = {item.assignment_id for item in pending}
+        budget_stopped_results = tuple(
+            ResearchResult(
+                assignment_id=item.assignment_id,
+                role=item.role,
+                component_id=item.component_id,
+                failure_reason="shared page/model budget exhausted before assignment",
+            )
+            for item in pending_assignments
+            if item.assignment_id not in admitted_ids
+        )
+        for result in budget_stopped_results:
+            self._repository.save_result(result)
+        new_results = (*new_results, *budget_stopped_results)
         updated = checkpoint.model_copy(
             update={
                 "stage": MultiAgentWorkflowStage.RESEARCHED,
@@ -417,6 +432,44 @@ def _consumption(checkpoint: MultiAgentWorkflowCheckpoint) -> ResearchConsumptio
         duration_seconds=sum(item.duration_seconds for item in checkpoint.results),
         estimated_cost_usd=sum(item.estimated_cost_usd for item in checkpoint.results),
     )
+
+
+def _apply_shared_candidate_budget(
+    checkpoint: MultiAgentWorkflowCheckpoint,
+    assignments: tuple[ResearchAssignment, ...],
+) -> tuple[ResearchAssignment, ...]:
+    """Allocate the component-wide page/model ceiling before concurrent fan-out."""
+    if not assignments:
+        return assignments
+    consumed_pages = sum(item.fetch_call_count for item in checkpoint.results)
+    page_capacity = max(
+        0,
+        checkpoint.budget.maximum_pages_per_component - consumed_pages,
+    )
+    consumed_models = sum(item.model_call_count for item in checkpoint.results)
+    model_capacity = max(0, checkpoint.budget.maximum_model_calls - consumed_models)
+    candidate_capacity = page_capacity
+    if checkpoint.budget.maximum_model_calls > 0:
+        candidate_capacity = min(candidate_capacity, model_capacity)
+    quotient, remainder = divmod(candidate_capacity, len(assignments))
+    bounded: list[ResearchAssignment] = []
+    for index, assignment in enumerate(assignments):
+        allowance = quotient + (1 if index < remainder else 0)
+        # A zero allowance cannot be represented by the typed assignment contract.
+        # Omit it; the sufficiency controller will preserve the unmet requirement.
+        if allowance < 1:
+            continue
+        bounded.append(
+            assignment.model_copy(
+                update={
+                    "candidate_limit_per_query": min(
+                        assignment.candidate_limit_per_query,
+                        allowance,
+                    )
+                }
+            )
+        )
+    return tuple(bounded)
 
 
 def _sufficiency_context(

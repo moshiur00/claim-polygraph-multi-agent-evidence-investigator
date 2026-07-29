@@ -1,0 +1,24 @@
+{
+  "audit_id": "phase10-stage10.6-social-argument-publication-gate-audit-v1",
+  "stage": "10.6",
+  "policy_version": "social-argument-publication-policy-v1",
+  "status": "implemented",
+  "deterministic": true,
+  "paid_provider_calls": 0,
+  "gates": {
+    "approved_use_enforced": true,
+    "ineligible_social_evidence_blocked": true,
+    "non_social_corroboration_required": true,
+    "unresolved_social_risks_route_review": true,
+    "critical_social_dependency_blocks_publication": true,
+    "direct_workflow_integrated": true,
+    "authoritative_langgraph_integrated": true,
+    "report_visibility_added": true,
+    "phase9_operation_manifest_preserved": true
+  },
+  "evidence": {
+    "fixture": "benchmarks/phase10_social_argument_policy_fixtures_v1.json",
+    "tests": "tests/unit/test_social_argument_publication_constraints.py",
+    "documentation": "docs/PHASE_10_STAGE_10.6_ARGUMENT_JUDGMENT_PUBLICATION_CONSTRAINTS.md"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "audit_id": "phase10-stage10.7-report-dashboard-transparency-gate-audit-v1",
+  "stage": "10.7",
+  "status": "implemented",
+  "paid_provider_calls": 0,
+  "gates": {
+    "provisional_report_visible_before_review": true,
+    "social_identity_and_authenticity_visible": true,
+    "original_source_trace_visible": true,
+    "approved_use_and_corroboration_visible": true,
+    "shared_origin_family_visible": true,
+    "quality_and_ignored_signals_visible": true,
+    "relevance_not_presented_as_truth": true,
+    "social_policy_findings_visible": true,
+    "critical_social_block_controls_publication_display": true,
+    "empty_and_unavailable_states_defined": true,
+    "markdown_social_trace_added": true,
+    "responsive_and_accessibility_checks_passed": true
+  },
+  "evidence": {
+    "fixture": "benchmarks/phase10_social_transparency_ui_fixtures_v1.json",
+    "dashboard_test": "dashboard/tests/social-transparency-source.test.mjs",
+    "documentation": "docs/PHASE_10_STAGE_10.7_REPORT_DASHBOARD_TRANSPARENCY.md"
+  }
+}

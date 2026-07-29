@@ -7,6 +7,8 @@ import uvicorn
 
 from claim_polygraph_ng.api import ApiDependencies, create_app
 from claim_polygraph_ng.application import (
+    AuthoritativeMultiAgentResearchAdapter,
+    AuthoritativeVerificationFanOutWorkflow,
     ClaimExtractionService,
     DeterministicResearchWorker,
     DirectInvestigationOrchestrator,
@@ -19,13 +21,18 @@ from claim_polygraph_ng.application import (
     SharedResearchOperations,
     parse_orchestrator_mode,
 )
-from claim_polygraph_ng.domain.telemetry import MetricName
+from claim_polygraph_ng.application.langgraph_authoritative import (
+    AuthoritativeFixtureLangGraphWorkflow,
+)
 from claim_polygraph_ng.domain.jobs import JobAdmissionPolicy
+from claim_polygraph_ng.domain.telemetry import MetricName
 from claim_polygraph_ng.persistence import (
     SQLiteInvestigationRepository,
     SQLiteResearchRepository,
     SQLiteReviewLedger,
 )
+from claim_polygraph_ng.persistence.jobs import SQLiteJobQueue
+from claim_polygraph_ng.persistence.paid_operations import SQLitePaidOperationLedger
 from claim_polygraph_ng.providers import (
     DeterministicModelProvider,
     DeterministicSearchProvider,
@@ -35,7 +42,6 @@ from claim_polygraph_ng.providers import (
 )
 from claim_polygraph_ng.retrieval import FetchedDocument, SafeHttpFetcher, UrlSafetyPolicy
 from claim_polygraph_ng.telemetry import TelemetryCollector
-from claim_polygraph_ng.persistence.jobs import SQLiteJobQueue
 
 
 class _InlineOnlyFetcher:
@@ -133,6 +139,34 @@ def build_development_app(
             default_provider_limit=1,
         ),
     )
+    research_repository = SQLiteResearchRepository(root / "research.db")
+    shared_research = SharedResearchOperations(
+        repository=research_repository,
+        search_provider=search_provider,
+        fetcher=content_fetcher,
+        telemetry=telemetry,
+    )
+    authoritative_workflow = AuthoritativeFixtureLangGraphWorkflow(
+        service=service,
+        investigations=repository,
+        langgraph_checkpoint_path=root / "authoritative-langgraph.db",
+        state_checkpoint_path=root / "authoritative-state.db",
+        research_adapter=AuthoritativeMultiAgentResearchAdapter(
+            workflow=LangGraphResearchFanOutWorkflow(
+                repository=research_repository,
+                operations=shared_research,
+                worker=DeterministicResearchWorker(research_repository),
+                telemetry=telemetry,
+            ),
+            paid_capable=live_research,
+            paid_operation_ledger=SQLitePaidOperationLedger(root / "paid-operations.db"),
+        ),
+        verification_workflow=AuthoritativeVerificationFanOutWorkflow(),
+        argument_workflow=LangGraphAdversarialArgumentWorkflow(
+            repository=research_repository
+        ),
+        review_ledger=reviews,
+    )
 
     async def investigate_authoritatively(claim: str):
         try:
@@ -159,13 +193,6 @@ def build_development_app(
         orchestrator or os.getenv("CLAIM_POLYGRAPH_ORCHESTRATOR", "langgraph")
     )
     if selected.value == "langgraph":
-        research_repository = SQLiteResearchRepository(root / "research.db")
-        operations = SharedResearchOperations(
-            repository=research_repository,
-            search_provider=search_provider,
-            fetcher=content_fetcher,
-            telemetry=telemetry,
-        )
         selected_orchestrator = LangGraphInvestigationOrchestrator(
             investigate_authoritatively=investigate_authoritatively,
             checkpoint_path=checkpoint_path,
@@ -175,7 +202,7 @@ def build_development_app(
             ),
             research_fan_out=LangGraphResearchFanOutWorkflow(
                 repository=research_repository,
-                operations=operations,
+                operations=shared_research,
                 worker=DeterministicResearchWorker(research_repository),
                 telemetry=telemetry,
             ),
@@ -184,13 +211,6 @@ def build_development_app(
     elif selected.value == "direct":
         selected_orchestrator = DirectInvestigationOrchestrator(investigate_authoritatively)
     else:
-        research_repository = SQLiteResearchRepository(root / "research.db")
-        operations = SharedResearchOperations(
-            repository=research_repository,
-            search_provider=search_provider,
-            fetcher=content_fetcher,
-            telemetry=telemetry,
-        )
         durable_authoritative = LangGraphInvestigationOrchestrator(
             investigate_authoritatively=investigate_authoritatively,
             checkpoint_path=checkpoint_path,
@@ -201,7 +221,7 @@ def build_development_app(
             investigate_authoritatively=durable_authoritative.investigate,
             multi_agent_service=MultiAgentInvestigationService(
                 repository=research_repository,
-                operations=operations,
+                operations=shared_research,
             ),
         )
     return create_app(
@@ -219,6 +239,7 @@ def build_development_app(
             live_research=live_research,
             model_provider=model_provider.provider_id,
             job_queue=job_queue,
+            authoritative_workflow=authoritative_workflow,
         )
     )
 

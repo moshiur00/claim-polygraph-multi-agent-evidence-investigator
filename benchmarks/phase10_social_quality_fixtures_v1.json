@@ -1,0 +1,37 @@
+{
+  "fixture_id": "phase10-social-quality-readiness-v1",
+  "version": 1,
+  "cases": [
+    {
+      "case_id": "SOCQUAL-001",
+      "authenticated": false,
+      "institutional_authority_confirmed": null,
+      "authority_scope_recorded": false,
+      "prohibited_signals": ["badge:verified", "engagement:follower_count"],
+      "expected_authority": "unknown"
+    },
+    {
+      "case_id": "SOCQUAL-002",
+      "authenticated": true,
+      "institutional_authority_confirmed": true,
+      "authority_scope_recorded": true,
+      "prohibited_signals": [],
+      "expected_authority": "favorable"
+    },
+    {
+      "case_id": "SOCQUAL-003",
+      "authenticated": true,
+      "institutional_authority_confirmed": true,
+      "authority_scope_recorded": true,
+      "prohibited_signals": ["engagement:likes", "engagement:view_count"],
+      "expected_authority": "favorable"
+    }
+  ],
+  "shared_origin": {
+    "component_id": "social-origin-fixture",
+    "origin_url": "https://authority.example/report?id=7",
+    "source_count": 3,
+    "expected_family_count": 1,
+    "expected_reason": "shared_origin_url"
+  }
+}

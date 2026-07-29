@@ -1,0 +1,44 @@
+{
+  "manifest_id": "phase9-stage9.2-release-manifest-v1",
+  "artifacts": [
+    {
+      "artifact_id": "investigation_service",
+      "path": "src/claim_polygraph_ng/application/investigation_service.py",
+      "sha256": "e4e6243295f7924a52c5080b7b5319fb06250c4175a345d0b80f4c5a837f143a"
+    },
+    {
+      "artifact_id": "direct_evaluator",
+      "path": "src/claim_polygraph_ng/evaluation/phase9_direct.py",
+      "sha256": "f4534447a0cffae7bb30dc1b99b7213b87c3dc4727f052e3113fd00fb14e18be"
+    },
+    {
+      "artifact_id": "direct_runner",
+      "path": "scripts/run_phase9_direct_equivalence.py",
+      "sha256": "511161dea986a0241b7f5314d7b9c8e2d58f60008b14f970fae1fbfcaf079ebb"
+    },
+    {
+      "artifact_id": "direct_tests",
+      "path": "tests/unit/test_phase9_direct_composition.py",
+      "sha256": "2b60f48ef7d36928df58b27cbb98af3a81be254e052d6039cff068e846fed698"
+    },
+    {
+      "artifact_id": "direct_evaluation",
+      "path": "artifacts/evaluations/phase9-stage9.2-direct-composition-v1.json",
+      "sha256": "40b427ce22b87e2762cda663a88f9c5ed12f8fd61f73dc8683bb18c7de77babd"
+    },
+    {
+      "artifact_id": "stage9_1_contracts",
+      "path": "artifacts/evaluations/phase9-stage9.1-operation-contracts-v1.json",
+      "sha256": "b5087ae1bc22bb0bb87d4dedbbe66966722411cda6639b3b8e7c87087a90c5c4"
+    },
+    {
+      "artifact_id": "stage9_2_report",
+      "path": "docs/PHASE_9_STAGE_9.2_COMPLETION_REPORT.md",
+      "sha256": "dc46e851f027b74f7d09764f0b2b15ae5ce9f94b4273fd2b784a64e68fa43aca"
+    }
+  ],
+  "external_model_calls": 0,
+  "live_search_calls": 0,
+  "network_fetches": 0,
+  "pdf_downloads": 0
+}

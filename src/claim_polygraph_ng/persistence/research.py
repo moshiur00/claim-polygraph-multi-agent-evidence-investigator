@@ -10,6 +10,7 @@ from claim_polygraph_ng.domain import (
     AdversarialArgumentCheckpoint,
     ArgumentRoleResult,
     Evidence,
+    OriginalSourceResolutionResult,
     ResearchResult,
     SearchResult,
     Source,
@@ -64,6 +65,10 @@ class SQLiteResearchRepository:
                 );
                 CREATE TABLE IF NOT EXISTS research_workflows (
                     investigation_id TEXT PRIMARY KEY,
+                    payload TEXT NOT NULL
+                );
+                CREATE TABLE IF NOT EXISTS original_source_resolutions (
+                    request_id TEXT PRIMARY KEY,
                     payload TEXT NOT NULL
                 );
                 CREATE TABLE IF NOT EXISTS argument_role_results (
@@ -137,6 +142,28 @@ class SQLiteResearchRepository:
             "evidence_id",
             str(evidence.evidence_id),
             evidence.model_dump_json(),
+        )
+
+    def save_original_source_resolution(
+        self,
+        result: OriginalSourceResolutionResult,
+    ) -> None:
+        self._put_payload(
+            "original_source_resolutions",
+            "request_id",
+            str(result.request_id),
+            result.model_dump_json(),
+        )
+
+    def get_original_source_resolution(
+        self,
+        request_id: UUID,
+    ) -> OriginalSourceResolutionResult | None:
+        return self._load_model(
+            "original_source_resolutions",
+            "request_id",
+            request_id,
+            OriginalSourceResolutionResult,
         )
 
     def get_evidence(self, evidence_ids: tuple[UUID, ...]) -> tuple[Evidence, ...]:

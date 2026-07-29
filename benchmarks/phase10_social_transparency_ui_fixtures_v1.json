@@ -1,0 +1,34 @@
+{
+  "fixture_version": "phase10-social-transparency-ui-fixtures-v1",
+  "states": [
+    {
+      "state_id": "no-social-evidence",
+      "expected_view": "explicit_empty_state",
+      "publication_blocked": false
+    },
+    {
+      "state_id": "eligible-attributed-statement-with-corroboration",
+      "expected_view": "bounded_contribution_trace",
+      "publication_blocked": false
+    },
+    {
+      "state_id": "social-only-decisive-proposition",
+      "expected_view": "blocking_policy_trace",
+      "publication_blocked": true
+    },
+    {
+      "state_id": "unresolved-or-deleted-social-origin",
+      "expected_view": "risk_and_archive_trace",
+      "publication_blocked": true
+    }
+  ],
+  "required_labels": [
+    "identity_and_authenticity",
+    "original_source",
+    "approved_use",
+    "verdict_effect",
+    "account_and_attribution",
+    "provenance_and_independence",
+    "quality_and_limitations"
+  ]
+}

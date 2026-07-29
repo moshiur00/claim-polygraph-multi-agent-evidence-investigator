@@ -11,13 +11,21 @@ from claim_polygraph_ng.domain.enums import (
     ClaimType,
     ComponentStatus,
     ContentRetention,
+    DistributionMedium,
     EvidenceStance,
+    EvidentiaryUse,
     ExtractionStatus,
     ResearchPath,
     RightsStatus,
     SourceType,
     SupportLevel,
     VerdictLabel,
+)
+from claim_polygraph_ng.domain.social import (
+    ProviderResultMetadata,
+    SocialEvidenceEligibility,
+    SocialSourceContext,
+    evaluate_social_evidence_eligibility,
 )
 
 Score = float
@@ -178,11 +186,32 @@ class Source(DomainModel):
     rights_basis: str | None = Field(default=None, max_length=2_000)
     rights_reference_url: AnyHttpUrl | None = None
     content_retention: ContentRetention = ContentRetention.EVIDENCE_PASSAGES_ONLY
+    distribution_medium: DistributionMedium = DistributionMedium.UNKNOWN
+    social_context: SocialSourceContext | None = None
+    social_eligibility: SocialEvidenceEligibility | None = None
+    discovery_metadata: ProviderResultMetadata | None = None
 
     @model_validator(mode="after")
-    def documented_rights_require_a_basis(self) -> "Source":
+    def validate_source_metadata(self) -> "Source":
         if self.rights_status is not RightsStatus.UNKNOWN and not self.rights_basis:
             raise ValueError("documented rights status requires rights_basis")
+        is_social = self.distribution_medium is DistributionMedium.SOCIAL_PLATFORM
+        if is_social and self.social_context is None:
+            raise ValueError("social distribution requires social_context")
+        if is_social and self.social_eligibility is None:
+            raise ValueError("social distribution requires social_eligibility")
+        if not is_social and (
+            self.social_context is not None or self.social_eligibility is not None
+        ):
+            raise ValueError(
+                "social context and eligibility require social distribution medium"
+            )
+        if is_social and self.social_context is not None:
+            expected = evaluate_social_evidence_eligibility(self.social_context)
+            if self.social_eligibility != expected:
+                raise ValueError(
+                    "social_eligibility must match deterministic policy evaluation"
+                )
         return self
 
 
@@ -204,6 +233,7 @@ class Evidence(DomainModel):
     extraction_status: ExtractionStatus = ExtractionStatus.EXTRACTED
     temporal_compatibility: Score | None = Field(default=None, ge=0.0, le=1.0)
     evidence_family_id: UUID | None = None
+    evidentiary_use: EvidentiaryUse = EvidentiaryUse.UNSPECIFIED
 
     @model_validator(mode="after")
     def extracted_evidence_must_be_relevant(self) -> "Evidence":

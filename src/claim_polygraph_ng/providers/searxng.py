@@ -12,6 +12,20 @@ from claim_polygraph_ng.domain import (
     SearchResult,
     SourceType,
 )
+from claim_polygraph_ng.providers.result_normalization import (
+    classify_candidate_distribution,
+    retain_provider_metadata,
+)
+
+_RETAINED_METADATA_KEYS = (
+    "engine",
+    "engines",
+    "category",
+    "score",
+    "publishedDate",
+    "template",
+    "positions",
+)
 
 
 class SearchProviderError(RuntimeError):
@@ -107,14 +121,23 @@ class SearXNGSearchProvider:
             return None
 
         try:
+            distribution_medium, social_url = classify_candidate_distribution(url)
             return SearchResult(
                 url=url,
                 title=title,
                 snippet=snippet,
                 source_type=SearXNGSearchProvider._source_type(raw_result),
                 publisher=SearXNGSearchProvider._publisher(raw_result),
+                distribution_medium=distribution_medium,
+                social_url=social_url,
+                provider_metadata=retain_provider_metadata(
+                    provider_id="searxng",
+                    raw_result=raw_result,
+                    attribute_keys=_RETAINED_METADATA_KEYS,
+                    result_id_keys=("id",),
+                ),
             )
-        except ValidationError:
+        except (ValidationError, ValueError):
             return None
 
     @staticmethod

@@ -1,0 +1,119 @@
+{
+  "audit_id": "phase10-stage10.9-final-audit-v1",
+  "generated_at": "2026-07-29T22:32:24.586004Z",
+  "checks": [
+    {
+      "check_id": "phase9_recovery_preserved",
+      "passed": true,
+      "detail": "All inherited retry, restart, checkpoint, review, receipt, and SSE controls pass."
+    },
+    {
+      "check_id": "deleted_content_safe",
+      "passed": true,
+      "detail": "Unavailable originals remain conditional or ineligible and unsafe use is blocked."
+    },
+    {
+      "check_id": "social_checkpoint_roundtrip",
+      "passed": true,
+      "detail": "Typed social context and eligibility survive JSON reconstruction."
+    },
+    {
+      "check_id": "malicious_html_is_data",
+      "passed": true,
+      "detail": "Executable HTML is removed and visible adversarial text remains quoted data."
+    },
+    {
+      "check_id": "model_prompt_injection_boundary",
+      "passed": true,
+      "detail": "Hosted and local model workers explicitly treat claims and passages as untrusted data."
+    },
+    {
+      "check_id": "telemetry_pii_minimized",
+      "passed": true,
+      "detail": "Claims, email addresses, tokens, and URLs are hashed instead of stored raw."
+    },
+    {
+      "check_id": "bounded_access_controls_present",
+      "passed": true,
+      "detail": "Reviewer identity binding, restricted CORS, and URL safety tests are present."
+    },
+    {
+      "check_id": "publication_controls_preserved",
+      "passed": true,
+      "detail": "Social eligibility and publication blocking cover direct and LangGraph paths."
+    },
+    {
+      "check_id": "dashboard_transparency_preserved",
+      "passed": true,
+      "detail": "The provisional report and social-source trace remain visible and accessible."
+    },
+    {
+      "check_id": "human_calibration_approved",
+      "passed": true,
+      "detail": "Stage 10.8 has an identified annotator and distinct approver."
+    },
+    {
+      "check_id": "unsafe_publication_rate_zero",
+      "passed": true,
+      "detail": "No declared unsafe adversarial social case remained publishable."
+    },
+    {
+      "check_id": "mandatory_review_recall_complete",
+      "passed": true,
+      "detail": "All declared mandatory-review social cases were routed."
+    },
+    {
+      "check_id": "direct_rollback_retained",
+      "passed": true,
+      "detail": "LangGraph remains default and direct composition remains explicit rollback."
+    },
+    {
+      "check_id": "zero_provider_release_audit",
+      "passed": true,
+      "detail": "The release audit and adversarial replay used no paid or network providers."
+    },
+    {
+      "check_id": "complete_python_regression",
+      "passed": true,
+      "detail": "The complete Python suite passed 565 tests."
+    },
+    {
+      "check_id": "dashboard_production_gate",
+      "passed": true,
+      "detail": "The dashboard production build and three UI/accessibility tests passed."
+    },
+    {
+      "check_id": "repository_lint_gates",
+      "passed": true,
+      "detail": "Ruff and ESLint passed."
+    },
+    {
+      "check_id": "promotion_adr_approved",
+      "passed": true,
+      "detail": "ADR 0023 was explicitly approved by Md Moshiur Rahman."
+    }
+  ],
+  "mechanical_gates_passed": true,
+  "stage10_8_human_calibration_approved": true,
+  "recommended_decision": "promote_bounded_local_social_evidence_governance",
+  "promotion_status": "promoted_bounded_local",
+  "promotion_approved_by": "Md Moshiur Rahman",
+  "phase10_closed": true,
+  "approved_scope": [
+    "local Docker deployment",
+    "bounded single-host use",
+    "human-reviewed publication workflow",
+    "social evidence as typed, constrained material"
+  ],
+  "non_promoted_claims": [
+    "authenticated multi-tenant production access",
+    "autonomous publication",
+    "social engagement or verification badges as truth signals",
+    "private or restricted social-content retrieval",
+    "population-level factual accuracy calibration"
+  ],
+  "model_calls": 0,
+  "search_calls": 0,
+  "network_calls": 0,
+  "pdf_downloads": 0
+}

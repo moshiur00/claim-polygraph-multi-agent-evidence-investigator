@@ -1,6 +1,5 @@
 """Locked experiment and fixture contracts for Phase 5 provenance work."""
 
-import hashlib
 import json
 from enum import StrEnum
 from pathlib import Path
@@ -8,6 +7,7 @@ from pathlib import Path
 from pydantic import Field, model_validator
 
 from claim_polygraph_ng.domain.base import DomainModel
+from claim_polygraph_ng.evaluation.artifact_hashing import artifact_matches_sha256
 from claim_polygraph_ng.evaluation.phase4_manifest import BaselineArtifact
 
 
@@ -174,7 +174,7 @@ def verify_phase5_manifest(
             errors.append(f"{artifact.artifact_id}: file is missing")
             continue
         checked += 1
-        if hashlib.sha256(candidate.read_bytes()).hexdigest() != artifact.sha256:
+        if not artifact_matches_sha256(candidate, artifact.sha256):
             errors.append(f"{artifact.artifact_id}: SHA-256 mismatch")
         if artifact.artifact_id == "provenance_benchmark":
             try:

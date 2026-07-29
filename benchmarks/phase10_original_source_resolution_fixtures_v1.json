@@ -1,0 +1,35 @@
+{
+  "fixture_id": "phase10-original-source-resolution-v1",
+  "version": 1,
+  "network_calls_permitted": 0,
+  "cases": [
+    {
+      "case_id": "ORIGIN-001",
+      "recorded_url": "https://authority.example/report?id=7&utm_source=social",
+      "target_url": "https://authority.example/report?id=7",
+      "link_resolved": false,
+      "expected_preflight": "allowed"
+    },
+    {
+      "case_id": "ORIGIN-002",
+      "recorded_url": "https://authority.example/report",
+      "target_url": "https://other.example/report",
+      "link_resolved": false,
+      "expected_preflight": "blocked"
+    },
+    {
+      "case_id": "ORIGIN-003",
+      "recorded_url": "https://x.com/other/status/987654",
+      "target_url": "https://x.com/other/status/987654",
+      "link_resolved": false,
+      "expected_preflight": "blocked"
+    },
+    {
+      "case_id": "ORIGIN-004",
+      "recorded_url": "https://authority.example/report",
+      "target_url": "https://authority.example/report",
+      "link_resolved": true,
+      "expected_preflight": "blocked"
+    }
+  ]
+}

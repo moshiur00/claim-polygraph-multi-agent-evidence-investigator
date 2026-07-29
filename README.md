@@ -1,102 +1,310 @@
 # Claim Polygraph NG
 
-Claim Polygraph NG is an evidence-first claim investigation system. It will
-decompose complex claims when useful, retrieve supporting and contradictory
-evidence, assess source quality and independence, verify numerical and temporal
-context, and produce citation-audited verdicts.
+### An auditable, multi-agent evidence investigation system for journalists
 
-The project begins with a lightweight vertical slice and grows toward a durable
-multi-agent architecture only after the core evidence workflow is measurable.
+[![Python 3.12+](https://img.shields.io/badge/Python-3.12%2B-3776AB?logo=python&logoColor=white)](pyproject.toml)
+[![LangGraph](https://img.shields.io/badge/Orchestration-LangGraph-1C3C3C)](docs/adr/0021-promote-unified-authoritative-langgraph.md)
+[![FastAPI](https://img.shields.io/badge/API-FastAPI-009688?logo=fastapi&logoColor=white)](src/claim_polygraph_ng/api.py)
+[![Next.js](https://img.shields.io/badge/Dashboard-Next.js-000000?logo=nextdotjs&logoColor=white)](dashboard)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](pyproject.toml)
 
-## Current milestone
+Claim Polygraph NG investigates factual claims by decomposing the research
+problem, assigning bounded specialist roles, retrieving supporting and
+contradictory evidence, testing source independence and context, and producing
+a citation-audited report for human review.
 
-Phase 8 implementation and automated closure gates are complete through Stage
-8.13. LangGraph is the default API orchestrator, while
-`InvestigationService` remains authoritative for evidence, verification and
-verdicts. Genuine concurrent multi-agent research, defender/challenger
-arguments, durable jobs and distributed trace continuity now run inside the
-promoted journey. Stage 8.14 approved multi-agent research as the default
-observational subgraph; its candidate evidence remains non-authoritative.
+It is built around a simple principle:
 
-| Capability | Current status |
+> An AI-generated verdict is not enough. A useful investigation must show the
+> evidence, provenance, counterargument, limitations, decision policy, and
+> review history behind it.
+
+![Claim Polygraph NG evidence review console](dashboard/public/og.png)
+
+## Why this project exists
+
+Search engines return documents; language models return answers. Journalists
+and researchers need something between them: a recoverable investigation that
+can explain where each material assertion came from, whether apparently
+independent sources share one origin, what evidence weakens the conclusion,
+and why the report is—or is not—safe to publish.
+
+Claim Polygraph NG explores that problem as an end-to-end software system,
+not only as a prompt:
+
+- one durable LangGraph thread owns the investigation lifecycle;
+- specialist research roles receive typed assignments and hard budgets;
+- only approved, persisted evidence can affect downstream reasoning;
+- defender and challenger roles independently test the claim;
+- deterministic policies constrain verdicts, citations, social evidence, and
+  publication;
+- human review interrupts and resumes the same graph without replaying
+  completed paid work;
+- the dashboard exposes progress, evidence, rationale, verification, audit
+  results, review history, and operational cost.
+
+## Product walkthrough
+
+```mermaid
+flowchart LR
+    A[Create] --> B[Analyze]
+    B --> C[Plan]
+    C --> D[Multi-agent research]
+    D --> E[Verify]
+    E --> F[Defender / challenger]
+    F --> G[Judgment]
+    G --> H[Citation assurance]
+    H --> I[Readiness]
+    I --> J{Human review?}
+    J -- Required --> K[Approve, revise, request evidence, or reject]
+    K --> L[Publish]
+    J -- Not required --> L
+    L --> M[Complete]
+```
+
+1. **Create** — admits an asynchronous durable job and creates a recoverable
+   investigation thread.
+2. **Analyze** — normalizes the submitted wording into typed, checkable claim
+   components without silently changing its meaning.
+3. **Plan** — creates explicit requirements for primary, independent,
+   contradictory, academic, fact-check, temporal, or numerical evidence.
+4. **Multi-agent research** — concurrently routes bounded assignments to
+   specialist roles, then deduplicates results and clusters shared origins.
+5. **Verify** — checks dates, intervals, quantities, units, historical status,
+   and important qualifications.
+6. **Defender / challenger** — builds independent cases for and against the
+   claim using only approved evidence.
+7. **Judgment** — proposes a verdict and constrains it through a deterministic
+   label policy.
+8. **Citation assurance** — audits material report sentences against exact
+   approved passages and blocks unsupported critical claims.
+9. **Readiness** — decides whether the packet is sufficiently complete for
+   judgment; readiness is not presented as truth probability.
+10. **Human review** — pauses the graph for an append-only, identity-bound
+    approve, revise, request-evidence, or reject decision.
+11. **Publish** — rechecks citation and evidence policy before finalization.
+12. **Complete** — persists the final report and immutable investigation
+    history.
+
+The internal, developer-oriented description of every stage is maintained in
+`docs/private/AUTHORITATIVE_WORKFLOW_STAGE_GUIDE.md` for local project use.
+
+## What makes the implementation interesting
+
+### A genuine bounded multi-agent path
+
+The research workflow is more than a collection of renamed functions.
+Primary-source, general-web, academic, fact-check, and challenger researchers
+have distinct permissions, adapters, assignments, outputs, and budgets.
+Compatible roles fan out concurrently. A sufficiency controller directs
+additional rounds only when evidence gain justifies their cost.
+
+The agents do not vote on truth. Their results pass through one authoritative
+consolidation boundary, and later stages may use only approved evidence.
+
+### One authoritative, recoverable graph
+
+LangGraph is the default orchestrator. Its nodes call typed
+`InvestigationService` operations for research, verification, argument
+construction, judgment, citation assurance, review, and finalization.
+Checkpointed state survives process restarts and browser disconnections.
+
+The direct sequential composition uses the same domain operations and remains a
+tested rollback path.
+
+### Cost-safe external operations
+
+Search, fetch, and model operations use deterministic idempotency scopes and
+durable paid-operation receipts. A retry or graph resume checks those receipts
+before repeating external work. Research is also bounded by rounds, queries,
+page fetches, model calls, tokens, time, and configured cost.
+
+### Evidence independence and provenance
+
+The system distinguishes the number of pages from the number of independent
+origins. Syndicated articles, copied passages, explicit citations, and social
+reposts are clustered into evidence families so repetition cannot masquerade
+as corroboration.
+
+### Social evidence without social-media naïveté
+
+Social platforms are modeled as distribution media, not authority classes.
+The system records account attribution, authenticity evidence, post type,
+original-source linkage, permitted evidentiary use, availability, and shared
+origin. Likes, follower counts, and verification badges never become truth
+scores. Unsupported or screenshot-only critical evidence routes to review or
+blocks publication.
+
+### Human review as part of the architecture
+
+Review is a durable LangGraph interrupt, not a comment added after generation.
+The ledger is append-only and sequence-checked. Approval and revision require a
+distinct approver under the current policy, and a revised verdict receives a
+new version and citation audit.
+
+## Architecture
+
+```mermaid
+flowchart TB
+    UI[Next.js investigation dashboard]
+    API[FastAPI + Server-Sent Events]
+    JOBS[Durable job queue]
+    GRAPH[Authoritative LangGraph]
+    SERVICE[InvestigationService domain operations]
+    ROLES[Concurrent specialist research subgraph]
+    PROVIDERS[SerpAPI / SearXNG / academic / fact-check adapters]
+    MODELS[OpenAI / Ollama / deterministic fixtures]
+    DATA[(SQLite WAL repositories)]
+    REVIEW[Append-only human-review ledger]
+    OBS[Metrics, traces, alerts, cost usage]
+
+    UI --> API
+    API --> JOBS
+    JOBS --> GRAPH
+    GRAPH --> SERVICE
+    GRAPH --> ROLES
+    ROLES --> PROVIDERS
+    SERVICE --> MODELS
+    SERVICE --> DATA
+    GRAPH --> DATA
+    GRAPH --> REVIEW
+    API --> OBS
+    JOBS --> OBS
+    GRAPH --> OBS
+    PROVIDERS --> OBS
+    OBS --> UI
+    REVIEW --> UI
+    DATA --> API
+```
+
+### Authority boundaries
+
+- **LangGraph** owns orchestration, branching, checkpoints, interruption, and
+  resume.
+- **`InvestigationService`** owns domain operations and authoritative
+  investigation artifacts.
+- **Deterministic policy** owns evidence eligibility, verdict constraints,
+  citation blocking, readiness, and publication safety.
+- **Models** propose structured analysis; they cannot invent evidence,
+  override approved-packet boundaries, or authorize publication.
+- **Humans** retain accountability for investigations routed to review.
+
+## Engineering highlights
+
+| Area | Implementation |
 |---|---|
-| Atomic and selectively decomposed complex claims | Complete and authoritative |
-| SerpAPI/SearXNG retrieval, safe fetch and bounded passages | Complete |
-| Source quality, duplicates, provenance families and independence | Complete |
-| Numerical/temporal verification and argument ledger | Complete; diagnostic artifacts |
-| Deterministic judgment policy | Observational only; not promoted after regression |
-| LangGraph checkpoints, interruption and idempotent resume | Complete and promoted |
-| Append-only review, distinct approval and verdict revisions | Complete |
-| FastAPI, SSE and connected dashboard | Complete for local API/demo deployment |
-| Bounded multi-agent research | Genuine concurrent LangGraph subgraph; candidate evidence observational |
-| Phase 8 controlled promotion experiment | Five-case pilot and ten-case comparison passed mechanical gates |
-| Article-text and URL claim extraction | Complete; deterministic selection gate |
-| Durable multi-agent LangGraph state | Complete; bounded ID/reference checkpoint |
-| Academic and fact-check specialist adapters | Complete; conditional, permission-bounded routing |
-| Concurrent LangGraph research fan-out | Complete; minimum team, cached map/reduce |
-| Empirically calibrated confidence | Unavailable by design; current dataset failed minimum support gate |
-| SQLite concurrency | Passed bounded single-host WAL gate; PostgreSQL preferred for multi-host production |
-| Durable jobs and backpressure | Complete for bounded database-backed queue |
-| Operational telemetry | W3C trace propagation, metrics and deterministic alerts complete locally |
-| Stage 8.14 targeted review | Approved; all five cases judged improved |
+| Backend | Python 3.12, FastAPI, Pydantic v2 |
+| Orchestration | LangGraph with SQLite-backed checkpoints and interruption |
+| Frontend | Next.js 16, React 19, TypeScript |
+| Retrieval | SerpAPI, optional SearXNG, safe bounded page fetching |
+| Specialist adapters | PubMed/NCBI, Semantic Scholar, Google Fact Check |
+| Reasoning providers | Schema-constrained OpenAI, local Ollama, deterministic fixtures |
+| Persistence | SQLite WAL repositories for investigations, jobs, graph state, reviews, receipts, and telemetry |
+| Live updates | Reconnectable Server-Sent Events using persisted checkpoints |
+| Reliability | Idempotent operations, paid-operation receipts, retries, cancellation, backpressure, restart recovery |
+| Evidence safety | SSRF/redirect controls, content limits, rights metadata, approved evidence, sentence-level citation audit |
+| Observability | Trace continuity across API, jobs, nodes, roles, providers, and reviews |
+| Delivery | Multi-service Docker Compose deployment |
 
-The reviewed benchmark contains 20 citation-grounded cases. The authoritative
-workflow and promoted LangGraph wrapper both currently achieve 90% agreement
-with reviewed labels; CPNG-006 and CPNG-019 are disclosed disagreements.
+## Measured evidence, not a production claim
 
-Atomic investigations enter through one `InvestigationOrchestrator` contract.
-The supported modes are `langgraph` (default), `direct` (rollback) and
-`multi_agent_experimental` (compatibility/experiment mode). The default
-LangGraph route now contains bounded multi-agent research and adversarial
-argument subgraphs while preserving `InvestigationService` authority.
+The project uses frozen benchmarks, release manifests, failure injection, and
+Architecture Decision Records rather than declaring a feature complete because
+one demo worked.
 
-The mock providers deliberately return synthetic evidence. They validate
-orchestration, policy, persistence, and audit contracts; they do not perform
-real fact-checking.
+The accepted Phase 9 release audit recorded:
 
-LangGraph coordinates durable graph state, concurrent role execution, review
-interruption, resume and recovery while `InvestigationService` remains
-authoritative for approved evidence and verdicts. Set
-`CLAIM_POLYGRAPH_ORCHESTRATOR=direct` to use the explicit rollback path.
+| Gate | Result |
+|---|---:|
+| Direct/unified verdict equivalence | 100% across 20 frozen claims |
+| Required-review recall | 100% |
+| Mean reviewed-evidence coverage | 100% |
+| Cases with material challenger gain | 7 |
+| Citation support | 100% |
+| Duplicate paid operations | 0 |
+| Python tests in that release audit | 505 passed |
+| Repeated SQLite four-graph stress runs | 8/8 passed |
 
-See the complete
-[project specification](docs/PROJECT_SPECIFICATION_AND_PLAN.md).
+The Phase 10 social-evidence release audit subsequently recorded:
 
-## Local Docker application
+| Gate | Result |
+|---|---:|
+| Unsafe adversarial publication rate | 0% |
+| Mandatory social-risk review recall | 100% |
+| Complete Python regression at that audit | 565 passed |
+| Dashboard build, UI/accessibility, and lint gates | Passed |
+| Paid provider calls used for the release audit | 0 |
 
-Start the API and dashboard together:
+These results validate architecture, control flow, recovery, and safety on the
+declared test sets. They do **not** establish population-level factual
+accuracy. All 20 Phase 9 benchmark cases requested review, so the routing result
+does not establish real-world specificity. The deterministic fixture judge is
+intentionally limited, and the current reviewed dataset is too small for
+calibrated confidence. Live quality still depends on retrieval quality,
+evidence, and human judgment.
+
+See the [Phase 9 final audit](docs/PHASE_9_STAGE_9.13_FINAL_AUDIT.md), the
+[Phase 10 final audit](docs/PHASE_10_STAGE_10.9_RECOVERY_SECURITY_AND_PROMOTION.md),
+and the accepted [LangGraph](docs/adr/0021-promote-unified-authoritative-langgraph.md)
+and [social-evidence](docs/adr/0023-promote-social-evidence-governance.md)
+ADRs.
+
+## Run the local product
+
+### Prerequisites
+
+- Docker Desktop with Docker Compose
+- a SerpAPI key for the default live-search path
+- an OpenAI API key for the default hosted reasoning path
+
+### 1. Configure
+
+Copy `.env.example` to `.env`, then replace the placeholder values:
+
+```dotenv
+SERPAPI_API_KEY=your-real-key
+OPENAI_API_KEY=your-real-key
+CLAIM_POLYGRAPH_SEARCH_PROVIDER=serpapi
+CLAIM_POLYGRAPH_MODEL_PROVIDER=openai
+CLAIM_POLYGRAPH_ORCHESTRATOR=langgraph
+```
+
+`.env` is ignored by Git. Never commit provider credentials.
+
+### 2. Start
 
 ```powershell
 docker compose up --build
 ```
 
-Open `http://localhost:3000`. The API health endpoint is
-`http://localhost:8000/health`. SQLite investigations, reviews, research state,
-checkpoints and telemetry persist in the `claim_polygraph_data` Docker volume.
+Open:
 
-The Docker deployment defaults to live Google retrieval through SerpAPI and
-schema-constrained OpenAI reasoning. Put `SERPAPI_API_KEY` and `OPENAI_API_KEY`
-only in the ignored `.env` file. The dashboard temporarily displays cumulative
-estimated OpenAI token cost from local telemetry; SerpAPI subscription or
-per-search charges remain external and are explicitly not included.
+- Dashboard: <http://localhost:3000>
+- API health: <http://localhost:8000/health>
 
-To use the optional local SearXNG service later:
+Investigation, review, research, checkpoint, job, receipt, and telemetry data
+persist in the `claim_polygraph_data` Docker volume.
+
+### 3. Stop
+
+```powershell
+docker compose down
+```
+
+Do not add `-v` unless you intentionally want to delete the persisted local
+volume.
+
+### Optional self-hosted search comparison
 
 ```powershell
 $env:CLAIM_POLYGRAPH_SEARCH_PROVIDER = "searxng"
 docker compose --profile searxng up --build
 ```
 
-Stop the application with `docker compose down`. Add `-v` only when you
-intentionally want to delete that persisted local data. To test the rollback
-orchestrator in PowerShell:
+SearXNG remains an optional comparison path; the current local Docker default
+is SerpAPI.
 
-```powershell
-$env:CLAIM_POLYGRAPH_ORCHESTRATOR = "direct"
-docker compose up --build
-```
-
-## Development setup
+## Developer setup
 
 ```powershell
 python -m venv .venv
@@ -105,407 +313,116 @@ python -m venv .venv
 .\.venv\Scripts\python -m ruff check .
 ```
 
-## Local CLI
+Dashboard checks:
 
-The CLI uses deterministic synthetic providers by default. It is intended to
-validate the workflow and report format before real providers are enabled.
-If `.env` defines an OpenAI model, add `--no-hosted-model` to explicitly force
-the local deterministic or selected Ollama provider.
+```powershell
+Set-Location dashboard
+npm ci
+npm test
+npm run lint
+```
+
+The command-line interface uses deterministic synthetic providers by default,
+which is useful for zero-cost workflow development:
 
 ```powershell
 claim-polygraph investigate "The claim to investigate"
 claim-polygraph investigate --complex "A compound claim with two assertions"
 claim-polygraph extract-claims "An article containing factual statements."
 claim-polygraph extract-claims --url "https://example.org/public-article"
-claim-polygraph resume-complex ROOT_INVESTIGATION_ID
 claim-polygraph list
 claim-polygraph show INVESTIGATION_ID
-```
-
-`extract-claims` accepts pasted article text or a public URL and returns ranked
-factual-claim candidates with exact character offsets and surrounding context.
-Extraction makes no truth judgment and starts no investigation or model call.
-For URLs, the existing safe fetch boundary enforces public-network, redirect,
-content-type, response-size and timeout rules; PDF retrieval remains blocked
-unless its host is explicitly approved. The dashboard exposes the same
-selection-first workflow.
-
-To opt into real retrieval through a trusted SearXNG instance whose JSON output
-is enabled:
-
-```powershell
-claim-polygraph --searxng-url http://localhost:8080 investigate "The claim"
-```
-
-Alternatively, set `SEARXNG_BASE_URL`. Search-result pages are validated
-against the public-network policy and fetched with redirect, content-type,
-timeout, and response-size limits. The structured analysis and verdict remain
-deterministic unless an Ollama model is explicitly enabled.
-
-For Phase 2, SerpAPI is the primary live-search path and SearXNG remains an
-optional self-hosted comparison. Put the key only in the Git-ignored `.env`
-file:
-
-```dotenv
-SERPAPI_API_KEY=your-real-key
-SERPAPI_ENGINE=google
-SERPAPI_LANGUAGE=en
-SERPAPI_COUNTRY=us
-SERPAPI_TIMEOUT_SECONDS=15
-```
-
-Then run:
-
-```powershell
-claim-polygraph --serpapi-engine google investigate "The claim"
-```
-
-`duckduckgo` is also accepted as an optional comparison engine. SerpAPI and
-SearXNG cannot be enabled in the same command. The API key is deliberately not
-accepted as a command-line argument and is never included in provider IDs.
-
-To opt into local schema-constrained reasoning with an already installed
-Ollama model:
-
-```powershell
-claim-polygraph --ollama-model YOUR_MODEL investigate "The claim"
-```
-
-Use both real retrieval and local reasoning with:
-
-```powershell
-claim-polygraph `
-  --searxng-url http://localhost:8080 `
-  --ollama-model YOUR_MODEL `
-  investigate "The claim"
-```
-
-`OLLAMA_MODEL` and `OLLAMA_BASE_URL` provide equivalent environment
-configuration. Ollama must already be running, and the named model must already
-be installed. Model output is validated against Pydantic schemas and protected
-evidence provenance fields, but it remains provisional until evaluated on
-reviewed benchmark cases. Use `--ollama-timeout SECONDS` or
-`OLLAMA_TIMEOUT_SECONDS` when local hardware needs a longer per-task deadline.
-
-### Faster hosted reasoning with OpenAI
-
-OpenAI is available as an explicit paid acceleration path. The deterministic
-provider remains the default, and the application never silently falls back
-between providers.
-
-Copy `.env.example` to `.env`, place your real API key in `.env`, and keep that
-file private:
-
-```dotenv
-OPENAI_API_KEY=your-real-key
-OPENAI_MODEL=gpt-5.4-mini
-OPENAI_FAST_MODEL=gpt-4o-mini
-OPENAI_TIMEOUT_SECONDS=60
-```
-
-Then run:
-
-```powershell
-claim-polygraph --openai-model gpt-5.4-mini investigate "The claim"
-```
-
-Use real retrieval and hosted reasoning together with:
-
-```powershell
-claim-polygraph `
-  --searxng-url http://localhost:8080 `
-  --openai-model gpt-5.4-mini `
-  --openai-fast-model gpt-4o-mini `
-  investigate "The claim"
-```
-
-The key is read only from `OPENAI_API_KEY` in the process environment or the
-Git-ignored `.env` file; there is deliberately no API-key command-line option.
-OpenAI calls use the Responses API, request strict schema-constrained JSON, do
-not store responses through the API request, and are validated against the same
-protected provenance rules as Ollama. Selecting an OpenAI model sends claim and
-evidence text to a hosted paid service. API-side project budgets and usage
-alerts should be configured separately because the CLI does not yet calculate
-or enforce a monetary cap.
-
-The current cost-first route uses `gpt-4o-mini` for claim normalization,
-evidence classification, and review critique. `gpt-5.4-mini` handles
-investigation planning, final verdict judgment, semantic passage evaluation,
-and citation auditing. `--openai-model` remains a single-model override when
-`--openai-fast-model` is omitted. Model quality must be compared against the
-benchmark before changing the production route.
-
-An inaccessible result is recorded with its extraction status and skipped.
-The workflow tries the next candidate within its page budget instead of
-failing the complete investigation. HTTPS verification uses the operating
-system trust store and is never disabled.
-
-Each completed investigation creates:
-
-```text
-artifacts/INVESTIGATION_ID/
-├── report.json
-├── report.md
-└── trace.json
-```
-
-The end-to-end behavior is demonstrated in
-`tests/integration/test_investigation_lifecycle.py`.
-
-## Evaluation baseline
-
-The repository includes a versioned twenty-claim benchmark covering the claim
-categories required by the project specification. CPNG-001 through CPNG-020
-have citation-grounded labels checked by Md Moshiur Rahman and distinctly
-approved by Md Rashedul Islam. Run a
-deterministic workflow baseline with:
-
-```powershell
-claim-polygraph evaluate
-```
-
-For a quick smoke test:
-
-```powershell
 claim-polygraph evaluate --limit 2
 ```
 
-Run the Phase 3 complex-only structural evaluation with:
+Synthetic evidence validates orchestration and contracts; it is not real
+fact-checking.
 
-```powershell
-claim-polygraph --no-hosted-model evaluate --complex `
-  --benchmark-evidence --limit 1 `
-  --output artifacts/evaluations/phase3-complex-smoke.json
+## Safety and privacy boundaries
+
+- Only public, permitted content is fetched; private or restricted material is
+  not bypassed.
+- PDF retrieval is disabled by default and requires explicit host approval
+  after a rights check.
+- Safe fetching enforces public-network, redirect, content-type, timeout, and
+  response-size policies.
+- Full fetched documents and unselected chunks are not retained; the system
+  stores bounded evidence passages, metadata, and hashes.
+- Retrieved text is treated as untrusted data. Visible prompt-injection text
+  remains quoted evidence but cannot authorize tools or override system policy.
+- Reviewer identity binding is suitable for the bounded local demo; it is not
+  cryptographic authentication.
+- Cost displayed in the dashboard is an estimate. SerpAPI plan charges are
+  separate, and the aggregate telemetry view may not yet include every model
+  usage event from durable jobs.
+
+## Current scope and next engineering steps
+
+This is a **portfolio-grade, bounded single-host system**, not an autonomous or
+internet-facing fact-checking service.
+
+The highest-value next steps are:
+
+1. reconcile all paid-operation receipts and trace events into one canonical
+   per-investigation cost ledger;
+2. expand human evaluation beyond the current 20-claim development benchmark,
+   including review-negative cases and more domains;
+3. add authenticated, role-based reviewer access before any multi-user
+   deployment;
+4. move durable jobs and persistence to PostgreSQL when measured concurrency
+   exceeds the validated SQLite envelope;
+5. evaluate factual calibration only after a sufficiently large held-out
+   reviewed dataset exists.
+
+## Repository guide
+
+```text
+dashboard/                  Next.js evidence-review dashboard
+src/claim_polygraph_ng/
+  application/              Authoritative workflows and services
+  domain/                   Typed claims, evidence, graph, review, and policy
+  providers/                Search, fetch, and reasoning adapters
+  persistence/              SQLite repositories, jobs, checkpoints, receipts
+  analysis/                 Provenance, verification, quality, and safeguards
+  reporting/                Human-readable and machine-readable reports
+tests/                      Unit, integration, security, and recovery tests
+benchmarks/                 Reviewed claims and adversarial fixtures
+artifacts/evaluations/      Versioned evaluation and release-audit outputs
+docs/                       Plans, completion reports, and ADRs
 ```
 
-Remove `--no-hosted-model` (or provide explicit OpenAI/Ollama options) for a
-model-backed run. The complex summary reports expected-component token-overlap
-recall, parent-link validity, protected-context validity, material coverage,
-parent citation support, verdict accuracy when human gold exists, and estimated
-cost per completed component. The overlap metric is a deterministic diagnostic,
-not a substitute for human semantic review.
+Start with:
 
-To measure reasoning and verdict classification against the reviewed evidence
-packets without search quality affecting the result, run:
+- [Project specification](docs/PROJECT_SPECIFICATION_AND_PLAN.md)
+- [Architecture and progress review](docs/PROJECT_PROGRESS_AND_ARCHITECTURE_REVIEW.md)
+- [Unified authoritative LangGraph plan](docs/PHASE_9_UNIFIED_AUTHORITATIVE_LANGGRAPH_PLAN.md)
+- [Social-media evidence governance plan](docs/PHASE_10_SOCIAL_MEDIA_EVIDENCE_GOVERNANCE_PLAN.md)
+- [Benchmark annotation policy](benchmarks/README.md)
 
-```powershell
-claim-polygraph evaluate --benchmark-evidence --limit 5 `
-  --output artifacts/evaluations/benchmark-evidence-openai.json
-```
+## Design decisions
 
-Add `--openai-model MODEL` (or configure `OPENAI_MODEL`) for a hosted-model
-run. This is an evidence-oracle baseline: it passes each reviewed excerpt
-through the normal extraction, evidence classification, synthesis, and
-citation-audit stages, but it does not measure web search or retrieval.
+The repository records major decisions as ADRs, including:
 
-Measure live search-candidate quality separately with a claim-only query for
-each of the five reviewed cases. Phase 2 uses SerpAPI Google:
+- starting with a lightweight vertical slice;
+- safe retrieval and rights-aware PDF handling;
+- explicit OpenAI and Ollama provider selection;
+- cost-first model routing;
+- honest non-promotion when an experiment regressed quality;
+- LangGraph promotion with a direct rollback;
+- retaining SQLite only for the measured local MVP;
+- durable jobs, telemetry, human review, and social-evidence governance.
 
-```powershell
-claim-polygraph --serpapi-engine google evaluate-retrieval `
-  --limit 5 --top-k 10 `
-  --query-strategy claim_only `
-  --snapshot-output artifacts/evaluations/serpapi-five-claim-snapshot.json `
-  --output artifacts/evaluations/serpapi-retrieval.json
-```
+This history is part of the project: unsuccessful experiments are documented
+instead of rewritten as successes.
 
-The equivalent SearXNG comparison remains available:
+## Author
 
-```powershell
-claim-polygraph --searxng-url http://localhost:8080 evaluate-retrieval `
-  --limit 5 --top-k 10 `
-  --query-strategy claim_only `
-  --output artifacts/evaluations/searxng-retrieval.json
-```
+**Md Moshiur Rahman**
 
-This reports exact reviewed-URL recall@K, reviewed-host recall@K, MRR,
-case success, reviewed-primary-host recall, and a lexical title/snippet proxy.
-The query does not include gold-source metadata. The lexical proxy is not
-semantic entailment or page-level passage recall.
+Built as a portfolio project exploring evidence-centric AI systems, durable
+multi-agent orchestration, human-in-the-loop review, and trustworthy product
+engineering.
 
-For the bounded query-strategy ablation, repeat the run with
-`--query-strategy balanced`. It issues the claim-only query plus generic
-authoritative-source and counterevidence queries, deduplicates candidates with
-reciprocal-rank fusion, and retains the same final top-K candidate budget.
+## License
 
-`--query-strategy guarded_fusion` uses the same expansion queries but protects
-the first seven claim-only results in a top-10 run. It reserves at most three
-tail positions for weighted expansion candidates, including one candidate from
-each expansion path when available.
-
-Capture all three query paths once, using either live provider:
-
-```powershell
-claim-polygraph --searxng-url http://localhost:8080 evaluate-retrieval `
-  --query-strategy guarded_fusion --component-queries --limit 20 --top-k 10 `
-  --snapshot-output artifacts/evaluations/phase3-searxng-snapshot.json `
-  --output artifacts/evaluations/guarded-live.json
-```
-
-`--component-queries` adds one query for every declared material component
-without using reviewed source metadata. The summary reports component-query
-completion, components with any candidate, and components recovering reviewed
-evidence. Atomic cases add no component queries.
-
-Then replay any strategy without SearXNG or network access:
-
-```powershell
-claim-polygraph evaluate-retrieval --query-strategy claim_only `
-  --snapshot-input artifacts/evaluations/searxng-five-claim-snapshot.json `
-  --output artifacts/evaluations/claim-only-replay.json
-```
-
-Replay rejects missing queries, larger result budgets, and benchmark
-identity/version mismatches.
-
-After two declared complex end-to-end runs, calculate the exact stability gate:
-
-```powershell
-claim-polygraph compare-complex-runs `
-  --first artifacts/evaluations/phase3-complex-run-1.json `
-  --second artifacts/evaluations/phase3-complex-run-2.json `
-  --output artifacts/evaluations/phase3-complex-stability.json
-```
-
-The comparison rejects different datasets or case sets and reports completion,
-exact verdict-label, and exact normalized component-set stability. Stability is
-repeatability, not factual accuracy.
-
-Use `--query-strategy quality_rerank` with a captured three-query snapshot to
-apply deterministic source-quality ranking. The score combines lexical claim
-relevance, government/academic authority signals, primary-source likelihood,
-query-fusion support, social/forum risk, and a repeated-host diversity penalty.
-Every selected candidate records its score and component features.
-
-Evaluate whether the quality-ranked pages are accessible and contain useful
-ranked passages:
-
-```powershell
-claim-polygraph evaluate-pages `
-  --retrieval artifacts/evaluations/quality-rerank-v2.json `
-  --top-n 3 --passage-top-k 3 `
-  --output artifacts/evaluations/page-fetch-quality-v1.json
-```
-
-This stage reports fetch and extraction success, duplicate-content rate,
-reviewed-passage token-coverage recall, and per-case passage success. Fetch
-failures remain separate from search and ranking failures.
-
-HTML, XHTML, plain text, and PDFs are supported. PDF responses have a separate
-20 MB download ceiling; encrypted files, files over 500 pages, and extraction
-output over 500,000 characters are rejected. Image-only PDFs produce no
-readable text because OCR is intentionally outside this stage. PDF retrieval
-is disabled by default: an operator must explicitly approve each source host
-after checking its license, permission, public-domain status, or applicable
-legal exception. Finding a public URL is not treated as permission.
-
-Every stored source records a rights status and retention scope. `unknown` is
-the default. Non-unknown rights claims require a written basis and may include
-a reference URL. Full fetched documents and unselected chunks are not persisted;
-only metadata, hashes, and bounded passages selected as evidence are retained.
-
-After completing that check, approve an exact host for one command:
-
-```powershell
-claim-polygraph --allow-pdf-host example.gov evaluate-pages `
-  --retrieval artifacts/evaluations/quality-rerank-v2.json
-```
-
-Run a bounded semantic comparison only for lexically unmatched passages above
-the lower coverage gate:
-
-```powershell
-claim-polygraph evaluate-semantic-passages `
-  --pages artifacts/evaluations/page-fetch-quality-v3.json `
-  --lower-lexical-threshold 0.2 `
-  --output artifacts/evaluations/semantic-passages-v1.json
-```
-
-This requires an explicitly configured OpenAI or Ollama model. It evaluates at
-most one passage per unmatched reviewed target, records token/cost telemetry,
-and does not count partial matches as recovered evidence.
-
-The investigation workflow also assigns evidence-family identifiers using
-shared hosts, publishers, near-duplicate passages, and explicit cross-citations.
-It passes the resulting independent-family count into judgment and requires
-human review when the plan's minimum is not met. Numerical and temporal checks
-record exactness terms, values, units, reference dates, and missing source-date
-context without treating those deterministic checks as verdicts.
-
-The completed five-claim retrieval iteration is recorded in:
-
-- `quality-rerank-v3-counter-coverage.json`
-- `page-fetch-quality-v7-top5-frozen.json`
-- `semantic-passages-v4-top5-frozen.json`
-
-The semantic stage raises combined passage recall from 66.67% to 75%. To run
-the reproducible candidate ranking through live page fetching, extraction,
-reasoning, and citation audit:
-
-```powershell
-claim-polygraph --openai-model gpt-5.4-mini `
-  --openai-fast-model gpt-4o-mini --openai-timeout 120 evaluate `
-  --dataset benchmarks/initial_claims_v1.json `
-  --retrieval-candidates artifacts/evaluations/quality-rerank-v3-counter-coverage.json `
-  --limit 5 --output artifacts/evaluations/phase1-live-e2e.json
-```
-
-The two final repeated results are `phase1-live-e2e-v8-enforced-audit.json` and
-`phase1-live-e2e-v9-enforced-repeat.json`. Both completed 5/5 cases, matched all
-five reviewed verdicts, and produced full citation support on all five concise
-verdict sentences. The candidate list is frozen for reproducibility, while the
-selected public pages are fetched live. This is not a live SearXNG search
-measurement.
-
-Phase 2 is closed. The ten-claim SerpAPI evaluation completed all 30 live
-queries and returned candidates for 10/10 cases. Combined reviewed-passage
-recall was 82.61%, with the original five cases holding their 75% Phase 1
-baseline. Two declared end-to-end runs completed 10/10 cases each, reached
-90% and 80% reviewed-label accuracy, delivered 100% full citation support,
-and achieved 90% exact label stability. Mean estimated model cost was
-$0.01085 and $0.01062 per completed case. No PDF was approved or downloaded.
-
-The final artifacts use the `phase2-ten-` prefix under
-`artifacts/evaluations/`. See
-[`docs/PHASE_2_COMPLETION_REPORT.md`](docs/PHASE_2_COMPLETION_REPORT.md) for
-the gate table, case-level outcomes, known weaknesses, and infrastructure
-decision.
-
-See [`docs/PHASE_1_COMPLETION_REPORT.md`](docs/PHASE_1_COMPLETION_REPORT.md) for
-the closed Phase 1 exit gates, costs, rights controls, and limitations. The
-closed Phase 2 scope and original measurable gates remain in
-[`docs/PHASE_2_EXECUTION_PLAN.md`](docs/PHASE_2_EXECUTION_PLAN.md).
-
-The default summary is written to
-`artifacts/evaluations/deterministic-baseline.json`. All cases measure workflow
-completion, latency, artifact counts, structural citation status, and verdict
-distribution. Verdict accuracy is calculated only for cases with
-human-reviewed expected verdicts. See
-[`benchmarks/README.md`](benchmarks/README.md) for the annotation policy.
-
-OpenAI runs additionally record the selected model, task, request latency,
-input tokens, cached input tokens, output tokens, schema-validation outcome,
-and a versioned list-price estimate. These values appear in trace events,
-Markdown execution summaries, and evaluation JSON. Estimates are not billing
-records and must be compared with the OpenAI usage dashboard.
-
-Check readiness of the first human-review batch with:
-
-```powershell
-claim-polygraph review-status
-```
-
-An optional AI annotator-and-critic pass can prepare the next draft packet:
-
-```powershell
-claim-polygraph ai-review --cases CPNG-006 CPNG-007 CPNG-008 CPNG-009 CPNG-010
-```
-
-This command records model, prompt, token, cost, and disagreement provenance
-and marks the cases `ai_reviewed`. It deliberately leaves `expected_verdict`,
-typed human annotation and approval fields, `reviewed_by`, and `reviewed_at`
-empty, so the output does not count as human
-ground truth or verdict accuracy.
-
-Then follow the
-[CPNG-001–005 review packet](benchmarks/review_packets/cpng_001_005.md).
+Released under the [MIT License](pyproject.toml).

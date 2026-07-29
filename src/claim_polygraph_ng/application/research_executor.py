@@ -7,6 +7,7 @@ import time
 from typing import Protocol
 from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
+from claim_polygraph_ng.analysis.social_urls import classify_social_url
 from claim_polygraph_ng.domain import (
     ResearchAssignment,
     ResearchResult,
@@ -62,6 +63,10 @@ class SharedResearchOperations:
         return await task
 
     async def fetch(self, url: str) -> FetchedDocument:
+        if classify_social_url(url) is not None:
+            raise ValueError(
+                "generic research fetch is prohibited for classified social URLs"
+            )
         cache_key = _fetch_cache_key(self._fetcher.provider_id, url)
         cached = self._repository.get_fetch(cache_key)
         if cached is not None:

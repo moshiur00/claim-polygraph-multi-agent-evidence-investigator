@@ -1,0 +1,21 @@
+{
+  "evaluation_id": "phase9-stage9.12b-portability-review-remediation-v1",
+  "generated_at": "2026-07-29T15:43:10.007500+00:00",
+  "checks": {
+    "phase5_historical_manifest_valid": true,
+    "phase6_historical_audit_valid": true,
+    "review_routing_recall_is_100_percent": true,
+    "all_stage9_comparison_gates_pass": true,
+    "verdict_equivalence_is_100_percent": true,
+    "challenger_gain_is_preserved": true
+  },
+  "valid": true,
+  "phase5_errors": [],
+  "phase6_errors": [],
+  "review_routing_recall": 1.0,
+  "recommended_disposition": "eligible_for_stage9_13_audit",
+  "external_model_calls": 0,
+  "live_search_calls": 0,
+  "network_fetches": 0,
+  "pdf_downloads": 0
+}

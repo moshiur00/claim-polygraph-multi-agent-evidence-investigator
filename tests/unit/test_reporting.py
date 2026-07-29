@@ -1,16 +1,30 @@
 """Unit tests for readable report rendering."""
 
 import asyncio
+from datetime import UTC, datetime
 
 from claim_polygraph_ng.application import InvestigationService
 from claim_polygraph_ng.domain import (
     ArgumentLedger,
     ArtifactType,
+    DistributionMedium,
+    EvidentiaryUse,
     InvestigationProvenance,
     InvestigationReport,
     JudgmentPolicyTrace,
     JudgmentReadiness,
+    SocialAccountIdentity,
+    SocialAccountType,
+    SocialAuthenticityEvidence,
+    SocialAuthenticityEvidenceType,
+    SocialAuthenticityStatus,
+    SocialCaptureMethod,
+    SocialContentOriginStatus,
+    SocialPostType,
+    SocialSourceContext,
+    Source,
     VerificationPacketV2,
+    evaluate_social_evidence_eligibility,
 )
 from claim_polygraph_ng.persistence import SQLiteInvestigationRepository
 from claim_polygraph_ng.providers import (
@@ -102,3 +116,62 @@ def test_old_report_payload_without_provenance_remains_valid(tmp_path) -> None:
     assert restored.argument_ledger is None
     assert restored.judgment_policy is None
     assert restored.readiness is None
+
+
+def test_markdown_exposes_social_identity_origin_use_and_limitations(tmp_path) -> None:
+    repository = SQLiteInvestigationRepository(tmp_path / "social-report.sqlite3")
+    service = InvestigationService(
+        repository=repository,
+        model_provider=DeterministicModelProvider(),
+        search_provider=DeterministicSearchProvider(),
+    )
+    report = asyncio.run(service.investigate("The example programme reduced waste."))
+    original_source = report.sources[0]
+    context = SocialSourceContext(
+        account=SocialAccountIdentity(
+            platform="x",
+            handle="agency",
+            account_type=SocialAccountType.GOVERNMENT,
+            authority_scope="Statements about the agency's own programme.",
+            authenticity_status=SocialAuthenticityStatus.AUTHENTICATED,
+            authenticity_evidence=(
+                SocialAuthenticityEvidence(
+                    evidence_type=(
+                        SocialAuthenticityEvidenceType.OFFICIAL_WEBSITE_LINK
+                    ),
+                    reference_url="https://agency.example/social",
+                    observed_at=datetime.now(UTC),
+                    description="The official website links to this account.",
+                ),
+            ),
+        ),
+        post_type=SocialPostType.ORIGINAL,
+        capture_method=SocialCaptureMethod.DIRECT_PUBLIC_PAGE,
+        content_origin_status=SocialContentOriginStatus.ORIGINAL_ACCESSIBLE,
+    )
+    social_source = Source.model_validate(
+        {
+            **original_source.model_dump(),
+            "distribution_medium": DistributionMedium.SOCIAL_PLATFORM,
+            "social_context": context,
+            "social_eligibility": evaluate_social_evidence_eligibility(context),
+        }
+    )
+    evidence = (
+        report.evidence[0].model_copy(
+            update={"evidentiary_use": EvidentiaryUse.ATTRIBUTED_STATEMENT}
+        ),
+        *report.evidence[1:],
+    )
+    social_report = report.model_copy(
+        update={"sources": (social_source, *report.sources[1:]), "evidence": evidence}
+    )
+
+    markdown = render_markdown(social_report, ())
+
+    assert "## Social-evidence trace" in markdown
+    assert "**Platform/account:** x / @agency" in markdown
+    assert "**Authenticity:** authenticated" in markdown
+    assert "**Assigned use:** attributed_statement" in markdown
+    assert "**Corroboration required:** no" in markdown
+    assert "Authenticity records attribution" in markdown

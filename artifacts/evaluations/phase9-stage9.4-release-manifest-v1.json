@@ -1,0 +1,44 @@
+{
+  "manifest_id": "phase9-stage9.4-release-manifest-v1",
+  "artifacts": [
+    {
+      "artifact_id": "authoritative_graph",
+      "path": "src/claim_polygraph_ng/application/langgraph_authoritative.py",
+      "sha256": "2422e3a2d707e5fc97713e75a2ab2c02dddca670af98355a47fd4248f23e3be3"
+    },
+    {
+      "artifact_id": "investigation_service",
+      "path": "src/claim_polygraph_ng/application/investigation_service.py",
+      "sha256": "b2b2824834c3a1f6dd9b1aa326d3bc1a366a3616a00525ccaa988f46cb9518eb"
+    },
+    {
+      "artifact_id": "artifact_contract",
+      "path": "src/claim_polygraph_ng/domain/investigation.py",
+      "sha256": "bd5a083533faf5c240b5a636f72b629a4aaf6f688ff31e55501524d796349f49"
+    },
+    {
+      "artifact_id": "integration_tests",
+      "path": "tests/integration/test_authoritative_langgraph.py",
+      "sha256": "de6c66a95419e37a000d2e5b8b4cdc5e6f66945fdadc64f44b654fbb881cd25a"
+    },
+    {
+      "artifact_id": "stage9_3_manifest",
+      "path": "artifacts/evaluations/phase9-stage9.3-graph-state-v1.json",
+      "sha256": "50d6200149b72bfd647caf9da5be20604373e6465cf6d89e9246b00fc9210d6d"
+    },
+    {
+      "artifact_id": "stage9_4_evaluation",
+      "path": "artifacts/evaluations/phase9-stage9.4-graph-skeleton-v1.json",
+      "sha256": "e3fd1634dee194c4113d31ad6b78850847cab703fc2b6b11311b0cdf9cffae24"
+    },
+    {
+      "artifact_id": "stage9_4_report",
+      "path": "docs/PHASE_9_STAGE_9.4_COMPLETION_REPORT.md",
+      "sha256": "97268089bbf923c53babc0d9568be8198c838b38ab370858a00f241138ccb891"
+    }
+  ],
+  "external_model_calls": 0,
+  "live_search_calls": 0,
+  "network_fetches": 0,
+  "pdf_downloads": 0
+}

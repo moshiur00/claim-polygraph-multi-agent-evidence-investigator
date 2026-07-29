@@ -1,0 +1,29 @@
+{
+  "fixture_version": "phase10-social-argument-policy-fixtures-v1",
+  "cases": [
+    {
+      "case_id": "social-only-decisive-proposition",
+      "expected_review": true,
+      "expected_publication_blocked": true,
+      "required_finding": "non_social_corroboration_missing"
+    },
+    {
+      "case_id": "social-plus-independent-web-corroboration",
+      "expected_review": true,
+      "expected_publication_blocked": false,
+      "required_finding": "decisive_use_not_allowed"
+    },
+    {
+      "case_id": "unspecified-social-use",
+      "expected_review": true,
+      "expected_publication_blocked": true,
+      "required_finding": "evidentiary_use_unspecified"
+    },
+    {
+      "case_id": "ineligible-social-copy",
+      "expected_review": true,
+      "expected_publication_blocked": true,
+      "required_finding": "ineligible_evidence_referenced"
+    }
+  ]
+}

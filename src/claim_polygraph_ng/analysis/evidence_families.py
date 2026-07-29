@@ -34,6 +34,8 @@ class FamilySourceRecord(DomainModel):
     url: AnyHttpUrl
     text: str = Field(min_length=1)
     published_at: date | None = None
+    related_source_ids: tuple[str, ...] = ()
+    origin_urls: tuple[AnyHttpUrl, ...] = ()
 
 
 class SourceDependencyEdge(DomainModel):
@@ -167,6 +169,33 @@ def _dependency_edge(
 ) -> SourceDependencyEdge:
     left_url = canonicalize_url(str(left.url)).canonical_value
     right_url = canonicalize_url(str(right.url)).canonical_value
+    if (
+        right.source_id in left.related_source_ids
+        or left.source_id in right.related_source_ids
+    ):
+        return _edge(
+            component_id,
+            left,
+            right,
+            DependencyStatus.CONFIRMED_DEPENDENT,
+            1,
+            "resolved_original_source",
+        )
+    left_origins = {
+        canonicalize_url(str(value)).canonical_value for value in left.origin_urls
+    }
+    right_origins = {
+        canonicalize_url(str(value)).canonical_value for value in right.origin_urls
+    }
+    if left_origins & right_origins or right_url in left_origins or left_url in right_origins:
+        return _edge(
+            component_id,
+            left,
+            right,
+            DependencyStatus.CONFIRMED_DEPENDENT,
+            1,
+            "shared_origin_url",
+        )
     if left_url == right_url:
         return _edge(
             component_id, left, right, DependencyStatus.CONFIRMED_DEPENDENT, 1, "canonical_url"

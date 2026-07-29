@@ -17,6 +17,7 @@ class JudgmentReasonCode(StrEnum):
     LABEL_INCOMPATIBLE_WITH_UNRESOLVED = "label_incompatible_with_unresolved"
     BLOCKING_CHALLENGE = "blocking_challenge"
     MIXED_MATERIAL_RESOLUTIONS = "mixed_material_resolutions"
+    SOCIAL_EVIDENCE_CONSTRAINT = "social_evidence_constraint"
 
 
 class JudgmentPolicyTrace(DomainModel):
