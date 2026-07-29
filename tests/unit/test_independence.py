@@ -86,3 +86,26 @@ def test_groups_an_explicit_cross_citation() -> None:
     assert analysis.independent_family_count == 1
     assert not analysis.requirement_met
     assert "explicit_cross_citation" in analysis.families[0].grouping_reasons
+
+
+def test_malformed_bracketed_url_in_passage_is_ignored() -> None:
+    claim_id = uuid4()
+    left = _source("https://one.example/report", "One Publisher")
+    right = _source("https://two.example/report", "Two Publisher")
+    evidence = (
+        _evidence(
+            claim_id,
+            left,
+            "Malformed citation https://example.org/[broken remains in text.",
+        ),
+        _evidence(claim_id, right, "Independent passage without a cross-citation."),
+    )
+
+    _, analysis = analyze_source_independence(
+        claim_id=claim_id,
+        sources=(left, right),
+        evidence=evidence,
+        required_families=2,
+    )
+
+    assert analysis.independent_family_count == 2

@@ -7,7 +7,7 @@ from uuid import NAMESPACE_URL, UUID, uuid5
 from claim_polygraph_ng.domain import Evidence, EvidenceFamily, IndependenceAnalysis, Source
 
 _TOKEN_PATTERN = re.compile(r"[a-z0-9]+")
-_URL_PATTERN = re.compile(r"https?://[^\s<>()]+", re.IGNORECASE)
+_URL_PATTERN = re.compile(r"https?://[^\s<>()\[\]]+", re.IGNORECASE)
 
 
 def analyze_source_independence(
@@ -141,11 +141,20 @@ def _cites_host(items: tuple[Evidence, ...], host: str) -> bool:
     return any(
         host
         in {
-            (urlsplit(url.rstrip(".,;")).hostname or "").casefold().removeprefix("www.")
+            parsed_host
             for url in _URL_PATTERN.findall(item.passage)
+            if (parsed_host := _safe_url_host(url.rstrip(".,;")))
         }
         for item in items
     )
+
+
+def _safe_url_host(value: str) -> str:
+    """Ignore malformed citation-like strings instead of aborting an investigation."""
+    try:
+        return (urlsplit(value).hostname or "").casefold().removeprefix("www.")
+    except ValueError:
+        return ""
 
 
 def _tokens(value: str) -> frozenset[str]:

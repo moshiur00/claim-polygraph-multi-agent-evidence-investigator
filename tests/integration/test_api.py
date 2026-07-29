@@ -14,10 +14,12 @@ from claim_polygraph_ng.domain import (
     VerdictLabel,
 )
 from claim_polygraph_ng.domain.investigation import Investigation
+from claim_polygraph_ng.domain.jobs import JobAdmissionPolicy
 from claim_polygraph_ng.persistence import (
     SQLiteInvestigationRepository,
     SQLiteReviewLedger,
 )
+from claim_polygraph_ng.persistence.jobs import SQLiteJobQueue
 from claim_polygraph_ng.providers import (
     DeterministicModelProvider,
     DeterministicSearchProvider,
@@ -118,6 +120,63 @@ def test_investigation_evidence_report_and_sse_are_exposed(tmp_path) -> None:
     assert events.headers["content-type"].startswith("text/event-stream")
     assert "event: investigation_completed" in events.text
     assert "data: {" in events.text
+
+
+def test_async_investigation_job_is_idempotent_and_completes_once(tmp_path) -> None:
+    repository = SQLiteInvestigationRepository(tmp_path / "investigations.db")
+    service = InvestigationService(
+        repository=repository,
+        model_provider=DeterministicModelProvider(),
+        search_provider=DeterministicSearchProvider(),
+    )
+    calls = 0
+
+    async def investigate_once(claim: str):
+        nonlocal calls
+        calls += 1
+        return await service.investigate(claim)
+
+    app = create_app(
+        ApiDependencies(
+            investigations=repository,
+            reviews=SQLiteReviewLedger(tmp_path / "reviews.db"),
+            graph_checkpoint_path=tmp_path / "graph.db",
+            investigate=investigate_once,
+            job_queue=SQLiteJobQueue(
+                tmp_path / "jobs.db",
+                JobAdmissionPolicy(maximum_active_jobs=1, default_provider_limit=1),
+            ),
+        )
+    )
+
+    async def scenario():
+        async with app.router.lifespan_context(app):
+            first = await _request(
+                app,
+                "POST",
+                "/api/investigation-jobs",
+                json={"claim": "The example policy reduced emissions.", "idempotency_key": "same-request"},
+            )
+            replay = await _request(
+                app,
+                "POST",
+                "/api/investigation-jobs",
+                json={"claim": "The example policy reduced emissions.", "idempotency_key": "same-request"},
+            )
+            assert first.status_code == replay.status_code == 202
+            assert first.json()["job"]["job_id"] == replay.json()["job"]["job_id"]
+            job_id = first.json()["job"]["job_id"]
+            for _ in range(100):
+                state = await _request(app, "GET", f"/api/investigation-jobs/{job_id}")
+                if state.json()["job"]["status"] == "completed":
+                    break
+                await asyncio.sleep(0.02)
+            return state
+
+    completed = asyncio.run(scenario())
+    assert completed.json()["job"]["status"] == "completed"
+    assert completed.json()["investigation_id"]
+    assert calls == 1
 
 
 def test_graph_review_resume_is_typed_durable_and_idempotent(tmp_path) -> None:

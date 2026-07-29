@@ -20,6 +20,7 @@ from claim_polygraph_ng.application import (
     parse_orchestrator_mode,
 )
 from claim_polygraph_ng.domain.telemetry import MetricName
+from claim_polygraph_ng.domain.jobs import JobAdmissionPolicy
 from claim_polygraph_ng.persistence import (
     SQLiteInvestigationRepository,
     SQLiteResearchRepository,
@@ -34,6 +35,7 @@ from claim_polygraph_ng.providers import (
 )
 from claim_polygraph_ng.retrieval import FetchedDocument, SafeHttpFetcher, UrlSafetyPolicy
 from claim_polygraph_ng.telemetry import TelemetryCollector
+from claim_polygraph_ng.persistence.jobs import SQLiteJobQueue
 
 
 class _InlineOnlyFetcher:
@@ -123,6 +125,14 @@ def build_development_app(
     )
     reviews = SQLiteReviewLedger(root / "reviews.db")
     checkpoint_path = root / "langgraph-checkpoints.db"
+    job_queue = SQLiteJobQueue(
+        root / "jobs.db",
+        JobAdmissionPolicy(
+            maximum_queue_depth=50,
+            maximum_active_jobs=1,
+            default_provider_limit=1,
+        ),
+    )
 
     async def investigate_authoritatively(claim: str):
         try:
@@ -208,6 +218,7 @@ def build_development_app(
             retrieval_provider=search_provider.provider_id,
             live_research=live_research,
             model_provider=model_provider.provider_id,
+            job_queue=job_queue,
         )
     )
 

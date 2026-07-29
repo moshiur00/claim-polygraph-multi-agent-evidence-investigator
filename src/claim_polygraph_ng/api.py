@@ -7,7 +7,7 @@ from collections.abc import Awaitable, Callable
 from dataclasses import dataclass
 from pathlib import Path
 from time import perf_counter
-from uuid import UUID
+from uuid import UUID, uuid4
 
 from fastapi import FastAPI, Header, HTTPException, Query, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
@@ -23,12 +23,19 @@ from claim_polygraph_ng.application.orchestrator import OrchestratorMode
 from claim_polygraph_ng.domain.api import (
     ApiStatus,
     CreateInvestigationRequest,
+    InvestigationJobResponse,
     StartGraphRunRequest,
     StartGraphRunResponse,
     SubmitApprovalRequest,
     SubmitDecisionRequest,
     SubmitDecisionResponse,
     SubmitRevisionRequest,
+)
+from claim_polygraph_ng.domain.jobs import (
+    JobFailureClass,
+    JobSpec,
+    JobStatus,
+    TERMINAL_JOB_STATUSES,
 )
 from claim_polygraph_ng.domain.graph import DurableGraphSnapshot
 from claim_polygraph_ng.domain.input import ClaimExtractionPacket, InvestigationInput
@@ -52,6 +59,7 @@ from claim_polygraph_ng.domain.telemetry import (
     TelemetrySpan,
 )
 from claim_polygraph_ng.persistence.base import InvestigationRepository
+from claim_polygraph_ng.persistence.jobs import JobBackpressureError, SQLiteJobQueue
 from claim_polygraph_ng.persistence.review import (
     ReviewConcurrencyError,
     ReviewLedgerError,
@@ -88,6 +96,7 @@ class ApiDependencies:
     retrieval_provider: str = "deterministic"
     live_research: bool = False
     model_provider: str = "deterministic"
+    job_queue: SQLiteJobQueue | None = None
 
 
 def create_app(dependencies: ApiDependencies) -> FastAPI:
@@ -167,6 +176,106 @@ def create_app(dependencies: ApiDependencies) -> FastAPI:
                 )
                 return response
 
+    worker_wakeup = asyncio.Event()
+    worker_task: asyncio.Task | None = None
+
+    def resolve_job_investigation(job) -> UUID | None:
+        if job.result_reference:
+            return UUID(job.result_reference)
+        claim = str(job.spec.payload.get("claim", ""))
+        candidates = [
+            item
+            for item in dependencies.investigations.list_investigations()
+            if item.input_claim == claim and item.created_at >= job.created_at
+        ]
+        return candidates[0].investigation_id if candidates else None
+
+    async def execute_next_job() -> bool:
+        if dependencies.job_queue is None or dependencies.investigate is None:
+            return False
+        job = dependencies.job_queue.claim("api-async-worker", lease_seconds=90)
+        if job is None:
+            return False
+        renewal_stopped = asyncio.Event()
+
+        async def renew_lease() -> None:
+            while not renewal_stopped.is_set():
+                try:
+                    await asyncio.wait_for(renewal_stopped.wait(), timeout=30)
+                except TimeoutError:
+                    try:
+                        dependencies.job_queue.renew_lease(
+                            job.job_id, "api-async-worker", lease_seconds=90
+                        )
+                    except Exception:
+                        return
+
+        renewer = asyncio.create_task(renew_lease())
+        try:
+            report = await dependencies.investigate(str(job.spec.payload["claim"]))
+            current = dependencies.job_queue.safe_boundary(job.job_id, "api-async-worker")
+            if current.status is not JobStatus.CANCELLED:
+                dependencies.job_queue.complete(
+                    job.job_id,
+                    "api-async-worker",
+                    result_reference=str(report.investigation.investigation_id),
+                )
+        except Exception as error:
+            current = dependencies.job_queue.load(job.job_id)
+            if current.status in {JobStatus.RUNNING, JobStatus.CANCELLING}:
+                fallback_id = resolve_job_investigation(job)
+                fallback = (
+                    dependencies.investigations.get_investigation(fallback_id)
+                    if fallback_id is not None
+                    else None
+                )
+                if fallback is not None and fallback.status is InvestigationStatus.COMPLETED:
+                    dependencies.job_queue.complete(
+                        job.job_id,
+                        "api-async-worker",
+                        result_reference=str(fallback.investigation_id),
+                    )
+                else:
+                    dependencies.job_queue.fail(
+                        job.job_id,
+                        "api-async-worker",
+                        classification=JobFailureClass.PERMANENT,
+                        error=f"{type(error).__name__}: {error}",
+                    )
+        finally:
+            renewal_stopped.set()
+            await renewer
+        return True
+
+    async def worker_loop() -> None:
+        if dependencies.job_queue is None:
+            return
+        dependencies.job_queue.recover_expired_leases()
+        while True:
+            if await execute_next_job():
+                continue
+            worker_wakeup.clear()
+            try:
+                await asyncio.wait_for(worker_wakeup.wait(), timeout=1)
+            except TimeoutError:
+                pass
+
+    @app.on_event("startup")
+    async def start_job_worker() -> None:
+        nonlocal worker_task
+        if dependencies.job_queue is not None:
+            dependencies.job_queue.initialize()
+            worker_task = asyncio.create_task(worker_loop())
+
+    @app.on_event("shutdown")
+    async def stop_job_worker() -> None:
+        if worker_task is not None:
+            worker_task.cancel()
+            try:
+                await worker_task
+            except asyncio.CancelledError:
+                pass
+
     @app.get("/health", response_model=ApiStatus)
     def health() -> ApiStatus:
         return ApiStatus(
@@ -237,6 +346,112 @@ def create_app(dependencies: ApiDependencies) -> FastAPI:
                 status_code=502,
                 detail=f"investigation provider failed: {type(error).__name__}",
             ) from error
+
+    @app.post(
+        "/api/investigation-jobs",
+        response_model=InvestigationJobResponse,
+        status_code=202,
+    )
+    async def create_investigation_job(
+        payload: CreateInvestigationRequest,
+        response: Response,
+    ) -> InvestigationJobResponse:
+        if dependencies.job_queue is None or dependencies.investigate is None:
+            raise HTTPException(status_code=503, detail="durable investigation jobs are not configured")
+        key = payload.idempotency_key or f"investigation:{uuid4()}"
+        try:
+            admitted = dependencies.job_queue.enqueue(
+                JobSpec(
+                    idempotency_key=key,
+                    kind="authoritative_investigation",
+                    payload={"claim": payload.claim},
+                    provider=dependencies.retrieval_provider,
+                    maximum_attempts=1,
+                )
+            )
+        except JobBackpressureError as error:
+            raise HTTPException(status_code=429, detail=str(error)) from error
+        worker_wakeup.set()
+        response.headers["Location"] = f"/api/investigation-jobs/{admitted.job.job_id}"
+        return InvestigationJobResponse(
+            job=admitted.job,
+            events=dependencies.job_queue.audit_events(admitted.job.job_id),
+        )
+
+    @app.get(
+        "/api/investigation-jobs/{job_id}",
+        response_model=InvestigationJobResponse,
+    )
+    def get_investigation_job(job_id: UUID) -> InvestigationJobResponse:
+        if dependencies.job_queue is None:
+            raise HTTPException(status_code=503, detail="durable investigation jobs are not configured")
+        try:
+            job = dependencies.job_queue.load(job_id)
+            investigation_id = resolve_job_investigation(job)
+            return InvestigationJobResponse(
+                job=job,
+                investigation_id=investigation_id,
+                events=dependencies.job_queue.audit_events(job_id),
+            )
+        except Exception as error:
+            raise HTTPException(status_code=404, detail=f"job not found: {job_id}") from error
+
+    @app.post(
+        "/api/investigation-jobs/{job_id}/cancel",
+        response_model=InvestigationJobResponse,
+    )
+    def cancel_investigation_job(
+        job_id: UUID,
+        x_reviewer_identity: str = Header(default="dashboard-user"),
+    ) -> InvestigationJobResponse:
+        if dependencies.job_queue is None:
+            raise HTTPException(status_code=503, detail="durable investigation jobs are not configured")
+        try:
+            job = dependencies.job_queue.request_cancellation(job_id, actor=x_reviewer_identity)
+            return InvestigationJobResponse(
+                job=job, events=dependencies.job_queue.audit_events(job_id)
+            )
+        except Exception as error:
+            raise HTTPException(status_code=409, detail=str(error)) from error
+
+    @app.get("/api/investigation-jobs/{job_id}/events")
+    async def stream_investigation_job_events(
+        job_id: UUID,
+        after: int = Query(default=0, ge=0),
+        follow: bool = Query(default=True),
+    ) -> StreamingResponse:
+        if dependencies.job_queue is None:
+            raise HTTPException(status_code=503, detail="durable investigation jobs are not configured")
+        try:
+            dependencies.job_queue.load(job_id)
+        except Exception as error:
+            raise HTTPException(status_code=404, detail=f"job not found: {job_id}") from error
+
+        async def generate_job_events():
+            cursor = after
+            while True:
+                job = dependencies.job_queue.load(job_id)
+                events = dependencies.job_queue.audit_events(job_id)
+                for event in events:
+                    if event.sequence <= cursor:
+                        continue
+                    yield (
+                        f"id: {event.sequence}\nevent: job_event\ndata: "
+                        f"{event.model_dump_json()}\n\n"
+                    )
+                    cursor = event.sequence
+                payload = InvestigationJobResponse(
+                    job=job,
+                    investigation_id=resolve_job_investigation(job),
+                    events=events,
+                )
+                yield f"event: job_state\ndata: {payload.model_dump_json()}\n\n"
+                if not follow or job.status in TERMINAL_JOB_STATUSES:
+                    break
+                yield ": keep-alive\n\n"
+                await asyncio.sleep(0.5)
+
+        return StreamingResponse(generate_job_events(), media_type="text/event-stream")
 
     @app.get("/api/investigations/{investigation_id}", response_model=Investigation)
     def get_investigation(investigation_id: UUID) -> Investigation:

@@ -120,6 +120,16 @@ class SerpAPISearchProvider:
         if response.status_code in {401, 403}:
             raise SearchProviderError("SerpAPI authentication was rejected")
         if response.status_code == 429:
+            try:
+                rate_payload = response.json()
+            except ValueError:
+                rate_payload = {}
+            rate_error = rate_payload.get("error") if isinstance(rate_payload, dict) else None
+            if isinstance(rate_error, str) and "activat" in rate_error.casefold():
+                raise SearchProviderError(
+                    "SerpAPI account activation is required; complete activation at "
+                    "https://serpapi.com/users/welcome"
+                )
             raise SearchProviderError("SerpAPI quota or rate limit was exceeded")
         try:
             response.raise_for_status()

@@ -139,6 +139,13 @@ def test_serpapi_retries_one_transient_failure() -> None:
     (
         (httpx.Response(401, json={"error": "Invalid API key"}), "authentication"),
         (httpx.Response(429, json={"error": "Rate limit"}), "quota or rate limit"),
+        (
+            httpx.Response(
+                429,
+                json={"error": "Your account needs to be activated. Visit: https://serpapi.com/users/welcome"},
+            ),
+            "account activation is required",
+        ),
         (httpx.Response(200, text="not json"), "invalid JSON"),
         (
             httpx.Response(200, json={"organic_results": {}}),
