@@ -1,0 +1,44 @@
+{
+  "manifest_id": "phase9-stage9.5-release-manifest-v1",
+  "artifacts": [
+    {
+      "artifact_id": "receipt_contracts",
+      "path": "src/claim_polygraph_ng/domain/paid_operations.py",
+      "sha256": "925db5318211e9ccca9674c373c091cefbc1038b280b6d284048cf34a067baae"
+    },
+    {
+      "artifact_id": "receipt_repository",
+      "path": "src/claim_polygraph_ng/persistence/paid_operations.py",
+      "sha256": "388b604b691e0607ff0cb04a7d692f0f771393f4fc4b6fb1302ed87cd821dc4a"
+    },
+    {
+      "artifact_id": "provider_decorators",
+      "path": "src/claim_polygraph_ng/providers/idempotent.py",
+      "sha256": "df6d6185d9d7392297bdf707c1cb7cef0a5a44966601352a344f74592b65ad73"
+    },
+    {
+      "artifact_id": "receipt_tests",
+      "path": "tests/unit/test_paid_operation_receipts.py",
+      "sha256": "cd69e8734130d7eac19e56eafce26c2f61df8af8b0fe0ddf4ffdbb44af48c7ce"
+    },
+    {
+      "artifact_id": "stage9_4_manifest",
+      "path": "artifacts/evaluations/phase9-stage9.4-release-manifest-v1.json",
+      "sha256": "c011c04d14b4103eb95583107526219fb3d12dc1dc0b687517a74a55175f93ef"
+    },
+    {
+      "artifact_id": "stage9_5_gate",
+      "path": "artifacts/evaluations/phase9-stage9.5-paid-operation-safety-v1.json",
+      "sha256": "d83f4570a6dae7e2ce4bae5f5860266afec665b923bd3291d0a2cfb573ec357c"
+    },
+    {
+      "artifact_id": "stage9_5_report",
+      "path": "docs/PHASE_9_STAGE_9.5_COMPLETION_REPORT.md",
+      "sha256": "f1b2a926e414729687a26a15e6021964bba82735c34e12f417a2aafeb3664f69"
+    }
+  ],
+  "external_model_calls": 0,
+  "live_search_calls": 0,
+  "network_fetches": 0,
+  "pdf_downloads": 0
+}

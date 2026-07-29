@@ -1,0 +1,64 @@
+{
+  "manifest_id": "phase9-stage9.8-release-manifest-v1",
+  "artifacts": [
+    {
+      "artifact_id": "publication_contract",
+      "path": "src/claim_polygraph_ng/domain/publication.py",
+      "sha256": "28ff52c4b25de23bef0caf2dbdcb1f504685270ec9adcb668df2be04d07eb677"
+    },
+    {
+      "artifact_id": "report_contract",
+      "path": "src/claim_polygraph_ng/domain/investigation.py",
+      "sha256": "bd5a083533faf5c240b5a636f72b629a4aaf6f688ff31e55501524d796349f49"
+    },
+    {
+      "artifact_id": "durable_state",
+      "path": "src/claim_polygraph_ng/domain/authoritative_graph.py",
+      "sha256": "4b2844a8d661ec93e384c631ab2ecc03b17f150ee8d395767aadb98d1a81f7d3"
+    },
+    {
+      "artifact_id": "operation_contracts",
+      "path": "src/claim_polygraph_ng/application/operation_contracts.py",
+      "sha256": "0b21683b8607ee71fbccc5dd7326292273fea6e5dfbe9a1680c89af4918907f3"
+    },
+    {
+      "artifact_id": "service_authority",
+      "path": "src/claim_polygraph_ng/application/investigation_service.py",
+      "sha256": "b2b2824834c3a1f6dd9b1aa326d3bc1a366a3616a00525ccaa988f46cb9518eb"
+    },
+    {
+      "artifact_id": "authoritative_graph",
+      "path": "src/claim_polygraph_ng/application/langgraph_authoritative.py",
+      "sha256": "d9d7639bbdd86c6263724dc2eac48f1e9a826d3d05197f99a04d86e5a371e2aa"
+    },
+    {
+      "artifact_id": "publication_renderer",
+      "path": "src/claim_polygraph_ng/reporting/reports.py",
+      "sha256": "906a7fd9c3540dd96ec35c35ea28f7ca7bdee3002c93914a9db17fa646c1bcb0"
+    },
+    {
+      "artifact_id": "integration_tests",
+      "path": "tests/integration/test_authoritative_judgment_publication.py",
+      "sha256": "5ccee77c5924f5655d541de0444fd15557ba3b1fe02eab91f4c95b7d726717df"
+    },
+    {
+      "artifact_id": "stage9_7_manifest",
+      "path": "artifacts/evaluations/phase9-stage9.7-release-manifest-v1.json",
+      "sha256": "1caea09b7cb7edb2e4db7819ddaeea6eabedc26c4e74844fea282f3f9d391625"
+    },
+    {
+      "artifact_id": "stage9_8_gate",
+      "path": "artifacts/evaluations/phase9-stage9.8-judgment-publication-v1.json",
+      "sha256": "76f1fa11b75b01f352925a74c6c82bcbfd9b6d1af445e4436b8889fb5003990b"
+    },
+    {
+      "artifact_id": "stage9_8_report",
+      "path": "docs/PHASE_9_STAGE_9.8_COMPLETION_REPORT.md",
+      "sha256": "5bd209c14ecb50dcf0a70a2ef008e8f14b5172850c538fe2fa4fd294c43195ba"
+    }
+  ],
+  "external_model_calls": 0,
+  "live_search_calls": 0,
+  "network_fetches": 0,
+  "pdf_downloads": 0
+}

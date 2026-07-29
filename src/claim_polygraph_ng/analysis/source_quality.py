@@ -6,10 +6,10 @@ from uuid import UUID
 
 from pydantic import Field
 
-from claim_polygraph_ng.domain import SourceType
+from claim_polygraph_ng.domain import DistributionMedium, SourceType
 from claim_polygraph_ng.domain.base import DomainModel
 
-SOURCE_QUALITY_VERSION = "dimensions-v1"
+SOURCE_QUALITY_VERSION = "dimensions-v2-social"
 
 
 class QualityFinding(StrEnum):
@@ -62,6 +62,12 @@ class SourceQualityMetadata(DomainModel):
     conflict_disclosed: bool | None = None
     interested_party: bool | None = None
     temporally_compatible: bool | None = None
+    distribution_medium: DistributionMedium = DistributionMedium.UNKNOWN
+    social_identity_resolved: bool | None = None
+    social_account_authenticated: bool | None = None
+    social_account_institutional: bool | None = None
+    social_authority_scope_recorded: bool | None = None
+    prohibited_social_signals: tuple[str, ...] = ()
 
 
 class SourceQualityAssessment(DomainModel):
@@ -115,18 +121,67 @@ def assess_source_quality(metadata: SourceQualityMetadata) -> SourceQualityAsses
         ),
         _conflict(metadata),
     )
+    limitations = [
+        "These dimensions describe evidence conditions and do not determine truth.",
+        "Unknown findings must not be converted into unfavorable or favorable findings.",
+        "Publisher or source type alone is insufficient to accept or reject evidence.",
+    ]
+    if metadata.prohibited_social_signals:
+        limitations.append(
+            "Engagement counts and platform badges were explicitly excluded from authority "
+            "and quality findings."
+        )
     return SourceQualityAssessment(
         source_id=metadata.source_id,
         dimensions=dimensions,
-        limitations=(
-            "These dimensions describe evidence conditions and do not determine truth.",
-            "Unknown findings must not be converted into unfavorable or favorable findings.",
-            "Publisher or source type alone is insufficient to accept or reject evidence.",
-        ),
+        limitations=tuple(limitations),
     )
 
 
 def _authority(metadata: SourceQualityMetadata) -> DimensionAssessment:
+    if metadata.distribution_medium is DistributionMedium.SOCIAL_PLATFORM:
+        if (
+            metadata.institutional_authority_confirmed is True
+            and metadata.social_account_authenticated is True
+            and metadata.social_authority_scope_recorded is True
+        ):
+            return DimensionAssessment(
+                dimension=SourceQualityDimension.AUTHORITY,
+                finding=QualityFinding.FAVORABLE,
+                reason=(
+                    "Authenticated institutional identity and claim-specific authority "
+                    "scope are explicitly recorded."
+                ),
+                signals=("authenticated_account", "authority_scope_recorded"),
+            )
+        if metadata.institutional_authority_confirmed is False:
+            return DimensionAssessment(
+                dimension=SourceQualityDimension.AUTHORITY,
+                finding=QualityFinding.UNFAVORABLE,
+                reason="The social account lacks authority for the material assertion.",
+                signals=("authority_not_applicable",),
+            )
+        return DimensionAssessment(
+            dimension=SourceQualityDimension.AUTHORITY,
+            finding=QualityFinding.UNKNOWN,
+            reason=(
+                "A platform identity or badge does not establish claim-specific authority; "
+                "authenticated ownership and applicable scope are incomplete."
+            ),
+            signals=tuple(
+                signal
+                for signal, present in (
+                    ("identity_resolved", metadata.social_identity_resolved),
+                    ("authenticated_account", metadata.social_account_authenticated),
+                    ("institutional_account", metadata.social_account_institutional),
+                    (
+                        "authority_scope_recorded",
+                        metadata.social_authority_scope_recorded,
+                    ),
+                )
+                if present is True
+            ),
+        )
     if metadata.institutional_authority_confirmed is True:
         return DimensionAssessment(
             dimension=SourceQualityDimension.AUTHORITY,

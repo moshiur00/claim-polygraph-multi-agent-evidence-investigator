@@ -4,6 +4,7 @@ import asyncio
 import json
 import os
 from collections.abc import Awaitable, Callable
+from contextlib import suppress
 from dataclasses import dataclass
 from pathlib import Path
 from time import perf_counter
@@ -13,6 +14,9 @@ from fastapi import FastAPI, Header, HTTPException, Query, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import PlainTextResponse, StreamingResponse
 
+from claim_polygraph_ng.application.langgraph_authoritative import (
+    AuthoritativeFixtureLangGraphWorkflow,
+)
 from claim_polygraph_ng.application.langgraph_durable import (
     DuplicateReviewDecisionError,
     DurableFixtureLangGraphWorkflow,
@@ -22,6 +26,8 @@ from claim_polygraph_ng.application.langgraph_durable import (
 from claim_polygraph_ng.application.orchestrator import OrchestratorMode
 from claim_polygraph_ng.domain.api import (
     ApiStatus,
+    AuthoritativeJobResponse,
+    AuthoritativeReviewRequest,
     CreateInvestigationRequest,
     InvestigationJobResponse,
     StartGraphRunRequest,
@@ -31,12 +37,6 @@ from claim_polygraph_ng.domain.api import (
     SubmitDecisionResponse,
     SubmitRevisionRequest,
 )
-from claim_polygraph_ng.domain.jobs import (
-    JobFailureClass,
-    JobSpec,
-    JobStatus,
-    TERMINAL_JOB_STATUSES,
-)
 from claim_polygraph_ng.domain.graph import DurableGraphSnapshot
 from claim_polygraph_ng.domain.input import ClaimExtractionPacket, InvestigationInput
 from claim_polygraph_ng.domain.investigation import (
@@ -45,7 +45,13 @@ from claim_polygraph_ng.domain.investigation import (
     InvestigationReport,
     InvestigationStatus,
 )
-from claim_polygraph_ng.domain.models import Evidence
+from claim_polygraph_ng.domain.jobs import (
+    TERMINAL_JOB_STATUSES,
+    JobFailureClass,
+    JobSpec,
+    JobStatus,
+)
+from claim_polygraph_ng.domain.models import AtomicClaim, Evidence, Verdict
 from claim_polygraph_ng.domain.review import (
     ReviewAuditTrail,
     ReviewerDecisionRecord,
@@ -58,6 +64,9 @@ from claim_polygraph_ng.domain.telemetry import (
     TelemetrySnapshot,
     TelemetrySpan,
 )
+from claim_polygraph_ng.persistence.authoritative_graph import (
+    AuthoritativeCheckpointCorruptionError,
+)
 from claim_polygraph_ng.persistence.base import InvestigationRepository
 from claim_polygraph_ng.persistence.jobs import JobBackpressureError, SQLiteJobQueue
 from claim_polygraph_ng.persistence.review import (
@@ -66,11 +75,13 @@ from claim_polygraph_ng.persistence.review import (
     ReviewPolicyError,
     SQLiteReviewLedger,
 )
+from claim_polygraph_ng.providers import ModelUnavailableError, SearchProviderError
 from claim_polygraph_ng.reporting import (
     IncompleteInvestigationError,
     InvestigationNotFoundError,
     PublicationBlockedError,
     load_report,
+    render_markdown,
     render_publishable_markdown,
 )
 from claim_polygraph_ng.telemetry import (
@@ -97,13 +108,14 @@ class ApiDependencies:
     live_research: bool = False
     model_provider: str = "deterministic"
     job_queue: SQLiteJobQueue | None = None
+    authoritative_workflow: AuthoritativeFixtureLangGraphWorkflow | None = None
 
 
 def create_app(dependencies: ApiDependencies) -> FastAPI:
     """Build the Stage 7.5 API without global mutable service state."""
     dependencies.investigations.initialize()
     dependencies.reviews.initialize()
-    app = FastAPI(title="Claim Polygraph NG API", version="7.5")
+    app = FastAPI(title="Claim Polygraph NG API", version="10.9")
     allowed_origins = tuple(
         origin.strip()
         for origin in os.getenv(
@@ -212,6 +224,42 @@ def create_app(dependencies: ApiDependencies) -> FastAPI:
 
         renewer = asyncio.create_task(renew_lease())
         try:
+            if (
+                job.spec.kind == "authoritative_langgraph_investigation"
+                and dependencies.authoritative_workflow is not None
+            ):
+                thread_id = str(job.spec.payload["thread_id"])
+
+                def authoritative_safe_boundary() -> None:
+                    boundary = dependencies.job_queue.safe_boundary(
+                        job.job_id, "api-async-worker"
+                    )
+                    if boundary.status is JobStatus.CANCELLED:
+                        raise RuntimeError("authoritative job cancelled at node boundary")
+
+                graph_result = await dependencies.authoritative_workflow.start(
+                    str(job.spec.payload["claim"]),
+                    thread_id=thread_id,
+                    safe_boundary=authoritative_safe_boundary,
+                )
+                current = dependencies.job_queue.safe_boundary(
+                    job.job_id, "api-async-worker"
+                )
+                if current.status is JobStatus.CANCELLED:
+                    return True
+                if graph_result.interrupt is not None:
+                    dependencies.job_queue.interrupt(
+                        job.job_id,
+                        "api-async-worker",
+                        reason=graph_result.interrupt.route_reason,
+                    )
+                else:
+                    dependencies.job_queue.complete(
+                        job.job_id,
+                        "api-async-worker",
+                        result_reference=thread_id,
+                    )
+                return True
             report = await dependencies.investigate(str(job.spec.payload["claim"]))
             current = dependencies.job_queue.safe_boundary(job.job_id, "api-async-worker")
             if current.status is not JobStatus.CANCELLED:
@@ -239,7 +287,13 @@ def create_app(dependencies: ApiDependencies) -> FastAPI:
                     dependencies.job_queue.fail(
                         job.job_id,
                         "api-async-worker",
-                        classification=JobFailureClass.PERMANENT,
+                        classification=(
+                            JobFailureClass.TRANSIENT
+                            if isinstance(
+                                error, (SearchProviderError, ModelUnavailableError)
+                            )
+                            else JobFailureClass.PERMANENT
+                        ),
                         error=f"{type(error).__name__}: {error}",
                     )
         finally:
@@ -255,10 +309,8 @@ def create_app(dependencies: ApiDependencies) -> FastAPI:
             if await execute_next_job():
                 continue
             worker_wakeup.clear()
-            try:
+            with suppress(TimeoutError):
                 await asyncio.wait_for(worker_wakeup.wait(), timeout=1)
-            except TimeoutError:
-                pass
 
     @app.on_event("startup")
     async def start_job_worker() -> None:
@@ -271,10 +323,8 @@ def create_app(dependencies: ApiDependencies) -> FastAPI:
     async def stop_job_worker() -> None:
         if worker_task is not None:
             worker_task.cancel()
-            try:
+            with suppress(asyncio.CancelledError):
                 await worker_task
-            except asyncio.CancelledError:
-                pass
 
     @app.get("/health", response_model=ApiStatus)
     def health() -> ApiStatus:
@@ -284,6 +334,325 @@ def create_app(dependencies: ApiDependencies) -> FastAPI:
             retrieval_provider=dependencies.retrieval_provider,
             live_research=dependencies.live_research,
             model_provider=dependencies.model_provider,
+        )
+
+    def authoritative_response(job) -> AuthoritativeJobResponse:
+        workflow = dependencies.authoritative_workflow
+        if workflow is None:
+            raise HTTPException(
+                status_code=503, detail="authoritative LangGraph is not configured"
+            )
+        thread_id = str(job.spec.payload.get("thread_id") or job.result_reference or "")
+        if not thread_id:
+            raise HTTPException(status_code=409, detail="job has no authoritative thread")
+        try:
+            state = workflow.latest_state(thread_id)
+        except AuthoritativeCheckpointCorruptionError as error:
+            raise HTTPException(
+                status_code=503,
+                detail="authoritative checkpoint integrity validation failed",
+            ) from error
+        trail = workflow.review_trail(thread_id)
+        stored_report = None
+        if state is not None and (
+            state.final_report_ref is not None
+            or (
+                state.readiness_ref is not None
+                and state.publication_decision_ref is not None
+            )
+        ):
+            try:
+                stored_report = load_report(
+                    dependencies.investigations,
+                    state.investigation_id,
+                    require_completed=state.final_report_ref is not None,
+                )
+            except (InvestigationNotFoundError, IncompleteInvestigationError):
+                stored_report = None
+        interruption = None
+        if job.status is JobStatus.INTERRUPTED and trail is not None:
+            # The immutable request is the durable public representation of the
+            # LangGraph interrupt; no synthetic node progress is emitted.
+            from claim_polygraph_ng.domain.graph import (
+                ReviewDecisionKind,
+                ReviewInterruptPayload,
+            )
+
+            claims = (
+                dependencies.investigations.list_artifacts(
+                    state.investigation_id,
+                    ArtifactType.CLAIM,
+                    AtomicClaim,
+                )
+                if state is not None
+                else ()
+            )
+            verdicts = (
+                dependencies.investigations.list_artifacts(
+                    state.investigation_id,
+                    ArtifactType.ENFORCED_VERDICT,
+                    Verdict,
+                )
+                or dependencies.investigations.list_artifacts(
+                    state.investigation_id,
+                    ArtifactType.PROPOSED_VERDICT,
+                    Verdict,
+                )
+                if state is not None
+                else ()
+            )
+            claim = (
+                stored_report.claim
+                if stored_report is not None
+                else claims[0]
+                if claims
+                else None
+            )
+            verdict = (
+                stored_report.verdict
+                if stored_report is not None
+                else verdicts[0]
+                if verdicts
+                else None
+            )
+            if claim is not None and verdict is not None:
+                allowed_decisions = (
+                    (
+                        ReviewDecisionKind.REQUEST_EVIDENCE,
+                        ReviewDecisionKind.REJECT,
+                    )
+                    if state is not None and not state.approved_evidence_ids
+                    else (
+                        ReviewDecisionKind.APPROVE,
+                        ReviewDecisionKind.REVISE,
+                        ReviewDecisionKind.REQUEST_EVIDENCE,
+                        ReviewDecisionKind.REJECT,
+                    )
+                )
+                interruption = ReviewInterruptPayload(
+                    thread_id=thread_id,
+                    question="Should this investigation be approved for publication?",
+                    claim_text=claim.text,
+                    provisional_verdict=verdict.label,
+                    approved_evidence_ids=state.approved_evidence_ids,
+                    route_reason=trail.request.reason,
+                    allowed_decisions=allowed_decisions,
+                )
+        decision_kind = (
+            trail.decisions[-1].kind.value
+            if trail is not None and trail.decisions
+            else None
+        )
+        publication_status = (
+            "more_evidence_required"
+            if decision_kind == "request_evidence"
+            else "rejected"
+            if decision_kind == "reject"
+            else
+            "published"
+            if state is not None
+            and state.phase.value == "complete"
+            and not state.publication_blocked
+            else "blocked"
+            if state is not None and state.publication_blocked
+            else "review_required"
+            if job.status is JobStatus.INTERRUPTED
+            else "processing"
+            if job.status in {JobStatus.QUEUED, JobStatus.RUNNING}
+            else job.status.value
+        )
+        return AuthoritativeJobResponse(
+            job=job,
+            thread_id=thread_id,
+            investigation_id=state.investigation_id if state is not None else None,
+            graph=state,
+            interruption=interruption,
+            review=trail,
+            publication_status=publication_status,
+            verdict=stored_report.verdict.label.value if stored_report is not None else None,
+            report_available=stored_report is not None,
+            events=dependencies.job_queue.audit_events(job.job_id)
+            if dependencies.job_queue is not None
+            else (),
+        )
+
+    @app.post(
+        "/api/authoritative-jobs",
+        response_model=AuthoritativeJobResponse,
+        status_code=202,
+    )
+    async def create_authoritative_job(
+        payload: CreateInvestigationRequest,
+        response: Response,
+    ) -> AuthoritativeJobResponse:
+        if dependencies.job_queue is None or dependencies.authoritative_workflow is None:
+            raise HTTPException(
+                status_code=503, detail="authoritative LangGraph jobs are not configured"
+            )
+        thread_id = str(uuid4())
+        key = payload.idempotency_key or f"authoritative:{thread_id}"
+        try:
+            admitted = dependencies.job_queue.enqueue(
+                JobSpec(
+                    idempotency_key=key,
+                    kind="authoritative_langgraph_investigation",
+                    payload={"claim": payload.claim, "thread_id": thread_id},
+                    provider=dependencies.retrieval_provider,
+                    maximum_attempts=2,
+                )
+            )
+        except JobBackpressureError as error:
+            raise HTTPException(status_code=429, detail=str(error)) from error
+        worker_wakeup.set()
+        response.headers["Location"] = f"/api/authoritative-jobs/{admitted.job.job_id}"
+        return authoritative_response(admitted.job)
+
+    @app.get(
+        "/api/authoritative-jobs/{job_id}",
+        response_model=AuthoritativeJobResponse,
+    )
+    def get_authoritative_job(job_id: UUID) -> AuthoritativeJobResponse:
+        if dependencies.job_queue is None:
+            raise HTTPException(status_code=503, detail="durable jobs are not configured")
+        try:
+            job = dependencies.job_queue.load(job_id)
+        except Exception as error:
+            raise HTTPException(status_code=404, detail="job not found") from error
+        if job.spec.kind != "authoritative_langgraph_investigation":
+            raise HTTPException(status_code=404, detail="authoritative job not found")
+        return authoritative_response(job)
+
+    @app.post(
+        "/api/authoritative-jobs/{job_id}/review",
+        response_model=AuthoritativeJobResponse,
+    )
+    async def review_authoritative_job(
+        job_id: UUID,
+        payload: AuthoritativeReviewRequest,
+        x_reviewer_identity: str | None = Header(default=None),
+    ) -> AuthoritativeJobResponse:
+        if dependencies.job_queue is None or dependencies.authoritative_workflow is None:
+            raise HTTPException(status_code=503, detail="authoritative jobs are not configured")
+        _require_identity(x_reviewer_identity, payload.decision.reviewer_identity)
+        try:
+            job = dependencies.job_queue.load(job_id)
+            if job.spec.kind != "authoritative_langgraph_investigation":
+                raise HTTPException(status_code=404, detail="authoritative job not found")
+            thread_id = str(job.spec.payload["thread_id"])
+            result = await dependencies.authoritative_workflow.resume(
+                thread_id,
+                payload.decision,
+                approver_identity=payload.approver_identity,
+            )
+            if result.interrupt is None:
+                job = dependencies.job_queue.complete_interrupted(
+                    job_id,
+                    actor=payload.decision.reviewer_identity,
+                    result_reference=thread_id,
+                )
+            return authoritative_response(job)
+        except HTTPException:
+            raise
+        except (DuplicateReviewDecisionError, GraphResumeError, ValueError) as error:
+            raise HTTPException(status_code=409, detail=str(error)) from error
+
+    @app.post(
+        "/api/authoritative-jobs/{job_id}/cancel",
+        response_model=AuthoritativeJobResponse,
+    )
+    def cancel_authoritative_job(
+        job_id: UUID,
+        x_reviewer_identity: str = Header(default="dashboard-user"),
+    ) -> AuthoritativeJobResponse:
+        if dependencies.job_queue is None:
+            raise HTTPException(status_code=503, detail="durable jobs are not configured")
+        try:
+            job = dependencies.job_queue.load(job_id)
+            if job.spec.kind != "authoritative_langgraph_investigation":
+                raise HTTPException(status_code=404, detail="authoritative job not found")
+            job = dependencies.job_queue.request_cancellation(
+                job_id, actor=x_reviewer_identity
+            )
+            return authoritative_response(job)
+        except HTTPException:
+            raise
+        except Exception as error:
+            raise HTTPException(status_code=409, detail=str(error)) from error
+
+    @app.get("/api/authoritative-jobs/{job_id}/events")
+    async def stream_authoritative_job_events(
+        job_id: UUID,
+        after: int = Query(default=0, ge=0),
+        follow: bool = Query(default=True),
+        last_event_id: str | None = Header(default=None, alias="Last-Event-ID"),
+    ) -> StreamingResponse:
+        if dependencies.job_queue is None or dependencies.authoritative_workflow is None:
+            raise HTTPException(status_code=503, detail="authoritative jobs are not configured")
+        try:
+            job = dependencies.job_queue.load(job_id)
+        except Exception as error:
+            raise HTTPException(status_code=404, detail="job not found") from error
+        if job.spec.kind != "authoritative_langgraph_investigation":
+            raise HTTPException(status_code=404, detail="authoritative job not found")
+        try:
+            dependencies.authoritative_workflow.state_history(
+                str(job.spec.payload["thread_id"])
+            )
+        except AuthoritativeCheckpointCorruptionError as error:
+            raise HTTPException(
+                status_code=503,
+                detail="authoritative checkpoint integrity validation failed",
+            ) from error
+
+        if last_event_id is not None:
+            try:
+                reconnect_cursor = int(last_event_id)
+            except ValueError as error:
+                raise HTTPException(
+                    status_code=422, detail="Last-Event-ID must be a non-negative integer"
+                ) from error
+            if reconnect_cursor < 0:
+                raise HTTPException(
+                    status_code=422, detail="Last-Event-ID must be a non-negative integer"
+                )
+        else:
+            reconnect_cursor = 0
+
+        async def generate_authoritative_events():
+            cursor = max(after, reconnect_cursor)
+            last_job_sequence = 0
+            while True:
+                current = dependencies.job_queue.load(job_id)
+                thread_id = str(current.spec.payload["thread_id"])
+                history = dependencies.authoritative_workflow.state_history(thread_id)
+                for state in history:
+                    event_sequence = state.checkpoint_sequence + 1
+                    if event_sequence <= cursor:
+                        continue
+                    yield (
+                        f"id: {event_sequence}\nevent: authoritative_checkpoint\ndata: "
+                        f"{state.model_dump_json()}\n\n"
+                    )
+                    cursor = event_sequence
+                events = dependencies.job_queue.audit_events(job_id)
+                for event in events:
+                    if event.sequence <= last_job_sequence:
+                        continue
+                    yield f"event: job_event\ndata: {event.model_dump_json()}\n\n"
+                    last_job_sequence = event.sequence
+                payload = authoritative_response(current)
+                yield f"event: authoritative_state\ndata: {payload.model_dump_json()}\n\n"
+                if not follow or current.status in TERMINAL_JOB_STATUSES or (
+                    current.status is JobStatus.INTERRUPTED
+                ):
+                    break
+                yield ": keep-alive\n\n"
+                await asyncio.sleep(0.25)
+
+        return StreamingResponse(
+            generate_authoritative_events(),
+            media_type="text/event-stream",
+            headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
         )
 
     @app.get("/api/investigations", response_model=list[Investigation])
@@ -357,7 +726,10 @@ def create_app(dependencies: ApiDependencies) -> FastAPI:
         response: Response,
     ) -> InvestigationJobResponse:
         if dependencies.job_queue is None or dependencies.investigate is None:
-            raise HTTPException(status_code=503, detail="durable investigation jobs are not configured")
+            raise HTTPException(
+                status_code=503,
+                detail="durable investigation jobs are not configured",
+            )
         key = payload.idempotency_key or f"investigation:{uuid4()}"
         try:
             admitted = dependencies.job_queue.enqueue(
@@ -384,7 +756,10 @@ def create_app(dependencies: ApiDependencies) -> FastAPI:
     )
     def get_investigation_job(job_id: UUID) -> InvestigationJobResponse:
         if dependencies.job_queue is None:
-            raise HTTPException(status_code=503, detail="durable investigation jobs are not configured")
+            raise HTTPException(
+                status_code=503,
+                detail="durable investigation jobs are not configured",
+            )
         try:
             job = dependencies.job_queue.load(job_id)
             investigation_id = resolve_job_investigation(job)
@@ -405,7 +780,10 @@ def create_app(dependencies: ApiDependencies) -> FastAPI:
         x_reviewer_identity: str = Header(default="dashboard-user"),
     ) -> InvestigationJobResponse:
         if dependencies.job_queue is None:
-            raise HTTPException(status_code=503, detail="durable investigation jobs are not configured")
+            raise HTTPException(
+                status_code=503,
+                detail="durable investigation jobs are not configured",
+            )
         try:
             job = dependencies.job_queue.request_cancellation(job_id, actor=x_reviewer_identity)
             return InvestigationJobResponse(
@@ -421,7 +799,10 @@ def create_app(dependencies: ApiDependencies) -> FastAPI:
         follow: bool = Query(default=True),
     ) -> StreamingResponse:
         if dependencies.job_queue is None:
-            raise HTTPException(status_code=503, detail="durable investigation jobs are not configured")
+            raise HTTPException(
+                status_code=503,
+                detail="durable investigation jobs are not configured",
+            )
         try:
             dependencies.job_queue.load(job_id)
         except Exception as error:
@@ -475,19 +856,31 @@ def create_app(dependencies: ApiDependencies) -> FastAPI:
     @app.get("/api/investigations/{investigation_id}/report")
     def get_report(investigation_id: UUID, format: str = Query(default="json")):
         try:
-            report = load_report(dependencies.investigations, investigation_id)
+            report = load_report(
+                dependencies.investigations,
+                investigation_id,
+                require_completed=False,
+            )
         except InvestigationNotFoundError as error:
             raise HTTPException(status_code=404, detail=str(error)) from error
         except IncompleteInvestigationError as error:
             raise HTTPException(status_code=409, detail=str(error)) from error
-        if format == "markdown":
+        if format in {"markdown", "provisional_markdown"}:
             events = dependencies.investigations.list_events(investigation_id)
+            if format == "provisional_markdown":
+                return PlainTextResponse(
+                    "> **PROVISIONAL — HUMAN REVIEW REQUIRED BEFORE PUBLICATION**\n\n"
+                    + render_markdown(report, events)
+                )
             try:
                 return PlainTextResponse(render_publishable_markdown(report, events))
             except PublicationBlockedError as error:
                 raise HTTPException(status_code=409, detail=str(error)) from error
         if format != "json":
-            raise HTTPException(status_code=422, detail="format must be json or markdown")
+            raise HTTPException(
+                status_code=422,
+                detail="format must be json, markdown, or provisional_markdown",
+            )
         return report
 
     @app.post("/api/graph-runs", response_model=StartGraphRunResponse, status_code=201)

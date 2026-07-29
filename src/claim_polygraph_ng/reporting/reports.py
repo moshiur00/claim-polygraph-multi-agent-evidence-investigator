@@ -9,11 +9,13 @@ from claim_polygraph_ng.domain import (
     ArgumentLedger,
     ArtifactType,
     AtomicClaim,
+    AuthoritativePublicationDecision,
     ClaimCoverage,
     ClaimDecomposition,
     ComplexInvestigationReport,
     ComplexWorkflowCheckpoint,
     ContextVerification,
+    DistributionMedium,
     Evidence,
     EvidenceStance,
     FullReportCitationAssurance,
@@ -27,6 +29,7 @@ from claim_polygraph_ng.domain import (
     PublicationGateStatus,
     ReportAssertionSection,
     SentenceAudit,
+    SocialEvidencePolicyResult,
     Source,
     TraceEvent,
     TraceEventType,
@@ -62,12 +65,14 @@ class ExportedReportPaths:
 def load_report(
     repository: InvestigationRepository,
     investigation_id: UUID,
+    *,
+    require_completed: bool = True,
 ) -> InvestigationReport:
-    """Reconstruct and validate a completed report from stored artifacts."""
+    """Reconstruct a report; optionally permit a complete provisional packet."""
     investigation = repository.get_investigation(investigation_id)
     if investigation is None:
         raise InvestigationNotFoundError(f"investigation not found: {investigation_id}")
-    if investigation.status is not InvestigationStatus.COMPLETED:
+    if require_completed and investigation.status is not InvestigationStatus.COMPLETED:
         raise IncompleteInvestigationError(
             f"investigation is {investigation.status.value}, not completed"
         )
@@ -110,6 +115,16 @@ def load_report(
         ArtifactType.FULL_REPORT_ASSURANCE,
         FullReportCitationAssurance,
     )
+    publication_decisions = repository.list_artifacts(
+        investigation_id,
+        ArtifactType.PUBLICATION_DECISION,
+        AuthoritativePublicationDecision,
+    )
+    social_evidence_policies = repository.list_artifacts(
+        investigation_id,
+        ArtifactType.SOCIAL_EVIDENCE_POLICY,
+        SocialEvidencePolicyResult,
+    )
 
     missing = [
         name
@@ -142,6 +157,12 @@ def load_report(
         verdict=verdicts[-1],
         audits=audits,
         full_report_assurance=(full_report_assurance[-1] if full_report_assurance else None),
+        publication_decision=(
+            publication_decisions[-1] if publication_decisions else None
+        ),
+        social_evidence_policy=(
+            social_evidence_policies[-1] if social_evidence_policies else None
+        ),
     )
 
 
@@ -391,6 +412,12 @@ def render_publishable_markdown(
 ) -> str:
     """Render only after the complete material-sentence publication gate passes."""
     assurance = report.full_report_assurance
+    decision = report.publication_decision
+    if decision is not None and not decision.publication_allowed:
+        reasons = decision.blocking_reasons or (
+            "Authoritative human approval is required before publication.",
+        )
+        raise PublicationBlockedError("publication blocked: " + " ".join(reasons))
     if assurance is None:
         raise PublicationBlockedError(
             "full-report citation assurance is missing; publication is blocked"
@@ -455,6 +482,93 @@ def render_markdown(
     ):
         items = tuple(item for item in report.evidence if item.stance is stance)
         lines.extend(_evidence_section(heading, items, evidence_labels, source_by_id))
+
+    social_items = tuple(
+        item
+        for item in report.evidence
+        if (
+            source_by_id.get(item.source_id) is not None
+            and source_by_id[item.source_id].distribution_medium
+            is DistributionMedium.SOCIAL_PLATFORM
+        )
+    )
+    if social_items:
+        lines.extend(
+            [
+                "## Social-evidence trace",
+                "",
+                "Authenticity records attribution; it does not establish that a "
+                "statement is true. Relevance is not authority or independence.",
+                "",
+            ]
+        )
+        for item in social_items:
+            source = source_by_id[item.source_id]
+            context = source.social_context
+            eligibility = source.social_eligibility
+            assert context is not None
+            assert eligibility is not None
+            original = context.original_source
+            underlying = (
+                source_by_id.get(original.source_id)
+                if original is not None and original.source_id is not None
+                else None
+            )
+            family = next(
+                (
+                    candidate
+                    for candidate in (report.provenance.families if report.provenance else ())
+                    if source.source_id in candidate.source_ids
+                ),
+                None,
+            )
+            account = context.account
+            account_label = (
+                f"@{account.handle}"
+                if account.handle
+                else account.display_name or "unresolved account"
+            )
+            origin_label = (
+                underlying.title
+                if underlying is not None
+                else str(original.url)
+                if original is not None and original.url is not None
+                else "original social post"
+            )
+            lines.extend(
+                [
+                    f"### {evidence_labels[item.evidence_id]} — "
+                    f"{_inline(source.title)}",
+                    "",
+                    f"- **Platform/account:** {_inline(account.platform)} / "
+                    f"{_inline(account_label)}",
+                    f"- **Identity resolved:** "
+                    f"{'yes' if account.identity_resolved else 'no'}",
+                    f"- **Account type:** {account.account_type.value}",
+                    f"- **Authenticity:** {account.authenticity_status.value}",
+                    f"- **Authority scope:** "
+                    f"{_inline(account.authority_scope or 'not established')}",
+                    f"- **Post/capture:** {context.post_type.value} / "
+                    f"{context.capture_method.value}",
+                    f"- **Content origin:** {context.content_origin_status.value}",
+                    f"- **Original source:** {_inline(origin_label)}",
+                    f"- **Original-source status:** "
+                    f"{'resolved' if original and original.resolved else 'not resolved'}",
+                    f"- **Eligibility:** {eligibility.decision.value}",
+                    f"- **Assigned use:** {item.evidentiary_use.value}",
+                    f"- **Allowed uses:** "
+                    f"{_joined(value.value for value in eligibility.allowed_uses)}",
+                    f"- **Corroboration required:** "
+                    f"{'yes' if eligibility.requires_corroboration else 'no'}",
+                    f"- **Independent proof allowed:** "
+                    f"{'yes' if eligibility.independent_proof_allowed else 'no'}",
+                    f"- **Evidence family:** "
+                    f"{family.family_id if family is not None else 'unassigned'}",
+                    f"- **Eligibility reasons:** "
+                    f"{_joined(eligibility.reason_codes)}",
+                    "",
+                ]
+            )
 
     if report.independence_analysis is not None:
         analysis = report.independence_analysis
@@ -670,6 +784,50 @@ def render_markdown(
                 "",
             ]
         )
+
+    if report.social_evidence_policy is not None:
+        social_policy = report.social_evidence_policy
+        lines.extend(
+            [
+                "## Social-evidence constraints",
+                "",
+                f"- **Social evidence referenced:** "
+                f"{len(social_policy.social_evidence_ids)}",
+                f"- **Non-social evidence referenced:** "
+                f"{len(social_policy.non_social_evidence_ids)}",
+                f"- **Human review required:** "
+                f"{'yes' if social_policy.requires_human_review else 'no'}",
+                f"- **Publication blocked:** "
+                f"{'yes' if social_policy.publication_blocked else 'no'}",
+                "",
+            ]
+        )
+        for finding in social_policy.findings:
+            lines.append(
+                f"- **{finding.severity.value} / {finding.code.value}:** "
+                f"{finding.reason}"
+            )
+        lines.append("")
+    if report.publication_decision is not None:
+        decision = report.publication_decision
+        lines.extend(
+            [
+                "",
+                "## Authoritative publication decision",
+                "",
+                f"- **Status:** {decision.status.value}",
+                f"- **Publication allowed:** "
+                f"{'yes' if decision.publication_allowed else 'no'}",
+                f"- **Proposed label:** {decision.proposed_label.value}",
+                f"- **Enforced label:** {decision.enforced_label.value}",
+                f"- **Readiness:** {decision.readiness_state.value}",
+                f"- **Reason codes:** {', '.join(decision.reason_codes)}",
+                "",
+            ]
+        )
+        if decision.blocking_reasons:
+            lines.extend(["### Publication blockers", ""])
+            lines.extend(_bullet_items(decision.blocking_reasons))
 
     provider_events = tuple(
         event for event in events if event.event_type is TraceEventType.PROVIDER_CALLED

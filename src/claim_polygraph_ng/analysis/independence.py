@@ -4,6 +4,7 @@ import re
 from urllib.parse import urlsplit
 from uuid import NAMESPACE_URL, UUID, uuid5
 
+from claim_polygraph_ng.analysis.canonicalization import canonicalize_url
 from claim_polygraph_ng.domain import Evidence, EvidenceFamily, IndependenceAnalysis, Source
 
 _TOKEN_PATTERN = re.compile(r"[a-z0-9]+")
@@ -47,6 +48,10 @@ def analyze_source_independence(
         for right_id in evidence_sources[index + 1 :]:
             right_source = sources_by_id[right_id]
             right_evidence = tuple(item for item in evidence if item.source_id == right_id)
+            if _resolved_original_pair(left_source, right_source):
+                union(left_id, right_id, "resolved_original_source")
+            if _shared_origin_pair(left_source, right_source):
+                union(left_id, right_id, "shared_origin_url")
             if _host(left_source) == _host(right_source):
                 union(left_id, right_id, "same_host")
             if (
@@ -115,7 +120,7 @@ def analyze_source_independence(
         families=tuple(sorted(families, key=lambda family: str(family.family_id))),
         limitations=(
             "Deterministic grouping detects shared hosts, publishers, near-duplicate passages, "
-            "and explicit cross-citations only.",
+            "explicit cross-citations, and resolved original-source links only.",
             "Undisclosed syndication or reliance on the same offline authority may remain hidden.",
         ),
     )
@@ -124,6 +129,40 @@ def analyze_source_independence(
 
 def _host(source: Source) -> str:
     return (urlsplit(str(source.canonical_url)).hostname or "").casefold().removeprefix("www.")
+
+
+def _resolved_original_pair(left: Source, right: Source) -> bool:
+    return _links_to_source(left, right.source_id) or _links_to_source(
+        right, left.source_id
+    )
+
+
+def _links_to_source(source: Source, target_id: UUID) -> bool:
+    if source.social_context is None or source.social_context.original_source is None:
+        return False
+    link = source.social_context.original_source
+    return link.resolved and link.source_id == target_id
+
+
+def _shared_origin_pair(left: Source, right: Source) -> bool:
+    left_origins = _origin_urls(left)
+    right_origins = _origin_urls(right)
+    left_url = canonicalize_url(str(left.canonical_url)).canonical_value
+    right_url = canonicalize_url(str(right.canonical_url)).canonical_value
+    return bool(
+        left_origins & right_origins
+        or right_url in left_origins
+        or left_url in right_origins
+    )
+
+
+def _origin_urls(source: Source) -> frozenset[str]:
+    if source.social_context is None or source.social_context.original_source is None:
+        return frozenset()
+    url = source.social_context.original_source.url
+    if url is None:
+        return frozenset()
+    return frozenset({canonicalize_url(str(url)).canonical_value})
 
 
 def _passages_overlap(

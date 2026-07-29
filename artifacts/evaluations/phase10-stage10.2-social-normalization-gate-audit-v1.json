@@ -1,0 +1,43 @@
+{
+  "audit_id": "phase10-stage10.2-social-normalization-gate-audit-v1",
+  "fixture_id": "phase10-social-url-normalization-v1",
+  "fixture_version": 1,
+  "case_count": 15,
+  "exact_match_count": 15,
+  "social_case_count": 13,
+  "non_social_case_count": 2,
+  "platform_count": 10,
+  "unknown_social_path_count": 1,
+  "model_calls": 0,
+  "search_calls": 0,
+  "social_page_fetches": 0,
+  "valid": true,
+  "errors": [],
+  "artifacts": [
+    {
+      "artifact_id": "fixtures",
+      "path": "benchmarks/phase10_social_url_fixtures_v1.json",
+      "sha256": "8b6acf50488d7aa9149d2d65523a97b57f46d600ba863347a8eae0b33eb9a77f"
+    },
+    {
+      "artifact_id": "normalizer",
+      "path": "src/claim_polygraph_ng/analysis/social_urls.py",
+      "sha256": "072ecf2376c603dc1c7e58bec20b6cda77b39ef2449bbb19f193efc6ab4a922b"
+    },
+    {
+      "artifact_id": "candidate_contract",
+      "path": "src/claim_polygraph_ng/domain/social.py",
+      "sha256": "e01bea84acf50d0a4dec014b1111be8b2e48f7d36a1c9609e664915880f641f7"
+    },
+    {
+      "artifact_id": "serpapi_adapter",
+      "path": "src/claim_polygraph_ng/providers/serpapi.py",
+      "sha256": "80c026b4e1faffc06f11c165c55da87f3f5047ab3b27632cc6dedf9e8a67cb82"
+    },
+    {
+      "artifact_id": "searxng_adapter",
+      "path": "src/claim_polygraph_ng/providers/searxng.py",
+      "sha256": "8afc5d455078646d4224762281a4d56b5998f9746edb6f530789f86cea7a154d"
+    }
+  ]
+}

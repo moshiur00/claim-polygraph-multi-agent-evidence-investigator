@@ -1,0 +1,57 @@
+{
+  "manifest_id": "phase9-stage9.10-release-manifest-v1",
+  "artifacts": [
+    {
+      "artifact_id": "api",
+      "path": "src/claim_polygraph_ng/api.py",
+      "sha256": "91feff4e7efe11ff7eef3645a2ae77e923656bcd76681d08d6d79f223e6cde46"
+    },
+    {
+      "artifact_id": "api_contracts",
+      "path": "src/claim_polygraph_ng/domain/api.py",
+      "sha256": "b7d2d922e23c6671518ebd24feda3e8e223dd92083ddc2d600d48d473169f0f7"
+    },
+    {
+      "artifact_id": "api_wiring",
+      "path": "src/claim_polygraph_ng/api_server.py",
+      "sha256": "28ba31bfdfe0bfa29696bdb31b1c7076d1863d391a0431d6fbcf1a18cdf2e8db"
+    },
+    {
+      "artifact_id": "authoritative_graph",
+      "path": "src/claim_polygraph_ng/application/langgraph_authoritative.py",
+      "sha256": "d9d7639bbdd86c6263724dc2eac48f1e9a826d3d05197f99a04d86e5a371e2aa"
+    },
+    {
+      "artifact_id": "durable_jobs",
+      "path": "src/claim_polygraph_ng/persistence/jobs.py",
+      "sha256": "46fa3f64ce88cc4ed9884e534fe944cadae6f45128d4807c718a2e623f0205ac"
+    },
+    {
+      "artifact_id": "dashboard",
+      "path": "dashboard/app/page.tsx",
+      "sha256": "ab7e24170dcc593c58d3937a88b7a8231394b1823d176b656a98c1a46a692311"
+    },
+    {
+      "artifact_id": "integration_tests",
+      "path": "tests/integration/test_authoritative_api.py",
+      "sha256": "510b1e2b2a644f399b27b939ccb2f173a88de0ace1402673b37aee7eb1fc70db"
+    },
+    {
+      "artifact_id": "stage9_9_manifest",
+      "path": "artifacts/evaluations/phase9-stage9.9-release-manifest-v1.json",
+      "sha256": "b45ef807a0d0c92a54cbf8a857e9277d07133c4dbd02a216040ad240dad2206c"
+    },
+    {
+      "artifact_id": "stage9_10_gate",
+      "path": "artifacts/evaluations/phase9-stage9.10-api-dashboard-v1.json",
+      "sha256": "faf880ec5dee666570d0e33dc4156a3fe4ea1283386a9b793b7d60a7a93e702d"
+    },
+    {
+      "artifact_id": "stage9_10_report",
+      "path": "docs/PHASE_9_STAGE_9.10_COMPLETION_REPORT.md",
+      "sha256": "813f712030623482a9926ef0c858e74e7c74f802ccacb0c114a148fc9e6536f1"
+    }
+  ],
+  "external_model_calls": 0,
+  "live_search_calls": 0
+}

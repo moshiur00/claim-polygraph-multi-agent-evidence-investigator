@@ -90,6 +90,36 @@ def test_unsupported_critical_sentence_blocks_after_bounded_attempts() -> None:
     )
 
 
+def test_long_raw_source_passage_becomes_a_bounded_report_finding() -> None:
+    claim_id = uuid4()
+    evidence = _evidence(
+        claim_id,
+        EvidenceStance.CONTRADICTS,
+        "<!DOCTYPE html><html><body>" + ("relevant source text " * 900) + "</body></html>",
+    )
+    verdict = _verdict(
+        claim_id,
+        VerdictLabel.CONTRADICTED,
+        evidence.evidence_id,
+        "The submitted claim is contradicted by the reviewed record.",
+    )
+
+    assurance = assure_full_report(
+        claim_id=claim_id,
+        verdict=verdict,
+        evidence=(evidence,),
+        approved_evidence_ids=(evidence.evidence_id,),
+    )
+
+    evidence_findings = tuple(
+        item
+        for item in assurance.original_assertions
+        if item.section.value == "evidence_finding"
+    )
+    assert len(evidence_findings) == 1
+    assert len(evidence_findings[0].sentence) <= 240
+
+
 def test_export_and_markdown_endpoint_boundary_fail_before_writing(tmp_path) -> None:
     repository = SQLiteInvestigationRepository(tmp_path / "investigations.db")
     report = asyncio.run(

@@ -74,6 +74,41 @@ class ProvenanceRequirementState(StrEnum):
     UNCERTAIN = "uncertain"
 
 
+class SocialRiskSeverity(StrEnum):
+    """Readiness impact of one deterministic social-evidence risk."""
+
+    INFO = "info"
+    CAUTION = "caution"
+    BLOCKING = "blocking"
+
+
+class SocialRiskCode(StrEnum):
+    """Typed social-evidence conditions surfaced to readiness and review."""
+
+    IDENTITY_UNRESOLVED = "identity_unresolved"
+    ACCOUNT_UNAUTHENTICATED = "account_unauthenticated"
+    AUTHORITY_SCOPE_MISSING = "authority_scope_missing"
+    ORIGIN_UNRESOLVED = "origin_unresolved"
+    SHARED_ORIGIN_REPETITION = "shared_origin_repetition"
+    SCREENSHOT_OR_COPY = "screenshot_or_copy"
+    UNAVAILABLE_WITHOUT_VERIFIED_ARCHIVE = "unavailable_without_verified_archive"
+    INELIGIBLE_SOCIAL_EVIDENCE_USED = "ineligible_social_evidence_used"
+    UNAUTHORIZED_DECISIVE_USE = "unauthorized_decisive_use"
+    SOCIAL_ONLY_EVIDENCE_PACKET = "social_only_evidence_packet"
+    ENGAGEMENT_SIGNAL_IGNORED = "engagement_signal_ignored"
+    PLATFORM_BADGE_IGNORED = "platform_badge_ignored"
+
+
+class SocialRiskFinding(DomainModel):
+    """One source-scoped or packet-scoped social-evidence safeguard."""
+
+    code: SocialRiskCode
+    severity: SocialRiskSeverity
+    reason: str = Field(min_length=10, max_length=2_000)
+    source_id: UUID | None = None
+    evidence_ids: tuple[UUID, ...] = ()
+
+
 class ProvenanceDependency(DomainModel):
     """One persisted pairwise source-dependency observation."""
 
@@ -107,6 +142,7 @@ class ProvenanceSourceQuality(DomainModel):
     source_id: UUID
     dimensions: tuple[ProvenanceQualityDimension, ...] = Field(min_length=1)
     limitations: tuple[str, ...] = ()
+    ignored_signals: tuple[str, ...] = ()
 
 
 class InvestigationProvenance(DomainModel):
@@ -124,6 +160,7 @@ class InvestigationProvenance(DomainModel):
     required_independent_families: int = Field(ge=1)
     requirement_state: ProvenanceRequirementState
     limitations: tuple[str, ...]
+    social_risk_findings: tuple[SocialRiskFinding, ...] = ()
 
     @model_validator(mode="after")
     def validate_bounds_and_references(self) -> "InvestigationProvenance":
@@ -139,6 +176,11 @@ class InvestigationProvenance(DomainModel):
             for source_id in (dependency.left_source_id, dependency.right_source_id)
         )
         referenced.update(item.source_id for item in self.source_quality)
+        referenced.update(
+            item.source_id
+            for item in self.social_risk_findings
+            if item.source_id is not None
+        )
         if not referenced.issubset(known):
             raise ValueError("provenance records must reference stored source IDs")
         return self

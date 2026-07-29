@@ -10,6 +10,10 @@ from claim_polygraph_ng.analysis import (
     consolidate_evidence,
     route_research_roles,
 )
+from claim_polygraph_ng.analysis.social_attribution import (
+    is_social_candidate,
+    source_from_search_result,
+)
 from claim_polygraph_ng.application.research_executor import (
     ResearchExecutor,
     ResearchWorker,
@@ -33,7 +37,6 @@ from claim_polygraph_ng.domain import (
     ResearchRoutingRequest,
     SearchRequest,
     SentenceAudit,
-    Source,
     SufficiencyContext,
     SufficiencyDecision,
     SupportLevel,
@@ -47,6 +50,7 @@ from claim_polygraph_ng.domain.research import (
 )
 from claim_polygraph_ng.persistence import SQLiteResearchRepository
 from claim_polygraph_ng.providers import StructuredModelProvider
+from claim_polygraph_ng.retrieval import extract_document_text
 
 _ROLE_PATH = {
     ResearchRole.PRIMARY_SOURCE: ResearchPath.PRIMARY,
@@ -79,24 +83,32 @@ class DeterministicResearchWorker:
         evidence_ids: list[UUID] = []
         fetch_calls = 0
         for result in results[: assignment.candidate_limit_per_query]:
+            if is_social_candidate(result):
+                assert result.social_url is not None
+                source = source_from_search_result(
+                    result,
+                    canonical_url=str(result.social_url.canonical_url),
+                    retrieved_at=datetime.now(UTC),
+                    extraction_status=ExtractionStatus.PARTIAL,
+                )
+                self._repository.save_source(source)
+                source_ids.append(source.source_id)
+                continue
             if result.inline_content:
                 passage = result.inline_content
                 final_url = str(result.url)
                 retrieved_at = datetime.now(UTC)
             else:
                 document = await operations.fetch(str(result.url))
-                passage = document.text
+                passage = extract_document_text(document)
                 final_url = str(document.final_url)
                 retrieved_at = document.retrieved_at
                 fetch_calls += 1
             if not passage.strip():
                 continue
-            source = Source(
-                url=result.url,
+            source = source_from_search_result(
+                result,
                 canonical_url=final_url,
-                title=result.title,
-                source_type=result.source_type,
-                publisher=result.publisher,
                 retrieved_at=retrieved_at,
                 content_hash=hashlib.sha256(passage.encode()).hexdigest(),
                 extraction_status=ExtractionStatus.EXTRACTED,
@@ -163,25 +175,33 @@ class StructuredResearchWorker(DeterministicResearchWorker):
         model_calls = 0
         estimated_cost = 0.0
         for result in results[: assignment.candidate_limit_per_query]:
+            if is_social_candidate(result):
+                assert result.social_url is not None
+                source = source_from_search_result(
+                    result,
+                    canonical_url=str(result.social_url.canonical_url),
+                    retrieved_at=datetime.now(UTC),
+                    extraction_status=ExtractionStatus.PARTIAL,
+                )
+                self._repository.save_source(source)
+                source_ids.append(source.source_id)
+                continue
             if result.inline_content:
                 passage = result.inline_content
                 final_url = str(result.url)
                 retrieved_at = datetime.now(UTC)
             else:
                 document = await operations.fetch(str(result.url))
-                passage = document.text
+                passage = extract_document_text(document)
                 final_url = str(document.final_url)
                 retrieved_at = document.retrieved_at
                 fetch_calls += 1
             passage = passage.strip()[:20_000]
             if not passage:
                 continue
-            source = Source(
-                url=result.url,
+            source = source_from_search_result(
+                result,
                 canonical_url=final_url,
-                title=result.title,
-                source_type=result.source_type,
-                publisher=result.publisher,
                 retrieved_at=retrieved_at,
                 content_hash=hashlib.sha256(passage.encode()).hexdigest(),
                 extraction_status=ExtractionStatus.EXTRACTED,

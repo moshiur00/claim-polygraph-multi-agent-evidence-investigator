@@ -1,0 +1,37 @@
+{
+  "audit_id": "phase10-stage10.1-social-contract-audit-v1",
+  "schema_version": 1,
+  "legacy_source_loads": true,
+  "legacy_evidence_loads": true,
+  "legacy_distribution_medium": "unknown",
+  "legacy_evidentiary_use": "unspecified",
+  "strict_social_validation": true,
+  "model_calls": 0,
+  "search_calls": 0,
+  "schemas": [
+    {
+      "contract": "Source",
+      "schema_sha256": "49e0cd71b818f74a3adea13d97ba02cd6b438f49877ea69c08d33228a499a10a"
+    },
+    {
+      "contract": "Evidence",
+      "schema_sha256": "5fb5dd23724d9fb8e23f61883ad3a63fd754c61e8fa09365c52fc0a5ffe2b5e0"
+    },
+    {
+      "contract": "SocialAccountIdentity",
+      "schema_sha256": "c01a7e1695c9b773c7378198a38be0ef29dd99d29fad425254540fb37ee3e92e"
+    },
+    {
+      "contract": "SocialOriginalSourceLink",
+      "schema_sha256": "ba749ffbec3e642ab49cab2768a25393a1ad083a0660261a383678ab8c107f5a"
+    },
+    {
+      "contract": "SocialSourceContext",
+      "schema_sha256": "5353ebcd1582fd9ffd28dc05a4803c8ea64bc57893bb42ba346b38bc58098f07"
+    },
+    {
+      "contract": "SocialEvidenceEligibility",
+      "schema_sha256": "4349453c5537bc30a6c5a3a82c5ffa22c86ae161ad6a0e78a2f1ecb6f9644d01"
+    }
+  ]
+}

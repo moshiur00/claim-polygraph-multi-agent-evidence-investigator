@@ -1,0 +1,59 @@
+{
+  "manifest_id": "phase9-stage9.6-release-manifest-v1",
+  "artifacts": [
+    {
+      "artifact_id": "authority_bridge",
+      "path": "src/claim_polygraph_ng/application/authoritative_research.py",
+      "sha256": "c9682a45c8cd842acfc4520044661eda33d9a5bfaba5d367cf36d00b9afab51e"
+    },
+    {
+      "artifact_id": "authoritative_graph",
+      "path": "src/claim_polygraph_ng/application/langgraph_authoritative.py",
+      "sha256": "2422e3a2d707e5fc97713e75a2ab2c02dddca670af98355a47fd4248f23e3be3"
+    },
+    {
+      "artifact_id": "service_authority",
+      "path": "src/claim_polygraph_ng/application/investigation_service.py",
+      "sha256": "b2b2824834c3a1f6dd9b1aa326d3bc1a366a3616a00525ccaa988f46cb9518eb"
+    },
+    {
+      "artifact_id": "research_subgraph",
+      "path": "src/claim_polygraph_ng/application/langgraph_research.py",
+      "sha256": "8489791ada0c514e42112ca0fe79f22436d31bb6d4c78a8112bbce087c18eb97"
+    },
+    {
+      "artifact_id": "durable_state",
+      "path": "src/claim_polygraph_ng/domain/authoritative_graph.py",
+      "sha256": "4b2844a8d661ec93e384c631ab2ecc03b17f150ee8d395767aadb98d1a81f7d3"
+    },
+    {
+      "artifact_id": "receipt_repository",
+      "path": "src/claim_polygraph_ng/persistence/paid_operations.py",
+      "sha256": "388b604b691e0607ff0cb04a7d692f0f771393f4fc4b6fb1302ed87cd821dc4a"
+    },
+    {
+      "artifact_id": "integration_tests",
+      "path": "tests/integration/test_authoritative_multi_agent_research.py",
+      "sha256": "8814b51d97b0693386f9bf51bf4119df463b6267936a89d354b397885690a47e"
+    },
+    {
+      "artifact_id": "stage9_5_manifest",
+      "path": "artifacts/evaluations/phase9-stage9.5-release-manifest-v1.json",
+      "sha256": "aca54f98482de402b16552fb9992c0edc252a00835dc55d43c99ddd7e6f7e3c4"
+    },
+    {
+      "artifact_id": "stage9_6_gate",
+      "path": "artifacts/evaluations/phase9-stage9.6-authoritative-multi-agent-research-v1.json",
+      "sha256": "cb93e9bbb436ac63e8c2b86174a466b6e23caf1225af1de8a49ae68c9fd9b0ca"
+    },
+    {
+      "artifact_id": "stage9_6_report",
+      "path": "docs/PHASE_9_STAGE_9.6_COMPLETION_REPORT.md",
+      "sha256": "47cc8cd322048a50583b1de9efb0dbc341232f27c7f1132a59ca499742e8b30f"
+    }
+  ],
+  "external_model_calls": 0,
+  "live_search_calls": 0,
+  "network_fetches": 0,
+  "pdf_downloads": 0
+}

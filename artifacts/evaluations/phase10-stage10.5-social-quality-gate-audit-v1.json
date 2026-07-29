@@ -1,0 +1,58 @@
+{
+  "audit_id": "phase10-stage10.5-social-quality-gate-audit-v1",
+  "fixture_id": "phase10-social-quality-readiness-v1",
+  "quality_case_count": 3,
+  "exact_authority_count": 3,
+  "badge_authority_promotion_count": 0,
+  "engagement_authority_change_count": 0,
+  "shared_origin_source_count": 3,
+  "shared_origin_family_count": 1,
+  "shared_origin_reason_present": true,
+  "model_calls": 0,
+  "search_calls": 0,
+  "network_calls": 0,
+  "valid": true,
+  "errors": [],
+  "artifacts": [
+    {
+      "artifact_id": "fixtures",
+      "path": "benchmarks/phase10_social_quality_fixtures_v1.json",
+      "sha256": "c4490e13e78e240cfb90c734ad4cc484420061957756a5cb1211c4135a360789"
+    },
+    {
+      "artifact_id": "source_quality",
+      "path": "src/claim_polygraph_ng/analysis/source_quality.py",
+      "sha256": "744f77080cb45a085efe2359335eaf23d5439f9d648c7d3b89501d3a56bedd10"
+    },
+    {
+      "artifact_id": "provenance",
+      "path": "src/claim_polygraph_ng/analysis/investigation_provenance.py",
+      "sha256": "7a4ae1ddb9586649a67fd24966e3294893b0cc5bfae97100bc765081eff30777"
+    },
+    {
+      "artifact_id": "independence",
+      "path": "src/claim_polygraph_ng/analysis/independence.py",
+      "sha256": "376176aa056aaef0380fc09d3c071d4303906d169d3cb3e092873e83e131dbc5"
+    },
+    {
+      "artifact_id": "family_inference",
+      "path": "src/claim_polygraph_ng/analysis/evidence_families.py",
+      "sha256": "ded69bb1df748a2a8d00613cccc221f2766918decea1cc6a9d9b6ab73c74dc2c"
+    },
+    {
+      "artifact_id": "readiness",
+      "path": "src/claim_polygraph_ng/analysis/readiness.py",
+      "sha256": "47c1e00d7f60ff07ff730596d85196aab5ed575bdd9bc256f515603494338f8c"
+    },
+    {
+      "artifact_id": "readiness_contract",
+      "path": "src/claim_polygraph_ng/domain/readiness.py",
+      "sha256": "aa817b3284c29debb92c31e71e24d5e800b6fd12724e129f2ee5786acaebe5eb"
+    },
+    {
+      "artifact_id": "adversarial_tests",
+      "path": "tests/unit/test_social_quality_readiness.py",
+      "sha256": "0e66c5e973822487e0757a3a2f0a6c3305e2a5d4e30e4968da095509f8698d30"
+    }
+  ]
+}

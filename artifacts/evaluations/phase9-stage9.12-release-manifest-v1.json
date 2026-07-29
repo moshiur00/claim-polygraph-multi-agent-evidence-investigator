@@ -1,0 +1,39 @@
+{
+  "manifest_id": "phase9-stage9.12-release-manifest-v1",
+  "artifacts": [
+    {
+      "artifact_id": "comparison_evaluator",
+      "path": "src/claim_polygraph_ng/evaluation/phase9_comparison.py",
+      "sha256": "4c046c1db58e3467271963e7a0c439130efa211abd101fad45f18dc45e894e6c"
+    },
+    {
+      "artifact_id": "comparison_runner",
+      "path": "scripts/run_phase9_comparison.py",
+      "sha256": "147358bd19d9a0b03281f90d0fd9a080dba6947aac97b8121908ca95fe6eb9da"
+    },
+    {
+      "artifact_id": "comparison_tests",
+      "path": "tests/integration/test_phase9_comparison.py",
+      "sha256": "85bcded2dc09d8db4c6fbca9e26b87f65e849bb0c5ba712b19dd853896b772ae"
+    },
+    {
+      "artifact_id": "comparison_result",
+      "path": "artifacts/evaluations/phase9-stage9.12-frozen-comparison-v1.json",
+      "sha256": "2c4bd8f050a4ad686cc2f1d73966b1b002f35491da52a8be75e7eefdb9c94d31"
+    },
+    {
+      "artifact_id": "stage9_11_manifest",
+      "path": "artifacts/evaluations/phase9-stage9.11-release-manifest-v1.json",
+      "sha256": "f9804d40d16058b182921559443e6e3b40466eb875a33163c0afad213830c064"
+    },
+    {
+      "artifact_id": "stage9_12_report",
+      "path": "docs/PHASE_9_STAGE_9.12_COMPLETION_REPORT.md",
+      "sha256": "c6c5b0af589816258d2a60d6b721a42ee93c64ca56dfd521e39837e04797e40b"
+    }
+  ],
+  "external_model_calls": 0,
+  "live_search_calls": 0,
+  "network_fetches": 0,
+  "pdf_downloads": 0
+}

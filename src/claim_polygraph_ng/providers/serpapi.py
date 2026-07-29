@@ -9,11 +9,23 @@ import truststore
 from pydantic import ValidationError
 
 from claim_polygraph_ng.domain import SearchRequest, SearchResult, SourceType
+from claim_polygraph_ng.providers.result_normalization import (
+    classify_candidate_distribution,
+    retain_provider_metadata,
+)
 from claim_polygraph_ng.providers.searxng import SearchProviderError
 
 _SEARCH_URL = "https://serpapi.com/search.json"
 _SUPPORTED_ENGINES = frozenset({"google", "duckduckgo"})
 _LOCALE_PATTERN = re.compile(r"^[a-z]{2}$")
+_RETAINED_METADATA_KEYS = (
+    "position",
+    "source",
+    "displayed_link",
+    "date",
+    "result_id",
+    "about_this_result",
+)
 
 
 class SerpAPISearchProvider:
@@ -85,7 +97,11 @@ class SerpAPISearchProvider:
                 ) and attempt < self._maximum_attempts:
                     continue
                 payload = self._validated_payload(response)
-                return self._normalize_results(payload, request.maximum_results)
+                return self._normalize_results(
+                    payload,
+                    request.maximum_results,
+                    self.provider_id,
+                )
 
         raise SearchProviderError("SerpAPI request failed without a response")
 
@@ -153,10 +169,11 @@ class SerpAPISearchProvider:
     def _normalize_results(
         payload: dict[str, Any],
         maximum_results: int,
+        provider_id: str,
     ) -> tuple[SearchResult, ...]:
         normalized: list[SearchResult] = []
         for raw_result in payload.get("organic_results", []):
-            result = SerpAPISearchProvider._normalize_result(raw_result)
+            result = SerpAPISearchProvider._normalize_result(raw_result, provider_id)
             if result is not None:
                 normalized.append(result)
             if len(normalized) >= maximum_results:
@@ -164,7 +181,10 @@ class SerpAPISearchProvider:
         return tuple(normalized)
 
     @staticmethod
-    def _normalize_result(raw_result: Any) -> SearchResult | None:
+    def _normalize_result(
+        raw_result: Any,
+        provider_id: str,
+    ) -> SearchResult | None:
         if not isinstance(raw_result, dict):
             return None
         url = raw_result.get("link")
@@ -176,6 +196,7 @@ class SerpAPISearchProvider:
         if not isinstance(publisher, str) or not publisher.strip():
             publisher = raw_result.get("displayed_link")
         try:
+            distribution_medium, social_url = classify_candidate_distribution(url)
             return SearchResult(
                 url=url,
                 title=title,
@@ -184,6 +205,15 @@ class SerpAPISearchProvider:
                 publisher=(
                     publisher.strip() if isinstance(publisher, str) and publisher.strip() else None
                 ),
+                distribution_medium=distribution_medium,
+                social_url=social_url,
+                provider_metadata=retain_provider_metadata(
+                    provider_id=provider_id,
+                    raw_result=raw_result,
+                    attribute_keys=_RETAINED_METADATA_KEYS,
+                    rank_key="position",
+                    result_id_keys=("result_id",),
+                ),
             )
-        except ValidationError:
+        except (ValidationError, ValueError):
             return None

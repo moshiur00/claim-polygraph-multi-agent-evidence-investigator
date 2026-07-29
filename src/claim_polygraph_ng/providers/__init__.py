@@ -7,6 +7,11 @@ from claim_polygraph_ng.providers.base import (
     StructuredModelProvider,
 )
 from claim_polygraph_ng.providers.factcheck import GoogleFactCheckSearchProvider
+from claim_polygraph_ng.providers.idempotent import (
+    IdempotentSearchProvider,
+    IdempotentStructuredModelProvider,
+    canonical_paid_operation_spec,
+)
 from claim_polygraph_ng.providers.mock import (
     DeterministicModelProvider,
     DeterministicSearchProvider,
@@ -34,6 +39,8 @@ __all__ = [
     "DeterministicSearchProvider",
     "FactCheckSearchProvider",
     "GoogleFactCheckSearchProvider",
+    "IdempotentSearchProvider",
+    "IdempotentStructuredModelProvider",
     "ModelOutputError",
     "ModelProviderError",
     "ModelUnavailableError",
@@ -46,4 +53,5 @@ __all__ = [
     "SemanticScholarAcademicSearchProvider",
     "SerpAPISearchProvider",
     "StructuredModelProvider",
+    "canonical_paid_operation_spec",
 ]

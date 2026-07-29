@@ -84,6 +84,11 @@ from claim_polygraph_ng.analysis.source_quality import (
     SourceQualityMetadata,
     assess_source_quality,
 )
+from claim_polygraph_ng.analysis.stance import (
+    EvidenceStanceProfile,
+    deterministic_stance_label,
+    stance_profile,
+)
 from claim_polygraph_ng.analysis.sufficiency import (
     assess_evidence_sufficiency,
     calculate_evidence_gain,
@@ -117,6 +122,7 @@ __all__ = [
     "DependencyStatus",
     "DimensionAssessment",
     "EvidenceFamilyInference",
+    "EvidenceStanceProfile",
     "ExactDuplicateCluster",
     "ExtractedProvenanceLink",
     "FamilySourceRecord",
@@ -155,6 +161,7 @@ __all__ = [
     "cluster_exact_duplicates",
     "consolidate_evidence",
     "constrain_parent_verdict",
+    "deterministic_stance_label",
     "enforce_judgment_policy",
     "extract_provenance_links",
     "fingerprint_content",
@@ -164,6 +171,7 @@ __all__ = [
     "route_research_roles",
     "route_targeted_research_roles",
     "satisfied_requirement_ids",
+    "stance_profile",
     "targeted_roles",
     "verify_claim_context",
     "verify_numerical_assertion",

@@ -1,0 +1,249 @@
+{
+  "manifest_id": "phase10-stage10.0-social-evidence-baseline-v1",
+  "schema_version": 1,
+  "generated_from_existing_artifacts_only": true,
+  "default_orchestrator": "langgraph",
+  "authoritative_domain_service": "InvestigationService",
+  "rollback_path": "direct",
+  "adr_status": "proposed",
+  "resource_policy": {
+    "model_calls": 0,
+    "search_calls": 0,
+    "network_calls": 0,
+    "pdf_downloads": 0
+  },
+  "observations": [
+    {
+      "concern": "general_search_ingestion",
+      "current_behavior": "SerpAPI emits general results as SourceType.OTHER.",
+      "remediation_gap": "Distribution medium and authority are not separated.",
+      "enforcement_point": "provider normalization"
+    },
+    {
+      "concern": "evidence_creation",
+      "current_behavior": "Relevant fetched passages can be persisted as evidence.",
+      "remediation_gap": "No social-specific evidence-use eligibility decision exists.",
+      "enforcement_point": "research consolidation"
+    },
+    {
+      "concern": "independence",
+      "current_behavior": "Family analysis uses host, publisher, duplicates and citations.",
+      "remediation_gap": "Cross-platform copies can hide a shared origin.",
+      "enforcement_point": "provenance and independence"
+    },
+    {
+      "concern": "source_quality",
+      "current_behavior": "Quality is explained from retained source metadata.",
+      "remediation_gap": "Account authenticity, post type and author scope are absent.",
+      "enforcement_point": "source-quality assessment"
+    },
+    {
+      "concern": "readiness",
+      "current_behavior": "Unknown source quality can contribute to review routing.",
+      "remediation_gap": "No mandatory social-only decisive-evidence safeguard exists.",
+      "enforcement_point": "readiness and publication"
+    },
+    {
+      "concern": "evaluation_live_parity",
+      "current_behavior": "Retrieval evaluation applies some low-quality host penalties.",
+      "remediation_gap": "Evaluation heuristics do not enforce live evidence safety.",
+      "enforcement_point": "authoritative workflow"
+    },
+    {
+      "concern": "reporting",
+      "current_behavior": "Reports expose sources, evidence, reasoning and review state.",
+      "remediation_gap": "Approved social use and shared origin are not explicit.",
+      "enforcement_point": "report and dashboard"
+    }
+  ],
+  "policy_matrix": [
+    {
+      "material_type": "unknown_individual_post",
+      "allowed_uses": [
+        "lead",
+        "public_reaction_context"
+      ],
+      "independent_proof": false,
+      "required_controls": [
+        "resolve_identity",
+        "resolve_origin",
+        "corroborate"
+      ]
+    },
+    {
+      "material_type": "authenticated_individual_statement",
+      "allowed_uses": [
+        "proof_statement_was_made"
+      ],
+      "independent_proof": false,
+      "required_controls": [
+        "authenticate_account",
+        "limit_proposition_to_statement"
+      ]
+    },
+    {
+      "material_type": "eyewitness_post",
+      "allowed_uses": [
+        "qualified_observation"
+      ],
+      "independent_proof": false,
+      "required_controls": [
+        "authenticate",
+        "verify_time_place",
+        "corroborate"
+      ]
+    },
+    {
+      "material_type": "verified_institutional_account",
+      "allowed_uses": [
+        "first_party_statement_within_scope"
+      ],
+      "independent_proof": true,
+      "required_controls": [
+        "verify_account",
+        "verify_scope",
+        "prefer_official_record"
+      ]
+    },
+    {
+      "material_type": "government_account",
+      "allowed_uses": [
+        "official_announcement_within_scope"
+      ],
+      "independent_proof": true,
+      "required_controls": [
+        "verify_account",
+        "distinguish_controlling_instrument"
+      ]
+    },
+    {
+      "material_type": "academic_institution_post",
+      "allowed_uses": [
+        "discovery",
+        "first_party_announcement"
+      ],
+      "independent_proof": false,
+      "required_controls": [
+        "resolve_paper_or_data",
+        "cite_underlying_source"
+      ]
+    },
+    {
+      "material_type": "repost_quote_or_screenshot",
+      "allowed_uses": [
+        "lead"
+      ],
+      "independent_proof": false,
+      "required_controls": [
+        "find_original",
+        "record_derivation",
+        "authenticate"
+      ]
+    },
+    {
+      "material_type": "post_linking_report",
+      "allowed_uses": [
+        "discovery",
+        "context"
+      ],
+      "independent_proof": false,
+      "required_controls": [
+        "cite_underlying_report",
+        "share_evidence_family"
+      ]
+    }
+  ],
+  "non_negotiable_safeguards": [
+    "Social platform is a distribution medium, not an authority classification.",
+    "Models cannot override deterministic evidence-use eligibility.",
+    "Cross-platform repetition with a shared origin is not independent corroboration.",
+    "Social-only decisive evidence cannot yield a publishable supported verdict.",
+    "Social-only decisive evidence cannot yield a publishable contradicted verdict.",
+    "Social sources are retained with limitations rather than silently discarded.",
+    "Unsafe provisional reports may be reviewed but publication remains blocked."
+  ],
+  "compatibility_rules": [
+    {
+      "surface": "persisted_source_type",
+      "rule": "Existing SourceType values and SourceType.OTHER records remain readable."
+    },
+    {
+      "surface": "new_social_fields",
+      "rule": "Additive fields default to unknown or the safest non-decisive use."
+    },
+    {
+      "surface": "historical_artifacts",
+      "rule": "Evidence, reports, reviews, checkpoints and receipts are not rewritten."
+    },
+    {
+      "surface": "checkpoint_reconstruction",
+      "rule": "Versioned reconstruction preserves legacy state semantics."
+    },
+    {
+      "surface": "rollback",
+      "rule": "The direct authoritative workflow remains available throughout Phase 10."
+    }
+  ],
+  "artifacts": [
+    {
+      "artifact_id": "serpapi_adapter",
+      "path": "src/claim_polygraph_ng/providers/serpapi.py",
+      "sha256": "80c026b4e1faffc06f11c165c55da87f3f5047ab3b27632cc6dedf9e8a67cb82"
+    },
+    {
+      "artifact_id": "multi_agent_research",
+      "path": "src/claim_polygraph_ng/application/multi_agent_service.py",
+      "sha256": "d780914735934ed98eae7fc096ef3e22a22b162e0cf8352baef252f83f32a6d6"
+    },
+    {
+      "artifact_id": "independence_analysis",
+      "path": "src/claim_polygraph_ng/analysis/independence.py",
+      "sha256": "376176aa056aaef0380fc09d3c071d4303906d169d3cb3e092873e83e131dbc5"
+    },
+    {
+      "artifact_id": "investigation_provenance",
+      "path": "src/claim_polygraph_ng/analysis/investigation_provenance.py",
+      "sha256": "7a4ae1ddb9586649a67fd24966e3294893b0cc5bfae97100bc765081eff30777"
+    },
+    {
+      "artifact_id": "readiness",
+      "path": "src/claim_polygraph_ng/analysis/readiness.py",
+      "sha256": "7f7712b77c20ce985b8f0c75fb7fa48d3d987d13f5cd59c127ba85127ad1ead2"
+    },
+    {
+      "artifact_id": "retrieval_evaluation",
+      "path": "src/claim_polygraph_ng/evaluation/retrieval.py",
+      "sha256": "e3e07fa95c472e746e9144e75f29fbbc4613c43575222a38b1bfd9159c7347b9"
+    },
+    {
+      "artifact_id": "source_enums",
+      "path": "src/claim_polygraph_ng/domain/enums.py",
+      "sha256": "ae362c05f03cea8080c6db965277fb51c7e9428d303da82a17dbb614c342075f"
+    },
+    {
+      "artifact_id": "source_models",
+      "path": "src/claim_polygraph_ng/domain/models.py",
+      "sha256": "9d71b80a5f1928c18edeb0fa2201d1ee0f24002d7b52cf5984f46300f2efee00"
+    },
+    {
+      "artifact_id": "phase10_plan",
+      "path": "docs/PHASE_10_SOCIAL_MEDIA_EVIDENCE_GOVERNANCE_PLAN.md",
+      "sha256": "e1e3974d03956e57676b54497a425c134715bb73bc9e01f64f010f30bc995ec0"
+    },
+    {
+      "artifact_id": "stage10_0_policy",
+      "path": "docs/PHASE_10_STAGE_10.0_BASELINE_AND_POLICY.md",
+      "sha256": "21e471d157c2397bf09ed1c398acc328a09cb3709b5e393ccbf9f4b12d26883b"
+    },
+    {
+      "artifact_id": "adr_0022",
+      "path": "docs/adr/0022-social-media-evidence-governance.md",
+      "sha256": "6305213a5e1c118fd8deecbf4b633693b46121bc22f2ca0d2411d66ac03982e2"
+    },
+    {
+      "artifact_id": "baseline_builder",
+      "path": "src/claim_polygraph_ng/evaluation/phase10_social_baseline.py",
+      "sha256": "0d906db40593820239a3ec1d0b62501f81602cbccf969d1b830d8ae08f3458f3"
+    }
+  ]
+}

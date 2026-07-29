@@ -1,12 +1,15 @@
 """Machine-verifiable Phase 6 targeted review and closure audit."""
 
-import hashlib
 import json
 from pathlib import Path
 
 from pydantic import Field, model_validator
 
 from claim_polygraph_ng.domain.base import DomainModel
+from claim_polygraph_ng.evaluation.artifact_hashing import (
+    artifact_matches_sha256,
+    artifact_sha256,
+)
 from claim_polygraph_ng.evaluation.phase4_manifest import BaselineArtifact
 from claim_polygraph_ng.evaluation.phase6_ablation import Phase6AblationEvaluation
 from claim_polygraph_ng.evaluation.phase6_manifest import (
@@ -242,7 +245,7 @@ def verify_closure_audit(
             errors.append(f"{artifact.artifact_id}: file is missing")
             continue
         checked += 1
-        if _sha256(candidate) != artifact.sha256:
+        if not artifact_matches_sha256(candidate, artifact.sha256):
             errors.append(f"{artifact.artifact_id}: SHA-256 mismatch")
     if audit.deterministic_policy_promoted:
         errors.append("regressive deterministic policy must not be promoted")
@@ -291,4 +294,4 @@ def _artifact(root: Path, relative_path: str) -> BaselineArtifact:
 
 
 def _sha256(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+    return artifact_sha256(path)

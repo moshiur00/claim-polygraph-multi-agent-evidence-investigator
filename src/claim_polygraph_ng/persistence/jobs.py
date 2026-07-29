@@ -294,6 +294,38 @@ class SQLiteJobQueue:
             reason="completed",
         )
 
+    def complete_interrupted(
+        self, job_id: UUID, *, actor: str, result_reference: str
+    ) -> DurableJob:
+        """Complete the same durable job after its graph interruption is resolved.
+
+        The graph decision is persisted before this transition. Repeating the API
+        request is therefore safe: a completed job is returned unchanged.
+        """
+        with self._connect(immediate=True) as connection:
+            job = self._load(connection, job_id)
+            if job.status is JobStatus.COMPLETED:
+                return job
+            if job.status is not JobStatus.INTERRUPTED:
+                raise JobStateError("only interrupted jobs may complete after review")
+            now = datetime.now(UTC)
+            completed = job.model_copy(
+                update={
+                    "status": JobStatus.COMPLETED,
+                    "result_reference": result_reference,
+                    "updated_at": now,
+                }
+            )
+            self._save(connection, completed)
+            self._audit(
+                connection,
+                job_id,
+                JobAuditAction.COMPLETED,
+                actor,
+                "authoritative graph completed after review",
+            )
+            return completed
+
     def fail(
         self,
         job_id: UUID,

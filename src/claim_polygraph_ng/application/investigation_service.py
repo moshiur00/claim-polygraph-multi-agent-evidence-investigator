@@ -20,6 +20,10 @@ from claim_polygraph_ng.analysis import (
 from claim_polygraph_ng.analysis.investigation_provenance import (
     build_investigation_provenance,
 )
+from claim_polygraph_ng.analysis.social_attribution import (
+    is_social_candidate,
+    source_from_search_result,
+)
 from claim_polygraph_ng.analysis.verification_bridge import bridge_legacy_verification
 from claim_polygraph_ng.config import RuntimePolicy
 from claim_polygraph_ng.domain import (
@@ -47,8 +51,27 @@ from claim_polygraph_ng.domain import (
     TraceEventType,
     Verdict,
     VerdictLabel,
+    evaluate_social_evidence_constraints,
+)
+from claim_polygraph_ng.domain.adversarial import AdversarialArgumentReport
+from claim_polygraph_ng.domain.argument import ArgumentLedger
+from claim_polygraph_ng.domain.authoritative_analysis import (
+    AuthoritativeVerificationReport,
 )
 from claim_polygraph_ng.domain.base import DomainModel
+from claim_polygraph_ng.domain.citation import (
+    FullReportCitationAssurance,
+    ReviewRoutingDecision,
+)
+from claim_polygraph_ng.domain.judgment import JudgmentPolicyTrace
+from claim_polygraph_ng.domain.provenance import InvestigationProvenance
+from claim_polygraph_ng.domain.publication import (
+    AuthoritativePublicationDecision,
+    decide_publication,
+)
+from claim_polygraph_ng.domain.readiness import JudgmentReadiness
+from claim_polygraph_ng.domain.social_constraints import SocialEvidencePolicyResult
+from claim_polygraph_ng.domain.verification import VerificationPacketV2
 from claim_polygraph_ng.persistence import InvestigationRepository
 from claim_polygraph_ng.providers import (
     ModelOutputError,
@@ -263,6 +286,132 @@ class InvestigationService:
         self._pages_fetched = 0
         self._model_usage = []
         self._active_page_limit = self._policy.budget.maximum_pages_fetched
+        investigation = self.create_investigation(
+            claim_text,
+            prepared_claim=prepared_claim,
+            parent_investigation_id=parent_investigation_id,
+        )
+
+        try:
+            claim = await self.normalize_claim(
+                investigation,
+                claim_text,
+                prepared_claim=prepared_claim,
+            )
+            investigation, plan = await self.plan_investigation(investigation, claim)
+            research_paths = self.prepare_research_requirements(claim, plan)
+            investigation, research = await self.execute_research(
+                investigation,
+                claim,
+                plan,
+                research_paths,
+            )
+            sources, evidence_items, independence = self.consolidate_evidence(research)
+            provenance = self.analyze_provenance(
+                investigation, claim, plan, sources, evidence_items
+            )
+            context_verification, verification_packet = self.verify_context(
+                investigation, claim, plan, sources, evidence_items
+            )
+            argument_ledger = self.build_argument_ledger(
+                investigation,
+                claim,
+                evidence_items,
+                verification_packet,
+                provenance,
+            )
+            defender = self.construct_defender_argument(argument_ledger)
+            challenger = self.construct_challenger_argument(argument_ledger)
+            argument_ledger = self.reconcile_arguments(defender, challenger)
+            social_evidence_policy = self.evaluate_social_evidence_policy(
+                investigation,
+                argument_ledger,
+                sources,
+                evidence_items,
+                provenance,
+            )
+            investigation, verdict = await self.draft_verdict(
+                investigation,
+                claim,
+                sources,
+                evidence_items,
+                independence,
+                context_verification,
+                verification_packet,
+                argument_ledger,
+            )
+            proposed_verdict = verdict
+            verdict, judgment_policy = self.apply_judgment_policy(
+                investigation,
+                verdict,
+                evidence_items,
+                independence,
+                context_verification,
+                argument_ledger,
+                social_evidence_policy,
+            )
+            (
+                investigation,
+                verdict,
+                audit,
+                full_report_assurance,
+            ) = await self.audit_citations(
+                investigation,
+                claim,
+                verdict,
+                evidence_items,
+            )
+            readiness = self.assess_readiness(
+                investigation,
+                claim,
+                argument_ledger,
+                verification_packet,
+                provenance,
+                audit,
+                verdict,
+                social_evidence_policy,
+            )
+            publication_decision = self.assess_publication(
+                investigation,
+                proposed_verdict,
+                verdict,
+                judgment_policy,
+                full_report_assurance,
+                readiness,
+                social_evidence_policy,
+            )
+            self.route_review(verdict, readiness, full_report_assurance)
+            return self.finalize_report(
+                investigation=investigation,
+                claim=claim,
+                plan=plan,
+                sources=sources,
+                evidence_items=evidence_items,
+                independence=independence,
+                provenance=provenance,
+                verification_packet=verification_packet,
+                argument_ledger=argument_ledger,
+                judgment_policy=judgment_policy,
+                readiness=readiness,
+                context_verification=context_verification,
+                verdict=verdict,
+                audit=audit,
+                full_report_assurance=full_report_assurance,
+                publication_decision=publication_decision,
+                social_evidence_policy=social_evidence_policy,
+            )
+        except Exception as error:
+            self.fail_investigation(investigation, error)
+            raise
+
+    def create_investigation(
+        self,
+        claim_text: str,
+        *,
+        prepared_claim: AtomicClaim | None = None,
+        parent_investigation_id: UUID | None = None,
+    ) -> Investigation:
+        """Create and persist the authoritative investigation boundary."""
         investigation = Investigation(
             input_claim=claim_text,
             parent_investigation_id=parent_investigation_id,
@@ -275,146 +424,411 @@ class InvestigationService:
             TraceEventType.INVESTIGATION_CREATED,
             "Investigation created.",
         )
-
-        investigation = self._transition(
+        return self._transition(
             investigation,
             status=InvestigationStatus.RUNNING,
             stage=InvestigationStage.CLAIM_ANALYSIS,
         )
 
-        try:
-            if prepared_claim is None:
-                claim = await self._generate(
-                    investigation,
-                    ModelTask.NORMALIZE_CLAIM,
-                    AtomicClaim,
-                    {"claim_text": claim_text},
-                )
-                claim = _anchor_claim_to_user_text(claim, claim_text)
-            else:
-                claim = prepared_claim
-            self._save_artifact(
+    async def normalize_claim(
+        self,
+        investigation: Investigation,
+        claim_text: str,
+        *,
+        prepared_claim: AtomicClaim | None = None,
+    ) -> AtomicClaim:
+        """Normalize one claim or retain an already prepared component claim."""
+        if prepared_claim is None:
+            generated = await self._generate(
                 investigation,
-                ArtifactType.CLAIM,
-                claim.claim_id,
-                claim,
+                ModelTask.NORMALIZE_CLAIM,
+                AtomicClaim,
+                {"claim_text": claim_text},
             )
+            claim = _anchor_claim_to_user_text(generated, claim_text)
+        else:
+            claim = prepared_claim
+        self._save_artifact(investigation, ArtifactType.CLAIM, claim.claim_id, claim)
+        return claim
 
-            investigation = self._transition(
-                investigation,
-                stage=InvestigationStage.PLANNING,
-            )
-            plan = await self._generate(
-                investigation,
-                ModelTask.PLAN_INVESTIGATION,
-                InvestigationPlan,
-                {"claim_id": str(claim.claim_id), "claim_text": claim.text},
-            )
-            self._save_artifact(
-                investigation,
-                ArtifactType.PLAN,
-                claim.claim_id,
-                plan,
-            )
+    async def plan_investigation(
+        self,
+        investigation: Investigation,
+        claim: AtomicClaim,
+    ) -> tuple[Investigation, InvestigationPlan]:
+        """Create the bounded authoritative research plan."""
+        investigation = self._transition(
+            investigation,
+            stage=InvestigationStage.PLANNING,
+        )
+        plan = await self._generate(
+            investigation,
+            ModelTask.PLAN_INVESTIGATION,
+            InvestigationPlan,
+            {"claim_id": str(claim.claim_id), "claim_text": claim.text},
+        )
+        self._save_artifact(investigation, ArtifactType.PLAN, claim.claim_id, plan)
+        return investigation, plan
 
-            investigation = self._transition(
-                investigation,
-                stage=InvestigationStage.RESEARCH,
-            )
-            sources, evidence_items, independence = await self._research(investigation, claim, plan)
-            provenance = build_investigation_provenance(
-                plan=plan,
-                sources=sources,
-                evidence=evidence_items,
-            )
-            self._save_artifact(
-                investigation,
-                ArtifactType.PROVENANCE,
-                claim.claim_id,
-                provenance,
-            )
-            context_verification = verify_claim_context(
-                claim=claim,
-                plan=plan,
-                sources=sources,
-                evidence=evidence_items,
-            )
-            self._save_artifact(
-                investigation,
-                ArtifactType.CONTEXT_VERIFICATION,
-                claim.claim_id,
-                context_verification,
-            )
-            verification_packet = bridge_legacy_verification(
-                claim=claim,
-                legacy=context_verification,
-                sources=sources,
-                evidence=evidence_items,
-            )
-            self._save_artifact(
-                investigation,
-                ArtifactType.VERIFICATION_PACKET,
-                claim.claim_id,
-                verification_packet,
-            )
-            argument_ledger = build_argument_ledger(
-                claim=claim,
-                evidence=evidence_items,
-                verification=verification_packet,
-                provenance=provenance,
-            )
-            self._save_artifact(
-                investigation,
-                ArtifactType.ARGUMENT_LEDGER,
-                claim.claim_id,
-                argument_ledger,
-            )
+    def prepare_research_requirements(
+        self,
+        claim: AtomicClaim,
+        plan: InvestigationPlan,
+    ) -> tuple[ResearchPath, ...]:
+        """Expose the legacy plan paths as the first reusable requirement boundary."""
+        if plan.claim_id != claim.claim_id:
+            raise ValueError("investigation plan must reference the normalized claim")
+        return plan.required_research_paths
 
-            investigation = self._transition(
-                investigation,
-                stage=InvestigationStage.JUDGMENT,
+    async def execute_research(
+        self,
+        investigation: Investigation,
+        claim: AtomicClaim,
+        plan: InvestigationPlan,
+        research_paths: tuple[ResearchPath, ...],
+    ) -> tuple[
+        Investigation,
+        tuple[tuple[Source, ...], tuple[Evidence, ...], IndependenceAnalysis],
+    ]:
+        """Execute current research behind an independently callable operation."""
+        if research_paths != plan.required_research_paths:
+            raise ValueError("research requirements must match the authoritative plan")
+        investigation = self._transition(
+            investigation,
+            stage=InvestigationStage.RESEARCH,
+        )
+        return investigation, await self._research(investigation, claim, plan)
+
+    @staticmethod
+    def consolidate_evidence(
+        research: tuple[tuple[Source, ...], tuple[Evidence, ...], IndependenceAnalysis],
+    ) -> tuple[tuple[Source, ...], tuple[Evidence, ...], IndependenceAnalysis]:
+        """Retain the legacy research packet without changing evidence identity."""
+        sources, evidence, independence = research
+        if len({item.source_id for item in sources}) != len(sources):
+            raise ValueError("research packet source IDs must be unique")
+        if len({item.evidence_id for item in evidence}) != len(evidence):
+            raise ValueError("research packet evidence IDs must be unique")
+        return sources, evidence, independence
+
+    def accept_research_packet(
+        self,
+        investigation: Investigation,
+        claim: AtomicClaim,
+        research: tuple[tuple[Source, ...], tuple[Evidence, ...], IndependenceAnalysis],
+    ) -> Investigation:
+        """Persist a validated external research packet under service authority."""
+        sources, evidence, independence = self.consolidate_evidence(research)
+        if any(item.claim_id != claim.claim_id for item in evidence):
+            raise ValueError("research evidence must reference the authoritative claim")
+        source_ids = {item.source_id for item in sources}
+        if any(item.source_id not in source_ids for item in evidence):
+            raise ValueError("research evidence must reference a source in the packet")
+        investigation = self._transition(
+            investigation,
+            stage=InvestigationStage.RESEARCH,
+        )
+        for source in sources:
+            self._save_artifact(
+                investigation, ArtifactType.SOURCE, source.source_id, source
             )
-            verdict = await self._generate(
-                investigation,
-                ModelTask.JUDGE_EVIDENCE,
-                Verdict,
-                {
-                    "claim_id": str(claim.claim_id),
-                    "claim": claim.model_dump(mode="json"),
-                    "sources": [source.model_dump(mode="json") for source in sources],
-                    "evidence": [item.model_dump(mode="json") for item in evidence_items],
-                    "independence_analysis": independence.model_dump(mode="json"),
-                    "context_verification": context_verification.model_dump(mode="json"),
-                    "verification_packet": verification_packet.model_dump(mode="json"),
-                    "argument_ledger": argument_ledger.model_dump(mode="json"),
-                    "taxonomy_guidance": _taxonomy_guidance(context_verification),
-                },
+        for item in evidence:
+            self._save_artifact(
+                investigation, ArtifactType.EVIDENCE, item.evidence_id, item
             )
-            verdict = _enforce_review_safeguards(
-                verdict,
-                independence_requirement_met=independence.requirement_met,
-                numerical_status=context_verification.numerical.status.value,
-                temporal_status=context_verification.temporal.status.value,
-            )
-            verdict = _enforce_evidence_label_consistency(verdict, evidence_items)
-            _policy_candidate, judgment_policy = enforce_judgment_policy(verdict, argument_ledger)
-            judgment_policy = judgment_policy.model_copy(update={"applied": False})
+        self._save_artifact(
+            investigation,
+            ArtifactType.INDEPENDENCE,
+            claim.claim_id,
+            independence,
+        )
+        return investigation
+
+    def analyze_provenance(
+        self,
+        investigation: Investigation,
+        claim: AtomicClaim,
+        plan: InvestigationPlan,
+        sources: tuple[Source, ...],
+        evidence: tuple[Evidence, ...],
+    ) -> InvestigationProvenance:
+        """Build and persist source-family and production-lineage observations."""
+        provenance = build_investigation_provenance(
+            plan=plan,
+            sources=sources,
+            evidence=evidence,
+        )
+        self._save_artifact(
+            investigation,
+            ArtifactType.PROVENANCE,
+            claim.claim_id,
+            provenance,
+        )
+        return provenance
+
+    def verify_context(
+        self,
+        investigation: Investigation,
+        claim: AtomicClaim,
+        plan: InvestigationPlan,
+        sources: tuple[Source, ...],
+        evidence: tuple[Evidence, ...],
+    ) -> tuple[ContextVerification, VerificationPacketV2]:
+        """Run deterministic numerical and temporal verification."""
+        context = verify_claim_context(
+            claim=claim,
+            plan=plan,
+            sources=sources,
+            evidence=evidence,
+        )
+        self._save_artifact(
+            investigation,
+            ArtifactType.CONTEXT_VERIFICATION,
+            claim.claim_id,
+            context,
+        )
+        packet = bridge_legacy_verification(
+            claim=claim,
+            legacy=context,
+            sources=sources,
+            evidence=evidence,
+        )
+        self._save_artifact(
+            investigation,
+            ArtifactType.VERIFICATION_PACKET,
+            claim.claim_id,
+            packet,
+        )
+        return context, packet
+
+    def accept_verification_report(
+        self,
+        investigation: Investigation,
+        report: AuthoritativeVerificationReport,
+    ) -> tuple[ContextVerification, VerificationPacketV2, InvestigationProvenance]:
+        """Validate and persist the deterministic verification fan-in."""
+        if report.investigation_id != investigation.investigation_id:
+            raise ValueError("verification report belongs to another investigation")
+        for artifact_type, artifact in (
+            (ArtifactType.PROVENANCE, report.provenance),
+            (ArtifactType.CONTEXT_VERIFICATION, report.context),
+            (ArtifactType.VERIFICATION_PACKET, report.verification),
+            (ArtifactType.COVERAGE, report.coverage),
+        ):
             self._save_artifact(
                 investigation,
-                ArtifactType.JUDGMENT_POLICY,
-                verdict.verdict_id,
-                judgment_policy,
+                artifact_type,
+                report.claim_id,
+                artifact,
             )
-            investigation = self._transition(
-                investigation,
-                stage=InvestigationStage.CITATION_AUDIT,
+        return report.context, report.verification, report.provenance
+
+    def build_argument_ledger(
+        self,
+        investigation: Investigation,
+        claim: AtomicClaim,
+        evidence: tuple[Evidence, ...],
+        verification: VerificationPacketV2,
+        provenance: InvestigationProvenance,
+    ) -> ArgumentLedger:
+        """Build the current deterministic claim-to-evidence ledger."""
+        ledger = build_argument_ledger(
+            claim=claim,
+            evidence=evidence,
+            verification=verification,
+            provenance=provenance,
+        )
+        self._save_artifact(
+            investigation,
+            ArtifactType.ARGUMENT_LEDGER,
+            claim.claim_id,
+            ledger,
+        )
+        return ledger
+
+    @staticmethod
+    def construct_defender_argument(ledger: ArgumentLedger) -> ArgumentLedger:
+        """Expose the legacy supporting argument without adding new evidence."""
+        return ledger
+
+    @staticmethod
+    def construct_challenger_argument(ledger: ArgumentLedger) -> ArgumentLedger:
+        """Expose the legacy deterministic challenges without adding new evidence."""
+        return ledger
+
+    @staticmethod
+    def reconcile_arguments(
+        defender: ArgumentLedger,
+        challenger: ArgumentLedger,
+    ) -> ArgumentLedger:
+        """Preserve the already reconciled legacy ledger during decomposition."""
+        if defender != challenger:
+            raise ValueError("legacy defender and challenger views must share one ledger")
+        return defender
+
+    @staticmethod
+    def reconcile_adversarial_report(
+        authoritative_ledger: ArgumentLedger,
+        report: AdversarialArgumentReport,
+    ) -> ArgumentLedger:
+        """Accept two independent positions only when fan-in preserves authority."""
+        if not report.complete_role_coverage:
+            raise ValueError("both argument roles must complete")
+        if not report.authoritative_ledger_equivalent:
+            raise ValueError("adversarial reconciliation changed the authoritative ledger")
+        return InvestigationService.reconcile_arguments(
+            authoritative_ledger,
+            report.reconciled_ledger,
+        )
+
+    def evaluate_social_evidence_policy(
+        self,
+        investigation: Investigation,
+        ledger: ArgumentLedger,
+        sources: tuple[Source, ...],
+        evidence: tuple[Evidence, ...],
+        provenance: InvestigationProvenance,
+    ) -> SocialEvidencePolicyResult:
+        """Persist argument-use, corroboration, review and publication constraints."""
+        result = evaluate_social_evidence_constraints(
+            ledger=ledger,
+            sources=sources,
+            evidence=evidence,
+            provenance=provenance,
+        )
+        self._save_artifact(
+            investigation,
+            ArtifactType.SOCIAL_EVIDENCE_POLICY,
+            ledger.claim_id,
+            result,
+        )
+        return result
+
+    async def draft_verdict(
+        self,
+        investigation: Investigation,
+        claim: AtomicClaim,
+        sources: tuple[Source, ...],
+        evidence: tuple[Evidence, ...],
+        independence: IndependenceAnalysis,
+        context: ContextVerification,
+        verification: VerificationPacketV2,
+        ledger: ArgumentLedger,
+    ) -> tuple[Investigation, Verdict]:
+        """Draft the model verdict from only the approved authoritative packet."""
+        investigation = self._transition(
+            investigation,
+            stage=InvestigationStage.JUDGMENT,
+        )
+        verdict = await self._generate(
+            investigation,
+            ModelTask.JUDGE_EVIDENCE,
+            Verdict,
+            {
+                "claim_id": str(claim.claim_id),
+                "claim": claim.model_dump(mode="json"),
+                "sources": [source.model_dump(mode="json") for source in sources],
+                "evidence": [item.model_dump(mode="json") for item in evidence],
+                "independence_analysis": independence.model_dump(mode="json"),
+                "context_verification": context.model_dump(mode="json"),
+                "verification_packet": verification.model_dump(mode="json"),
+                "argument_ledger": ledger.model_dump(mode="json"),
+                "taxonomy_guidance": _taxonomy_guidance(context),
+            },
+        )
+        return investigation, verdict
+
+    def apply_judgment_policy(
+        self,
+        investigation: Investigation,
+        verdict: Verdict,
+        evidence: tuple[Evidence, ...],
+        independence: IndependenceAnalysis,
+        context: ContextVerification,
+        ledger: ArgumentLedger,
+        social_policy: SocialEvidencePolicyResult | None = None,
+    ) -> tuple[Verdict, JudgmentPolicyTrace]:
+        """Apply existing safeguards while preserving legacy label behavior."""
+        proposed_verdict = verdict
+        verdict = _enforce_review_safeguards(
+            verdict,
+            independence_requirement_met=independence.requirement_met,
+            numerical_status=context.numerical.status.value,
+            temporal_status=context.temporal.status.value,
+        )
+        verdict = _enforce_evidence_label_consistency(verdict, evidence)
+        policy_candidate, policy = enforce_judgment_policy(
+            verdict, ledger, social_policy
+        )
+        if social_policy is not None and social_policy.requires_human_review:
+            verdict = policy_candidate
+        else:
+            policy = policy.model_copy(update={"applied": False})
+        self._save_artifact(
+            investigation,
+            ArtifactType.PROPOSED_VERDICT,
+            proposed_verdict.verdict_id,
+            proposed_verdict,
+        )
+        self._save_artifact(
+            investigation,
+            ArtifactType.ENFORCED_VERDICT,
+            verdict.verdict_id,
+            verdict,
+        )
+        self._save_artifact(
+            investigation,
+            ArtifactType.JUDGMENT_POLICY,
+            verdict.verdict_id,
+            policy,
+        )
+        return verdict, policy
+
+    async def audit_citations(
+        self,
+        investigation: Investigation,
+        claim: AtomicClaim,
+        verdict: Verdict,
+        evidence: tuple[Evidence, ...],
+    ) -> tuple[
+        Investigation,
+        Verdict,
+        SentenceAudit,
+        FullReportCitationAssurance,
+    ]:
+        """Audit and boundedly revise the verdict explanation."""
+        investigation = self._transition(
+            investigation,
+            stage=InvestigationStage.CITATION_AUDIT,
+        )
+        audit_inputs: dict[str, JsonValue] = {
+            "original_claim": claim.model_dump(mode="json"),
+            "verdict_label": verdict.label.value,
+            "sentence": verdict.concise_explanation,
+            "evidence_ids": [str(item.evidence_id) for item in evidence],
+            "evidence": [item.model_dump(mode="json") for item in evidence],
+        }
+        audit = await self._generate(
+            investigation,
+            ModelTask.AUDIT_SENTENCE,
+            SentenceAudit,
+            audit_inputs,
+        )
+        for _revision_attempt in range(2):
+            revision = (audit.suggested_revision or "").strip()
+            if (
+                audit.support_level is not SupportLevel.PARTIAL
+                or not 10 <= len(revision) <= 1_000
+                or revision == verdict.concise_explanation
+            ):
+                break
+            verdict = Verdict.model_validate(
+                {**verdict.model_dump(), "concise_explanation": revision}
             )
-            audit_inputs: dict[str, JsonValue] = {
-                "original_claim": claim.model_dump(mode="json"),
-                "verdict_label": verdict.label.value,
-                "sentence": verdict.concise_explanation,
-                "evidence_ids": [str(item.evidence_id) for item in evidence_items],
-                "evidence": [item.model_dump(mode="json") for item in evidence_items],
+            audit_inputs = {
+                **audit_inputs,
+                "sentence": revision,
+                "prior_audit": audit.model_dump(mode="json"),
             }
             audit = await self._generate(
                 investigation,
@@ -422,120 +836,205 @@ class InvestigationService:
                 SentenceAudit,
                 audit_inputs,
             )
-            for _revision_attempt in range(2):
-                revision = (audit.suggested_revision or "").strip()
-                if (
-                    audit.support_level is not SupportLevel.PARTIAL
-                    or not 10 <= len(revision) <= 1_000
-                    or revision == verdict.concise_explanation
-                ):
-                    break
-                verdict = Verdict.model_validate(
-                    {
-                        **verdict.model_dump(),
-                        "concise_explanation": revision,
-                    }
-                )
-                audit_inputs = {
-                    **audit_inputs,
-                    "sentence": revision,
-                    "prior_audit": audit.model_dump(mode="json"),
-                }
-                audit = await self._generate(
-                    investigation,
-                    ModelTask.AUDIT_SENTENCE,
-                    SentenceAudit,
-                    audit_inputs,
-                )
-            self._save_artifact(
-                investigation,
-                ArtifactType.VERDICT,
-                verdict.verdict_id,
-                verdict,
-            )
-            self._save_artifact(
-                investigation,
-                ArtifactType.AUDIT,
-                audit.sentence_id,
-                audit,
-            )
-            full_report_assurance = assure_full_report(
-                claim_id=claim.claim_id,
-                verdict=verdict,
-                evidence=evidence_items,
-                approved_evidence_ids=tuple(item.evidence_id for item in evidence_items),
-            )
-            self._save_artifact(
-                investigation,
-                ArtifactType.FULL_REPORT_ASSURANCE,
-                claim.claim_id,
-                full_report_assurance,
-            )
-            readiness = calculate_judgment_readiness(
-                ledger=argument_ledger,
-                verification=verification_packet,
-                provenance=provenance,
-                audits=(audit,),
-                unresolved_question_count=len(verdict.unresolved_questions),
-            )
-            self._save_artifact(
-                investigation,
-                ArtifactType.READINESS,
-                claim.claim_id,
-                readiness,
-            )
+        self._save_artifact(
+            investigation,
+            ArtifactType.VERDICT,
+            verdict.verdict_id,
+            verdict,
+        )
+        self._save_artifact(
+            investigation,
+            ArtifactType.AUDIT,
+            audit.sentence_id,
+            audit,
+        )
+        assurance = assure_full_report(
+            claim_id=claim.claim_id,
+            verdict=verdict,
+            evidence=evidence,
+            approved_evidence_ids=tuple(item.evidence_id for item in evidence),
+        )
+        self._save_artifact(
+            investigation,
+            ArtifactType.FULL_REPORT_ASSURANCE,
+            claim.claim_id,
+            assurance,
+        )
+        return investigation, verdict, audit, assurance
 
-            investigation = self._transition(
-                investigation,
-                status=InvestigationStatus.COMPLETED,
-                stage=InvestigationStage.COMPLETE,
-            )
-            self._event(
-                investigation,
-                TraceEventType.INVESTIGATION_COMPLETED,
-                "Investigation completed with an audited provisional verdict.",
-                {
-                    "llm_calls": self._llm_calls,
-                    "search_calls": self._search_calls,
-                    "pages_fetched": self._pages_fetched,
-                    "evidence_count": len(evidence_items),
-                },
-            )
-            return InvestigationReport(
-                investigation=investigation,
-                claim=claim,
-                plan=plan,
-                sources=sources,
-                evidence=evidence_items,
-                independence_analysis=independence,
-                provenance=provenance,
-                verification_packet=verification_packet,
-                argument_ledger=argument_ledger,
-                judgment_policy=judgment_policy,
-                readiness=readiness,
-                context_verification=context_verification,
-                verdict=verdict,
-                audits=(audit,),
-                full_report_assurance=full_report_assurance,
-            )
-        except Exception as error:
-            failed = investigation.model_copy(
-                update={
-                    "status": InvestigationStatus.FAILED,
-                    "stage": InvestigationStage.FAILED,
-                    "updated_at": datetime.now(UTC),
-                    "failure_reason": str(error),
-                }
-            )
-            failed = Investigation.model_validate(failed.model_dump())
-            self._repository.save_investigation(failed)
-            self._event(
-                failed,
-                TraceEventType.INVESTIGATION_FAILED,
-                "Investigation failed.",
-                {"error_type": type(error).__name__, "error": str(error)},
-            )
-            raise
+    def assess_readiness(
+        self,
+        investigation: Investigation,
+        claim: AtomicClaim,
+        ledger: ArgumentLedger,
+        verification: VerificationPacketV2,
+        provenance: InvestigationProvenance,
+        audit: SentenceAudit,
+        verdict: Verdict,
+        social_policy: SocialEvidencePolicyResult | None = None,
+    ) -> JudgmentReadiness:
+        """Calculate and persist deterministic judgment readiness."""
+        readiness = calculate_judgment_readiness(
+            ledger=ledger,
+            verification=verification,
+            provenance=provenance,
+            audits=(audit,),
+            unresolved_question_count=len(verdict.unresolved_questions),
+            social_policy=social_policy,
+        )
+        self._save_artifact(
+            investigation,
+            ArtifactType.READINESS,
+            claim.claim_id,
+            readiness,
+        )
+        return readiness
+
+    def assess_publication(
+        self,
+        investigation: Investigation,
+        proposed_verdict: Verdict,
+        enforced_verdict: Verdict,
+        policy: JudgmentPolicyTrace,
+        assurance: FullReportCitationAssurance,
+        readiness: JudgmentReadiness,
+        social_policy: SocialEvidencePolicyResult | None = None,
+    ) -> AuthoritativePublicationDecision:
+        """Persist the fail-closed decision controlling public rendering."""
+        decision = decide_publication(
+            investigation_id=investigation.investigation_id,
+            proposed_verdict=proposed_verdict,
+            enforced_verdict=enforced_verdict,
+            policy=policy,
+            assurance=assurance,
+            readiness=readiness,
+            social_policy=social_policy,
+        )
+        self._save_artifact(
+            investigation,
+            ArtifactType.PUBLICATION_DECISION,
+            decision.decision_id,
+            decision,
+        )
+        return decision
+
+    @staticmethod
+    def route_review(
+        verdict: Verdict,
+        readiness: JudgmentReadiness,
+        assurance: FullReportCitationAssurance,
+    ) -> bool:
+        """Return the legacy review disposition without creating new side effects."""
+        return bool(
+            verdict.human_review_required
+            or readiness.state.value == "human_review_required"
+            or assurance.publication_status.value == "blocked"
+        )
+
+    def record_review_routing(
+        self,
+        investigation: Investigation,
+        artifact_id: UUID,
+        decision: ReviewRoutingDecision,
+    ) -> None:
+        """Persist the typed routing rationale through the authority boundary."""
+        self._save_artifact(
+            investigation,
+            ArtifactType.REVIEW_ROUTING,
+            artifact_id,
+            decision,
+        )
+
+    def finalize_report(
+        self,
+        *,
+        investigation: Investigation,
+        claim: AtomicClaim,
+        plan: InvestigationPlan,
+        sources: tuple[Source, ...],
+        evidence_items: tuple[Evidence, ...],
+        independence: IndependenceAnalysis,
+        provenance: InvestigationProvenance,
+        verification_packet: VerificationPacketV2,
+        argument_ledger: ArgumentLedger,
+        judgment_policy: JudgmentPolicyTrace,
+        readiness: JudgmentReadiness,
+        context_verification: ContextVerification,
+        verdict: Verdict,
+        audit: SentenceAudit,
+        full_report_assurance: FullReportCitationAssurance,
+        publication_decision: AuthoritativePublicationDecision,
+        social_evidence_policy: SocialEvidencePolicyResult | None = None,
+    ) -> InvestigationReport:
+        """Persist terminal state and construct the compatibility report."""
+        investigation = self._transition(
+            investigation,
+            status=InvestigationStatus.COMPLETED,
+            stage=InvestigationStage.COMPLETE,
+        )
+        self._event(
+            investigation,
+            TraceEventType.INVESTIGATION_COMPLETED,
+            "Investigation completed with an audited provisional verdict.",
+            {
+                "llm_calls": self._llm_calls,
+                "search_calls": self._search_calls,
+                "pages_fetched": self._pages_fetched,
+                "evidence_count": len(evidence_items),
+            },
+        )
+        return InvestigationReport(
+            investigation=investigation,
+            claim=claim,
+            plan=plan,
+            sources=sources,
+            evidence=evidence_items,
+            independence_analysis=independence,
+            provenance=provenance,
+            verification_packet=verification_packet,
+            argument_ledger=argument_ledger,
+            judgment_policy=judgment_policy,
+            readiness=readiness,
+            context_verification=context_verification,
+            verdict=verdict,
+            audits=(audit,),
+            full_report_assurance=full_report_assurance,
+            publication_decision=publication_decision,
+            social_evidence_policy=social_evidence_policy,
+        )
+
+    def fail_investigation(
+        self,
+        investigation: Investigation,
+        error: Exception,
+    ) -> Investigation:
+        """Persist the unchanged authoritative terminal failure semantics."""
+        failed = investigation.model_copy(
+            update={
+                "status": InvestigationStatus.FAILED,
+                "stage": InvestigationStage.FAILED,
+                "updated_at": datetime.now(UTC),
+                "failure_reason": str(error),
+            }
+        )
+        failed = Investigation.model_validate(failed.model_dump())
+        self._repository.save_investigation(failed)
+        self._event(
+            failed,
+            TraceEventType.INVESTIGATION_FAILED,
+            "Investigation failed.",
+            {"error_type": type(error).__name__, "error": str(error)},
+        )
+        return failed
+
+    def persist_final_report(self, report: InvestigationReport) -> None:
+        """Persist a standalone report artifact for graph reconstruction."""
+        self._save_artifact(
+            report.investigation,
+            ArtifactType.REPORT,
+            report.investigation.investigation_id,
+            report,
+        )
 
     async def _research(
         self,
@@ -571,6 +1070,33 @@ class InvestigationService:
                 if result_key in seen_result_urls:
                     continue
                 seen_result_urls.add(result_key)
+                if is_social_candidate(result):
+                    assert result.social_url is not None
+                    social_source = source_from_search_result(
+                        result,
+                        canonical_url=str(result.social_url.canonical_url),
+                        retrieved_at=datetime.now(UTC),
+                        extraction_status=ExtractionStatus.PARTIAL,
+                    )
+                    sources.append(social_source)
+                    self._save_artifact(
+                        investigation,
+                        ArtifactType.SOURCE,
+                        social_source.source_id,
+                        social_source,
+                    )
+                    self._event(
+                        investigation,
+                        TraceEventType.STATUS_CHANGED,
+                        "Social candidate retained for attribution; content fetch not attempted.",
+                        {
+                            "platform": result.social_url.platform.value,
+                            "url_kind": result.social_url.url_kind.value,
+                            "research_path": research_path.value,
+                            "source_id": str(social_source.source_id),
+                        },
+                    )
+                    continue
                 try:
                     content, canonical_url, retrieved_at = await self._result_content(
                         investigation,
@@ -589,12 +1115,9 @@ class InvestigationService:
                     budget_exhausted = True
                     break
                 except FetchError as error:
-                    blocked_source = Source(
-                        url=result.url,
-                        canonical_url=result.url,
-                        title=result.title,
-                        source_type=result.source_type,
-                        publisher=result.publisher,
+                    blocked_source = source_from_search_result(
+                        result,
+                        canonical_url=str(result.url),
                         retrieved_at=datetime.now(UTC),
                         extraction_status=(
                             ExtractionStatus.BLOCKED
@@ -623,12 +1146,9 @@ class InvestigationService:
                     )
                     continue
 
-                source = Source(
-                    url=result.url,
+                source = source_from_search_result(
+                    result,
                     canonical_url=canonical_url,
-                    title=result.title,
-                    source_type=result.source_type,
-                    publisher=result.publisher,
                     retrieved_at=retrieved_at,
                     content_hash=hashlib.sha256(content.encode("utf-8")).hexdigest(),
                     extraction_status=ExtractionStatus.EXTRACTED,
@@ -722,6 +1242,10 @@ class InvestigationService:
         investigation: Investigation,
         result: SearchResult,
     ) -> tuple[str, str, datetime]:
+        if is_social_candidate(result):
+            raise DocumentRetrievalError(
+                "generic content fetch is prohibited for classified social candidates"
+            )
         if result.inline_content:
             return result.inline_content, str(result.url), datetime.now(UTC)
         if self._content_fetcher is None:

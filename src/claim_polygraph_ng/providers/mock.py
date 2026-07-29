@@ -6,6 +6,7 @@ from uuid import UUID
 
 from pydantic import JsonValue
 
+from claim_polygraph_ng.analysis.stance import deterministic_stance_label
 from claim_polygraph_ng.domain import (
     AtomicClaim,
     AuditIssue,
@@ -141,6 +142,7 @@ class DeterministicModelProvider:
     @staticmethod
     def _judge(inputs: Mapping[str, JsonValue]) -> Verdict:
         evidence_items = cast(list[dict[str, JsonValue]], inputs["evidence"])
+        typed_evidence = tuple(Evidence.model_validate(item) for item in evidence_items)
         supporting = [
             UUID(str(item["evidence_id"]))
             for item in evidence_items
@@ -152,21 +154,18 @@ class DeterministicModelProvider:
             if item["stance"] == EvidenceStance.CONTRADICTS
         ]
 
-        if supporting and contradicting:
-            label = VerdictLabel.MIXED
-            explanation = (
-                "The deterministic evidence packet contains both supporting "
-                "and contradictory material."
-            )
-        elif supporting:
-            label = VerdictLabel.SUPPORTED
-            explanation = "The deterministic evidence packet supports the claim."
-        elif contradicting:
-            label = VerdictLabel.CONTRADICTED
-            explanation = "The deterministic evidence packet contradicts the claim."
-        else:
-            label = VerdictLabel.UNVERIFIABLE
-            explanation = "The deterministic evidence packet is insufficient."
+        label = deterministic_stance_label(typed_evidence)
+        explanation = {
+            VerdictLabel.MIXED: (
+                "The deterministic evidence packet contains material qualification "
+                "or both supporting and contradictory evidence."
+            ),
+            VerdictLabel.SUPPORTED: "The deterministic evidence packet supports the claim.",
+            VerdictLabel.CONTRADICTED: (
+                "The deterministic evidence packet contradicts the claim."
+            ),
+            VerdictLabel.UNVERIFIABLE: "The deterministic evidence packet is insufficient.",
+        }[label]
 
         return Verdict(
             claim_id=UUID(str(inputs["claim_id"])),

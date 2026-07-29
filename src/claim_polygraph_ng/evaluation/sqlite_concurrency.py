@@ -165,6 +165,11 @@ def run_sqlite_concurrency_gate(
     trail = SQLiteReviewLedger(review_db).load(request.request_id)
 
     graph_db = root / "graph-checkpoints.sqlite3"
+    # Initialize LangGraph's shared checkpoint schema before concurrent workers
+    # begin. Production startup owns this migration boundary; allowing every
+    # worker to race schema creation measures a deployment bug, not WAL writes.
+    with DurableFixtureLangGraphWorkflow(graph_db, enabled=True):
+        pass
     requests = [
         FixtureGraphRequest(
             claim_text=f"Concurrency fixture claim {index}.",

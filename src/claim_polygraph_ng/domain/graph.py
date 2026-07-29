@@ -295,7 +295,7 @@ class ReviewInterruptPayload(DomainModel):
     question: str = Field(min_length=3, max_length=1_000)
     claim_text: str = Field(min_length=3, max_length=10_000)
     provisional_verdict: VerdictLabel
-    approved_evidence_ids: tuple[UUID, ...] = Field(min_length=1)
+    approved_evidence_ids: tuple[UUID, ...] = ()
     route_reason: str = Field(min_length=3, max_length=1_000)
     allowed_decisions: tuple[ReviewDecisionKind, ...] = (
         ReviewDecisionKind.APPROVE,

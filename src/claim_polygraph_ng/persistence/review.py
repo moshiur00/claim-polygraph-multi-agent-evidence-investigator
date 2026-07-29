@@ -119,6 +119,22 @@ class SQLiteReviewLedger:
 
     def create_request(self, request: ReviewRequest) -> ReviewRequest:
         with self._connect(immediate=True) as connection:
+            existing = connection.execute(
+                "SELECT payload FROM review_requests WHERE request_id = ?",
+                (str(request.request_id),),
+            ).fetchone()
+            if existing:
+                saved = ReviewRequest.model_validate_json(existing[0])
+                if (
+                    saved.request_id == request.request_id
+                    and saved.investigation_id == request.investigation_id
+                    and saved.graph_thread_id == request.graph_thread_id
+                    and saved.claim_id == request.claim_id
+                    and saved.reason == request.reason
+                    and saved.created_by == request.created_by
+                ):
+                    return saved
+                raise ReviewPolicyError("request ID already represents different content")
             connection.execute(
                 "INSERT INTO review_requests VALUES (?, ?, ?)",
                 (str(request.request_id), str(request.request_id), request.model_dump_json()),
@@ -197,6 +213,22 @@ class SQLiteReviewLedger:
         self, approval: ApprovalRecord, *, expected_sequence: int
     ) -> ApprovalRecord:
         with self._connect(immediate=True) as connection:
+            existing = connection.execute(
+                "SELECT payload FROM approval_records WHERE entity_id = ?",
+                (str(approval.approval_id),),
+            ).fetchone()
+            if existing:
+                saved = ApprovalRecord.model_validate_json(existing[0])
+                if (
+                    saved.approval_id == approval.approval_id
+                    and saved.request_id == approval.request_id
+                    and saved.decision_record_id == approval.decision_record_id
+                    and saved.approver_identity == approval.approver_identity
+                    and saved.decision is approval.decision
+                    and saved.rationale == approval.rationale
+                ):
+                    return saved
+                raise ReviewPolicyError("approval ID already represents different content")
             self._check_sequence(connection, approval.request_id, expected_sequence)
             decision = self._one(
                 connection,
@@ -233,6 +265,25 @@ class SQLiteReviewLedger:
         self, revision: VerdictRevision, *, expected_sequence: int
     ) -> VerdictRevision:
         with self._connect(immediate=True) as connection:
+            existing = connection.execute(
+                "SELECT payload FROM verdict_revisions WHERE entity_id = ?",
+                (str(revision.revision_id),),
+            ).fetchone()
+            if existing:
+                saved = VerdictRevision.model_validate_json(existing[0])
+                if (
+                    saved.revision_id == revision.revision_id
+                    and saved.request_id == revision.request_id
+                    and saved.decision_record_id == revision.decision_record_id
+                    and saved.approval_id == revision.approval_id
+                    and saved.original_verdict_id == revision.original_verdict_id
+                    and saved.original_verdict is revision.original_verdict
+                    and saved.revised_verdict is revision.revised_verdict
+                    and saved.change_kind is revision.change_kind
+                    and saved.rationale == revision.rationale
+                ):
+                    return saved
+                raise ReviewPolicyError("revision ID already represents different content")
             self._check_sequence(connection, revision.request_id, expected_sequence)
             decision = self._one(
                 connection,

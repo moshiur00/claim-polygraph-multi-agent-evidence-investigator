@@ -9,7 +9,7 @@ from pydantic import AnyHttpUrl, Field, JsonValue, model_validator
 from claim_polygraph_ng.domain.argument import ArgumentLedger
 from claim_polygraph_ng.domain.base import DomainModel
 from claim_polygraph_ng.domain.citation import FullReportCitationAssurance
-from claim_polygraph_ng.domain.enums import ResearchPath, SourceType
+from claim_polygraph_ng.domain.enums import DistributionMedium, ResearchPath, SourceType
 from claim_polygraph_ng.domain.judgment import JudgmentPolicyTrace
 from claim_polygraph_ng.domain.models import (
     AtomicClaim,
@@ -20,7 +20,9 @@ from claim_polygraph_ng.domain.models import (
     Verdict,
 )
 from claim_polygraph_ng.domain.provenance import IndependenceAnalysis, InvestigationProvenance
+from claim_polygraph_ng.domain.publication import AuthoritativePublicationDecision
 from claim_polygraph_ng.domain.readiness import JudgmentReadiness
+from claim_polygraph_ng.domain.social import ProviderResultMetadata, SocialUrlCandidate
 from claim_polygraph_ng.domain.verification import ContextVerification, VerificationPacketV2
 
 
@@ -99,6 +101,12 @@ class ArtifactType(StrEnum):
     DECOMPOSITION = "decomposition"
     COVERAGE = "coverage"
     CHECKPOINT = "checkpoint"
+    REPORT = "report"
+    PROPOSED_VERDICT = "proposed_verdict"
+    ENFORCED_VERDICT = "enforced_verdict"
+    PUBLICATION_DECISION = "publication_decision"
+    REVIEW_ROUTING = "review_routing"
+    SOCIAL_EVIDENCE_POLICY = "social_evidence_policy"
 
 
 class ModelTask(StrEnum):
@@ -249,12 +257,20 @@ class SearchResult(DomainModel):
     inline_content: str | None = Field(default=None, max_length=40_000)
     source_type: SourceType
     publisher: str | None = Field(default=None, max_length=500)
+    distribution_medium: DistributionMedium = DistributionMedium.UNKNOWN
+    social_url: SocialUrlCandidate | None = None
+    provider_metadata: ProviderResultMetadata | None = None
 
     @model_validator(mode="after")
     def require_candidate_text(self) -> "SearchResult":
         """A result needs a snippet or deterministic inline content."""
         if not self.snippet and not self.inline_content:
             raise ValueError("search results require a snippet or inline content")
+        is_social = self.distribution_medium is DistributionMedium.SOCIAL_PLATFORM
+        if is_social != (self.social_url is not None):
+            raise ValueError(
+                "social distribution and social_url classification must appear together"
+            )
         return self
 
 
@@ -276,6 +292,8 @@ class InvestigationReport(DomainModel):
     verdict: Verdict
     audits: tuple[SentenceAudit, ...]
     full_report_assurance: FullReportCitationAssurance | None = None
+    publication_decision: AuthoritativePublicationDecision | None = None
+    social_evidence_policy: "SocialEvidencePolicyResult | None" = None
 
 
 class ComplexInvestigationReport(DomainModel):
@@ -291,5 +309,6 @@ class ComplexInvestigationReport(DomainModel):
 
 
 from claim_polygraph_ng.domain.models import ClaimCoverage, ClaimDecomposition  # noqa: E402
+from claim_polygraph_ng.domain.social_constraints import SocialEvidencePolicyResult  # noqa: E402
 
 ComplexInvestigationReport.model_rebuild()

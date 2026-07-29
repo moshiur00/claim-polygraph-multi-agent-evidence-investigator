@@ -184,7 +184,9 @@ def _material_assertions(
         for evidence_item in evidence
         if evidence_item.stance is not EvidenceStance.IRRELEVANT
     ):
-        sentence = item.passage.strip()
+        # Evidence passages may be long source extracts. The report assertion is
+        # a bounded finding, not a second copy of the retained source content.
+        sentence = _passage_excerpt(item.passage)
         assertions.append(
             StructuredReportAssertion(
                 assertion_id=uuid5(

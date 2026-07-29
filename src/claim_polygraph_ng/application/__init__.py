@@ -1,5 +1,9 @@
 """Application services coordinating the investigation workflow."""
 
+from claim_polygraph_ng.application.authoritative_research import (
+    AuthoritativeMultiAgentResearchAdapter,
+    UnguardedPaidResearchError,
+)
 from claim_polygraph_ng.application.claim_extraction import ClaimExtractionService
 from claim_polygraph_ng.application.complex_investigation_service import (
     ComplexInvestigationService,
@@ -34,6 +38,9 @@ from claim_polygraph_ng.application.langgraph_fixture import (
 from claim_polygraph_ng.application.langgraph_research import (
     LangGraphResearchFanOutWorkflow,
 )
+from claim_polygraph_ng.application.langgraph_verification import (
+    AuthoritativeVerificationFanOutWorkflow,
+)
 from claim_polygraph_ng.application.multi_agent_service import (
     DeterministicResearchWorker,
     MultiAgentInvestigationService,
@@ -47,6 +54,12 @@ from claim_polygraph_ng.application.orchestrator import (
     OrchestratorMode,
     parse_orchestrator_mode,
 )
+from claim_polygraph_ng.application.original_source_resolver import (
+    OriginalSourceResolutionBundle,
+    OriginalSourceResolutionIntegrityError,
+    OriginalSourceResolver,
+    preflight_original_source_resolution,
+)
 from claim_polygraph_ng.application.research_executor import (
     ResearchExecutor,
     ResearchWorker,
@@ -54,6 +67,8 @@ from claim_polygraph_ng.application.research_executor import (
 )
 
 __all__ = [
+    "AuthoritativeMultiAgentResearchAdapter",
+    "AuthoritativeVerificationFanOutWorkflow",
     "BudgetExceededError",
     "ClaimExtractionService",
     "ComplexInvestigationService",
@@ -79,11 +94,16 @@ __all__ = [
     "LangGraphResearchFanOutWorkflow",
     "MultiAgentInvestigationService",
     "OrchestratorMode",
+    "OriginalSourceResolutionBundle",
+    "OriginalSourceResolutionIntegrityError",
+    "OriginalSourceResolver",
     "PermanentJobExecutionError",
     "ResearchExecutor",
     "ResearchWorker",
     "RetryableJobExecutionError",
     "SharedResearchOperations",
     "StructuredResearchWorker",
+    "UnguardedPaidResearchError",
     "parse_orchestrator_mode",
+    "preflight_original_source_resolution",
 ]

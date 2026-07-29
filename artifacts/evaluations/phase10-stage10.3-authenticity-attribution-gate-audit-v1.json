@@ -1,0 +1,52 @@
+{
+  "audit_id": "phase10-stage10.3-authenticity-attribution-gate-audit-v1",
+  "fixture_id": "phase10-social-authenticity-attribution-v1",
+  "case_count": 6,
+  "exact_match_count": 6,
+  "decision_counts": {
+    "conditional": 2,
+    "eligible": 1,
+    "ineligible": 3
+  },
+  "copied_material_case_count": 2,
+  "unavailable_case_count": 2,
+  "verified_archive_case_count": 1,
+  "decisive_permission_count": 0,
+  "model_calls": 0,
+  "search_calls": 0,
+  "social_page_fetches": 0,
+  "valid": true,
+  "errors": [],
+  "artifacts": [
+    {
+      "artifact_id": "fixtures",
+      "path": "benchmarks/phase10_social_attribution_fixtures_v1.json",
+      "sha256": "b766a1e0ee3943470035b2c70aca0f585af49b1ef9768ab532eade3fbd006ae3"
+    },
+    {
+      "artifact_id": "contracts",
+      "path": "src/claim_polygraph_ng/domain/social.py",
+      "sha256": "46fe68c720621652d89073b389150037b0f4e31269e9260a13e3c9b379790f88"
+    },
+    {
+      "artifact_id": "attribution",
+      "path": "src/claim_polygraph_ng/analysis/social_attribution.py",
+      "sha256": "10f1382fd4685ef01c3d143c8b321cb445a7d3b2b0567ddd6b486556dbc710b1"
+    },
+    {
+      "artifact_id": "authoritative_service",
+      "path": "src/claim_polygraph_ng/application/investigation_service.py",
+      "sha256": "998fbbc39c9a212d8ecbaeab63b9b3ade4969b1bab1cd753fba7e455bdb343c3"
+    },
+    {
+      "artifact_id": "multi_agent_service",
+      "path": "src/claim_polygraph_ng/application/multi_agent_service.py",
+      "sha256": "d780914735934ed98eae7fc096ef3e22a22b162e0cf8352baef252f83f32a6d6"
+    },
+    {
+      "artifact_id": "shared_operations",
+      "path": "src/claim_polygraph_ng/application/research_executor.py",
+      "sha256": "cd37c16b12bd98bd8f35e957a8aa73080484fe9d8579e3f4d8ff25ce80076f38"
+    }
+  ]
+}

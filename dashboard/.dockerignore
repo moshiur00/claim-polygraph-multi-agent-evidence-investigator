@@ -1,6 +1,7 @@
 .git
 .npm-cache
 .wrangler
+.pytest-tmp
 node_modules
 dist
 outputs

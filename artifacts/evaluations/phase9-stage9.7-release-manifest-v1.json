@@ -1,0 +1,54 @@
+{
+  "manifest_id": "phase9-stage9.7-release-manifest-v1",
+  "artifacts": [
+    {
+      "artifact_id": "analysis_contracts",
+      "path": "src/claim_polygraph_ng/domain/authoritative_analysis.py",
+      "sha256": "2954d4952512761714bdedf97cd72622895b335741a01fcaffa9d077ef4f53b3"
+    },
+    {
+      "artifact_id": "verification_subgraph",
+      "path": "src/claim_polygraph_ng/application/langgraph_verification.py",
+      "sha256": "c0bc8f5ace721885cdb87ca2d189c07f42bbd6aa345265158dcad9586397cb7e"
+    },
+    {
+      "artifact_id": "argument_subgraph",
+      "path": "src/claim_polygraph_ng/application/langgraph_argument.py",
+      "sha256": "50105ea7a94cb85ac4fe452cb5dcc5e702f68921974bee238b2a9d57d8a6657e"
+    },
+    {
+      "artifact_id": "authoritative_graph",
+      "path": "src/claim_polygraph_ng/application/langgraph_authoritative.py",
+      "sha256": "d9d7639bbdd86c6263724dc2eac48f1e9a826d3d05197f99a04d86e5a371e2aa"
+    },
+    {
+      "artifact_id": "service_authority",
+      "path": "src/claim_polygraph_ng/application/investigation_service.py",
+      "sha256": "b2b2824834c3a1f6dd9b1aa326d3bc1a366a3616a00525ccaa988f46cb9518eb"
+    },
+    {
+      "artifact_id": "integration_tests",
+      "path": "tests/integration/test_authoritative_verification_arguments.py",
+      "sha256": "0423ad4fbee6ebb1412f01eeb73795e71be21285fe319f38ebb6d1c24b799894"
+    },
+    {
+      "artifact_id": "stage9_6_manifest",
+      "path": "artifacts/evaluations/phase9-stage9.6-release-manifest-v1.json",
+      "sha256": "ba24cf8841f15a012d5001cc0e3cc068da108a40a7839be5fa70d47b47940ad0"
+    },
+    {
+      "artifact_id": "stage9_7_gate",
+      "path": "artifacts/evaluations/phase9-stage9.7-verification-arguments-v1.json",
+      "sha256": "49cba52ec7705ef83c3fafb1f158623a893619236faac3f8188df597c551af28"
+    },
+    {
+      "artifact_id": "stage9_7_report",
+      "path": "docs/PHASE_9_STAGE_9.7_COMPLETION_REPORT.md",
+      "sha256": "8edc53b70c00187660f9f7940ef7f340401affd354d765254fb8511c403e744e"
+    }
+  ],
+  "external_model_calls": 0,
+  "live_search_calls": 0,
+  "network_fetches": 0,
+  "pdf_downloads": 0
+}

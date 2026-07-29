@@ -1,0 +1,31 @@
+{
+  "evaluation_id": "phase9-stage9.12a-stance-remediation-v1",
+  "generated_at": "2026-07-29T15:43:07.842628+00:00",
+  "source_evaluation": "phase9-stage9.12-frozen-comparison-v1",
+  "case_count": 20,
+  "checks": {
+    "twenty_frozen_cases_replayed": true,
+    "verdict_equivalence_is_100_percent": true,
+    "challenger_material_gain_preserved": true,
+    "challenger_evidence_coverage_gain_preserved": true,
+    "challenger_family_coverage_gain_preserved": true,
+    "challenger_stance_coverage_gain_preserved": true,
+    "no_duplicate_paid_operations": true
+  },
+  "valid": true,
+  "metrics": {
+    "unified_direct_verdict_equivalence": 1.0,
+    "unified_mean_evidence_coverage_ratio": 1.0,
+    "without_challenger_mean_evidence_coverage_ratio": 0.8833333333333334,
+    "unified_mean_family_coverage_ratio": 0.925,
+    "without_challenger_mean_family_coverage_ratio": 0.8416666666666666,
+    "unified_challenge_coverage_rate": 1.0,
+    "without_challenger_challenge_coverage_rate": 0.95,
+    "challenger_material_gain_cases": 7
+  },
+  "remaining_non_stance_gate_failures": [],
+  "external_model_calls": 0,
+  "live_search_calls": 0,
+  "network_fetches": 0,
+  "pdf_downloads": 0
+}

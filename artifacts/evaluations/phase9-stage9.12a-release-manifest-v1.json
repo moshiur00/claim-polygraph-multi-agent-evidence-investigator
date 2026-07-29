@@ -1,0 +1,38 @@
+{
+  "manifest_id": "phase9-stage9.12a-release-manifest-v1",
+  "generated_at": "2026-07-29T15:43:07.843580+00:00",
+  "artifacts": [
+    {
+      "path": "src/claim_polygraph_ng/analysis/stance.py",
+      "sha256": "406535bc0b2b03191160cbc1ff11d6f36aae9dd3b556108b8de9cfef98467d86"
+    },
+    {
+      "path": "src/claim_polygraph_ng/providers/mock.py",
+      "sha256": "aa3624c7a77706b51c595e4180a333e06bfd86b62b9c7d77fa37ea53f0804f49"
+    },
+    {
+      "path": "src/claim_polygraph_ng/evaluation/phase9_comparison.py",
+      "sha256": "4c046c1db58e3467271963e7a0c439130efa211abd101fad45f18dc45e894e6c"
+    },
+    {
+      "path": "tests/unit/test_evidence_stance_contract.py",
+      "sha256": "aab0f5534c2e162eb878e3889f273162c0d0a23e31aa458016088c4f4aff4752"
+    },
+    {
+      "path": "tests/integration/test_phase9_comparison.py",
+      "sha256": "85bcded2dc09d8db4c6fbca9e26b87f65e849bb0c5ba712b19dd853896b772ae"
+    },
+    {
+      "path": "docs/PHASE_9_STAGE_9.12A_COMPLETION_REPORT.md",
+      "sha256": "1afcacb965730ee3886dc49c8517ca9fb92bfba4584fd7821fcea1c43105b1a0"
+    },
+    {
+      "path": "artifacts/evaluations/phase9-stage9.12-frozen-comparison-v1.json",
+      "sha256": "2c4bd8f050a4ad686cc2f1d73966b1b002f35491da52a8be75e7eefdb9c94d31"
+    },
+    {
+      "path": "artifacts/evaluations/phase9-stage9.12a-stance-remediation-v1.json",
+      "sha256": "7c90b3e43421dee7bed08fe8a94b0afdd2366928f46ca809b8d86bc5657fd502"
+    }
+  ]
+}

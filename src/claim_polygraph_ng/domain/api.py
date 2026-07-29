@@ -4,19 +4,23 @@ from uuid import UUID
 
 from pydantic import Field
 
+from claim_polygraph_ng.domain.authoritative_graph import (
+    AuthoritativeInvestigationGraphState,
+)
 from claim_polygraph_ng.domain.base import DomainModel
 from claim_polygraph_ng.domain.graph import (
     DurableGraphSnapshot,
     FixtureGraphRequest,
     ReviewDecision,
+    ReviewInterruptPayload,
 )
+from claim_polygraph_ng.domain.jobs import DurableJob, JobAuditEvent
 from claim_polygraph_ng.domain.review import (
     ApprovalRecord,
     ReviewAuditTrail,
     ReviewRequest,
     VerdictRevision,
 )
-from claim_polygraph_ng.domain.jobs import DurableJob, JobAuditEvent
 
 
 class StartGraphRunRequest(DomainModel):
@@ -53,7 +57,7 @@ class SubmitRevisionRequest(DomainModel):
 
 class ApiStatus(DomainModel):
     status: str
-    api_version: str = "8.1"
+    api_version: str = "9.10"
     orchestrator: str
     authoritative_service: str = "InvestigationService"
     retrieval_provider: str = "deterministic"
@@ -72,3 +76,25 @@ class InvestigationJobResponse(DomainModel):
     job: DurableJob
     investigation_id: UUID | None = None
     events: tuple[JobAuditEvent, ...] = ()
+
+
+class AuthoritativeJobResponse(DomainModel):
+    """One truthful view of job, graph, review and publication state."""
+
+    job: DurableJob
+    thread_id: str
+    investigation_id: UUID | None = None
+    graph: AuthoritativeInvestigationGraphState | None = None
+    interruption: ReviewInterruptPayload | None = None
+    review: ReviewAuditTrail | None = None
+    publication_status: str
+    verdict: str | None = None
+    report_available: bool = False
+    events: tuple[JobAuditEvent, ...] = ()
+
+
+class AuthoritativeReviewRequest(DomainModel):
+    """Decision used to resume the same authoritative graph and durable job."""
+
+    decision: ReviewDecision
+    approver_identity: str | None = Field(default=None, min_length=3, max_length=300)

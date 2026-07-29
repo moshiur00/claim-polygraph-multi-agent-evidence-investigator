@@ -52,6 +52,150 @@ class SourceType(StrEnum):
     OTHER = "other"
 
 
+class DistributionMedium(StrEnum):
+    """How material was distributed, independently of who authored it."""
+
+    UNKNOWN = "unknown"
+    WEB_PAGE = "web_page"
+    SOCIAL_PLATFORM = "social_platform"
+    DOCUMENT = "document"
+    DATASET_OR_API = "dataset_or_api"
+    BROADCAST = "broadcast"
+
+
+class SocialAccountType(StrEnum):
+    """The represented account owner; this does not establish authority."""
+
+    UNKNOWN = "unknown"
+    INDIVIDUAL = "individual"
+    INSTITUTION = "institution"
+    GOVERNMENT = "government"
+    ACADEMIC_INSTITUTION = "academic_institution"
+    NEWS_ORGANIZATION = "news_organization"
+    AUTOMATED = "automated"
+
+
+class SocialAuthenticityStatus(StrEnum):
+    """Recorded authenticity state for a social account or item."""
+
+    UNKNOWN = "unknown"
+    UNVERIFIED = "unverified"
+    AUTHENTICATED = "authenticated"
+    DISPUTED = "disputed"
+
+
+class SocialPostType(StrEnum):
+    """Structural type of social-media material."""
+
+    UNKNOWN = "unknown"
+    ORIGINAL = "original"
+    REPLY = "reply"
+    REPOST = "repost"
+    QUOTE = "quote"
+    SCREENSHOT = "screenshot"
+    LINK_SHARE = "link_share"
+
+
+class SocialPlatform(StrEnum):
+    """Deterministically recognized public social URL families."""
+
+    X = "x"
+    FACEBOOK = "facebook"
+    INSTAGRAM = "instagram"
+    THREADS = "threads"
+    LINKEDIN = "linkedin"
+    YOUTUBE = "youtube"
+    TIKTOK = "tiktok"
+    BLUESKY = "bluesky"
+    REDDIT = "reddit"
+    MASTODON = "mastodon"
+
+
+class SocialUrlKind(StrEnum):
+    """What a recognized social URL locates without fetching it."""
+
+    POST = "post"
+    ACCOUNT = "account"
+    COMMUNITY = "community"
+    UNKNOWN = "unknown"
+
+
+class SocialAuthenticityEvidenceType(StrEnum):
+    """Recorded basis used to authenticate an account or social item."""
+
+    OFFICIAL_WEBSITE_LINK = "official_website_link"
+    PLATFORM_ASSERTION = "platform_assertion"
+    CROSS_REFERENCED_IDENTIFIER = "cross_referenced_identifier"
+    CRYPTOGRAPHIC_SIGNATURE = "cryptographic_signature"
+    RELIABLE_ARCHIVE = "reliable_archive"
+    HUMAN_VERIFICATION = "human_verification"
+
+
+class SocialCaptureMethod(StrEnum):
+    """How social material entered the evidence workflow."""
+
+    UNKNOWN = "unknown"
+    SEARCH_RESULT_SNIPPET = "search_result_snippet"
+    DIRECT_PUBLIC_PAGE = "direct_public_page"
+    PROVIDER_API = "provider_api"
+    RELIABLE_ARCHIVE = "reliable_archive"
+    SCREENSHOT = "screenshot"
+    COPIED_TEXT = "copied_text"
+
+
+class SocialContentOriginStatus(StrEnum):
+    """Availability and origin state of the represented social content."""
+
+    UNKNOWN = "unknown"
+    ORIGINAL_ACCESSIBLE = "original_accessible"
+    ORIGINAL_UNAVAILABLE = "original_unavailable"
+    ARCHIVED_COPY = "archived_copy"
+    SCREENSHOT_ONLY = "screenshot_only"
+    COPIED_TEXT_ONLY = "copied_text_only"
+
+
+class SocialAttributionScope(StrEnum):
+    """The narrow proposition attributable to a social item."""
+
+    UNSPECIFIED = "unspecified"
+    PUBLICATION_EXISTENCE = "publication_existence"
+    ATTRIBUTED_STATEMENT = "attributed_statement"
+    EYEWITNESS_OBSERVATION = "eyewitness_observation"
+    INSTITUTIONAL_ANNOUNCEMENT = "institutional_announcement"
+    LINKED_SOURCE_DISCOVERY = "linked_source_discovery"
+
+
+class SocialSourceRelationship(StrEnum):
+    """Relationship from a social item to its underlying or prior source."""
+
+    UNDERLYING_RECORD = "underlying_record"
+    REPOST_OF = "repost_of"
+    QUOTES = "quotes"
+    SCREENSHOT_OF = "screenshot_of"
+    LINKS_TO = "links_to"
+
+
+class EvidentiaryUse(StrEnum):
+    """The bounded role an item may play in an investigation."""
+
+    UNSPECIFIED = "unspecified"
+    DECISIVE = "decisive"
+    QUALIFIED_OBSERVATION = "qualified_observation"
+    ATTRIBUTED_STATEMENT = "attributed_statement"
+    CONTEXT = "context"
+    DISCOVERY_LEAD = "discovery_lead"
+    EXCLUDED = "excluded"
+
+
+class EvidenceEligibilityDecision(StrEnum):
+    """Deterministic social-evidence eligibility outcome."""
+
+    UNKNOWN = "unknown"
+    ELIGIBLE = "eligible"
+    CONDITIONAL = "conditional"
+    INELIGIBLE = "ineligible"
+
+
 class EvidenceStance(StrEnum):
     """Relationship between an evidence passage and a claim."""
 

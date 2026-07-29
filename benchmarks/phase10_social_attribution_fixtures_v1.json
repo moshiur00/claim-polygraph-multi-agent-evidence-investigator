@@ -1,0 +1,141 @@
+{
+  "fixture_id": "phase10-social-authenticity-attribution-v1",
+  "version": 1,
+  "network_calls_permitted": 0,
+  "cases": [
+    {
+      "case_id": "SOCAUTH-001",
+      "context": {
+        "account": {
+          "platform": "x",
+          "identity_resolved": false,
+          "authenticity_status": "unknown"
+        },
+        "post_type": "unknown",
+        "capture_method": "search_result_snippet",
+        "content_origin_status": "unknown",
+        "attribution_scope": "linked_source_discovery"
+      },
+      "decision": "conditional",
+      "allowed_uses": ["discovery_lead", "context"],
+      "requires_human_review": false
+    },
+    {
+      "case_id": "SOCAUTH-002",
+      "context": {
+        "account": {
+          "platform": "instagram",
+          "handle": "witness",
+          "authenticity_status": "unverified"
+        },
+        "post_type": "screenshot",
+        "original_source": {
+          "relationship": "screenshot_of",
+          "url": "https://www.instagram.com/p/original",
+          "resolved": false
+        },
+        "capture_method": "screenshot",
+        "content_origin_status": "screenshot_only",
+        "attribution_scope": "unspecified"
+      },
+      "decision": "ineligible",
+      "allowed_uses": ["discovery_lead"],
+      "requires_human_review": true
+    },
+    {
+      "case_id": "SOCAUTH-003",
+      "context": {
+        "account": {
+          "platform": "facebook",
+          "identity_resolved": false,
+          "authenticity_status": "unknown"
+        },
+        "post_type": "unknown",
+        "capture_method": "copied_text",
+        "content_origin_status": "copied_text_only",
+        "attribution_scope": "unspecified"
+      },
+      "decision": "ineligible",
+      "allowed_uses": ["discovery_lead"],
+      "requires_human_review": true
+    },
+    {
+      "case_id": "SOCAUTH-004",
+      "context": {
+        "account": {
+          "platform": "x",
+          "handle": "former_account",
+          "authenticity_status": "unverified"
+        },
+        "post_type": "original",
+        "capture_method": "unknown",
+        "content_origin_status": "original_unavailable",
+        "attribution_scope": "publication_existence",
+        "unavailable_or_deleted": true
+      },
+      "decision": "ineligible",
+      "allowed_uses": ["discovery_lead"],
+      "requires_human_review": true
+    },
+    {
+      "case_id": "SOCAUTH-005",
+      "context": {
+        "account": {
+          "platform": "x",
+          "handle": "archived_account",
+          "authenticity_status": "authenticated",
+          "authenticity_evidence": [
+            {
+              "evidence_type": "reliable_archive",
+              "reference_url": "https://archive.example/capture/1",
+              "observed_at": "2026-07-29T00:00:00Z",
+              "description": "Archive metadata preserves the original account URL."
+            }
+          ]
+        },
+        "post_type": "original",
+        "capture_method": "reliable_archive",
+        "content_origin_status": "archived_copy",
+        "attribution_scope": "attributed_statement",
+        "archive_reference": {
+          "archive_url": "https://archive.example/capture/1",
+          "archive_provider": "Example Archive",
+          "captured_at": "2026-07-20T00:00:00Z",
+          "reliability_verified": true,
+          "verification_basis": "The archive record includes capture time and original URL."
+        },
+        "unavailable_or_deleted": true
+      },
+      "decision": "conditional",
+      "allowed_uses": ["attributed_statement", "context"],
+      "requires_human_review": true
+    },
+    {
+      "case_id": "SOCAUTH-006",
+      "context": {
+        "account": {
+          "platform": "x",
+          "handle": "agency",
+          "account_type": "government",
+          "authority_scope": "Announcements about the agency's own emergency designation.",
+          "authenticity_status": "authenticated",
+          "authenticity_evidence": [
+            {
+              "evidence_type": "official_website_link",
+              "reference_url": "https://agency.example/social-accounts",
+              "observed_at": "2026-07-29T00:00:00Z",
+              "description": "The agency website links to this exact account."
+            }
+          ]
+        },
+        "post_type": "original",
+        "capture_method": "direct_public_page",
+        "content_origin_status": "original_accessible",
+        "attribution_scope": "institutional_announcement"
+      },
+      "decision": "eligible",
+      "allowed_uses": ["attributed_statement", "context"],
+      "requires_human_review": false
+    }
+  ]
+}

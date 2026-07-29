@@ -24,6 +24,10 @@ class ReadinessReasonCode(StrEnum):
     PROVENANCE_UNCERTAIN = "provenance_uncertain"
     NONBLOCKING_CHALLENGE = "nonblocking_challenge"
     SOURCE_QUALITY_UNKNOWN = "source_quality_unknown"
+    SOCIAL_EVIDENCE_RISK = "social_evidence_risk"
+    BLOCKING_SOCIAL_EVIDENCE_RISK = "blocking_social_evidence_risk"
+    SOCIAL_ARGUMENT_POLICY_REVIEW = "social_argument_policy_review"
+    SOCIAL_ARGUMENT_POLICY_BLOCKED = "social_argument_policy_blocked"
     UNRESOLVED_QUESTIONS = "unresolved_questions"
 
 
@@ -52,6 +56,10 @@ class JudgmentReadiness(DomainModel):
     reason_codes: tuple[ReadinessReasonCode, ...] = Field(min_length=1)
     confidence_score: None = None
     limitations: tuple[str, ...]
+    social_risk_finding_count: int = Field(default=0, ge=0)
+    blocking_social_risk_count: int = Field(default=0, ge=0)
+    social_policy_finding_count: int = Field(default=0, ge=0)
+    blocking_social_policy_finding_count: int = Field(default=0, ge=0)
 
     @model_validator(mode="after")
     def validate_counts(self) -> "JudgmentReadiness":

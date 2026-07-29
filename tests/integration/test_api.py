@@ -155,13 +155,19 @@ def test_async_investigation_job_is_idempotent_and_completes_once(tmp_path) -> N
                 app,
                 "POST",
                 "/api/investigation-jobs",
-                json={"claim": "The example policy reduced emissions.", "idempotency_key": "same-request"},
+                json={
+                    "claim": "The example policy reduced emissions.",
+                    "idempotency_key": "same-request",
+                },
             )
             replay = await _request(
                 app,
                 "POST",
                 "/api/investigation-jobs",
-                json={"claim": "The example policy reduced emissions.", "idempotency_key": "same-request"},
+                json={
+                    "claim": "The example policy reduced emissions.",
+                    "idempotency_key": "same-request",
+                },
             )
             assert first.status_code == replay.status_code == 202
             assert first.json()["job"]["job_id"] == replay.json()["job"]["job_id"]

@@ -1,0 +1,42 @@
+{
+  "manifest_id": "phase9-stage9.13-release-manifest-v1",
+  "generated_at": "2026-07-29T15:43:12.139899+00:00",
+  "artifacts": [
+    {
+      "path": ".gitattributes",
+      "sha256": "c208db6f401b3ffd6a6cfb6cacf22978d31734d72280dcd9183aa6828a23444e"
+    },
+    {
+      "path": "src/claim_polygraph_ng/evaluation/sqlite_concurrency.py",
+      "sha256": "42dfddf8c205e775d5fe7927fc300cb5a7f29bf10536e357b7e2c8562cdd5907"
+    },
+    {
+      "path": "scripts/run_phase9_final_audit.py",
+      "sha256": "24865a3a12d77ab7552968d417f421f425dee584d6bb4773d0ac870d2274e15b"
+    },
+    {
+      "path": "docs/PHASE_9_STAGE_9.13_FINAL_AUDIT.md",
+      "sha256": "9b270e879ad6dfb2a50bf0fc51440933a7717c985ea6241c5f4a89a24dddae7c"
+    },
+    {
+      "path": "docs/adr/0021-promote-unified-authoritative-langgraph.md",
+      "sha256": "9c6c46d1dcfd69f685b57738b91f2ea983f091bde0a06b6c8d8d94d25e34b13b"
+    },
+    {
+      "path": "artifacts/evaluations/phase9-stage9.11-recovery-v1.json",
+      "sha256": "5de7696cd9e022c0776d4a41079f6d07932010c003713529a751eca1fbcc81da"
+    },
+    {
+      "path": "artifacts/evaluations/phase9-stage9.12-frozen-comparison-v1.json",
+      "sha256": "2c4bd8f050a4ad686cc2f1d73966b1b002f35491da52a8be75e7eefdb9c94d31"
+    },
+    {
+      "path": "artifacts/evaluations/phase9-stage9.12b-release-manifest-v1.json",
+      "sha256": "6be585c2d58dd7a0305eb37a94ac135f4eba9bfe5c1ebaaf895add7aea68df3b"
+    },
+    {
+      "path": "artifacts/evaluations/phase9-stage9.13-final-audit-v1.json",
+      "sha256": "704b894a63cab840927c378e874678fd8ffd7e6e3636040b95d3d5cca4560e67"
+    }
+  ]
+}

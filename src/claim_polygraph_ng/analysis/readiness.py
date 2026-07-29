@@ -10,9 +10,11 @@ from claim_polygraph_ng.domain import (
     PropositionResolution,
     ReadinessReasonCode,
     SentenceAudit,
+    SocialRiskSeverity,
     SupportLevel,
     VerificationPacketV2,
 )
+from claim_polygraph_ng.domain.social_constraints import SocialEvidencePolicyResult
 
 READINESS_VERSION = "judgment-readiness-v1"
 
@@ -24,6 +26,7 @@ def calculate_judgment_readiness(
     provenance: InvestigationProvenance | None = None,
     audits: tuple[SentenceAudit, ...] = (),
     unresolved_question_count: int = 0,
+    social_policy: SocialEvidencePolicyResult | None = None,
 ) -> JudgmentReadiness:
     """Calculate readiness from observable artifact conditions only."""
     material_ids = {
@@ -88,6 +91,18 @@ def calculate_judgment_readiness(
         if provenance
         else 0
     )
+    social_risks = provenance.social_risk_findings if provenance else ()
+    blocking_social_risks = sum(
+        item.severity is SocialRiskSeverity.BLOCKING for item in social_risks
+    )
+    caution_social_risks = sum(
+        item.severity is SocialRiskSeverity.CAUTION for item in social_risks
+    )
+    social_policy_findings = social_policy.findings if social_policy else ()
+    blocking_social_policy = sum(
+        item.severity is SocialRiskSeverity.BLOCKING
+        for item in social_policy_findings
+    )
     reasons = []
     hard_failure = False
     if resolved < material_count or not material_count:
@@ -101,6 +116,12 @@ def calculate_judgment_readiness(
         hard_failure = True
     if blocking:
         reasons.append(ReadinessReasonCode.BLOCKING_CHALLENGE)
+        hard_failure = True
+    if blocking_social_risks:
+        reasons.append(ReadinessReasonCode.BLOCKING_SOCIAL_EVIDENCE_RISK)
+        hard_failure = True
+    if blocking_social_policy:
+        reasons.append(ReadinessReasonCode.SOCIAL_ARGUMENT_POLICY_BLOCKED)
         hard_failure = True
     qualified = any(
         item.resolution is PropositionResolution.QUALIFIED
@@ -121,6 +142,10 @@ def calculate_judgment_readiness(
         reasons.append(ReadinessReasonCode.NONBLOCKING_CHALLENGE)
     if quality_unknown:
         reasons.append(ReadinessReasonCode.SOURCE_QUALITY_UNKNOWN)
+    if caution_social_risks:
+        reasons.append(ReadinessReasonCode.SOCIAL_EVIDENCE_RISK)
+    if social_policy and social_policy.requires_human_review:
+        reasons.append(ReadinessReasonCode.SOCIAL_ARGUMENT_POLICY_REVIEW)
     if unresolved_question_count:
         reasons.append(ReadinessReasonCode.UNRESOLVED_QUESTIONS)
     if hard_failure:
@@ -130,6 +155,8 @@ def calculate_judgment_readiness(
         or provenance_uncertain
         or nonblocking
         or quality_unknown
+        or caution_social_risks
+        or bool(social_policy and social_policy.requires_human_review)
         or unresolved_question_count
     ):
         state = JudgmentReadinessState.QUALIFIED
@@ -167,4 +194,8 @@ def calculate_judgment_readiness(
             "No benchmark verdict label or confidence target is an input.",
             f"Feature version: {READINESS_VERSION}.",
         ),
+        social_risk_finding_count=len(social_risks),
+        blocking_social_risk_count=blocking_social_risks,
+        social_policy_finding_count=len(social_policy_findings),
+        blocking_social_policy_finding_count=blocking_social_policy,
     )

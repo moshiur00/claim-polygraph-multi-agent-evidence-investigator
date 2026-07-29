@@ -1,0 +1,66 @@
+{
+  "manifest_id": "phase9-stage9.12b-release-manifest-v1",
+  "generated_at": "2026-07-29T15:43:10.007848+00:00",
+  "artifacts": [
+    {
+      "path": ".gitattributes",
+      "sha256": "c208db6f401b3ffd6a6cfb6cacf22978d31734d72280dcd9183aa6828a23444e"
+    },
+    {
+      "path": "src/claim_polygraph_ng/evaluation/artifact_hashing.py",
+      "sha256": "4e57bbafdb6bde78ca632936677619fda994b80e4803217a65fb454535dc9270"
+    },
+    {
+      "path": "src/claim_polygraph_ng/evaluation/phase5_manifest.py",
+      "sha256": "8ae129e9207976f4666ddbe38b707efbe4ef8b23907990ea10bd18d474aa39ba"
+    },
+    {
+      "path": "src/claim_polygraph_ng/evaluation/phase6_closure.py",
+      "sha256": "818e697049db2d45dba49bf1104f78672109509414f6b66f12a51e1bad033964"
+    },
+    {
+      "path": "src/claim_polygraph_ng/application/investigation_service.py",
+      "sha256": "b2b2824834c3a1f6dd9b1aa326d3bc1a366a3616a00525ccaa988f46cb9518eb"
+    },
+    {
+      "path": "src/claim_polygraph_ng/application/langgraph_authoritative.py",
+      "sha256": "d9d7639bbdd86c6263724dc2eac48f1e9a826d3d05197f99a04d86e5a371e2aa"
+    },
+    {
+      "path": "src/claim_polygraph_ng/domain/investigation.py",
+      "sha256": "bd5a083533faf5c240b5a636f72b629a4aaf6f688ff31e55501524d796349f49"
+    },
+    {
+      "path": "tests/unit/test_artifact_hashing.py",
+      "sha256": "61201c06d6365c986d1ab821020eb9c6ecc0fd29df26e8fc97cf20a9001a4553"
+    },
+    {
+      "path": "tests/unit/test_review_routing.py",
+      "sha256": "f6cfc7096d84239baa79a8770404bf7534a3d1b62995166c1781d1f5b88ccbe9"
+    },
+    {
+      "path": "tests/integration/test_authoritative_langgraph.py",
+      "sha256": "de6c66a95419e37a000d2e5b8b4cdc5e6f66945fdadc64f44b654fbb881cd25a"
+    },
+    {
+      "path": "tests/integration/test_phase9_comparison.py",
+      "sha256": "85bcded2dc09d8db4c6fbca9e26b87f65e849bb0c5ba712b19dd853896b772ae"
+    },
+    {
+      "path": "scripts/run_phase9_portability_review_remediation.py",
+      "sha256": "09b3f06805a90487b885f00652d2bf9147d8e4d56b8c44ab832497a7ee2f33de"
+    },
+    {
+      "path": "docs/PHASE_9_STAGE_9.12B_COMPLETION_REPORT.md",
+      "sha256": "2f19d589e1f6517e06539c44a9f54fcc5ca2e7e7923d48744a70e207bcbc3cc2"
+    },
+    {
+      "path": "artifacts/evaluations/phase9-stage9.12-frozen-comparison-v1.json",
+      "sha256": "2c4bd8f050a4ad686cc2f1d73966b1b002f35491da52a8be75e7eefdb9c94d31"
+    },
+    {
+      "path": "artifacts/evaluations/phase9-stage9.12b-portability-review-remediation-v1.json",
+      "sha256": "5acda9ac63f5886463c5c91bedecfb12e4ab4acc945051f02f41f0777c75d62d"
+    }
+  ]
+}
