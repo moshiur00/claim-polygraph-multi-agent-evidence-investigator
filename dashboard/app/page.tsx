@@ -9,11 +9,52 @@ type Source = { source_id: string; title: string; publisher: string | null; sour
 type Report = {
   investigation: Investigation;
   claim: { claim_id: string; text: string };
+  plan: {
+    required_research_paths: string[]; required_source_types: string[];
+    minimum_independent_families: number; maximum_search_calls: number;
+    maximum_pages_fetched: number; requires_numerical_check: boolean;
+    requires_temporal_check: boolean;
+  };
   sources: Source[];
   evidence: Evidence[];
-  verdict: { verdict_id: string; label: string; confidence: number | null; human_review_required: boolean; review_reason: string | null };
+  verdict: {
+    verdict_id: string; label: string; confidence: number | null;
+    concise_explanation: string; detailed_reasoning: string;
+    decisive_evidence_ids: string[]; contradictory_evidence_ids: string[];
+    unresolved_questions: string[]; conditions_that_could_change_verdict: string[];
+    human_review_required: boolean; review_reason: string | null;
+  };
   audits: Array<{ support_level: string; cited_evidence_ids: string[] }>;
-  independence_analysis: { independent_family_count: number } | null;
+  independence_analysis: { independent_family_count: number; required_independent_families: number; limitations: string[] } | null;
+  provenance: {
+    confirmed_independent_lower_bound: number; possible_independent_upper_bound: number;
+    unresolved_dependency_count: number; requirement_state: string; limitations: string[];
+  } | null;
+  readiness: {
+    state: string; material_coverage: number; verification_completeness: number;
+    citation_audit_complete: boolean; reason_codes: string[]; limitations: string[];
+  } | null;
+  context_verification: {
+    numerical: { required: boolean; status: string; claim_values: string[]; evidence_values: string[]; issues: string[] };
+    temporal: { required: boolean; status: string; reference_date: string | null; issues: string[] };
+    limitations: string[];
+  } | null;
+  argument_ledger: {
+    propositions: Array<{ proposition_id: string; text: string; material: boolean }>;
+    arguments: Array<{ proposition_id: string; resolution: string; supporting_evidence_ids: string[]; contradictory_evidence_ids: string[]; qualifying_evidence_ids: string[]; unresolved_reasons: string[] }>;
+    challenge_findings: Array<{ finding_id: string; kind: string; severity: string; rationale: string; evidence_ids: string[] }>;
+    limitations: string[];
+  } | null;
+  judgment_policy: {
+    proposed_label: string; enforced_label: string; allowed_labels: string[];
+    changed: boolean; applied: boolean; human_review_required: boolean;
+    reason_codes: string[]; rationale: string;
+  } | null;
+  full_report_assurance: {
+    publication_status: string; material_sentence_count: number;
+    audited_material_sentence_count: number; critical_failure_count: number;
+    revisions: unknown[]; blocking_reasons: string[];
+  } | null;
 };
 type GraphSnapshot = {
   thread_id: string; status: string; authoritative_verdict: string;
@@ -60,6 +101,14 @@ type ClaimExtractionPacket = {
   candidates: ClaimCandidate[];
   automatic_investigation_started: boolean;
 };
+type InvestigationJob = {
+  job: {
+    job_id: string; status: string; attempts: number;
+    last_error: string | null; result_reference: string | null;
+  };
+  investigation_id: string | null;
+  events: Array<{ sequence: number; action: string; detail: string; occurred_at: string }>;
+};
 
 const graphOrder = ["normalize", "research", "consolidate", "verify_context", "build_argument_ledger", "draft_verdict", "audit_citations", "assess_readiness", "route_review", "interrupt_for_review", "finalize"] as const;
 const graphLabels: Record<string, string> = {
@@ -69,6 +118,7 @@ const graphLabels: Record<string, string> = {
   assess_readiness: "Readiness", route_review: "Route review",
   interrupt_for_review: "Human review", finalize: "Final report",
 };
+const investigationStageOrder = ["claim_analysis", "planning", "research", "evidence_analysis", "judgment", "citation_audit", "complete"] as const;
 const defaultApi = "http://127.0.0.1:8000";
 const titleCase = (value: string) => value.replaceAll("_", " ").replace(/\b\w/g, (letter) => letter.toUpperCase());
 const shortId = (value: string) => value.slice(0, 8).toUpperCase();
@@ -81,7 +131,7 @@ export default function Home() {
   const [report, setReport] = useState<Report | null>(null);
   const [graph, setGraph] = useState<GraphSnapshot | null>(null);
   const [review, setReview] = useState<ReviewHistory | null>(null);
-  const [section, setSection] = useState("Evidence");
+  const [section, setSection] = useState("Overview");
   const [selectedEvidence, setSelectedEvidence] = useState(0);
   const [claim, setClaim] = useState("");
   const [inputMode, setInputMode] = useState<"manual_claim" | "article_text" | "public_url">("manual_claim");
@@ -91,6 +141,10 @@ export default function Home() {
   const [rationale, setRationale] = useState("The cited evidence supports this review decision.");
   const [reviewer, setReviewer] = useState("Md Moshiur Rahman");
   const [busy, setBusy] = useState(false);
+  const [activity, setActivity] = useState<"investigation" | "extraction" | "review" | null>(null);
+  const [elapsedSeconds, setElapsedSeconds] = useState(0);
+  const [job, setJob] = useState<InvestigationJob | null>(null);
+  const [liveStage, setLiveStage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [connected, setConnected] = useState(false);
   const [apiStatus, setApiStatus] = useState<ApiStatus | null>(null);
@@ -149,6 +203,67 @@ export default function Home() {
     stream.onerror = () => stream.close();
     return () => stream.close();
   }, [apiBase, graph?.thread_id]);
+  const jobActive = job != null && !["completed", "cancelled", "failed", "dead_letter"].includes(job.job.status);
+  const working = busy || jobActive;
+  useEffect(() => {
+    if (!working) { setElapsedSeconds(0); return; }
+    const started = Date.now();
+    const timer = window.setInterval(() => setElapsedSeconds(Math.floor((Date.now() - started) / 1000)), 1000);
+    return () => window.clearInterval(timer);
+  }, [working]);
+  useEffect(() => {
+    const storedJob = window.localStorage.getItem("claim-polygraph-active-job");
+    if (!storedJob) return;
+    void request<InvestigationJob>(`/api/investigation-jobs/${storedJob}`)
+      .then((restored) => {
+        if (["completed", "cancelled", "failed", "dead_letter"].includes(restored.job.status)) {
+          window.localStorage.removeItem("claim-polygraph-active-job");
+          setJob(null);
+          return;
+        }
+        setJob(restored);
+      })
+      .catch(() => window.localStorage.removeItem("claim-polygraph-active-job"));
+  }, [request]);
+  useEffect(() => {
+    if (!job?.job.job_id || !jobActive) return;
+    const stream = new EventSource(`${apiBase}/api/investigation-jobs/${job.job.job_id}/events?after=0&follow=true`);
+    stream.addEventListener("job_state", (event) => {
+      const state = JSON.parse((event as MessageEvent).data) as InvestigationJob;
+      setJob(state);
+      if (state.investigation_id) setSelectedId(state.investigation_id);
+      if (["completed", "cancelled", "failed", "dead_letter"].includes(state.job.status)) {
+        stream.close();
+        window.localStorage.removeItem("claim-polygraph-active-job");
+        if (state.job.status === "completed" && state.investigation_id) {
+          void request<Report>(`/api/investigations/${state.investigation_id}/report`).then(async (completed) => {
+            setReport(completed);
+            setInvestigations(await request<Investigation[]>("/api/investigations"));
+            const snapshot = await request<GraphSnapshot>(`/api/graph-runs/${state.investigation_id}`).catch(() => null);
+            setGraph(snapshot);
+            setTelemetry(await request<TelemetrySnapshot>("/api/operations/telemetry"));
+            setActivity(null);
+          });
+        } else if (state.job.last_error) {
+          setError(state.job.last_error);
+          setActivity(null);
+        }
+      }
+    });
+    stream.onerror = () => stream.close();
+    return () => stream.close();
+  }, [apiBase, job?.job.job_id, jobActive, request]);
+  useEffect(() => {
+    if (!jobActive || !job?.investigation_id) return;
+    const stream = new EventSource(`${apiBase}/api/investigations/${job.investigation_id}/events?after=0&follow=true`);
+    const updateStage = (event: Event) => {
+      const trace = JSON.parse((event as MessageEvent).data) as { stage?: string };
+      if (trace.stage) setLiveStage(trace.stage);
+    };
+    ["investigation_created", "status_changed", "artifact_created", "provider_called", "provider_failed", "investigation_completed", "investigation_failed"].forEach((name) => stream.addEventListener(name, updateStage));
+    stream.onerror = () => stream.close();
+    return () => stream.close();
+  }, [apiBase, job?.investigation_id, jobActive]);
 
   const sources = useMemo(() => new Map(report?.sources.map((source) => [source.source_id, source]) ?? []), [report]);
   const evidence = report?.evidence ?? [];
@@ -156,9 +271,14 @@ export default function Home() {
   const citationRate = report?.audits.length
     ? Math.round(report.audits.filter((audit) => audit.support_level === "full").length / report.audits.length * 100) : 0;
   const reviewPending = graph?.status === "review_required" && review?.decisions.length === 0;
+  const stageNode: Record<string, number> = { created: 0, claim_analysis: 0, planning: 1, research: 2, evidence_analysis: 3, judgment: 4, citation_audit: 5, complete: 6 };
+  const liveNodeIndex = liveStage ? (stageNode[liveStage] ?? 0) : 0;
+  const completedGraphNodes = graph?.completed_nodes.filter((node) => graphOrder.includes(node as typeof graphOrder[number])).length ?? 0;
+  const graphProgress = graph ? Math.round(completedGraphNodes / graphOrder.length * 100) : 0;
 
   async function submitClaim(event: FormEvent) {
     event.preventDefault(); if (!claim.trim()) return; setBusy(true);
+    setActivity(inputMode === "manual_claim" ? "investigation" : "extraction");
     try {
       if (inputMode !== "manual_claim") {
         const extracted = await request<ClaimExtractionPacket>("/api/claim-inputs/extract", {
@@ -172,28 +292,29 @@ export default function Home() {
         return;
       }
       await investigateCandidate(claim);
-    } catch (reason) { setError((reason as Error).message); } finally { setBusy(false); }
+    } catch (reason) { setError((reason as Error).message); } finally { setBusy(false); setActivity(null); }
   }
 
   async function investigateCandidate(selectedClaim: string) {
-      const created = await request<Report>("/api/investigations", { method: "POST", body: JSON.stringify({ claim: selectedClaim }) });
-      setInvestigations((items) => [...items, created.investigation]);
-      setSelectedId(created.investigation.investigation_id); setReport(created);
-      if (apiStatus?.orchestrator !== "direct") {
-        const snapshot = await request<GraphSnapshot>(`/api/graph-runs/${created.investigation.investigation_id}`);
-        setGraph(snapshot);
-        const requests = await request<ReviewRequest[]>("/api/reviews");
-        const pending = requests.find((item) => item.investigation_id === created.investigation.investigation_id);
-        setReview(pending ? await request<ReviewHistory>(`/api/reviews/${pending.request_id}`) : null);
-      } else {
-        setGraph(null); setReview(null);
-      }
+      const created = await request<InvestigationJob>("/api/investigation-jobs", {
+        method: "POST",
+        body: JSON.stringify({ claim: selectedClaim, idempotency_key: `dashboard:${crypto.randomUUID()}` }),
+      });
+      window.localStorage.setItem("claim-polygraph-active-job", created.job.job_id);
+      setJob(created); setLiveStage("created"); setReport(null); setGraph(null); setReview(null);
       setClaim(""); setClaimCandidates([]); setError(null);
-      setTelemetry(await request<TelemetrySnapshot>("/api/operations/telemetry"));
+  }
+
+  async function cancelJob() {
+    if (!jobActive || !job) return;
+    const cancelled = await request<InvestigationJob>(`/api/investigation-jobs/${job.job.job_id}/cancel`, {
+      method: "POST", headers: { "X-Reviewer-Identity": reviewer },
+    });
+    setJob(cancelled);
   }
 
   async function startReview() {
-    if (!report || !evidence.length) return; setBusy(true);
+    if (!report || !evidence.length) return; setBusy(true); setActivity("review");
     try {
       const payload = await request<{ graph: GraphSnapshot; review: ReviewRequest | null }>("/api/graph-runs", {
         method: "POST",
@@ -212,11 +333,11 @@ export default function Home() {
       setGraph(payload.graph);
       if (payload.review) setReview(await request<ReviewHistory>(`/api/reviews/${payload.review.request_id}`));
       setError(null);
-    } catch (reason) { setError((reason as Error).message); } finally { setBusy(false); }
+    } catch (reason) { setError((reason as Error).message); } finally { setBusy(false); setActivity(null); }
   }
 
   async function saveDecision() {
-    if (!review) return; setBusy(true);
+    if (!review) return; setBusy(true); setActivity("review");
     try {
       const decision: Record<string, unknown> = { kind: decisionKind, reviewer_identity: reviewer, rationale };
       if (decisionKind === "revise") decision.revised_verdict = revisedVerdict;
@@ -228,7 +349,7 @@ export default function Home() {
         },
       );
       setGraph(result.graph); setReview(result.review); setError(null);
-    } catch (reason) { setError((reason as Error).message); } finally { setBusy(false); }
+    } catch (reason) { setError((reason as Error).message); } finally { setBusy(false); setActivity(null); }
   }
 
   function saveApiAddress(event: FormEvent) {
@@ -290,11 +411,29 @@ export default function Home() {
             : <input id="claim-input" value={claim} onChange={(event) => setClaim(event.target.value)} placeholder={inputMode === "public_url" ? "https://example.org/article" : "Enter a checkable factual claim…"} />}
             <button className="primary" disabled={busy || !connected || claim.trim().length < 3}>{inputMode === "manual_claim" ? "Investigate" : "Extract claims"}</button></div>
         </form>
+        {working && <section className="activity-card" role="status" aria-live="polite">
+          <div className="activity-pulse"><i /><i /><i /></div>
+          <div className="activity-copy">
+            <span>{jobActive || activity === "investigation" ? "INVESTIGATION IN PROGRESS" : activity === "extraction" ? "EXTRACTING CLAIMS" : "UPDATING REVIEW"}</span>
+            <strong>{jobActive || activity === "investigation" ? `${titleCase(liveStage ?? job?.job.status ?? "queued")} · Researchers are gathering, challenging and verifying evidence` : activity === "extraction" ? "Finding checkable statements in the submitted material" : "Saving the decision and resuming the durable graph"}</strong>
+            <small>{elapsedSeconds}s elapsed · This is live activity, not an estimated completion percentage.</small>
+          </div>
+          {jobActive && <button className="cancel-job" onClick={cancelJob}>Cancel safely</button>}
+          <div className="activity-track"><i /></div>
+        </section>}
+        {jobActive && <section className="working-graph" aria-label="Investigation graph is running">
+          <div className="working-graph-head"><div><span>AUTHORITATIVE INVESTIGATION PROGRESS</span><strong>{titleCase(liveStage ?? job.job.status)}</strong></div><small>{job.investigation_id ? "Persisted evidence-production trace connected" : "Durable job queued · waiting for investigation ID"}</small></div>
+          <div className="graph-progress" role="progressbar" aria-valuenow={Math.round((liveNodeIndex + 1) / investigationStageOrder.length * 100)} aria-valuemin={0} aria-valuemax={100}><i style={{width: `${Math.round((liveNodeIndex + 1) / investigationStageOrder.length * 100)}%`}} /></div>
+          <div className="graph investigation-graph graph-running">
+            {investigationStageOrder.map((node, index) => <div className={`node ${index < liveNodeIndex ? "done" : index === liveNodeIndex ? "active" : "waiting"}`} key={node}><div>{index < liveNodeIndex ? "✓" : index === liveNodeIndex ? "↻" : index + 1}</div><span>{titleCase(node)}</span>{index < investigationStageOrder.length - 1 && <i />}</div>)}
+          </div>
+          <p>InvestigationService is producing the authoritative evidence packet. The separate review and publication workflow begins after this research completes.</p>
+        </section>}
         {claimCandidates.length > 0 && <section className="record-list" aria-label="Extracted claim candidates">
           {claimCandidates.map((candidate) => <article key={candidate.candidate_id}>
             <b>{candidate.rank}. {candidate.text}</b>
             <span>Check-worthiness {Math.round(candidate.checkworthiness * 100)}%</span>
-            <button className="ghost" disabled={busy} onClick={() => { setBusy(true); void investigateCandidate(candidate.text).catch((reason: Error) => setError(reason.message)).finally(() => setBusy(false)); }}>Investigate this claim</button>
+            <button className="ghost" disabled={busy} onClick={() => { setBusy(true); setActivity("investigation"); void investigateCandidate(candidate.text).catch((reason: Error) => setError(reason.message)).finally(() => { setBusy(false); setActivity(null); }); }}>Investigate this claim</button>
           </article>)}
         </section>}
         {error && <div className="error-banner" role="alert">{error}</div>}
@@ -309,13 +448,14 @@ export default function Home() {
           <>
             <div className="summary-row">
               <div><span>{graph?.final_verdict ? "FINAL VERDICT" : "PROVISIONAL VERDICT"}</span><strong>{titleCase(graph?.final_verdict ?? report.verdict.label)}</strong></div>
-              <div><span>CONFIDENCE</span><strong>{report.verdict.confidence == null ? "—" : `${Math.round(report.verdict.confidence * 100)}%`}</strong></div>
-              <div><span>CITATION SUPPORT</span><strong>{citationRate}%</strong></div>
-              <div><span>INDEPENDENT FAMILIES</span><strong>{report.independence_analysis?.independent_family_count ?? "—"}</strong></div>
+              <div><span>CONFIDENCE <button className="info-dot" aria-label="Explain confidence" title="A calibrated probability of verdict correctness. A dash means the system has not been empirically calibrated and will not invent a probability.">?</button></span><strong>{report.verdict.confidence == null ? "—" : `${Math.round(report.verdict.confidence * 100)}%`}</strong><small>{report.verdict.confidence == null ? "Not calibrated" : "Calibrated probability"}</small></div>
+              <div><span>CITATION SUPPORT <button className="info-dot" aria-label="Explain citation support" title="Material report sentences marked fully supported by their cited evidence, divided by all audited material sentences.">?</button></span><strong>{citationRate}%</strong><small>{report.audits.filter((audit) => audit.support_level === "full").length}/{report.audits.length} audited sentences</small></div>
+              <div><span>INDEPENDENT FAMILIES <button className="info-dot" aria-label="Explain evidence families" title="Groups of sources that appear to originate independently. Multiple pages repeating one original report count as one family.">?</button></span><strong>{report.independence_analysis?.independent_family_count ?? "—"}</strong><small>Target {report.plan.minimum_independent_families}</small></div>
               <div><span>EVIDENCE ITEMS</span><strong>{evidence.length}</strong></div>
             </div>
             <div className="graph-card">
-              <div className="card-heading"><div><span>LIVE LANGGRAPH PATH</span><h2>{graph ? titleCase(graph.status) : apiStatus?.orchestrator === "direct" ? "Direct rollback selected" : "Awaiting graph state"}</h2></div>{graph ? <span className="checkpoint">Checkpoint saved · SQLite</span> : apiStatus?.orchestrator === "direct" ? <button className="ghost" onClick={startReview} disabled={busy || !evidence.length}>Start review workflow</button> : null}</div>
+              <div className="card-heading"><div><span>REVIEW AND PUBLICATION WORKFLOW</span><h2>{graph ? titleCase(graph.status) : apiStatus?.orchestrator === "direct" ? "Direct rollback selected" : "Awaiting review workflow"}</h2></div>{graph ? <div className="graph-progress-label"><strong>{graphProgress}%</strong><small>{completedGraphNodes} of {graphOrder.length} nodes checkpointed</small></div> : apiStatus?.orchestrator === "direct" ? <button className="ghost" onClick={startReview} disabled={busy || !evidence.length}>Start review workflow</button> : null}</div>
+              {graph && <div className="graph-progress" role="progressbar" aria-valuenow={graphProgress} aria-valuemin={0} aria-valuemax={100} aria-label="Checkpointed graph progress"><i style={{width: `${graphProgress}%`}} /></div>}
               <div className="graph">
                 {graphOrder.map((node, index) => {
                   const done = graph?.completed_nodes.includes(node);
@@ -325,9 +465,71 @@ export default function Home() {
               </div>
             </div>
             <div className="tabs" role="tablist">
-              {["Evidence", "Citation audit", "Review history"].map((item) => <button key={item} role="tab" aria-selected={section === item} className={section === item ? "active" : ""} onClick={() => setSection(item)}>{item}</button>)}
+              {["Overview", "Decision rationale", "Evidence", "Verification", "Citation audit", "Review history"].map((item) => <button key={item} role="tab" aria-selected={section === item} className={section === item ? "active" : ""} onClick={() => setSection(item)}>{item}</button>)}
             </div>
-            <div className="content-grid">
+            {section === "Overview" && <div className="report-dashboard">
+              <section className="report-card verdict-card">
+                <span>DECISION</span><h2>{titleCase(graph?.final_verdict ?? report.verdict.label)}</h2>
+                <p>{report.readiness?.state === "human_review_required" ? "The evidence points to this verdict, but one or more safeguards require human review." : "The evidence packet has passed the current deterministic readiness checks."}</p>
+                <dl><div><dt>Readiness</dt><dd>{titleCase(report.readiness?.state ?? "not reported")}</dd></div><div><dt>Publication</dt><dd>{titleCase(report.full_report_assurance?.publication_status ?? "not reported")}</dd></div><div><dt>Critical citation failures</dt><dd>{report.full_report_assurance?.critical_failure_count ?? "—"}</dd></div></dl>
+              </section>
+              <section className="report-card">
+                <span>RESEARCH COVERAGE</span><h2>{evidence.length} retained passages</h2>
+                <div className="stance-bars">{["supporting", "contradictory", "qualifying", "context"].map((stance) => { const count = evidence.filter((item) => item.stance === stance).length; return <div key={stance}><label>{titleCase(stance)} <b>{count}</b></label><i><b style={{width: `${evidence.length ? Math.max(4, count / evidence.length * 100) : 0}%`}} /></i></div>; })}</div>
+                <small>Paths: {report.plan.required_research_paths.map(titleCase).join(" · ")}</small>
+              </section>
+              <section className="report-card">
+                <span>INDEPENDENCE & PROVENANCE</span><h2>{titleCase(report.provenance?.requirement_state ?? "not reported")}</h2>
+                <dl><div><dt>Confirmed independent lower bound</dt><dd>{report.provenance?.confirmed_independent_lower_bound ?? "—"}</dd></div><div><dt>Possible upper bound</dt><dd>{report.provenance?.possible_independent_upper_bound ?? "—"}</dd></div><div><dt>Unresolved relationships</dt><dd>{report.provenance?.unresolved_dependency_count ?? "—"}</dd></div></dl>
+              </section>
+              <section className="report-card">
+                <span>VERIFICATION</span><h2>{Math.round((report.readiness?.verification_completeness ?? 0) * 100)}% complete</h2>
+                <dl><div><dt>Material claim coverage</dt><dd>{Math.round((report.readiness?.material_coverage ?? 0) * 100)}%</dd></div><div><dt>Numerical check required</dt><dd>{report.plan.requires_numerical_check ? "Yes" : "No"}</dd></div><div><dt>Temporal check required</dt><dd>{report.plan.requires_temporal_check ? "Yes" : "No"}</dd></div></dl>
+              </section>
+              <details className="score-guide">
+                <summary>How to read scores and safeguards</summary>
+                <div><b>Relevance</b><p>A model-assigned claim-to-passage match from 0–100%. It measures topical usefulness, not source truth, quality, or verdict confidence.</p></div>
+                <div><b>Citation support</b><p>The share of audited material sentences fully supported by their cited passages.</p></div>
+                <div><b>Readiness</b><p>A deterministic completeness gate. It is deliberately separate from probability or confidence.</p></div>
+                <div><b>Independent families</b><p>Source-origin groups. Repetition across dependent sources does not increase the confirmed independent count.</p></div>
+              </details>
+            </div>}
+            {section === "Decision rationale" && <div className="decision-dashboard">
+              <section className="decision-hero">
+                <span>VERDICT EXPLANATION</span><h2>{report.verdict.concise_explanation}</h2>
+                <p>{report.verdict.detailed_reasoning}</p>
+                <div className="decision-badge">{titleCase(report.verdict.label)}</div>
+              </section>
+              <div className="decision-columns">
+                <section className="report-card">
+                  <span>ARGUMENT LEDGER</span><h2>{titleCase(report.argument_ledger?.arguments[0]?.resolution ?? "not reported")}</h2>
+                  <p>The ledger resolves each material proposition using only evidence retained in the approved packet.</p>
+                  <dl><div><dt>Supporting items</dt><dd>{report.argument_ledger?.arguments[0]?.supporting_evidence_ids.length ?? 0}</dd></div><div><dt>Contradictory items</dt><dd>{report.argument_ledger?.arguments[0]?.contradictory_evidence_ids.length ?? 0}</dd></div><div><dt>Qualifying items</dt><dd>{report.argument_ledger?.arguments[0]?.qualifying_evidence_ids.length ?? 0}</dd></div></dl>
+                </section>
+                <section className="report-card">
+                  <span>POLICY CONSTRAINT</span><h2>{titleCase(report.judgment_policy?.enforced_label ?? report.verdict.label)}</h2>
+                  <p>{report.judgment_policy?.rationale ?? "No separate judgment-policy explanation was recorded."}</p>
+                  <dl><div><dt>Proposed label</dt><dd>{titleCase(report.judgment_policy?.proposed_label ?? report.verdict.label)}</dd></div><div><dt>Policy changed it</dt><dd>{report.judgment_policy?.changed ? "Yes" : "No"}</dd></div><div><dt>Allowed labels</dt><dd>{report.judgment_policy?.allowed_labels.map(titleCase).join(", ") ?? "—"}</dd></div></dl>
+                </section>
+              </div>
+              <section className="challenge-card">
+                <div><span>CHALLENGER FINDINGS</span><h2>What could weaken this decision</h2></div>
+                {report.argument_ledger?.challenge_findings.map((finding) => <article key={finding.finding_id}><b>{titleCase(finding.kind)}</b><em>{titleCase(finding.severity)}</em><p>{finding.rationale}</p></article>)}
+                {!report.argument_ledger?.challenge_findings.length && <p>No deterministic challenger findings were recorded.</p>}
+              </section>
+              <section className="decisive-list">
+                <span>DECISIVE EVIDENCE</span>
+                {report.verdict.decisive_evidence_ids.map((id) => { const item = evidence.find((candidate) => candidate.evidence_id === id); const source = item ? sources.get(item.source_id) : null; return <button key={id} onClick={() => { const index = evidence.findIndex((candidate) => candidate.evidence_id === id); setSelectedEvidence(Math.max(0, index)); setSection("Evidence"); }}><b>{shortId(id)}</b><strong>{source?.title ?? "Retained evidence"}</strong><small>Open exact passage →</small></button>; })}
+              </section>
+              <p className="transparency-note"><b>Transparency boundary:</b> this view exposes the persisted explanation, evidence links, deterministic challenges, and policy decisions. It does not expose or reconstruct private model chain-of-thought.</p>
+            </div>}
+            {section === "Verification" && <div className="verification-dashboard">
+              <section className="report-card"><span>NUMERICAL CONTEXT</span><h2>{titleCase(report.context_verification?.numerical.status ?? "not reported")}</h2><dl><div><dt>Required</dt><dd>{report.context_verification?.numerical.required ? "Yes" : "No"}</dd></div><div><dt>Claim values</dt><dd>{report.context_verification?.numerical.claim_values.join(", ") || "None extracted"}</dd></div><div><dt>Evidence values</dt><dd>{report.context_verification?.numerical.evidence_values.slice(0, 8).join(", ") || "None extracted"}</dd></div></dl></section>
+              <section className="report-card"><span>TEMPORAL CONTEXT</span><h2>{titleCase(report.context_verification?.temporal.status ?? "not reported")}</h2><dl><div><dt>Required</dt><dd>{report.context_verification?.temporal.required ? "Yes" : "No"}</dd></div><div><dt>Reference date</dt><dd>{report.context_verification?.temporal.reference_date ?? "Not specified"}</dd></div><div><dt>Issues</dt><dd>{report.context_verification?.temporal.issues.length ?? 0}</dd></div></dl></section>
+              <section className="reason-list"><span>READINESS SIGNALS</span>{report.readiness?.reason_codes.map((reason) => <div key={reason}><b>{titleCase(reason)}</b><p>A persisted safeguard contributing to the current readiness state.</p></div>)}</section>
+              <section className="reason-list"><span>KNOWN LIMITATIONS</span>{[...(report.context_verification?.limitations ?? []), ...(report.readiness?.limitations ?? [])].map((limitation, index) => <div key={index}><b>Limitation {index + 1}</b><p>{limitation}</p></div>)}</section>
+            </div>}
+            {["Evidence", "Citation audit", "Review history"].includes(section) && <div className="content-grid">
               <section className="evidence-panel">
                 <div className="panel-title"><div><span>{section.toUpperCase()}</span><h2>{section === "Evidence" ? "Evidence packet" : section}</h2></div><span className="filter">{section === "Evidence" ? `${evidence.length} passages` : `${section === "Citation audit" ? report.audits.length : review?.events.length ?? 0} records`}</span></div>
                 {section === "Evidence" && <div className="evidence-layout">
@@ -339,7 +541,7 @@ export default function Home() {
                     {!evidence.length && <p className="empty-copy">No retained evidence passages.</p>}
                   </div>
                   <article className="passage">
-                    {selected ? <><div className="passage-meta"><span>EXACT PASSAGE</span><b>{shortId(selected.evidence_id)}</b></div><blockquote>“{selected.passage}”</blockquote><dl><div><dt>Source</dt><dd>{sources.get(selected.source_id)?.title ?? "Stored source"}</dd></div><div><dt>Source type</dt><dd>{titleCase(sources.get(selected.source_id)?.source_type ?? "unknown")}</dd></div><div><dt>Relevance</dt><dd>{Math.round(selected.relevance_score * 100)}%</dd></div><div><dt>Evidence family</dt><dd>{selected.evidence_family_id ? shortId(selected.evidence_family_id) : "Unassigned"}</dd></div></dl><div className="support-note">Citation data loaded from the authoritative report.</div></> : <p className="empty-copy">Select an evidence passage.</p>}
+                    {selected ? <><div className="passage-meta"><span>EXACT PASSAGE</span><b>{shortId(selected.evidence_id)}</b></div><blockquote>“{selected.passage}”</blockquote><dl><div><dt>Source</dt><dd>{sources.get(selected.source_id)?.title ?? "Stored source"}</dd></div><div><dt>Source type</dt><dd>{titleCase(sources.get(selected.source_id)?.source_type ?? "unknown")}</dd></div><div><dt>Relevance <button className="info-dot" title="Claim-to-passage topical match. It is not a truth, quality, or confidence score." aria-label="Explain relevance score">?</button></dt><dd>{Math.round(selected.relevance_score * 100)}%</dd></div><div><dt>Evidence family</dt><dd>{selected.evidence_family_id ? shortId(selected.evidence_family_id) : "Unassigned"}</dd></div></dl><div className="score-explanation"><b>What {Math.round(selected.relevance_score * 100)}% means</b><p>The passage was rated as highly related to this claim. This score does not establish that the passage is correct or independent; those are evaluated separately.</p></div><div className="support-note">Citation data loaded from the authoritative report.</div></> : <p className="empty-copy">Select an evidence passage.</p>}
                   </article>
                 </div>}
                 {section === "Citation audit" && <div className="record-list">{report.audits.map((audit, index) => <article key={index}><b>Sentence {index + 1} · {titleCase(audit.support_level)}</b><span>{audit.cited_evidence_ids.length} citation{audit.cited_evidence_ids.length === 1 ? "" : "s"}</span></article>)}</div>}
@@ -352,6 +554,7 @@ export default function Home() {
                   : <div className="approved-state"><div className="approval-mark">{graph.status === "completed" ? "✓" : "!"}</div><h2>{titleCase(graph.status)}</h2><p>The graph resumed from its SQLite checkpoint without repeating completed research nodes.</p><dl><div><dt>Final verdict</dt><dd>{graph.final_verdict ? titleCase(graph.final_verdict) : "Not issued"}</dd></div><div><dt>Reviewer</dt><dd>{graph.reviewer_identity ?? "—"}</dd></div><div><dt>Audit chain</dt><dd>{review?.chain_valid ? "Verified" : "Pending"}</dd></div></dl></div>}
               </aside>
             </div>
+            }
           </>
         )}
       </section>

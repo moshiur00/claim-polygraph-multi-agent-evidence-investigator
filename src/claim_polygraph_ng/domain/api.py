@@ -16,6 +16,7 @@ from claim_polygraph_ng.domain.review import (
     ReviewRequest,
     VerdictRevision,
 )
+from claim_polygraph_ng.domain.jobs import DurableJob, JobAuditEvent
 
 
 class StartGraphRunRequest(DomainModel):
@@ -62,3 +63,12 @@ class ApiStatus(DomainModel):
 
 class CreateInvestigationRequest(DomainModel):
     claim: str = Field(min_length=3, max_length=10_000)
+    idempotency_key: str | None = Field(default=None, min_length=3, max_length=300)
+
+
+class InvestigationJobResponse(DomainModel):
+    """Durable asynchronous investigation submission and current state."""
+
+    job: DurableJob
+    investigation_id: UUID | None = None
+    events: tuple[JobAuditEvent, ...] = ()
