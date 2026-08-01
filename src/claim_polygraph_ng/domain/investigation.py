@@ -122,6 +122,7 @@ class ModelTask(StrEnum):
     REVIEW_CRITIQUE = "review_critique"
     EVALUATE_PASSAGE = "evaluate_passage"
     CLASSIFY_PROVENANCE_RELATIONSHIP = "classify_provenance_relationship"
+    ASSIST_VERIFICATION_CONSTRUCTION = "assist_verification_construction"
 
 
 class ModelCallUsage(DomainModel):

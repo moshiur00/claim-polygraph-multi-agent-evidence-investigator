@@ -1,0 +1,354 @@
+{
+  "evaluation_id": "verification-construction-v4-stage7-development-v1",
+  "status": "completed_safe",
+  "model": "gpt-4o-mini",
+  "case_count": 20,
+  "positive_gold_cases": 18,
+  "constructions_succeeded": 1,
+  "correct_constructions": 1,
+  "unsafe_accepted_constructions": 0,
+  "construction_precision": 1.0,
+  "construction_recall": 0.05555555555555555,
+  "human_review_routing_recall": 1.0,
+  "provider_attempts": 7,
+  "completed_paid_operations": 6,
+  "failed_paid_operations": 1,
+  "duplicate_paid_operations": 0,
+  "input_tokens": 8117,
+  "output_tokens": 1488,
+  "estimated_cost_usd": 0.00211035,
+  "estimated_cost_upper_bound_usd": 0.00211035,
+  "development_call_limit": 18,
+  "development_calls_remaining": 11,
+  "calibration_cases_loaded": 0,
+  "held_out_cases_loaded": 0,
+  "preflight_sha256": "b2e51a77d21303ef749831ec9badb7537efded468408d385f80a9950bea38dc9",
+  "budget_amendment_sha256": "2fa0a48b2e58ba615cc66c9c25b0090a730ee52dfbef7327157c173ef033e746",
+  "dataset_sha256": "6f45fd6c568135654a6af681c6c26fdea3f94505efc013064a0384b62f10e17a",
+  "results": [
+    {
+      "case_id": "V3-004",
+      "disposition": "human_review_ineligible",
+      "eligibility": "missing_reference_date",
+      "construction_succeeded": false,
+      "human_review_required": true,
+      "provider_attempt": false,
+      "routes": [
+        "assisted"
+      ],
+      "gold_positive": true,
+      "correct_construction": false,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-008",
+      "disposition": "human_review_safe_failure",
+      "eligibility": "temporal",
+      "construction_succeeded": false,
+      "human_review_required": true,
+      "provider_attempt": true,
+      "routes": [
+        "assisted"
+      ],
+      "error_type": "ValidationError",
+      "error": "1 validation error for AssistedConstructionProposal\n  Value error, status construction requires an exact claimed status [type=value_error, input_value={'kind': <AssistedConstru..., retrospective=False))}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/value_error",
+      "gold_positive": true,
+      "correct_construction": false,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-009",
+      "disposition": "human_review_safe_failure",
+      "eligibility": "numerical_conversion",
+      "construction_succeeded": false,
+      "human_review_required": true,
+      "provider_attempt": true,
+      "routes": [
+        "assisted"
+      ],
+      "error_type": "ValueError",
+      "error": "scalar value is not explicit in bound evidence",
+      "gold_positive": true,
+      "correct_construction": false,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-014",
+      "disposition": "human_review_safe_failure",
+      "eligibility": "numerical_scalar",
+      "construction_succeeded": false,
+      "human_review_required": true,
+      "provider_attempt": true,
+      "routes": [
+        "assisted"
+      ],
+      "error_type": "ValueError",
+      "error": "scalar value is not explicit in bound evidence",
+      "gold_positive": true,
+      "correct_construction": false,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-015",
+      "disposition": "human_review_ineligible",
+      "construction_succeeded": false,
+      "human_review_required": true,
+      "provider_attempt": false,
+      "routes": [
+        "not_applicable"
+      ],
+      "gold_positive": false,
+      "correct_construction": false,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-016",
+      "disposition": "human_review_ineligible",
+      "construction_succeeded": false,
+      "human_review_required": true,
+      "provider_attempt": false,
+      "routes": [
+        "not_applicable"
+      ],
+      "gold_positive": true,
+      "correct_construction": false,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-017",
+      "disposition": "human_review_ineligible",
+      "construction_succeeded": false,
+      "human_review_required": true,
+      "provider_attempt": false,
+      "routes": [
+        "not_applicable"
+      ],
+      "gold_positive": true,
+      "correct_construction": false,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-028",
+      "disposition": "human_review_ineligible",
+      "construction_succeeded": false,
+      "human_review_required": true,
+      "provider_attempt": false,
+      "routes": [
+        "not_applicable"
+      ],
+      "gold_positive": false,
+      "correct_construction": false,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-029",
+      "disposition": "human_review_ineligible",
+      "eligibility": "excluded_qualitative",
+      "construction_succeeded": false,
+      "human_review_required": true,
+      "provider_attempt": false,
+      "routes": [
+        "assisted"
+      ],
+      "gold_positive": true,
+      "correct_construction": false,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-036",
+      "disposition": "human_review_ineligible",
+      "eligibility": "excluded_qualitative",
+      "construction_succeeded": false,
+      "human_review_required": true,
+      "provider_attempt": false,
+      "routes": [
+        "assisted"
+      ],
+      "gold_positive": true,
+      "correct_construction": false,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-037",
+      "disposition": "validated_assisted_proposal",
+      "eligibility": "numerical_conversion",
+      "construction_succeeded": true,
+      "human_review_required": false,
+      "provider_attempt": true,
+      "routes": [
+        "assisted"
+      ],
+      "proposal": {
+        "kind": "numerical_scalar",
+        "failed_construction_id": "14e80147-1e2b-50d4-b69d-8b082eb29b0d",
+        "claim_text_span": "One petroleum barrel contains 42 U.S. gallons.",
+        "left_subject": null,
+        "right_subject": null,
+        "comparator": "equal",
+        "dimension": "volume",
+        "left_value": null,
+        "right_value": null,
+        "scalar_form": "single_value",
+        "scalar_subject": "petroleum barrel",
+        "numeric_operation": "direct",
+        "expected_values": [
+          {
+            "value": "42",
+            "unit": "U.S. gallons",
+            "dimension": "volume",
+            "scale": "1",
+            "tolerance": null
+          }
+        ],
+        "evidence_bindings": [
+          {
+            "evidence_id": "52125c7d-52bd-56ca-8686-5fed01a3521a",
+            "start_char": 0,
+            "end_char": 34,
+            "quoted_text": "One barrel equals 42 U.S. gallons."
+          }
+        ],
+        "temporal_relation": null,
+        "reference_date": null,
+        "claimed_interval": null,
+        "requires_reference_date": false,
+        "claimed_status": null,
+        "temporal_bindings": []
+      },
+      "gold_positive": true,
+      "correct_construction": true,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-042",
+      "disposition": "human_review_safe_failure",
+      "eligibility": "temporal",
+      "construction_succeeded": false,
+      "human_review_required": true,
+      "provider_attempt": true,
+      "routes": [
+        "assisted"
+      ],
+      "error_type": "ValueError",
+      "error": "proposal quote does not match the retained evidence span",
+      "gold_positive": true,
+      "correct_construction": false,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-043",
+      "disposition": "human_review_ineligible",
+      "eligibility": "excluded_qualitative",
+      "construction_succeeded": false,
+      "human_review_required": true,
+      "provider_attempt": false,
+      "routes": [
+        "assisted"
+      ],
+      "gold_positive": true,
+      "correct_construction": false,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-044",
+      "disposition": "human_review_ineligible",
+      "eligibility": "excluded_qualitative",
+      "construction_succeeded": false,
+      "human_review_required": true,
+      "provider_attempt": false,
+      "routes": [
+        "assisted"
+      ],
+      "gold_positive": true,
+      "correct_construction": false,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-045",
+      "disposition": "human_review_safe_failure",
+      "eligibility": "numerical_conversion",
+      "construction_succeeded": false,
+      "human_review_required": true,
+      "provider_attempt": true,
+      "routes": [
+        "assisted"
+      ],
+      "error_type": "ModelOutputError",
+      "error": "OpenAI output failed schema validation: 2 validation errors for AssistedScalarProviderProposal\nvalues.0.tolerance\n  Input should be a valid decimal [type=decimal_parsing, input_value='null', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/decimal_parsing\nvalues\n  Tuple should have at least 1 item after validation, not 0 [type=too_short, input_value=[{'value': '1.95583', 'un...', 'tolerance': 'null'}], input_type=list]\n    For further information visit https://errors.pydantic.dev/2.13/v/too_short",
+      "gold_positive": true,
+      "correct_construction": false,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-046",
+      "disposition": "human_review_ineligible",
+      "eligibility": "excluded_qualitative",
+      "construction_succeeded": false,
+      "human_review_required": true,
+      "provider_attempt": false,
+      "routes": [
+        "assisted",
+        "deterministic"
+      ],
+      "gold_positive": true,
+      "correct_construction": false,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-047",
+      "disposition": "human_review_ineligible",
+      "construction_succeeded": false,
+      "human_review_required": true,
+      "provider_attempt": false,
+      "routes": [
+        "not_applicable"
+      ],
+      "gold_positive": true,
+      "correct_construction": false,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-048",
+      "disposition": "human_review_ineligible",
+      "construction_succeeded": false,
+      "human_review_required": true,
+      "provider_attempt": false,
+      "routes": [
+        "not_applicable"
+      ],
+      "gold_positive": true,
+      "correct_construction": false,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-049",
+      "disposition": "human_review_safe_failure",
+      "eligibility": "numerical_scalar",
+      "construction_succeeded": false,
+      "human_review_required": true,
+      "provider_attempt": true,
+      "routes": [
+        "assisted"
+      ],
+      "error_type": "ValueError",
+      "error": "scalar value is not explicit in bound evidence",
+      "gold_positive": true,
+      "correct_construction": false,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-055",
+      "disposition": "human_review_ineligible",
+      "eligibility": "excluded_qualitative",
+      "construction_succeeded": false,
+      "human_review_required": true,
+      "provider_attempt": false,
+      "routes": [
+        "assisted"
+      ],
+      "gold_positive": true,
+      "correct_construction": false,
+      "unsafe_accepted": false
+    }
+  ]
+}

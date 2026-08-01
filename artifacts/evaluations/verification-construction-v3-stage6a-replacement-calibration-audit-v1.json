@@ -1,0 +1,35 @@
+{
+  "audit_id": "verification-construction-v3-stage6a-replacement-calibration-audit-v1",
+  "status": "passed_not_promoted",
+  "freeze_integrity": true,
+  "calibration_executions": 1,
+  "configuration_changed_after_freeze": false,
+  "thresholds_changed_after_results": false,
+  "provider_attempts": 17,
+  "estimated_cost_usd": 0.047080000000000004,
+  "construction_precision": 0.75,
+  "overall_construction_recall": 0.1875,
+  "incremental_recall_gain": 0.1875,
+  "human_review_routing_recall": 1.0,
+  "unsafe_accepted_constructions": 1,
+  "failed_gates": [
+    "unsafe_accepted_constructions",
+    "construction_precision",
+    "overall_construction_recall",
+    "publication_safety_regressions"
+  ],
+  "eligible_for_original_held_out": false,
+  "original_held_out_cases_loaded": 0,
+  "original_held_out_cases_exposed_to_model": 0,
+  "decision": "Keep the original held-out split sealed. The replacement calibration did not pass every frozen promotion gate.",
+  "artifacts": [
+    {
+      "path": "artifacts/evaluations/verification-construction-v3-stage6a-replacement-calibration-freeze-v1.json",
+      "sha256": "67f315aacf3622da54d39d2dcd0f91524936bb1549a6324a3818027cd2437edc"
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v3-stage6a-replacement-calibration-v1.json",
+      "sha256": "20775449d73b74d96894e3b30fe199c574050cb70e4e52cbc2049c49f57e1902"
+    }
+  ]
+}

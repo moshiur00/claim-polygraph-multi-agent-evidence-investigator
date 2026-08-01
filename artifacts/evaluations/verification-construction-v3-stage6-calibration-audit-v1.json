@@ -1,0 +1,36 @@
+{
+  "audit_id": "verification-construction-v3-stage6-calibration-audit-v1",
+  "status": "passed_not_promoted",
+  "freeze_integrity": true,
+  "configuration_changed_after_freeze": false,
+  "thresholds_changed_after_results": false,
+  "calibration_executions": 1,
+  "provider_attempts": 0,
+  "completed_paid_operations": 0,
+  "estimated_cost_usd": 0.0,
+  "unsafe_accepted_constructions": 0,
+  "human_review_routing_recall": 1.0,
+  "overall_construction_recall": 0.0,
+  "fallback_recall_gain": 0.0,
+  "eligible_for_held_out": false,
+  "held_out_cases_loaded": 0,
+  "held_out_cases_exposed_to_model": 0,
+  "failed_gates": [
+    "exact_evidence_span_validity",
+    "construction_precision",
+    "fallback_recall_gain",
+    "overall_construction_recall",
+    "cost_per_recovered_assertion"
+  ],
+  "decision": "Do not execute V3.7 held-out evaluation with this configuration. The frozen eligibility preflight is safe but materially under-covers the reviewed numerical and temporal construction space.",
+  "artifacts": [
+    {
+      "path": "artifacts/evaluations/verification-construction-v3-stage6-calibration-freeze-v1.json",
+      "sha256": "01c77852a6e7160a6a8f7e18a476f5c55c96538f02d2edfc5766945c256b5888"
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v3-stage6-calibration-v1.json",
+      "sha256": "462dbc951305a47f5d00d8ac1db0c4bcc82053c87d3f0d94113b1860c259391f"
+    }
+  ]
+}

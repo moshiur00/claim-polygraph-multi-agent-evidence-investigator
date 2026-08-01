@@ -1,0 +1,92 @@
+{
+  "artifact_id": "verification-construction-v4-stage6-canary-result-v1",
+  "status": "failed_safe",
+  "manifest_sha256": "efac17962697f759a008694bf768179bec8f0948ea2d3877ec0d36ec94d696dd",
+  "model": "gpt-4o-mini",
+  "provider_attempts": 2,
+  "completed_paid_operations": 2,
+  "failed_paid_operations": 0,
+  "input_tokens": 2271,
+  "cached_input_tokens": 0,
+  "output_tokens": 390,
+  "estimated_cost_usd": 0.00057465,
+  "estimated_cost_upper_bound_usd": 0.00057465,
+  "cost_is_lower_bound": false,
+  "unpriced_operation_count": 0,
+  "receipt_statuses": [
+    "completed",
+    "completed"
+  ],
+  "usage_dispositions": [
+    "measured",
+    "measured"
+  ],
+  "cancellation": {
+    "error_type": "AssistedConstructionCancelled",
+    "receipt_count_before": 2,
+    "receipt_count_after": 2,
+    "created_receipt": false
+  },
+  "telemetry": {
+    "spans": 3,
+    "traces": 3,
+    "metric_series": 2
+  },
+  "dataset_exposure": {
+    "benchmark": 0,
+    "development": 0,
+    "calibration": 0,
+    "held_out": 0
+  },
+  "results": [
+    {
+      "canary_id": "v4.6-synthetic-scalar-canary-v1",
+      "disposition": "validated_proposal",
+      "proposal": {
+        "kind": "numerical_scalar",
+        "failed_construction_id": "c927ada7-d8c6-5134-90de-4d85e5172e4a",
+        "claim_text_span": "exactly 37 litres",
+        "left_subject": null,
+        "right_subject": null,
+        "comparator": "equal",
+        "dimension": "volume",
+        "left_value": null,
+        "right_value": null,
+        "scalar_form": "single_value",
+        "scalar_subject": "exactly",
+        "numeric_operation": "direct",
+        "expected_values": [
+          {
+            "value": "37",
+            "unit": "litres",
+            "dimension": "volume",
+            "scale": "1",
+            "tolerance": null
+          }
+        ],
+        "evidence_bindings": [
+          {
+            "evidence_id": "ccb52b09-597a-5b06-b80e-0bc64bf652c4",
+            "start_char": 72,
+            "end_char": 89,
+            "quoted_text": "exactly 37 litres"
+          }
+        ],
+        "temporal_relation": null,
+        "reference_date": null,
+        "claimed_interval": null,
+        "requires_reference_date": false,
+        "claimed_status": null,
+        "temporal_bindings": []
+      },
+      "cached_replay_equal": true
+    },
+    {
+      "canary_id": "v4.6-synthetic-temporal-canary-v1",
+      "disposition": "safe_failure",
+      "error_type": "ValueError",
+      "error": "observed status is not explicit in bound evidence",
+      "cached_replay_equal": false
+    }
+  ]
+}

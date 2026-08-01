@@ -41,6 +41,15 @@ class PaidReceiptDecision(StrEnum):
     TERMINAL_FAILURE = "terminal_failure"
 
 
+class PaidUsageDisposition(StrEnum):
+    """How confidently a receipt accounts for provider usage and cost."""
+
+    MEASURED = "measured"
+    UNKNOWN_WITH_UPPER_BOUND = "unknown_with_upper_bound"
+    NOT_APPLICABLE = "not_applicable"
+    LEGACY_UNCLASSIFIED = "legacy_unclassified"
+
+
 class PaidOperationSpec(DomainModel):
     operation_key: str = Field(min_length=16, max_length=300)
     investigation_id: UUID
@@ -65,6 +74,9 @@ class PaidOperationReceipt(DomainModel):
     cached_input_tokens: int = Field(default=0, ge=0)
     output_tokens: int = Field(default=0, ge=0)
     estimated_cost_usd: float = Field(default=0, ge=0)
+    usage_disposition: PaidUsageDisposition = PaidUsageDisposition.LEGACY_UNCLASSIFIED
+    estimated_cost_upper_bound_usd: float | None = Field(default=None, ge=0)
+    usage_note: str | None = Field(default=None, min_length=3, max_length=500)
     duration_seconds: float = Field(default=0, ge=0)
     error_class: str | None = Field(default=None, max_length=200)
     safe_error: str | None = Field(default=None, max_length=1_000)
@@ -100,6 +112,17 @@ class PaidOperationReceipt(DomainModel):
             raise ValueError("only completed receipts may expose a result")
         if self.cached_input_tokens > self.input_tokens:
             raise ValueError("cached input tokens cannot exceed input tokens")
+        if (
+            self.usage_disposition
+            is PaidUsageDisposition.UNKNOWN_WITH_UPPER_BOUND
+            and self.estimated_cost_upper_bound_usd is None
+        ):
+            raise ValueError("unknown usage requires a conservative cost upper bound")
+        if (
+            self.usage_disposition is PaidUsageDisposition.MEASURED
+            and self.estimated_cost_upper_bound_usd is not None
+        ):
+            raise ValueError("measured usage cannot also expose an upper bound")
         return self
 
 
@@ -110,10 +133,15 @@ class PaidReceiptClaim(DomainModel):
 
 class PaidCostLedger(DomainModel):
     completed_operation_count: int = Field(ge=0)
+    attempted_operation_count: int = Field(default=0, ge=0)
+    failed_operation_count: int = Field(default=0, ge=0)
     model_operation_count: int = Field(ge=0)
     search_operation_count: int = Field(ge=0)
     input_tokens: int = Field(ge=0)
     cached_input_tokens: int = Field(ge=0)
     output_tokens: int = Field(ge=0)
     estimated_cost_usd: float = Field(ge=0)
+    estimated_cost_upper_bound_usd: float = Field(default=0, ge=0)
+    unpriced_operation_count: int = Field(default=0, ge=0)
+    cost_is_lower_bound: bool = False
     duration_seconds: float = Field(ge=0)

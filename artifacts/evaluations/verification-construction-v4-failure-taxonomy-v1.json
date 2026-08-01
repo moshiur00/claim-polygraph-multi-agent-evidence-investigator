@@ -1,0 +1,97 @@
+{
+  "taxonomy_id": "verification-construction-v4-failure-taxonomy-v1",
+  "derived_from": "verification-construction-v3-stage8-eligibility-analysis-v1",
+  "v3_held_out_claim_text_copied_into_v4_fixtures": 0,
+  "categories": [
+    {
+      "category_id": "V4-F01",
+      "layer": "eligibility",
+      "name": "quantified exact count",
+      "remediation_contract": "Recognize explicit counts even when universal or approximate quantifiers require qualification."
+    },
+    {
+      "category_id": "V4-F02",
+      "layer": "eligibility",
+      "name": "ordinal ranking with time",
+      "remediation_contract": "Represent rank, population, measure and reference period as typed operands."
+    },
+    {
+      "category_id": "V4-F03",
+      "layer": "eligibility",
+      "name": "absence or zero-use status",
+      "remediation_contract": "Recognize absence claims when retained evidence can bind a nonzero counterexample or status."
+    },
+    {
+      "category_id": "V4-F04",
+      "layer": "eligibility",
+      "name": "relative measurement",
+      "remediation_contract": "Recognize ordinary comparative language grounded by explicit measurements and reference populations."
+    },
+    {
+      "category_id": "V4-F05",
+      "layer": "extraction",
+      "name": "paired-value comparison",
+      "remediation_contract": "Extract both values, units, subjects and the comparison relation."
+    },
+    {
+      "category_id": "V4-F06",
+      "layer": "extraction",
+      "name": "multiplicative comparison",
+      "remediation_contract": "Extract ratio or multiplicative language and bind both comparison values."
+    },
+    {
+      "category_id": "V4-F07",
+      "layer": "extraction",
+      "name": "dated projection",
+      "remediation_contract": "Preserve start value/date, end value/date and projection modality."
+    },
+    {
+      "category_id": "V4-F08",
+      "layer": "extraction",
+      "name": "dated scalar",
+      "remediation_contract": "Bind the scalar value and its material reference date in one linked construction."
+    },
+    {
+      "category_id": "V4-F09",
+      "layer": "construction",
+      "name": "compound conditions",
+      "remediation_contract": "Create linked assertions for every threshold, duration, scope and consequence."
+    },
+    {
+      "category_id": "V4-F10",
+      "layer": "construction",
+      "name": "material qualifier loss",
+      "remediation_contract": "Reject claim spans or evidence bindings that omit a material qualifier or scope."
+    },
+    {
+      "category_id": "V4-F11",
+      "layer": "construction",
+      "name": "decisive evidence omission",
+      "remediation_contract": "Require bindings for support, contradiction or qualification needed by deterministic verification."
+    },
+    {
+      "category_id": "V4-F12",
+      "layer": "validation",
+      "name": "scalar normalization mismatch",
+      "remediation_contract": "Normalize compatible magnitude and unit forms before explicit-binding validation."
+    },
+    {
+      "category_id": "V4-F13",
+      "layer": "validation",
+      "name": "invalid scale",
+      "remediation_contract": "Fail closed on nonpositive scales and preserve the terminal receipt and safe error."
+    },
+    {
+      "category_id": "V4-F14",
+      "layer": "eligibility",
+      "name": "open-world or causal exclusion",
+      "remediation_contract": "Continue excluding unsupported superlative, causal and universal generalization claims."
+    },
+    {
+      "category_id": "V4-F15",
+      "layer": "observability",
+      "name": "failed response usage gap",
+      "remediation_contract": "Persist provider usage or explicit unknown usage plus a conservative cost upper bound for every attempted response."
+    }
+  ]
+}

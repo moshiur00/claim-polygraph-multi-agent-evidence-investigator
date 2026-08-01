@@ -19,6 +19,7 @@ from claim_polygraph_ng.domain.graph import (
 )
 from claim_polygraph_ng.domain.operations import ArtifactReference, AuthoritativeOperation
 from claim_polygraph_ng.domain.research import ResearchBudget, ResearchConsumption
+from claim_polygraph_ng.domain.verification import AssertionConstructionState
 
 
 def graph_utc_now() -> datetime:
@@ -108,6 +109,10 @@ class AuthoritativeInvestigationGraphState(DomainModel):
         default=(), max_length=250
     )
     approved_evidence_ids: tuple[UUID, ...] = Field(default=(), max_length=1_000)
+    verification_construction_ids: tuple[UUID, ...] = Field(default=(), max_length=128)
+    verification_construction_states: dict[UUID, AssertionConstructionState] = Field(
+        default_factory=dict
+    )
     defender_result_id: UUID | None = None
     challenger_result_id: UUID | None = None
     reconciled_ledger_ref: ArtifactReference | None = None
@@ -189,6 +194,13 @@ class AuthoritativeInvestigationGraphState(DomainModel):
         _unique(self.approved_evidence_ids, "approved evidence IDs")
         if not set(self.approved_evidence_ids) <= artifact_ids:
             raise ValueError("approved evidence IDs must exist in the artifact inventory")
+        _unique(self.verification_construction_ids, "verification construction IDs")
+        if set(self.verification_construction_states) != set(
+            self.verification_construction_ids
+        ):
+            raise ValueError(
+                "every verification construction requires exactly one durable state"
+            )
         if (
             self.defender_result_id is not None
             and self.defender_result_id == self.challenger_result_id

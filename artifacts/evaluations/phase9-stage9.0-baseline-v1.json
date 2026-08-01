@@ -476,7 +476,7 @@
         "social_evidence_policy"
       ],
       "compatibility_rule": "Existing fields remain readable and keep their meaning; additions are optional.",
-      "schema_sha256": "e89315cd0e4f4833bcb2f39577b258be502f0a554bde9d466c2bcaca608d2de5"
+      "schema_sha256": "10f7ada30d20ad23da0e35fa41d3568e0a7f36c3f495cfe7016da0e9eacb316a"
     },
     {
       "contract_id": "investigation_status_v1",
@@ -614,12 +614,12 @@
     {
       "artifact_id": "report_renderer",
       "path": "src/claim_polygraph_ng/reporting/reports.py",
-      "sha256": "caf1422aa273955054eb45b0f50b1b3c2f1b263126538dbc830d4dd55fe59ceb"
+      "sha256": "570c6ddcd03d09e85f674bfaec7c1e0aa338c2556cc052e13593c445e46802e3"
     },
     {
       "artifact_id": "dashboard_page",
       "path": "dashboard/app/page.tsx",
-      "sha256": "1b5251d78aff0a5ce1586f36f5369a8517dd10eda3a839a8b2a2efba950a6759"
+      "sha256": "8dd3437697ab955a67a51683e1914609278662c35f991443ec07102aa8f0059a"
     },
     {
       "artifact_id": "phase9_plan",

@@ -1,0 +1,52 @@
+{
+  "audit_id": "verification-construction-v4-stage8-collection-audit-v1",
+  "status": "awaiting_human_review",
+  "collection_gate_passed": true,
+  "calibration_execution_authorized": false,
+  "workbook_sha256": "164218436b3b64001a64df457d3a3d582630890b0aa8d5b761056f409c120ea5",
+  "case_count": 20,
+  "origin_family_count": 10,
+  "source_domain_count": 10,
+  "source_domains": [
+    "bankofengland.co.uk",
+    "faa.gov",
+    "ftc.gov",
+    "iso.org",
+    "nato.int",
+    "oecd.org",
+    "rba.gov.au",
+    "ssa.gov",
+    "statcan.gc.ca",
+    "uspto.gov"
+  ],
+  "label_counts": {
+    "deterministic_constructible": 16,
+    "fallback_eligible": 0,
+    "unconstructible": 0,
+    "not_applicable": 4
+  },
+  "annotator_identity_prefill": "Md Moshiur Rahman",
+  "distinct_approver_identity_prefill": "Md Rashedul Islam",
+  "human_annotations_completed": 0,
+  "distinct_approvals_completed": 0,
+  "model_calls": 0,
+  "network_calls_during_benchmark_execution": 0,
+  "paid_operations": 0,
+  "calibration_cases_exposed_to_model": 0,
+  "held_out_cases_loaded": 0,
+  "gates": {
+    "case_count_20": true,
+    "minimum_10_origin_families": true,
+    "exact_claim_reuse_zero": true,
+    "retired_domain_reuse_zero": true,
+    "calibration_only": true,
+    "exact_span_failures_zero": true,
+    "human_annotations_zero_before_review": true,
+    "approvals_zero_before_review": true,
+    "provider_model_calls_zero": true,
+    "pdf_sources_zero": true,
+    "calibration_execution_zero": true,
+    "held_out_cases_loaded_zero": true
+  },
+  "next_action": "Human annotation by Md Moshiur Rahman and distinct approval by Md Rashedul Islam"
+}

@@ -12,6 +12,8 @@ from claim_polygraph_ng.domain import (
     ResearchPath,
     Source,
     SourceType,
+    VerificationIssueSeverity,
+    VerificationReadinessImpact,
     VerificationStatus,
 )
 
@@ -113,3 +115,97 @@ def test_hyphenated_entity_number_is_not_treated_as_a_quantity() -> None:
 
     assert verification.numerical.claim_values == ()
     assert verification.numerical.status is VerificationStatus.NOT_REQUIRED
+
+
+def test_required_numerical_check_without_claim_operand_fails_closed() -> None:
+    claim = AtomicClaim(
+        text="The reported effect is substantial.",
+        checkworthiness=0.9,
+    )
+    source = _source()
+    evidence = Evidence(
+        claim_id=claim.claim_id,
+        source_id=source.source_id,
+        passage="The paper reports coefficients of 0.27 and 0.9.",
+        stance=EvidenceStance.SUPPORTS,
+        relevance_score=0.8,
+    )
+
+    verification = verify_claim_context(
+        claim=claim,
+        plan=_plan(claim.claim_id, numerical=True),
+        sources=(source,),
+        evidence=(evidence,),
+    )
+
+    assert verification.numerical.status is VerificationStatus.INSUFFICIENT
+    assert verification.numerical.claim_values == ()
+    finding = next(
+        item
+        for item in verification.numerical.findings
+        if item.code == "claim_value_missing"
+    )
+    assert finding.severity is VerificationIssueSeverity.BLOCKING
+    assert finding.readiness_impact is VerificationReadinessImpact.HUMAN_REVIEW
+
+
+def test_qualitative_quantity_hints_are_not_accepted_as_numeric_operands() -> None:
+    claim = AtomicClaim(
+        text="The treatment works more often than the comparison.",
+        quantities=("more", "than"),
+        checkworthiness=0.9,
+    )
+    source = _source()
+    evidence = Evidence(
+        claim_id=claim.claim_id,
+        source_id=source.source_id,
+        passage="The paper was published in 2016 and enrolled 500 participants.",
+        stance=EvidenceStance.SUPPORTS,
+        relevance_score=0.8,
+    )
+
+    verification = verify_claim_context(
+        claim=claim,
+        plan=_plan(claim.claim_id, numerical=True),
+        sources=(source,),
+        evidence=(evidence,),
+    )
+
+    assert verification.numerical.claim_values == ()
+    assert verification.numerical.claim_observations == ()
+    assert verification.numerical.status is VerificationStatus.INSUFFICIENT
+    assert {finding.code for finding in verification.numerical.findings} >= {
+        "claim_value_missing"
+    }
+
+
+def test_context_values_retain_evidence_provenance_and_offsets() -> None:
+    claim = AtomicClaim(
+        text="The measured value is 42 percent.",
+        quantities=("42",),
+        checkworthiness=1.0,
+    )
+    source = _source()
+    passage = "The approved study reports 41.8 percent after adjustment."
+    evidence = Evidence(
+        claim_id=claim.claim_id,
+        source_id=source.source_id,
+        passage=passage,
+        stance=EvidenceStance.QUALIFIES,
+        relevance_score=1.0,
+    )
+
+    verification = verify_claim_context(
+        claim=claim,
+        plan=_plan(claim.claim_id, numerical=True),
+        sources=(source,),
+        evidence=(evidence,),
+    )
+
+    claim_observation = verification.numerical.claim_observations[0]
+    evidence_observation = verification.numerical.evidence_observations[0]
+    assert claim.text[claim_observation.start_char : claim_observation.end_char] == "42"
+    assert evidence_observation.evidence_id == evidence.evidence_id
+    assert evidence_observation.source_id == source.source_id
+    assert passage[evidence_observation.start_char : evidence_observation.end_char] == "41.8"
+    assert evidence_observation.unit_hint == "percent"

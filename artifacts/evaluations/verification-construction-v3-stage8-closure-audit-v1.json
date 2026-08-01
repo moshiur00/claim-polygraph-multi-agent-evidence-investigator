@@ -1,0 +1,49 @@
+{
+  "audit_id": "verification-construction-v3-stage8-closure-audit-v1",
+  "status": "complete_not_promoted",
+  "adjudicated_attempts": 7,
+  "annotator_identity": "Md Moshiur Rahman",
+  "distinct_approver_identity": "Md Rashedul Islam",
+  "annotation_date": "2026-07-31",
+  "approval_date": "2026-07-31",
+  "reviewer_separation_valid": true,
+  "annotation_checklists_complete": true,
+  "approval_checklists_complete": true,
+  "model_calls": 0,
+  "held_out_reruns": 0,
+  "held_out_result_unchanged": true,
+  "adjudication_decisions": {
+    "accept": 2,
+    "revise": 3,
+    "reject_unsafe": 0,
+    "confirm_safe_failure": 2
+  },
+  "held_out_metrics": {
+    "construction_precision": 1.0,
+    "overall_construction_recall": 0.3125,
+    "human_review_routing_recall": 1.0,
+    "unsafe_accepted_constructions": 0,
+    "failed_promotion_gates": [
+      "overall_construction_recall"
+    ]
+  },
+  "decision": "V3.8 human adjudication is complete. The evaluated configuration remains not promoted because held-out overall construction recall did not meet the frozen threshold. Preserve the result and proceed to recovery and final experiment audit without held-out retuning.",
+  "artifacts": [
+    {
+      "path": "benchmarks/verification_construction_v3_stage8_adjudication_workbook_v1.json",
+      "sha256": "50a29756b5965f9ff2a73b55934b57c2ebbea9109684bdc21967f4ec32b428a6"
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v3-stage7-held-out-v1.json",
+      "sha256": "3886b0b05f35cfcfe54a68281c00def4931f5f42fc3bf66540438a53ba5ccf9d"
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v3-stage8-eligibility-analysis-v1.json",
+      "sha256": "8b22de10e74ea3924905acdb27adf80c36e715aa2aa315f9619a8dd9ab9c6941"
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v3-stage8-ablation-v1.json",
+      "sha256": "8e76342191e22c737acff457c7cf6f17ecdf318e1a3c21851ab8589a45cdb672"
+    }
+  ]
+}

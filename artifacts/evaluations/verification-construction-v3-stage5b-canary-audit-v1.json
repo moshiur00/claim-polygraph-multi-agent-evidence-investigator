@@ -1,0 +1,39 @@
+{
+  "audit_id": "verification-construction-v3-stage5b-canary-audit-v1",
+  "status": "remediated_offline_recanary_required",
+  "original_canary_status": "failed_safe",
+  "original_provider_attempts": 1,
+  "original_completed_paid_operations": 0,
+  "original_estimated_cost_usd": 0.0,
+  "current_prompt_version": "verification-construction-v3-dev-v3",
+  "root_cause": "Provider returned an explicit written date while the canonical domain contract expected an ISO-parsed date.",
+  "remediation": "A provider-facing date wire type now parses explicit written or ISO dates and deterministically converts them to TemporalInstant.",
+  "second_provider_call_made": false,
+  "benchmark_exposure": {
+    "development": 0,
+    "calibration": 0,
+    "held_out": 0
+  },
+  "artifacts": [
+    {
+      "path": "src/claim_polygraph_ng/analysis/assisted_verification_construction.py",
+      "sha256": "314e1fc13086840502a622bcf43aff6fe3fa48ddfa9770bd621884cd74caa242"
+    },
+    {
+      "path": "src/claim_polygraph_ng/analysis/bounded_assisted_construction.py",
+      "sha256": "54b5b98419e3609b33a8ed58efcbf9c5241b6914059a604ac23728905a90ed4a"
+    },
+    {
+      "path": "src/claim_polygraph_ng/providers/openai.py",
+      "sha256": "8a4d617e7035046394eab69bd6202f264c3a33d4635e8801c42d01172b3b747a"
+    },
+    {
+      "path": "scripts/run_v3_stage5b_synthetic_canary.py",
+      "sha256": "6640eb1deb8da09de44555d3d4aba3e284e3e691052841e345b6e2132901a504"
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v3-stage5b-synthetic-canary-v1.json",
+      "sha256": "217b6a5c234a5ac7e2783c64bc8c1bde080875b68d7c81b1f4f6c5c23ce19836"
+    }
+  ]
+}

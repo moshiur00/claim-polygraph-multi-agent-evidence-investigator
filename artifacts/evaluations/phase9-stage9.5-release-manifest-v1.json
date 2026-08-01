@@ -4,17 +4,17 @@
     {
       "artifact_id": "receipt_contracts",
       "path": "src/claim_polygraph_ng/domain/paid_operations.py",
-      "sha256": "925db5318211e9ccca9674c373c091cefbc1038b280b6d284048cf34a067baae"
+      "sha256": "819a411e6dbadd475d0620228281b28ec85ea696cf1422981be675a9971b05b9"
     },
     {
       "artifact_id": "receipt_repository",
       "path": "src/claim_polygraph_ng/persistence/paid_operations.py",
-      "sha256": "388b604b691e0607ff0cb04a7d692f0f771393f4fc4b6fb1302ed87cd821dc4a"
+      "sha256": "b50e1bfb8e0d860586a8393030b4152c2cc23214420eef1f60f20bdc63dcfaa4"
     },
     {
       "artifact_id": "provider_decorators",
       "path": "src/claim_polygraph_ng/providers/idempotent.py",
-      "sha256": "df6d6185d9d7392297bdf707c1cb7cef0a5a44966601352a344f74592b65ad73"
+      "sha256": "996252153187b0b13dd7816a6e902eb24e7883001c95791abdd4939569e2da4d"
     },
     {
       "artifact_id": "receipt_tests",

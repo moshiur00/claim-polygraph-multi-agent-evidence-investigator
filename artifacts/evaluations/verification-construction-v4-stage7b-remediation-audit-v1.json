@@ -1,0 +1,189 @@
+{
+  "audit_id": "verification-construction-v4-stage7b-remediation-audit-v1",
+  "status": "passed",
+  "exit_criterion_met": true,
+  "fresh_calibration_collection_authorized": true,
+  "development_cases_loaded": 20,
+  "constructible_eligibility_recall": 1.0,
+  "negative_exclusion_precision": 1.0,
+  "focused_tests_passed": 96,
+  "full_unit_tests_passed": 525,
+  "candidate_extraction_version": "verification-candidate-extraction-v3",
+  "assisted_canonicalization_version": "assisted-canonicalization-v4.7b",
+  "model_calls": 0,
+  "network_calls": 0,
+  "paid_operations": 0,
+  "calibration_cases_loaded": 0,
+  "held_out_cases_loaded": 0,
+  "prior_paid_result_sha256": "5c269540db9a7e260e5aa2d8f39fcf59b399b78f9ba9592363680691ec4ea649",
+  "gates": {
+    "constructible_eligibility_recall": true,
+    "negative_exclusion_precision": true,
+    "candidate_date_overlap_regression": true,
+    "unique_exact_sentence_binding": true,
+    "whole_passage_expansion_remains_blocked": true,
+    "implicit_conversion_unity_is_unit_bound": true,
+    "temporal_status_is_exact_claim_text": true,
+    "nullable_tolerance_normalization": true,
+    "prior_paid_result_not_rerun": true,
+    "model_calls_zero": true,
+    "network_calls_zero": true,
+    "calibration_cases_loaded_zero": true,
+    "held_out_cases_loaded_zero": true
+  },
+  "results": [
+    {
+      "case_id": "V3-004",
+      "gold_positive": true,
+      "construction_route_available": true,
+      "resolved_eligibility": "temporal"
+    },
+    {
+      "case_id": "V3-008",
+      "gold_positive": true,
+      "construction_route_available": true,
+      "resolved_eligibility": "temporal"
+    },
+    {
+      "case_id": "V3-009",
+      "gold_positive": true,
+      "construction_route_available": true,
+      "resolved_eligibility": "excluded_qualitative"
+    },
+    {
+      "case_id": "V3-014",
+      "gold_positive": true,
+      "construction_route_available": true,
+      "resolved_eligibility": "temporal"
+    },
+    {
+      "case_id": "V3-015",
+      "gold_positive": false,
+      "construction_route_available": false,
+      "resolved_eligibility": "excluded_qualitative"
+    },
+    {
+      "case_id": "V3-016",
+      "gold_positive": true,
+      "construction_route_available": true,
+      "resolved_eligibility": "numerical_scalar"
+    },
+    {
+      "case_id": "V3-017",
+      "gold_positive": true,
+      "construction_route_available": true,
+      "resolved_eligibility": "numerical_scalar"
+    },
+    {
+      "case_id": "V3-028",
+      "gold_positive": false,
+      "construction_route_available": false,
+      "resolved_eligibility": "excluded_qualitative"
+    },
+    {
+      "case_id": "V3-029",
+      "gold_positive": true,
+      "construction_route_available": true,
+      "resolved_eligibility": "temporal"
+    },
+    {
+      "case_id": "V3-036",
+      "gold_positive": true,
+      "construction_route_available": true,
+      "resolved_eligibility": "temporal"
+    },
+    {
+      "case_id": "V3-037",
+      "gold_positive": true,
+      "construction_route_available": true,
+      "resolved_eligibility": "numerical_conversion"
+    },
+    {
+      "case_id": "V3-042",
+      "gold_positive": true,
+      "construction_route_available": true,
+      "resolved_eligibility": "numerical_scalar"
+    },
+    {
+      "case_id": "V3-043",
+      "gold_positive": true,
+      "construction_route_available": true,
+      "resolved_eligibility": "temporal"
+    },
+    {
+      "case_id": "V3-044",
+      "gold_positive": true,
+      "construction_route_available": true,
+      "resolved_eligibility": "numerical_scalar"
+    },
+    {
+      "case_id": "V3-045",
+      "gold_positive": true,
+      "construction_route_available": true,
+      "resolved_eligibility": "excluded_qualitative"
+    },
+    {
+      "case_id": "V3-046",
+      "gold_positive": true,
+      "construction_route_available": true,
+      "resolved_eligibility": "excluded_qualitative"
+    },
+    {
+      "case_id": "V3-047",
+      "gold_positive": true,
+      "construction_route_available": true,
+      "resolved_eligibility": "numerical_scalar"
+    },
+    {
+      "case_id": "V3-048",
+      "gold_positive": true,
+      "construction_route_available": true,
+      "resolved_eligibility": "numerical_scalar"
+    },
+    {
+      "case_id": "V3-049",
+      "gold_positive": true,
+      "construction_route_available": true,
+      "resolved_eligibility": "numerical_scalar"
+    },
+    {
+      "case_id": "V3-055",
+      "gold_positive": true,
+      "construction_route_available": true,
+      "resolved_eligibility": "numerical_scalar"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "src/claim_polygraph_ng/analysis/candidate_extraction.py",
+      "sha256": "3db52dc953911e0c59ef0d05df83c9fc248c455e8a9a9dd3965e88e8345172fb",
+      "bytes": 19412
+    },
+    {
+      "path": "src/claim_polygraph_ng/analysis/assisted_verification_construction.py",
+      "sha256": "36cfa5a6972665012702d46dfc74df7e02893f3849f691c2e705c19f5833985d",
+      "bytes": 41641
+    },
+    {
+      "path": "src/claim_polygraph_ng/domain/verification.py",
+      "sha256": "386cf035bc6872cfa646c802cbc99be4528bb9dfdb9cb03cbe5d6f053bd643c0",
+      "bytes": 21455
+    },
+    {
+      "path": "tests/unit/test_v4_stage7b_remediation.py",
+      "sha256": "e4d4f0abdcd3bacd1e6da38b2468752778a5d143f0011b950e3fbe91315e88a6",
+      "bytes": 7798
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage7-development-v1.json",
+      "sha256": "5c269540db9a7e260e5aa2d8f39fcf59b399b78f9ba9592363680691ec4ea649",
+      "bytes": 11476
+    },
+    {
+      "path": "benchmarks/verification_construction_v3_approved_frozen_v2.json",
+      "sha256": "6f45fd6c568135654a6af681c6c26fdea3f94505efc013064a0384b62f10e17a",
+      "bytes": 202949
+    }
+  ],
+  "next_stage": "V4.8 fresh calibration collection and independent approval"
+}

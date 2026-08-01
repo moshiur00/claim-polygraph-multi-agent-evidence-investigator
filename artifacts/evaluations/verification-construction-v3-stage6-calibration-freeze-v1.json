@@ -1,0 +1,99 @@
+{
+  "manifest_id": "verification-construction-v3-stage6-calibration-freeze-v1",
+  "status": "frozen",
+  "frozen_before_calibration_execution": true,
+  "prompt_version": "verification-construction-v3-dev-v3",
+  "prompt_sha256": "1e40e6d5985de2c5d706ae2c5b7caf4234fa4d0370af6b2affef93c4f4800cad",
+  "schemas": {
+    "numerical_sha256": "cf5164aff5c34531da23c4b6af87faec23bfc8cae749a2f089f02c4a4716d73c",
+    "temporal_sha256": "da2bf4b022b95d6124bf1f36f27fbd6e767f72519c128b1635e77625f9607449"
+  },
+  "provider": {
+    "name": "openai",
+    "model": "gpt-5.6-luna",
+    "endpoint": "responses",
+    "reasoning_effort": "low",
+    "store": false
+  },
+  "budget": {
+    "maximum_calls_per_case": 1,
+    "maximum_total_calls": 25,
+    "maximum_input_tokens": 6000,
+    "maximum_output_tokens": 800,
+    "maximum_total_cost_usd": 0.75,
+    "search_calls": 0,
+    "retries": 0
+  },
+  "promotion_thresholds": {
+    "minimum_evidence_span_validity": 1.0,
+    "maximum_unsafe_accepted_constructions": 0,
+    "minimum_construction_precision": 0.98,
+    "minimum_fallback_recall_gain": 0.15,
+    "minimum_overall_construction_recall": 0.75,
+    "minimum_human_review_routing_recall": 1.0,
+    "maximum_publication_safety_regressions": 0,
+    "maximum_duplicate_paid_operations": 0,
+    "maximum_cost_per_recovered_assertion_usd": 0.05
+  },
+  "dataset_sha256": "6f45fd6c568135654a6af681c6c26fdea3f94505efc013064a0384b62f10e17a",
+  "calibration_case_count": 20,
+  "calibration_case_ids": [
+    "V3-002",
+    "V3-005",
+    "V3-007",
+    "V3-018",
+    "V3-019",
+    "V3-022",
+    "V3-023",
+    "V3-026",
+    "V3-027",
+    "V3-034",
+    "V3-035",
+    "V3-038",
+    "V3-041",
+    "V3-050",
+    "V3-051",
+    "V3-053",
+    "V3-054",
+    "V3-056",
+    "V3-057",
+    "V3-059"
+  ],
+  "development_cases_exposed_during_freeze": 0,
+  "held_out_cases_exposed_during_freeze": 0,
+  "execution_at_freeze": {
+    "calibration_model_calls": 0,
+    "calibration_network_calls": 0,
+    "calibration_paid_operations": 0
+  },
+  "artifacts": [
+    {
+      "path": "src/claim_polygraph_ng/analysis/assisted_verification_construction.py",
+      "sha256": "314e1fc13086840502a622bcf43aff6fe3fa48ddfa9770bd621884cd74caa242"
+    },
+    {
+      "path": "src/claim_polygraph_ng/analysis/bounded_assisted_construction.py",
+      "sha256": "54b5b98419e3609b33a8ed58efcbf9c5241b6914059a604ac23728905a90ed4a"
+    },
+    {
+      "path": "src/claim_polygraph_ng/providers/idempotent.py",
+      "sha256": "d06d24f88dbec2d4140b8f05874967fee575dea9d4240b71ba15275fd6a3ec54"
+    },
+    {
+      "path": "src/claim_polygraph_ng/providers/ollama.py",
+      "sha256": "4a82e19aeabcfd99e79e01799bed662ae6f13fb267c616d11097ca2a0dd0a507"
+    },
+    {
+      "path": "src/claim_polygraph_ng/providers/openai.py",
+      "sha256": "8a4d617e7035046394eab69bd6202f264c3a33d4635e8801c42d01172b3b747a"
+    },
+    {
+      "path": "src/claim_polygraph_ng/evaluation/v3_calibration.py",
+      "sha256": "faf7a16e3cac9e3ce1c47f9ec94c5add999e04c539acda4b9120336fe19b25ad"
+    },
+    {
+      "path": "benchmarks/verification_construction_v3_approved_frozen_v2.json",
+      "sha256": "6f45fd6c568135654a6af681c6c26fdea3f94505efc013064a0384b62f10e17a"
+    }
+  ]
+}

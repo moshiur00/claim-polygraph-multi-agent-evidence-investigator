@@ -1,0 +1,77 @@
+{
+  "audit_id": "verification-construction-v4-stage6c-canary-audit-v1",
+  "status": "passed",
+  "exit_criterion_met": true,
+  "provider_attempts": 1,
+  "completed_paid_operations": 1,
+  "duplicate_provider_attempts": 0,
+  "input_tokens": 1138,
+  "output_tokens": 186,
+  "estimated_cost_usd": 0.0002823,
+  "cumulative_synthetic_calls": 4,
+  "remaining_synthetic_calls": 0,
+  "cumulative_synthetic_cost_usd": 0.00114315,
+  "gates": {
+    "manifest_frozen_and_hash_matched": true,
+    "final_call_was_authorized": true,
+    "one_call_ceiling_respected": true,
+    "no_automatic_retry": true,
+    "receipt_completed_and_measured": true,
+    "temporal_proposal_validated": true,
+    "unique_date_reconstructed": true,
+    "evidence_interval_reconstructed": true,
+    "exact_evidence_span_valid": true,
+    "cached_replay_without_duplicate": true,
+    "dataset_exposure_zero": true,
+    "cumulative_canary_allocation_exhausted_exactly": true,
+    "cumulative_cost_within_v4_ceiling": true
+  },
+  "artifacts": [
+    {
+      "path": "scripts/freeze_v4_stage6c_canary.py",
+      "sha256": "0da37595a4d59bb2de62a3639aa4a4d33eb80fed171b0de52db359690b3f1ae9",
+      "bytes": 3748
+    },
+    {
+      "path": "scripts/run_v4_stage6c_canary.py",
+      "sha256": "24ed44589ad51c31ebdedd816ee79cd29ce15354e1648d926bc5966096eebe7a",
+      "bytes": 5845
+    },
+    {
+      "path": "scripts/audit_v4_stage6c_canary.py",
+      "sha256": "fe39e1d896b2ffacb77a83f910f6b9665bc31d185850a4a654ae494160a65d93",
+      "bytes": 5418
+    },
+    {
+      "path": "src/claim_polygraph_ng/analysis/assisted_verification_construction.py",
+      "sha256": "c7ca465222eae2eef2a8812b0b822a331e0f17162f53faf5e41131169ebfc7f8",
+      "bytes": 36628
+    },
+    {
+      "path": "tests/unit/test_v3_assisted_boundary.py",
+      "sha256": "0d419a17b4ac1d5f50d8cf0152103d8d2faac2f6980ea9a1fd12897c2a02c31a",
+      "bytes": 37132
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-canary-budget-amendment-v1.json",
+      "sha256": "2fa0a48b2e58ba615cc66c9c25b0090a730ee52dfbef7327157c173ef033e746",
+      "bytes": 1156
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage6c-canary-manifest-v1.json",
+      "sha256": "d6fd389fe6cc7192e9472c52b456a51c4ee1316cf0d001e4900bb66d87f4cd32",
+      "bytes": 1598
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage6c-canary-result-v1.json",
+      "sha256": "3cca3ba513126b9db85cd5eb25b1e153e7893e06fd254e0b8a66bae36256afd6",
+      "bytes": 2240
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage6b-temporal-wire-v1.json",
+      "sha256": "26eda0b0c1da9f684bef2be20923a4906574d131305f16745f798d63162d2daf",
+      "bytes": 3417
+    }
+  ],
+  "next_stage": "V4.7 development evaluation with maximum 18 calls"
+}

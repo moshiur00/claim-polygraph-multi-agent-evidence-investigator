@@ -1,0 +1,79 @@
+{
+  "fixture_id": "verification-construction-v3-stage6b-synthetic-fixtures-v1",
+  "source": "synthetic_only",
+  "model_calls": 0,
+  "cases": [
+    {
+      "case_id": "V3B-SYN-001",
+      "claim": "The synthetic district recorded 12,345,678 residents.",
+      "expected_eligibility": "numerical_scalar",
+      "focus": "grouped_decimal"
+    },
+    {
+      "case_id": "V3B-SYN-002",
+      "claim": "One synthetic energy unit equals 2.75 x 10^6 joules.",
+      "expected_eligibility": "numerical_conversion",
+      "focus": "scientific_notation"
+    },
+    {
+      "case_id": "V3B-SYN-003",
+      "claim": "The chamber pressure is 875 hectopascals.",
+      "expected_eligibility": "numerical_scalar",
+      "focus": "additional_pressure_unit"
+    },
+    {
+      "case_id": "V3B-SYN-004",
+      "claim": "A synthetic orbital cycle lasts 412 local days.",
+      "expected_eligibility": "numerical_scalar",
+      "focus": "qualified_duration_unit"
+    },
+    {
+      "case_id": "V3B-SYN-005",
+      "claim": "The tank holds between 40 liters and 45 liters.",
+      "expected_eligibility": "numerical_range",
+      "focus": "range"
+    },
+    {
+      "case_id": "V3B-SYN-006",
+      "claim": "The revised synthetic process is twice as fast.",
+      "expected_eligibility": "numerical_scalar",
+      "focus": "ratio_word"
+    },
+    {
+      "case_id": "V3B-SYN-007",
+      "claim": "Synthetic rule Q took effect on 14 February 2022.",
+      "expected_eligibility": "temporal",
+      "focus": "temporal_binding_default"
+    },
+    {
+      "case_id": "V3B-SYN-008",
+      "claim": "Synthetic rule R took effect on February 14, 2022.",
+      "expected_eligibility": "temporal",
+      "focus": "month_first_date"
+    },
+    {
+      "case_id": "V3B-SYN-009",
+      "claim": "The reservoir holds 72 million liters.",
+      "expected_eligibility": "numerical_scalar",
+      "focus": "subject_and_span_canonicalization"
+    },
+    {
+      "case_id": "V3B-SYN-010",
+      "claim": "The synthetic committee currently considers the measure active.",
+      "expected_eligibility": "missing_reference_date",
+      "focus": "fail_closed_status"
+    },
+    {
+      "case_id": "V3B-SYN-011",
+      "claim": "The proposed design is elegant.",
+      "expected_eligibility": "excluded_qualitative",
+      "focus": "qualitative_exclusion"
+    },
+    {
+      "case_id": "V3B-SYN-012",
+      "claim": "The sample contains 18 kilograms.",
+      "expected_eligibility": "numerical_scalar",
+      "focus": "additional_mass_unit"
+    }
+  ]
+}

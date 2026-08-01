@@ -1,0 +1,89 @@
+{
+  "manifest_id": "verification-construction-v3-stage0",
+  "schema_version": 1,
+  "status": "frozen",
+  "artifacts": [
+    {
+      "artifact_id": "benchmark_schema",
+      "path": "benchmarks/verification_construction_v3_schema.json",
+      "sha256": "af5be8d1ab3470515db0c915069a94e938bb90ff7dbf804ee5554c3f8126ebd2"
+    },
+    {
+      "artifact_id": "sampling_policy",
+      "path": "artifacts/evaluations/verification-construction-v3-sampling-policy-v1.json",
+      "sha256": "44ea9af8a52dd47934478fd1579a5e4e6e698348db95982fce2511d9a59fd265"
+    },
+    {
+      "artifact_id": "execution_plan",
+      "path": "docs/private/verification-construction-v3-execution-plan.md",
+      "sha256": "b7e1ee7a87fc1434e9fc814607ba1d0284f92c75fdc515de52c3abaf41519066"
+    }
+  ],
+  "sampling_policy": {
+    "target_case_count": 60,
+    "split_quotas": {
+      "development": 20,
+      "calibration": 20,
+      "held_out": 20
+    },
+    "dimension_quotas": {
+      "percentage_or_rate": 6,
+      "count": 6,
+      "pressure": 6,
+      "currency": 6,
+      "speed": 6,
+      "temperature": 6,
+      "duration": 6,
+      "distance_or_mass": 6,
+      "temporal_instant": 6,
+      "temporal_interval_or_status": 6
+    },
+    "construction_label_quotas": {
+      "deterministic_constructible": 30,
+      "fallback_eligible": 15,
+      "unconstructible": 10,
+      "not_applicable": 5
+    },
+    "source_class_quotas": {
+      "official_or_legal": 18,
+      "academic": 12,
+      "fact_check": 10,
+      "news": 12,
+      "other_reviewed_public_source": 8
+    },
+    "minimum_distinct_evidence_families": 40,
+    "maximum_cases_per_origin_family": 2,
+    "random_seed": 20260730,
+    "selection_frozen_before_model_calls": true
+  },
+  "budget": {
+    "stage_v3_0_model_calls": 0,
+    "stage_v3_0_network_calls": 0,
+    "maximum_assisted_calls_per_eligible_case": 1,
+    "maximum_input_tokens_per_call": 6000,
+    "maximum_output_tokens_per_call": 800,
+    "maximum_total_model_calls": 25,
+    "maximum_total_cost_usd": 0.75,
+    "maximum_cost_per_recovered_assertion_usd": 0.05,
+    "search_calls_allowed": 0,
+    "retries_after_valid_paid_receipt": 0
+  },
+  "promotion_thresholds": {
+    "minimum_evidence_span_validity": 1.0,
+    "maximum_unsafe_accepted_constructions": 0,
+    "minimum_construction_precision": 0.98,
+    "minimum_fallback_recall_gain": 0.15,
+    "minimum_overall_construction_recall": 0.75,
+    "minimum_human_review_routing_recall": 1.0,
+    "maximum_publication_safety_regressions": 0,
+    "maximum_verdict_regressions": 0,
+    "maximum_duplicate_paid_operations": 0,
+    "maximum_cost_per_recovered_assertion_usd": 0.05,
+    "maximum_median_latency_overhead_seconds": 4.0,
+    "maximum_p95_latency_overhead_seconds": 10.0,
+    "distinct_human_approval_required": true
+  },
+  "model_provider_selected": false,
+  "model_calls_made": 0,
+  "network_calls_made": 0
+}

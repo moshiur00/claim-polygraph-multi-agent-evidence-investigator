@@ -1,0 +1,66 @@
+{
+  "manifest_id": "verification-construction-v3-stage6e-collection-protocol-v1",
+  "created_at": "2026-07-31T01:53:46.934651+00:00",
+  "status": "frozen_awaiting_human_annotation_and_distinct_approval",
+  "case_count": 20,
+  "minimum_origin_families": 10,
+  "maximum_cases_per_origin_family": 2,
+  "collection_rules": {
+    "accessible_official_html_only": true,
+    "pdf_downloads_allowed": false,
+    "restricted_content_allowed": false,
+    "previously_exposed_claim_url_or_family_reuse_allowed": false
+  },
+  "review_rules": {
+    "machine_suggestions_prefilled": true,
+    "annotator_identity_default": "Md Moshiur Rahman",
+    "approver_identity_default": "Md Rashedul Islam",
+    "annotation_requires_explicit_human_record_action": true,
+    "approval_requires_distinct_explicit_action": true,
+    "approval_decision_defaults_to": "return_for_revision",
+    "approval_checklist_defaults_checked": 0
+  },
+  "promotion_thresholds": {
+    "minimum_evidence_span_validity": 1.0,
+    "maximum_unsafe_accepted_constructions": 0,
+    "minimum_construction_precision": 0.98,
+    "minimum_incremental_recall_gain": 0.15,
+    "minimum_overall_construction_recall": 0.75,
+    "minimum_human_review_routing_recall": 1.0,
+    "maximum_publication_safety_regressions": 0,
+    "maximum_duplicate_paid_operations": 0,
+    "maximum_cost_per_recovered_assertion_usd": 0.05
+  },
+  "execution_controls": {
+    "model_calls_before_approval_and_freeze": 0,
+    "calibration_execution_limit_after_approval": 1,
+    "held_out_may_open_only_if_every_gate_passes": true,
+    "held_out_cases_exposed_to_model": 0
+  },
+  "artifacts": [
+    {
+      "path": "benchmarks/verification_construction_v3_stage6e_fresh_calibration_workbook_v1.json",
+      "sha256": "1e041a0f7db903d60a1938e187976cb2d5777c9d72a532a5f64b64e6c9352afa"
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v3-stage6e-collection-audit-v1.json",
+      "sha256": "042db432ac7ec71a701d3448708bd4fd136763b9e61ea6fc9ccdae5b633c21df"
+    },
+    {
+      "path": "scripts/build_v3_stage6e_fresh_calibration_workbook.py",
+      "sha256": "0e6a6c6a0eb870c94861417100775b91482b99201da291c3fbf568d366f82652"
+    },
+    {
+      "path": "scripts/audit_v3_stage6e_collection.py",
+      "sha256": "88a59b19c829dfc682a75d549fc98adbc02628462b63fab3a22eaed0aa13403d"
+    },
+    {
+      "path": "dashboard/app/annotation/page.tsx",
+      "sha256": "24e8f50ce399bf8be00b265c36efc77e9c181d481c106d06239689b859d27851"
+    },
+    {
+      "path": "dashboard/public/v3-stage6e-fresh-calibration.json",
+      "sha256": "1e041a0f7db903d60a1938e187976cb2d5777c9d72a532a5f64b64e6c9352afa"
+    }
+  ]
+}

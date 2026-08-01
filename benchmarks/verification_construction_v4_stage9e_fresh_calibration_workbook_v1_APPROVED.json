@@ -1,0 +1,1451 @@
+{
+  "workbook_id": "verification-construction-v4-stage9e-fresh-calibration-workbook-v1",
+  "schema_version": 1,
+  "frozen": false,
+  "cases": [
+    {
+      "case_id": "V3-341",
+      "source_candidate_id": "V4-STAGE9E-341",
+      "split": "calibration",
+      "origin_family_id": "official:snb",
+      "claim_text": "The Swiss National Bank commenced operations in 1907.",
+      "evidence": [
+        {
+          "evidence_id": "V3-341:E1",
+          "title": "The history of the SNB",
+          "url": "https://www.snb.ch/en/the-snb/organisation/history",
+          "source_class": "official_html",
+          "passage": "Since the Swiss National Bank commenced operations in 1907, it has had a strong impact on economic policy in Switzerland."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "started_in",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 53,
+          "quoted_text": "The Swiss National Bank commenced operations in 1907."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-341:E1",
+            "start_char": 0,
+            "end_char": 121,
+            "quoted_text": "Since the Swiss National Bank commenced operations in 1907, it has had a strong impact on economic policy in Switzerland."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-08-01",
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "started_in",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 53,
+          "quoted_text": "The Swiss National Bank commenced operations in 1907."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-341:E1",
+            "start_char": 0,
+            "end_char": 121,
+            "quoted_text": "Since the Swiss National Bank commenced operations in 1907, it has had a strong impact on economic policy in Switzerland."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-08-01",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-342",
+      "source_candidate_id": "V4-STAGE9E-342",
+      "split": "calibration",
+      "origin_family_id": "official:snb",
+      "claim_text": "The SNB head office in Berne was inaugurated on January 20, 1912.",
+      "evidence": [
+        {
+          "evidence_id": "V3-342:E1",
+          "title": "The history of the SNB",
+          "url": "https://www.snb.ch/en/the-snb/organisation/history",
+          "source_class": "official_html",
+          "passage": "Inaugurated on 20 January 1912, the Swiss National Bank's head office on Bundesplatz 1 in Berne recently marked its 100th anniversary."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "inaugurated_on",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 65,
+          "quoted_text": "The SNB head office in Berne was inaugurated on January 20, 1912."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-342:E1",
+            "start_char": 0,
+            "end_char": 134,
+            "quoted_text": "Inaugurated on 20 January 1912, the Swiss National Bank's head office on Bundesplatz 1 in Berne recently marked its 100th anniversary."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-08-01",
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "inaugurated_on",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 65,
+          "quoted_text": "The SNB head office in Berne was inaugurated on January 20, 1912."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-342:E1",
+            "start_char": 0,
+            "end_char": 134,
+            "quoted_text": "Inaugurated on 20 January 1912, the Swiss National Bank's head office on Bundesplatz 1 in Berne recently marked its 100th anniversary."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-08-01",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-343",
+      "source_candidate_id": "V4-STAGE9E-343",
+      "split": "calibration",
+      "origin_family_id": "official:norges-bank",
+      "claim_text": "Norges Bank was established on June 14, 1816.",
+      "evidence": [
+        {
+          "evidence_id": "V3-343:E1",
+          "title": "History of Norges Bank",
+          "url": "https://www.norges-bank.no/en/topics/about/history/history-of-norges-bank/",
+          "source_class": "official_html",
+          "passage": "Norges Bank was established by Act of the Storting (the Norwegian parliament) of 14 June 1816."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "established_on",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 45,
+          "quoted_text": "Norges Bank was established on June 14, 1816."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-343:E1",
+            "start_char": 0,
+            "end_char": 94,
+            "quoted_text": "Norges Bank was established by Act of the Storting (the Norwegian parliament) of 14 June 1816."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-08-01",
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "established_on",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 45,
+          "quoted_text": "Norges Bank was established on June 14, 1816."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-343:E1",
+            "start_char": 0,
+            "end_char": 94,
+            "quoted_text": "Norges Bank was established by Act of the Storting (the Norwegian parliament) of 14 June 1816."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-08-01",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-344",
+      "source_candidate_id": "V4-STAGE9E-344",
+      "split": "calibration",
+      "origin_family_id": "official:norges-bank",
+      "claim_text": "Norges Bank started operations in January 1817.",
+      "evidence": [
+        {
+          "evidence_id": "V3-344:E1",
+          "title": "History of Norges Bank",
+          "url": "https://www.norges-bank.no/en/topics/about/history/history-of-norges-bank/",
+          "source_class": "official_html",
+          "passage": "The operation started up in small, leased premises in the Stiftsgaarden, Trondheim's old gubernatorial residence, in January 1817."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "started_in",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 47,
+          "quoted_text": "Norges Bank started operations in January 1817."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-344:E1",
+            "start_char": 0,
+            "end_char": 130,
+            "quoted_text": "The operation started up in small, leased premises in the Stiftsgaarden, Trondheim's old gubernatorial residence, in January 1817."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-08-01",
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "started_in",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 47,
+          "quoted_text": "Norges Bank started operations in January 1817."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-344:E1",
+            "start_char": 0,
+            "end_char": 130,
+            "quoted_text": "The operation started up in small, leased premises in the Stiftsgaarden, Trondheim's old gubernatorial residence, in January 1817."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-08-01",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-345",
+      "source_candidate_id": "V4-STAGE9E-345",
+      "split": "calibration",
+      "origin_family_id": "official:dnb",
+      "claim_text": "De Nederlandsche Bank was founded in 1814.",
+      "evidence": [
+        {
+          "evidence_id": "V3-345:E1",
+          "title": "History",
+          "url": "https://www.dnb.nl/en/about-us/history/",
+          "source_class": "official_html",
+          "passage": "DNB was founded in 1814."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "founded_in",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 42,
+          "quoted_text": "De Nederlandsche Bank was founded in 1814."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-345:E1",
+            "start_char": 0,
+            "end_char": 24,
+            "quoted_text": "DNB was founded in 1814."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-08-01",
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "founded_in",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 42,
+          "quoted_text": "De Nederlandsche Bank was founded in 1814."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-345:E1",
+            "start_char": 0,
+            "end_char": 24,
+            "quoted_text": "DNB was founded in 1814."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-08-01",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-346",
+      "source_candidate_id": "V4-STAGE9E-346",
+      "split": "calibration",
+      "origin_family_id": "official:dnb",
+      "claim_text": "DNB has faced more important challenges than every other central bank.",
+      "evidence": [
+        {
+          "evidence_id": "V3-346:E1",
+          "title": "History",
+          "url": "https://www.dnb.nl/en/about-us/history/",
+          "source_class": "official_html",
+          "passage": "Discover the milestones and challenges of our history, spanning more than 200 years."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "qualitative_superlative",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 70,
+          "quoted_text": "DNB has faced more important challenges than every other central bank."
+        },
+        "evidence_spans": [],
+        "suggested_gold_label": "not_applicable",
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-08-01",
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "qualitative_superlative",
+        "gold_label": "not_applicable",
+        "claim_span": null,
+        "evidence_spans": [],
+        "expected_verification_state": null,
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-08-01",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-347",
+      "source_candidate_id": "V4-STAGE9E-347",
+      "split": "calibration",
+      "origin_family_id": "official:banque-france",
+      "claim_text": "The Banque de France was founded on January 18, 1800.",
+      "evidence": [
+        {
+          "evidence_id": "V3-347:E1",
+          "title": "The history of the Banque de France",
+          "url": "https://www.banque-france.fr/en/banque-de-france/institution-rooted-history/founding-history-banque-de-france",
+          "source_class": "official_html",
+          "passage": "The Banque de France is founded on 18 January 1800 by a group of bankers at the instigation of the First Consul, Napoleon Bonaparte."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "founded_on",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 53,
+          "quoted_text": "The Banque de France was founded on January 18, 1800."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-347:E1",
+            "start_char": 0,
+            "end_char": 132,
+            "quoted_text": "The Banque de France is founded on 18 January 1800 by a group of bankers at the instigation of the First Consul, Napoleon Bonaparte."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-08-01",
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "founded_on",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 53,
+          "quoted_text": "The Banque de France was founded on January 18, 1800."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-347:E1",
+            "start_char": 0,
+            "end_char": 132,
+            "quoted_text": "The Banque de France is founded on 18 January 1800 by a group of bankers at the instigation of the First Consul, Napoleon Bonaparte."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-08-01",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-348",
+      "source_candidate_id": "V4-STAGE9E-348",
+      "split": "calibration",
+      "origin_family_id": "official:banque-france",
+      "claim_text": "The Banque de France was nationalised on December 2, 1945.",
+      "evidence": [
+        {
+          "evidence_id": "V3-348:E1",
+          "title": "The history of the Banque de France",
+          "url": "https://www.banque-france.fr/en/banque-de-france/institution-rooted-history/founding-history-banque-de-france",
+          "source_class": "official_html",
+          "passage": "After the Liberation, the Banque de France is nationalised by the act of 2 December 1945."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "nationalised_on",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 58,
+          "quoted_text": "The Banque de France was nationalised on December 2, 1945."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-348:E1",
+            "start_char": 0,
+            "end_char": 89,
+            "quoted_text": "After the Liberation, the Banque de France is nationalised by the act of 2 December 1945."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-08-01",
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "nationalised_on",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 58,
+          "quoted_text": "The Banque de France was nationalised on December 2, 1945."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-348:E1",
+            "start_char": 0,
+            "end_char": 89,
+            "quoted_text": "After the Liberation, the Banque de France is nationalised by the act of 2 December 1945."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-08-01",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-349",
+      "source_candidate_id": "V4-STAGE9E-349",
+      "split": "calibration",
+      "origin_family_id": "official:banco-espana",
+      "claim_text": "The Banco Nacional de San Carlos was founded on June 2, 1782.",
+      "evidence": [
+        {
+          "evidence_id": "V3-349:E1",
+          "title": "History",
+          "url": "https://www.bde.es/wbe/en/sobre-banco/mision/historia-del-banco/",
+          "source_class": "official_html",
+          "passage": "On 2 June, by means of a Royal Warrant signed by King Carlos III, the Banco Nacional de San Carlos was founded."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "founded_on",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 61,
+          "quoted_text": "The Banco Nacional de San Carlos was founded on June 2, 1782."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-349:E1",
+            "start_char": 0,
+            "end_char": 111,
+            "quoted_text": "On 2 June, by means of a Royal Warrant signed by King Carlos III, the Banco Nacional de San Carlos was founded."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-08-01",
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "founded_on",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 61,
+          "quoted_text": "The Banco Nacional de San Carlos was founded on June 2, 1782."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-349:E1",
+            "start_char": 0,
+            "end_char": 111,
+            "quoted_text": "On 2 June, by means of a Royal Warrant signed by King Carlos III, the Banco Nacional de San Carlos was founded."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-08-01",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-350",
+      "source_candidate_id": "V4-STAGE9E-350",
+      "split": "calibration",
+      "origin_family_id": "official:banco-espana",
+      "claim_text": "Banco Español de San Fernando was renamed Banco de España on January 28, 1856.",
+      "evidence": [
+        {
+          "evidence_id": "V3-350:E1",
+          "title": "History",
+          "url": "https://www.bde.es/wbe/en/sobre-banco/mision/historia-del-banco/",
+          "source_class": "official_html",
+          "passage": "The Law of 28 January 1856 renamed the new Banco Español de San Fernando as the Banco de España."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "renamed_on",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 78,
+          "quoted_text": "Banco Español de San Fernando was renamed Banco de España on January 28, 1856."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-350:E1",
+            "start_char": 0,
+            "end_char": 96,
+            "quoted_text": "The Law of 28 January 1856 renamed the new Banco Español de San Fernando as the Banco de España."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-08-01",
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "renamed_on",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 78,
+          "quoted_text": "Banco Español de San Fernando was renamed Banco de España on January 28, 1856."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-350:E1",
+            "start_char": 0,
+            "end_char": 96,
+            "quoted_text": "The Law of 28 January 1856 renamed the new Banco Español de San Fernando as the Banco de España."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-08-01",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-351",
+      "source_candidate_id": "V4-STAGE9E-351",
+      "split": "calibration",
+      "origin_family_id": "official:nbb",
+      "claim_text": "The law establishing the National Bank of Belgium was signed on May 5, 1850.",
+      "evidence": [
+        {
+          "evidence_id": "V3-351:E1",
+          "title": "175 years of the National Bank of Belgium",
+          "url": "https://www.nbb.be/en/news-events/news/175-years-national-bank-belgium",
+          "source_class": "official_html",
+          "passage": "It was on 5 May 1850 that Leopold I signed the law establishing the National Bank."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "signed_on",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 76,
+          "quoted_text": "The law establishing the National Bank of Belgium was signed on May 5, 1850."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-351:E1",
+            "start_char": 0,
+            "end_char": 82,
+            "quoted_text": "It was on 5 May 1850 that Leopold I signed the law establishing the National Bank."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-08-01",
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "signed_on",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 76,
+          "quoted_text": "The law establishing the National Bank of Belgium was signed on May 5, 1850."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-351:E1",
+            "start_char": 0,
+            "end_char": 82,
+            "quoted_text": "It was on 5 May 1850 that Leopold I signed the law establishing the National Bank."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-08-01",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-352",
+      "source_candidate_id": "V4-STAGE9E-352",
+      "split": "calibration",
+      "origin_family_id": "official:nbb",
+      "claim_text": "The National Bank of Belgium issued its first banknotes in 1851.",
+      "evidence": [
+        {
+          "evidence_id": "V3-352:E1",
+          "title": "175 years of the National Bank of Belgium",
+          "url": "https://www.nbb.be/en/news-events/news/175-years-national-bank-belgium",
+          "source_class": "official_html",
+          "passage": "In 1851, the National Bank issued its first banknotes."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "issued_in",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 64,
+          "quoted_text": "The National Bank of Belgium issued its first banknotes in 1851."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-352:E1",
+            "start_char": 0,
+            "end_char": 54,
+            "quoted_text": "In 1851, the National Bank issued its first banknotes."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-08-01",
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "issued_in",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 64,
+          "quoted_text": "The National Bank of Belgium issued its first banknotes in 1851."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-352:E1",
+            "start_char": 0,
+            "end_char": 54,
+            "quoted_text": "In 1851, the National Bank issued its first banknotes."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-08-01",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-353",
+      "source_candidate_id": "V4-STAGE9E-353",
+      "split": "calibration",
+      "origin_family_id": "official:oenb",
+      "claim_text": "Austria's central bank started operating on June 1, 1816.",
+      "evidence": [
+        {
+          "evidence_id": "V3-353:E1",
+          "title": "Foundation of the bank",
+          "url": "https://www.oenb.at/en/About-Us/History/1816-1818.html",
+          "source_class": "official_html",
+          "passage": "The privileged Austrian National Bank started operation on June 1, 1816."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "started_on",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 57,
+          "quoted_text": "Austria's central bank started operating on June 1, 1816."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-353:E1",
+            "start_char": 0,
+            "end_char": 72,
+            "quoted_text": "The privileged Austrian National Bank started operation on June 1, 1816."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-08-01",
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "started_on",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 57,
+          "quoted_text": "Austria's central bank started operating on June 1, 1816."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-353:E1",
+            "start_char": 0,
+            "end_char": 72,
+            "quoted_text": "The privileged Austrian National Bank started operation on June 1, 1816."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-08-01",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-354",
+      "source_candidate_id": "V4-STAGE9E-354",
+      "split": "calibration",
+      "origin_family_id": "official:oenb",
+      "claim_text": "The Austrian central bank's permanent management was established on January 19, 1818.",
+      "evidence": [
+        {
+          "evidence_id": "V3-354:E1",
+          "title": "The Privilegirte Oesterreichische National-Bank",
+          "url": "https://www.oenb.at/en/About-Us/History/1818-1878.html",
+          "source_class": "official_html",
+          "passage": "On January 19, 1818, the permanent bank management was set up."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "established_on",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 85,
+          "quoted_text": "The Austrian central bank's permanent management was established on January 19, 1818."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-354:E1",
+            "start_char": 0,
+            "end_char": 62,
+            "quoted_text": "On January 19, 1818, the permanent bank management was set up."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-08-01",
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "established_on",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 85,
+          "quoted_text": "The Austrian central bank's permanent management was established on January 19, 1818."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-354:E1",
+            "start_char": 0,
+            "end_char": 62,
+            "quoted_text": "On January 19, 1818, the permanent bank management was set up."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-08-01",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-355",
+      "source_candidate_id": "V4-STAGE9E-355",
+      "split": "calibration",
+      "origin_family_id": "official:cnb",
+      "claim_text": "The Czech National Bank became the Czech Republic's central bank in 1993.",
+      "evidence": [
+        {
+          "evidence_id": "V3-355:E1",
+          "title": "85 Years of the Central Bank",
+          "url": "https://www.cnb.cz/en/about_cnb/85-let/",
+          "source_class": "official_html",
+          "passage": "Under the Constitution, the Czech National Bank became the central bank of the newly formed Czech Republic in 1993."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "became_in",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 73,
+          "quoted_text": "The Czech National Bank became the Czech Republic's central bank in 1993."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-355:E1",
+            "start_char": 0,
+            "end_char": 115,
+            "quoted_text": "Under the Constitution, the Czech National Bank became the central bank of the newly formed Czech Republic in 1993."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-08-01",
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "became_in",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 73,
+          "quoted_text": "The Czech National Bank became the Czech Republic's central bank in 1993."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-355:E1",
+            "start_char": 0,
+            "end_char": 115,
+            "quoted_text": "Under the Constitution, the Czech National Bank became the central bank of the newly formed Czech Republic in 1993."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-08-01",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-356",
+      "source_candidate_id": "V4-STAGE9E-356",
+      "split": "calibration",
+      "origin_family_id": "official:cnb",
+      "claim_text": "The Czech National Bank is more open than every other central bank.",
+      "evidence": [
+        {
+          "evidence_id": "V3-356:E1",
+          "title": "85 Years of the Central Bank",
+          "url": "https://www.cnb.cz/en/about_cnb/85-let/",
+          "source_class": "official_html",
+          "passage": "The independent, competent and maximally open Czech National Bank works to ensure price stability."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "qualitative_superlative",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 67,
+          "quoted_text": "The Czech National Bank is more open than every other central bank."
+        },
+        "evidence_spans": [],
+        "suggested_gold_label": "not_applicable",
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-08-01",
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "qualitative_superlative",
+        "gold_label": "not_applicable",
+        "claim_span": null,
+        "evidence_spans": [],
+        "expected_verification_state": null,
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-08-01",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-357",
+      "source_candidate_id": "V4-STAGE9E-357",
+      "split": "calibration",
+      "origin_family_id": "official:nationalbanken",
+      "claim_text": "Danmarks Nationalbank was established in 1818.",
+      "evidence": [
+        {
+          "evidence_id": "V3-357:E1",
+          "title": "Historical banknotes",
+          "url": "https://www.nationalbanken.dk/en/what-we-do/notes-and-coins/historical-banknotes",
+          "source_class": "official_html",
+          "passage": "Since its establishment in 1818, Danmarks Nationalbank has been the only institution in Denmark that is allowed to issue banknotes."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "established_in",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 46,
+          "quoted_text": "Danmarks Nationalbank was established in 1818."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-357:E1",
+            "start_char": 0,
+            "end_char": 131,
+            "quoted_text": "Since its establishment in 1818, Danmarks Nationalbank has been the only institution in Denmark that is allowed to issue banknotes."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-08-01",
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "established_in",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 46,
+          "quoted_text": "Danmarks Nationalbank was established in 1818."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-357:E1",
+            "start_char": 0,
+            "end_char": 131,
+            "quoted_text": "Since its establishment in 1818, Danmarks Nationalbank has been the only institution in Denmark that is allowed to issue banknotes."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-08-01",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-358",
+      "source_candidate_id": "V4-STAGE9E-358",
+      "split": "calibration",
+      "origin_family_id": "official:nationalbanken",
+      "claim_text": "Danmarks Nationalbank issued its first banknotes in 1819.",
+      "evidence": [
+        {
+          "evidence_id": "V3-358:E1",
+          "title": "Historical banknotes",
+          "url": "https://www.nationalbanken.dk/en/what-we-do/notes-and-coins/historical-banknotes",
+          "source_class": "official_html",
+          "passage": "Danmarks Nationalbank issued its first banknotes in 1819."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "issued_in",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 57,
+          "quoted_text": "Danmarks Nationalbank issued its first banknotes in 1819."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-358:E1",
+            "start_char": 0,
+            "end_char": 57,
+            "quoted_text": "Danmarks Nationalbank issued its first banknotes in 1819."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-08-01",
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "issued_in",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 57,
+          "quoted_text": "Danmarks Nationalbank issued its first banknotes in 1819."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-358:E1",
+            "start_char": 0,
+            "end_char": 57,
+            "quoted_text": "Danmarks Nationalbank issued its first banknotes in 1819."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-08-01",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-359",
+      "source_candidate_id": "V4-STAGE9E-359",
+      "split": "calibration",
+      "origin_family_id": "official:bank-finland",
+      "claim_text": "The Bank of Finland traces its origin to 1811.",
+      "evidence": [
+        {
+          "evidence_id": "V3-359:E1",
+          "title": "History of the Bank of Finland",
+          "url": "https://www.suomenpankki.fi/en/bank-of-finland/art-and-history/",
+          "source_class": "official_html",
+          "passage": "It traces its origin back to 1811."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "originated_in",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 46,
+          "quoted_text": "The Bank of Finland traces its origin to 1811."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-359:E1",
+            "start_char": 0,
+            "end_char": 34,
+            "quoted_text": "It traces its origin back to 1811."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-08-01",
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "originated_in",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 46,
+          "quoted_text": "The Bank of Finland traces its origin to 1811."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-359:E1",
+            "start_char": 0,
+            "end_char": 34,
+            "quoted_text": "It traces its origin back to 1811."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-08-01",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-360",
+      "source_candidate_id": "V4-STAGE9E-360",
+      "split": "calibration",
+      "origin_family_id": "official:bank-finland",
+      "claim_text": "The Bank of Finland moved to Helsinki in 1819.",
+      "evidence": [
+        {
+          "evidence_id": "V3-360:E1",
+          "title": "History of the Bank of Finland",
+          "url": "https://www.suomenpankki.fi/en/bank-of-finland/art-and-history/",
+          "source_class": "official_html",
+          "passage": "This pioneering bank later became the Bank of Finland, which was moved, with the relocation of the capital city, to Helsinki in 1819."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "moved_in",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 46,
+          "quoted_text": "The Bank of Finland moved to Helsinki in 1819."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-360:E1",
+            "start_char": 0,
+            "end_char": 133,
+            "quoted_text": "This pioneering bank later became the Bank of Finland, which was moved, with the relocation of the capital city, to Helsinki in 1819."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-08-01",
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "moved_in",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 46,
+          "quoted_text": "The Bank of Finland moved to Helsinki in 1819."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-360:E1",
+            "start_char": 0,
+            "end_char": 133,
+            "quoted_text": "This pioneering bank later became the Bank of Finland, which was moved, with the relocation of the capital city, to Helsinki in 1819."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-08-01",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    }
+  ]
+}

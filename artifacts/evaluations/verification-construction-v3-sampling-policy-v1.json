@@ -1,0 +1,59 @@
+{
+  "policy_id": "verification-construction-v3-sampling-policy-v1",
+  "target_case_count": 60,
+  "split_quotas": {
+    "development": 20,
+    "calibration": 20,
+    "held_out": 20
+  },
+  "dimension_quotas": {
+    "percentage_or_rate": 6,
+    "count": 6,
+    "pressure": 6,
+    "currency": 6,
+    "speed": 6,
+    "temperature": 6,
+    "duration": 6,
+    "distance_or_mass": 6,
+    "temporal_instant": 6,
+    "temporal_interval_or_status": 6
+  },
+  "construction_label_quotas": {
+    "deterministic_constructible": 30,
+    "fallback_eligible": 15,
+    "unconstructible": 10,
+    "not_applicable": 5
+  },
+  "source_class_quotas": {
+    "official_or_legal": 18,
+    "academic": 12,
+    "fact_check": 10,
+    "news": 12,
+    "other_reviewed_public_source": 8
+  },
+  "minimum_distinct_evidence_families": 40,
+  "maximum_cases_per_origin_family": 2,
+  "random_seed": 20260730,
+  "selection_frozen_before_model_calls": true,
+  "inclusion_rules": [
+    "Natural claim wording from reviewed public evidence packets",
+    "At least one material numerical or temporal construction question",
+    "Retained evidence text is legally accessible or already permitted",
+    "Exact offsets can be annotated without downloading restricted material"
+  ],
+  "exclusion_rules": [
+    "Private, paywalled, deleted, or access-controlled evidence without permission",
+    "Cases generated solely to match an implemented regular expression",
+    "Duplicate claims or shared-origin evidence beyond the family cap",
+    "Claims whose answer depends on undisclosed personal data",
+    "Any case previously exposed during held-out evaluation"
+  ],
+  "sampling_order": [
+    "Collect eligible case metadata without model assistance",
+    "Cluster candidates by evidence-origin family",
+    "Apply source, dimension, and construction-label quotas",
+    "Assign splits using the frozen seed and family-level grouping",
+    "Complete annotation and distinct approval",
+    "Hash and freeze the dataset before any assisted-construction call"
+  ]
+}

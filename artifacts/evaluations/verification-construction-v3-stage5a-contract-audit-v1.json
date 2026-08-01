@@ -1,0 +1,64 @@
+{
+  "audit_id": "verification-construction-v3-stage5a-contract-audit-v1",
+  "status": "passed",
+  "prompt_version": "verification-construction-v3-dev-v2",
+  "development_cases_loaded": 20,
+  "untouched_temporal_case_ids": [
+    "V3-008"
+  ],
+  "locked_previous_attempt_case_ids": [
+    "V3-046"
+  ],
+  "missing_reference_date_case_ids": [
+    "V3-004"
+  ],
+  "explicitly_excluded_qualitative_case_ids": [
+    "V3-014",
+    "V3-016",
+    "V3-017",
+    "V3-029"
+  ],
+  "calibration_cases_loaded": 0,
+  "held_out_cases_loaded": 0,
+  "pre_execution": {
+    "model_calls": 0,
+    "network_calls": 0,
+    "paid_operations": 0
+  },
+  "gates": {
+    "typed_numerical_branch": true,
+    "typed_temporal_status_branch": true,
+    "exact_claim_date_grounding": true,
+    "exact_evidence_date_grounding": true,
+    "exact_status_text_grounding": true,
+    "missing_reference_date_fail_closed": true,
+    "qualitative_exclusion": true,
+    "prompt_version_in_paid_receipt_key": true
+  },
+  "artifacts": [
+    {
+      "path": "src/claim_polygraph_ng/analysis/assisted_verification_construction.py",
+      "sha256": "849d7f0ca4c582ec5e5459a73205a6099b0f6c2934c9a5ad8a011eb4a745e4dd"
+    },
+    {
+      "path": "src/claim_polygraph_ng/analysis/bounded_assisted_construction.py",
+      "sha256": "54b5b98419e3609b33a8ed58efcbf9c5241b6914059a604ac23728905a90ed4a"
+    },
+    {
+      "path": "src/claim_polygraph_ng/providers/idempotent.py",
+      "sha256": "d06d24f88dbec2d4140b8f05874967fee575dea9d4240b71ba15275fd6a3ec54"
+    },
+    {
+      "path": "src/claim_polygraph_ng/providers/ollama.py",
+      "sha256": "096895d8d0febab0dfe9f7d0dff81317edb25f25064d7396202bf17f501b1983"
+    },
+    {
+      "path": "src/claim_polygraph_ng/providers/openai.py",
+      "sha256": "112e626d69d199cedccd7624ac1eb04c79962a22ec415ce0a29411016250de51"
+    },
+    {
+      "path": "scripts/run_v3_stage5a_development.py",
+      "sha256": "0c1477e139a1c1f31e50ea31e7ee30b4c014c22637f4292d815cfc320f78f076"
+    }
+  ]
+}

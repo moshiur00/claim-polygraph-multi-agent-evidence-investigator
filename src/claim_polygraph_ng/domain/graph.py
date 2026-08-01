@@ -57,6 +57,15 @@ class ReviewDecisionKind(StrEnum):
     REJECT = "reject"
 
 
+class VerificationConstructionDisposition(StrEnum):
+    """Reviewer disposition for one persisted assertion-construction attempt."""
+
+    ACCEPT = "accept"
+    CORRECT = "correct"
+    NOT_APPLICABLE = "not_applicable"
+    REQUEST_EVIDENCE = "request_evidence"
+
+
 class DurableGraphStatus(StrEnum):
     """Persisted externally visible status of the durable graph."""
 
@@ -313,11 +322,74 @@ class ReviewDecision(DomainModel):
     reviewer_identity: str = Field(min_length=3, max_length=300)
     rationale: str = Field(min_length=3, max_length=5_000)
     revised_verdict: VerdictLabel | None = None
+    verification_construction_id: UUID | None = None
+    verification_disposition: VerificationConstructionDisposition | None = None
+    corrected_left_subject: str | None = Field(default=None, min_length=1, max_length=500)
+    corrected_right_subject: str | None = Field(default=None, min_length=1, max_length=500)
+    corrected_comparator: str | None = Field(
+        default=None,
+        pattern=r"^[a-z_]+$",
+        max_length=100,
+    )
+    corrected_claim_text_span: str | None = Field(
+        default=None,
+        min_length=1,
+        max_length=2_000,
+    )
+    corrected_value: str | None = Field(default=None, min_length=1, max_length=200)
+    corrected_unit: str | None = Field(default=None, min_length=1, max_length=100)
+    corrected_evidence_ids: tuple[UUID, ...] = ()
 
     @model_validator(mode="after")
     def revision_requires_label(self) -> "ReviewDecision":
         if (self.kind is ReviewDecisionKind.REVISE) != (self.revised_verdict is not None):
             raise ValueError("only revise decisions require a revised verdict")
+        has_disposition = self.verification_disposition is not None
+        if has_disposition != (self.verification_construction_id is not None):
+            raise ValueError(
+                "verification disposition and construction ID must be supplied together"
+            )
+        corrections = (
+            self.corrected_left_subject,
+            self.corrected_right_subject,
+            self.corrected_comparator,
+            self.corrected_claim_text_span,
+            self.corrected_value,
+            self.corrected_unit,
+            *self.corrected_evidence_ids,
+        )
+        if any(corrections) and (
+            self.verification_disposition
+            is not VerificationConstructionDisposition.CORRECT
+        ):
+            raise ValueError("corrected operands require the correct disposition")
+        if len(set(self.corrected_evidence_ids)) != len(
+            self.corrected_evidence_ids
+        ):
+            raise ValueError("corrected evidence IDs must be unique")
+        if (
+            self.verification_disposition
+            is VerificationConstructionDisposition.CORRECT
+            and not any(corrections)
+        ):
+            raise ValueError("correct disposition requires at least one correction")
+        if (
+            self.verification_disposition
+            is VerificationConstructionDisposition.REQUEST_EVIDENCE
+            and self.kind is not ReviewDecisionKind.REQUEST_EVIDENCE
+        ):
+            raise ValueError("request-evidence disposition requires request_evidence")
+        if self.verification_disposition in {
+            VerificationConstructionDisposition.ACCEPT,
+            VerificationConstructionDisposition.NOT_APPLICABLE,
+        } and self.kind is not ReviewDecisionKind.APPROVE:
+            raise ValueError("accept and not-applicable dispositions require approval")
+        if (
+            self.verification_disposition
+            is VerificationConstructionDisposition.CORRECT
+            and self.kind is not ReviewDecisionKind.REVISE
+        ):
+            raise ValueError("correct disposition requires a revise decision")
         return self
 
 

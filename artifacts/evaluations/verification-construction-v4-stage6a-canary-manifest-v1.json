@@ -1,0 +1,35 @@
+{
+  "manifest_id": "verification-construction-v4-stage6a-canary-manifest-v1",
+  "status": "frozen",
+  "provider": "openai",
+  "model": "gpt-4o-mini",
+  "prompt_version": "verification-construction-v3-remediation-v6",
+  "canonicalization_version": "assisted-canonicalization-v4.6a",
+  "maximum_provider_attempts": 1,
+  "maximum_calls_per_fixture": 1,
+  "maximum_input_tokens": 6000,
+  "maximum_output_tokens": 900,
+  "automatic_retries": 0,
+  "maximum_total_cost_usd": 0.25,
+  "fixture": {
+    "canary_id": "v4.6a-synthetic-temporal-canary-v1",
+    "kind": "temporal_status",
+    "claim_text": "Charter R entered into force on 9 March 2021.",
+    "evidence_text": "The fictional registry records that Charter R entered into force on 9 March 2021.",
+    "fixture_sha256": "47d0705b482bb1a6cf77c09bd3406edb3e4e55e685b0788d12962d5a549e5bbe"
+  },
+  "fresh_receipt_identity": true,
+  "dataset_exposure": {
+    "benchmark": 0,
+    "development": 0,
+    "calibration": 0,
+    "held_out": 0
+  },
+  "offline_remediation": {
+    "path": "artifacts/evaluations/verification-construction-v4-stage6a-offline-remediation-v1.json",
+    "sha256": "165170f388a35cc175ce5e2b30d9954a2b23abd56671e88b73b8b26487079447"
+  },
+  "model_calls_before_execution": 0,
+  "network_calls_before_execution": 0,
+  "paid_operations_before_execution": 0
+}

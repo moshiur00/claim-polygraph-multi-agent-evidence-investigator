@@ -1,0 +1,371 @@
+{
+  "audit_id": "verification-construction-v4-stage5-offline-gate-v1",
+  "status": "passed",
+  "offline": true,
+  "model_calls": 0,
+  "network_calls": 0,
+  "search_calls": 0,
+  "paid_operations": 0,
+  "v3_split_exposure": {
+    "development_cases_loaded": 20,
+    "calibration_cases_loaded": 0,
+    "held_out_cases_loaded": 0
+  },
+  "synthetic_gate_metrics": {
+    "constructible_eligibility_recall": 1.0,
+    "negative_exclusion_precision": 1.0,
+    "compound_operand_preservation": 1.0,
+    "exact_span_validity": 1.0,
+    "failed_response_cost_observability": 1.0
+  },
+  "exposed_development_diagnostic": {
+    "promotional": false,
+    "case_count": 20,
+    "applicable_case_count": 18,
+    "applicable_recovered": 14,
+    "eligibility_recall": 0.7777777777777778,
+    "unsafe_inclusions": 0,
+    "note": "Legacy exposed development coverage is diagnostic; no frozen promotion threshold was assigned to it.",
+    "cases": [
+      {
+        "case_id": "V3-004",
+        "claim_text_sha256": "cb8683b0ac1b7d04beaebcf944ee9777a5f99f9d96fa2de843b03b2f51799116",
+        "gold_label": "fallback_eligible",
+        "routes": [
+          "assisted"
+        ],
+        "reason_codes": [
+          "status_or_absence"
+        ],
+        "routed_for_construction": true
+      },
+      {
+        "case_id": "V3-008",
+        "claim_text_sha256": "d95fd88c65fa1272574586890890d4e1caec6653e53e347e29b4a24ab4bc5fc0",
+        "gold_label": "fallback_eligible",
+        "routes": [
+          "assisted"
+        ],
+        "reason_codes": [
+          "status_or_absence"
+        ],
+        "routed_for_construction": true
+      },
+      {
+        "case_id": "V3-009",
+        "claim_text_sha256": "4a9203239094603c2b46e044462c33bba7ec909849192bda610b33b367c72fd4",
+        "gold_label": "deterministic_constructible",
+        "routes": [
+          "assisted"
+        ],
+        "reason_codes": [
+          "ordinary_numerical_language"
+        ],
+        "routed_for_construction": true
+      },
+      {
+        "case_id": "V3-014",
+        "claim_text_sha256": "6ab977407f1121dbf290485dd69104be5fbe67f593946c681c4e2aa4a25ec4c2",
+        "gold_label": "fallback_eligible",
+        "routes": [
+          "assisted"
+        ],
+        "reason_codes": [
+          "status_or_absence"
+        ],
+        "routed_for_construction": true
+      },
+      {
+        "case_id": "V3-015",
+        "claim_text_sha256": "b4cad2882577e59045845aba96776db7e82200dea2ece4ed9ce29adbd3159dc9",
+        "gold_label": "not_applicable",
+        "routes": [
+          "not_applicable"
+        ],
+        "reason_codes": [
+          "qualitative_generalization"
+        ],
+        "routed_for_construction": false
+      },
+      {
+        "case_id": "V3-016",
+        "claim_text_sha256": "1186f19d70cb683e49862f71a704b2ff0c387ce787ee87cd1b64dac5d15d9cb9",
+        "gold_label": "fallback_eligible",
+        "routes": [
+          "not_applicable"
+        ],
+        "reason_codes": [
+          "no_typed_verification_basis"
+        ],
+        "routed_for_construction": false
+      },
+      {
+        "case_id": "V3-017",
+        "claim_text_sha256": "3dd77cd972b09caba100e458d6308e26b1e3e45d9c4356c6e16181854f6e7197",
+        "gold_label": "fallback_eligible",
+        "routes": [
+          "not_applicable"
+        ],
+        "reason_codes": [
+          "no_typed_verification_basis"
+        ],
+        "routed_for_construction": false
+      },
+      {
+        "case_id": "V3-028",
+        "claim_text_sha256": "2c8f49d951f1c8486e9f69df200db3a556ee41fd33b8c7610ddb56c55a1dfd8f",
+        "gold_label": "not_applicable",
+        "routes": [
+          "not_applicable"
+        ],
+        "reason_codes": [
+          "causal_claim"
+        ],
+        "routed_for_construction": false
+      },
+      {
+        "case_id": "V3-029",
+        "claim_text_sha256": "674ed983afa19e79a92e46b89c0e2fe1469f134f2d7e52384fdff256f231a4d7",
+        "gold_label": "fallback_eligible",
+        "routes": [
+          "assisted"
+        ],
+        "reason_codes": [
+          "status_or_absence"
+        ],
+        "routed_for_construction": true
+      },
+      {
+        "case_id": "V3-036",
+        "claim_text_sha256": "9ea621fd7fb9f489c8719a51c2d3166c1656b1f086ea98517be37490b6af0ff0",
+        "gold_label": "deterministic_constructible",
+        "routes": [
+          "assisted"
+        ],
+        "reason_codes": [
+          "ordinary_temporal_language"
+        ],
+        "routed_for_construction": true
+      },
+      {
+        "case_id": "V3-037",
+        "claim_text_sha256": "c9ac76b72b215d58682a0d5046ee60cf6bd70ed483a89904b3ab5f427870012d",
+        "gold_label": "deterministic_constructible",
+        "routes": [
+          "assisted"
+        ],
+        "reason_codes": [
+          "ordinary_numerical_language"
+        ],
+        "routed_for_construction": true
+      },
+      {
+        "case_id": "V3-042",
+        "claim_text_sha256": "3447b1c81fcc752fe5cc87df44b2f95751121349823cd3856f88c5edc1189c44",
+        "gold_label": "deterministic_constructible",
+        "routes": [
+          "deterministic",
+          "assisted"
+        ],
+        "reason_codes": [
+          "bounded_construction_ambiguity",
+          "complete_linked_group"
+        ],
+        "routed_for_construction": true
+      },
+      {
+        "case_id": "V3-043",
+        "claim_text_sha256": "4d4b47e414321d9bf6284e5dca5ebdd2ed588c79aad199c3d5d332ff27ae0fdc",
+        "gold_label": "deterministic_constructible",
+        "routes": [
+          "assisted"
+        ],
+        "reason_codes": [
+          "ordinary_temporal_language"
+        ],
+        "routed_for_construction": true
+      },
+      {
+        "case_id": "V3-044",
+        "claim_text_sha256": "48ddd66262b5b7a5f28deabb53bed0fa2c47dcc7332e2fb1ba761d61ec738d9a",
+        "gold_label": "deterministic_constructible",
+        "routes": [
+          "assisted"
+        ],
+        "reason_codes": [
+          "ordinary_temporal_language"
+        ],
+        "routed_for_construction": true
+      },
+      {
+        "case_id": "V3-045",
+        "claim_text_sha256": "7e970f42478f3486074723f047e328c11fb0791ebc64b4506344ee714513b0a7",
+        "gold_label": "deterministic_constructible",
+        "routes": [
+          "assisted"
+        ],
+        "reason_codes": [
+          "ordinary_numerical_language"
+        ],
+        "routed_for_construction": true
+      },
+      {
+        "case_id": "V3-046",
+        "claim_text_sha256": "fb3c05b71feef015b316e8de500c0bba9cedd9522b7630926cf8693124408a5d",
+        "gold_label": "fallback_eligible",
+        "routes": [
+          "deterministic",
+          "assisted"
+        ],
+        "reason_codes": [
+          "bounded_construction_ambiguity",
+          "complete_linked_group"
+        ],
+        "routed_for_construction": true
+      },
+      {
+        "case_id": "V3-047",
+        "claim_text_sha256": "ff568fc536999eb6e894116e1d51c3152ff445cfad5609714c7f3b87a5b3eae1",
+        "gold_label": "fallback_eligible",
+        "routes": [
+          "not_applicable"
+        ],
+        "reason_codes": [
+          "no_typed_verification_basis"
+        ],
+        "routed_for_construction": false
+      },
+      {
+        "case_id": "V3-048",
+        "claim_text_sha256": "e1b3fdf891b3626468218130008d561bad21519ae19021fb544aa73d5b16da70",
+        "gold_label": "deterministic_constructible",
+        "routes": [
+          "not_applicable"
+        ],
+        "reason_codes": [
+          "no_typed_verification_basis"
+        ],
+        "routed_for_construction": false
+      },
+      {
+        "case_id": "V3-049",
+        "claim_text_sha256": "bc3e5eac0530b13c2d08e9f5be8941e28e62de748d6c4ea9e7f459bb671fe712",
+        "gold_label": "deterministic_constructible",
+        "routes": [
+          "assisted"
+        ],
+        "reason_codes": [
+          "ordinary_numerical_language"
+        ],
+        "routed_for_construction": true
+      },
+      {
+        "case_id": "V3-055",
+        "claim_text_sha256": "ce9547c5c641db8913933e9273e63215f5e581354fa9561d94eb13a118c306c1",
+        "gold_label": "fallback_eligible",
+        "routes": [
+          "deterministic",
+          "assisted"
+        ],
+        "reason_codes": [
+          "bounded_construction_ambiguity",
+          "complete_linked_group"
+        ],
+        "routed_for_construction": true
+      }
+    ]
+  },
+  "gates": {
+    "all_predecessors_passed": true,
+    "all_predecessors_offline": true,
+    "constructible_eligibility_recall_100_percent": true,
+    "negative_exclusion_precision_100_percent": true,
+    "compound_operand_preservation_100_percent": true,
+    "exact_span_validity_100_percent": true,
+    "schema_validity_100_percent": true,
+    "unsafe_accepted_constructions_zero": true,
+    "human_review_routing_recall_100_percent": true,
+    "publication_safety_regressions_zero": true,
+    "duplicate_paid_operations_zero": true,
+    "failed_response_cost_observability_100_percent": true,
+    "cancellation_before_reservation_preserved": true,
+    "restart_reconstruction_preserved": true,
+    "external_operation_counters_zero": true,
+    "v3_development_only_loaded": true,
+    "v3_held_out_texts_loaded_zero": true
+  },
+  "artifacts": [
+    {
+      "path": "src/claim_polygraph_ng/analysis/candidate_extraction.py",
+      "sha256": "38299171ae73074ec00ef701403927c4ab1e940f7c412b1bd050b7572876d640",
+      "bytes": 18394
+    },
+    {
+      "path": "src/claim_polygraph_ng/analysis/compound_construction.py",
+      "sha256": "8f06261770cc7f3d7861b20f8e267987beb0bd8646bdb0fa01d1df2c756195fc",
+      "bytes": 12984
+    },
+    {
+      "path": "src/claim_polygraph_ng/analysis/construction_eligibility.py",
+      "sha256": "1928cd76af2e18dcda0894119e2ac3103129e0de9af7b1b402dc7d5125eac261",
+      "bytes": 9269
+    },
+    {
+      "path": "src/claim_polygraph_ng/domain/compound_assertions.py",
+      "sha256": "6f4ded675b8cc66c96fc5d048535fc5e84689cf6b6315840c66a7931f2526573",
+      "bytes": 7420
+    },
+    {
+      "path": "src/claim_polygraph_ng/domain/construction_eligibility.py",
+      "sha256": "1aa5e89364477ef36d5f474f7638c29e1161d4ad192affaded3a69e57dccf748",
+      "bytes": 4014
+    },
+    {
+      "path": "tests/unit/test_v4_failed_cost_observability.py",
+      "sha256": "790193079f9868166bb3245037fe43a57550b5bc5f2cc85bca60176f0bb27897",
+      "bytes": 9761
+    },
+    {
+      "path": "tests/unit/test_v4_candidate_extraction.py",
+      "sha256": "ecbc56172bcad300c2407bbf28695dfee6d2e9f725c180bb4e5fce3cb28983cd",
+      "bytes": 5253
+    },
+    {
+      "path": "tests/unit/test_v4_compound_assertions.py",
+      "sha256": "b25c9bd70dba0d152cacd3d1308e81ae2bfce57cf801f78a27c7190d7dd63194",
+      "bytes": 6344
+    },
+    {
+      "path": "tests/unit/test_v4_construction_eligibility.py",
+      "sha256": "6d1f3436d5a061cf6e10845b41b3e79fa11066c56e47bdca4f465e44ab04d68a",
+      "bytes": 5396
+    },
+    {
+      "path": "scripts/audit_v4_stage5_offline_gate.py",
+      "sha256": "620d168c7f6b819638266a98cd73a73e42bc1949fb3f7273960e57a2adc167b2",
+      "bytes": 8360
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage1-cost-observability-v1.json",
+      "sha256": "76137b424d0ab275079c34ba9844fab0df3c5eeddafd7546300d151cd3f8dbd8",
+      "bytes": 3449
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage2-candidate-extraction-v1.json",
+      "sha256": "1bcf4444d5960618c85a0aa97ce9afff805e7585310f49b1654971bc634b9469",
+      "bytes": 35679
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage3-compound-assertions-v1.json",
+      "sha256": "f354fc30c0c977735ea3f915aa0edf5dca0f45e93b428fea588aa3bb493749fa",
+      "bytes": 24163
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage4-eligibility-v1.json",
+      "sha256": "b92692b6ab4d26dc5484260c754c8110b0441074ccfe347643fc129bf97e4d7f",
+      "bytes": 12084
+    }
+  ],
+  "exit_criterion_met": true,
+  "next_stage": "V4.6 bounded synthetic provider canary"
+}

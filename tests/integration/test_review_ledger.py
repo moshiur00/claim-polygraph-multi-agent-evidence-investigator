@@ -5,7 +5,10 @@ from uuid import uuid4
 
 import pytest
 
-from claim_polygraph_ng.domain.graph import ReviewDecisionKind
+from claim_polygraph_ng.domain.graph import (
+    ReviewDecisionKind,
+    VerificationConstructionDisposition,
+)
 from claim_polygraph_ng.domain.models import VerdictLabel
 from claim_polygraph_ng.domain.review import (
     ApprovalDecision,
@@ -136,3 +139,34 @@ def test_decision_replay_is_idempotent_but_authoritative_revision_needs_approval
     )
     with pytest.raises(ReviewPolicyError, match="require approval"):
         ledger.record_revision(revision, expected_sequence=2)
+
+
+def test_verification_construction_disposition_survives_restart_and_replay(
+    tmp_path,
+) -> None:
+    path = tmp_path / "review.db"
+    ledger = SQLiteReviewLedger(path)
+    ledger.initialize()
+    request = ledger.create_request(_request())
+    construction_id = uuid4()
+    decision = ReviewerDecisionRecord(
+        decision_id=uuid4(),
+        request_id=request.request_id,
+        kind=ReviewDecisionKind.REQUEST_EVIDENCE,
+        reviewer_identity="Md Moshiur Rahman",
+        rationale="The comparison needs evidence-bound operands.",
+        verification_construction_id=construction_id,
+        verification_disposition=(
+            VerificationConstructionDisposition.REQUEST_EVIDENCE
+        ),
+    )
+
+    ledger.record_decision(decision, expected_sequence=1)
+    assert ledger.record_decision(decision, expected_sequence=999) == decision
+
+    replayed = SQLiteReviewLedger(path).load(request.request_id)
+    assert replayed.decisions[0].verification_construction_id == construction_id
+    assert (
+        replayed.decisions[0].verification_disposition
+        is VerificationConstructionDisposition.REQUEST_EVIDENCE
+    )

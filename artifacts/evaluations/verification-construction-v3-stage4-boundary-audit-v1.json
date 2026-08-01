@@ -1,0 +1,43 @@
+{
+  "audit_id": "verification-construction-v3-stage4-boundary-audit-v1",
+  "status": "passed",
+  "selected_model": "gpt-5.6-luna",
+  "model_calls": 0,
+  "network_calls": 0,
+  "paid_operations": 0,
+  "prompt_tuning_performed": false,
+  "artifacts": [
+    {
+      "path": "src/claim_polygraph_ng/analysis/assisted_verification_construction.py",
+      "sha256": "2e93fe35a40e19e5c88adcfde0f41dcc795dd60d8b6e9c15502eeb54bd42a86e"
+    },
+    {
+      "path": "src/claim_polygraph_ng/analysis/bounded_assisted_construction.py",
+      "sha256": "e354bd7efc46601d77d0c8054af0b97b68d63ea64ba997d367f05faa05e4c983"
+    },
+    {
+      "path": "src/claim_polygraph_ng/providers/idempotent.py",
+      "sha256": "cbf772f2e39b249ee9d8a8cf57bb1d5987babbf808dea055209ccdf44d8e59a3"
+    },
+    {
+      "path": "src/claim_polygraph_ng/providers/openai.py",
+      "sha256": "504f748a1e77f6ad807eb6de0f8bfca63560a1097581fab1ff6c94930357a90b"
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v3-stage4-provider-boundary-v1.json",
+      "sha256": "fda6287dc00c44e4c1e5f99086c92aee0056821d118290a07a8e0e2fbe96696d"
+    }
+  ],
+  "gates": {
+    "structured_output": true,
+    "exact_span_validation": true,
+    "approved_packet_enforcement": true,
+    "durable_receipt_cache": true,
+    "duplicate_charge_prevention": true,
+    "one_attempt_per_case": true,
+    "cost_and_token_budgets": true,
+    "cooperative_cancellation": true,
+    "privacy_safe_telemetry": true,
+    "judgment_fields_absent": true
+  }
+}

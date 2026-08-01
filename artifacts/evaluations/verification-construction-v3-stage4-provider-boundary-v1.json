@@ -1,0 +1,50 @@
+{
+  "manifest_id": "verification-construction-v3-stage4-provider-boundary-v1",
+  "status": "wired_not_executed",
+  "selected_provider": "openai",
+  "selected_model": "gpt-5.6-luna",
+  "endpoint": "responses",
+  "structured_outputs_required": true,
+  "reasoning_effort": "low",
+  "store_response": false,
+  "selection_reason": "Official OpenAI documentation identifies GPT-5.6 Luna as the cost-sensitive high-volume tier and confirms Responses API and Structured Outputs support.",
+  "official_sources": [
+    "https://developers.openai.com/api/docs/models",
+    "https://developers.openai.com/api/docs/models/gpt-5.6-luna"
+  ],
+  "pricing": {
+    "version": "openai-list-prices-2026-07-30",
+    "input_usd_per_million": 1.0,
+    "cached_input_usd_per_million": 0.1,
+    "output_usd_per_million": 6.0
+  },
+  "frozen_budget": {
+    "maximum_calls_per_case": 1,
+    "maximum_total_calls": 25,
+    "maximum_input_tokens_per_call": 6000,
+    "maximum_output_tokens_per_call": 800,
+    "maximum_total_cost_usd": 0.75
+  },
+  "safety_boundary": {
+    "proposal_may_set_verdict": false,
+    "proposal_may_set_verification_state": false,
+    "proposal_may_set_readiness": false,
+    "proposal_may_set_publication": false,
+    "exact_claim_span_required": true,
+    "exact_approved_evidence_spans_required": true,
+    "deterministic_validation_required": true,
+    "durable_paid_receipt_required": true,
+    "duplicate_charge_prevention_required": true,
+    "cooperative_cancellation_required": true,
+    "privacy_safe_telemetry_required": true
+  },
+  "execution_controls": {
+    "benchmark_model_calls": 0,
+    "network_calls": 0,
+    "paid_operations": 0,
+    "prompt_tuning_performed": false,
+    "development_split_exposed_to_model": false,
+    "calibration_split_exposed_to_model": false,
+    "held_out_split_exposed_to_model": false
+  }
+}

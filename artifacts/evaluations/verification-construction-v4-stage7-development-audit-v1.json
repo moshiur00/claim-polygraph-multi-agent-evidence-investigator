@@ -1,0 +1,62 @@
+{
+  "audit_id": "verification-construction-v4-stage7-development-audit-v1",
+  "status": "failed_safe",
+  "exit_criterion_met": false,
+  "promotion_authorized": false,
+  "result_sha256": "5c269540db9a7e260e5aa2d8f39fcf59b399b78f9ba9592363680691ec4ea649",
+  "metrics": {
+    "cases": 20,
+    "positive_gold_cases": 18,
+    "constructible_eligibility_recall": 0.3888888888888889,
+    "construction_precision": 1.0,
+    "construction_recall": 0.05555555555555555,
+    "human_review_routing_recall": 1.0,
+    "unsafe_accepted_constructions": 0,
+    "provider_attempts": 7,
+    "completed_paid_operations": 6,
+    "failed_paid_operations": 1,
+    "duplicate_paid_operations": 0,
+    "estimated_cost_usd": 0.00211035,
+    "development_calls_remaining": 11
+  },
+  "false_eligibility_exclusion_case_ids": [
+    "V3-004",
+    "V3-016",
+    "V3-017",
+    "V3-029",
+    "V3-036",
+    "V3-043",
+    "V3-044",
+    "V3-046",
+    "V3-047",
+    "V3-048",
+    "V3-055"
+  ],
+  "safe_failure_case_ids": [
+    "V3-008",
+    "V3-009",
+    "V3-014",
+    "V3-042",
+    "V3-045",
+    "V3-049"
+  ],
+  "gates": {
+    "development_call_limit": true,
+    "unsafe_accepted_constructions_zero": true,
+    "construction_precision": true,
+    "constructible_eligibility_recall": false,
+    "overall_construction_recall": false,
+    "human_review_routing_recall": true,
+    "duplicate_paid_operations_zero": true,
+    "failed_response_cost_observability": true,
+    "calibration_remained_sealed": true,
+    "held_out_remained_sealed": true
+  },
+  "dataset_exposure": {
+    "development_cases": 20,
+    "calibration_cases": 0,
+    "held_out_cases": 0
+  },
+  "next_stage": "V4.7b development-result remediation",
+  "remediation_scope": "Align V4 candidate routing with assisted eligibility; repair scalar and temporal evidence binding; normalize nullable tolerance; use only development results and synthetic fixtures; do not rerun V4.7."
+}

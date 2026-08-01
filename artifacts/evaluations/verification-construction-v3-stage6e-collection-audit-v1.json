@@ -1,0 +1,49 @@
+{
+  "audit_id": "verification-construction-v3-stage6e-collection-audit-v1",
+  "status": "passed",
+  "checks": {
+    "case_count": true,
+    "minimum_origin_families": true,
+    "maximum_two_cases_per_family": true,
+    "unique_claims": true,
+    "no_exposed_claim_reuse": true,
+    "no_exposed_url_reuse": true,
+    "no_exposed_family_reuse": true,
+    "exact_machine_spans": true,
+    "accessible_html_only": true,
+    "all_annotations_unrecorded": true,
+    "all_approvals_unrecorded": true
+  },
+  "case_count": 20,
+  "origin_family_count": 10,
+  "family_counts": {
+    "official:fao": 2,
+    "official:iaea": 2,
+    "official:icao": 2,
+    "official:imo": 2,
+    "official:interpol": 2,
+    "official:itu": 2,
+    "official:unicef": 2,
+    "official:upu": 2,
+    "official:wmo": 2,
+    "official:wto": 2
+  },
+  "suggested_constructible_cases": 18,
+  "suggested_nonconstructible_cases": 2,
+  "controls": {
+    "model_calls": 0,
+    "estimated_cost_usd": 0.0,
+    "pdf_downloads": 0,
+    "restricted_content_fetches": 0,
+    "held_out_claim_texts_printed_or_exposed_to_model": 0,
+    "held_out_cases_exposed_to_provider": 0,
+    "human_annotations_recorded": 0,
+    "human_approvals_recorded": 0
+  },
+  "review_defaults": {
+    "annotator_identity": "Md Moshiur Rahman",
+    "approver_identity": "Md Rashedul Islam",
+    "approval_decisions_prefilled": 0,
+    "approval_checklists_prefilled": 0
+  }
+}

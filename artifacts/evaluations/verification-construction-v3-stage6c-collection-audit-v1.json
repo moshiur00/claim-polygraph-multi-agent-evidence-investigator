@@ -1,0 +1,41 @@
+{
+  "audit_id": "verification-construction-v3-stage6c-collection-audit-v1",
+  "status": "passed_awaiting_human_review",
+  "workbook_sha256": "a23643e04f82d1c7c7a7e1ca3ba9e365363f1c1003f4dfd4a87f87ecdf13f5ec",
+  "case_count": 20,
+  "origin_family_count": 10,
+  "maximum_cases_per_family": 2,
+  "family_counts": {
+    "official:bls": 2,
+    "official:cern": 2,
+    "official:federal-reserve": 2,
+    "official:ilo": 2,
+    "official:library-of-congress": 2,
+    "official:nhgri": 2,
+    "official:noaa": 2,
+    "official:sec": 2,
+    "official:smithsonian": 2,
+    "official:un": 2
+  },
+  "exact_claim_reuse_count": 0,
+  "source_url_reuse_count": 0,
+  "pdf_or_document_downloads": 0,
+  "annotated_cases": 0,
+  "approved_cases": 0,
+  "model_calls": 0,
+  "sealed_data_controls": {
+    "original_frozen_dataset_opened_for_comparison": false,
+    "original_held_out_cases_loaded": 0,
+    "original_held_out_cases_exposed": 0,
+    "non_reuse_strategy": "Compare exact claims and URLs only with exposed collection artifacts; use ten new organization-level origin families and do not inspect the sealed held-out split."
+  },
+  "coverage": [
+    "count",
+    "date",
+    "date_range",
+    "distance",
+    "percentage",
+    "temporal_status"
+  ],
+  "blocking_reasons": []
+}

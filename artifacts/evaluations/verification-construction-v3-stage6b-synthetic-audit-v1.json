@@ -1,0 +1,98 @@
+{
+  "audit_id": "verification-construction-v3-stage6b-synthetic-audit-v1",
+  "status": "passed",
+  "case_count": 12,
+  "passed_count": 12,
+  "failed_count": 0,
+  "development_or_synthetic_only": true,
+  "model_calls": 0,
+  "original_calibration_cases_loaded": 0,
+  "replacement_calibration_cases_loaded": 0,
+  "original_held_out_cases_loaded": 0,
+  "results": [
+    {
+      "case_id": "V3B-SYN-001",
+      "focus": "grouped_decimal",
+      "expected": "numerical_scalar",
+      "observed": "numerical_scalar",
+      "passed": true
+    },
+    {
+      "case_id": "V3B-SYN-002",
+      "focus": "scientific_notation",
+      "expected": "numerical_conversion",
+      "observed": "numerical_conversion",
+      "passed": true
+    },
+    {
+      "case_id": "V3B-SYN-003",
+      "focus": "additional_pressure_unit",
+      "expected": "numerical_scalar",
+      "observed": "numerical_scalar",
+      "passed": true
+    },
+    {
+      "case_id": "V3B-SYN-004",
+      "focus": "qualified_duration_unit",
+      "expected": "numerical_scalar",
+      "observed": "numerical_scalar",
+      "passed": true
+    },
+    {
+      "case_id": "V3B-SYN-005",
+      "focus": "range",
+      "expected": "numerical_range",
+      "observed": "numerical_range",
+      "passed": true
+    },
+    {
+      "case_id": "V3B-SYN-006",
+      "focus": "ratio_word",
+      "expected": "numerical_scalar",
+      "observed": "numerical_scalar",
+      "passed": true
+    },
+    {
+      "case_id": "V3B-SYN-007",
+      "focus": "temporal_binding_default",
+      "expected": "temporal",
+      "observed": "temporal",
+      "passed": true
+    },
+    {
+      "case_id": "V3B-SYN-008",
+      "focus": "month_first_date",
+      "expected": "temporal",
+      "observed": "temporal",
+      "passed": true
+    },
+    {
+      "case_id": "V3B-SYN-009",
+      "focus": "subject_and_span_canonicalization",
+      "expected": "numerical_scalar",
+      "observed": "numerical_scalar",
+      "passed": true
+    },
+    {
+      "case_id": "V3B-SYN-010",
+      "focus": "fail_closed_status",
+      "expected": "missing_reference_date",
+      "observed": "missing_reference_date",
+      "passed": true
+    },
+    {
+      "case_id": "V3B-SYN-011",
+      "focus": "qualitative_exclusion",
+      "expected": "excluded_qualitative",
+      "observed": "excluded_qualitative",
+      "passed": true
+    },
+    {
+      "case_id": "V3B-SYN-012",
+      "focus": "additional_mass_unit",
+      "expected": "numerical_scalar",
+      "observed": "numerical_scalar",
+      "passed": true
+    }
+  ]
+}

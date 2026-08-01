@@ -1,0 +1,847 @@
+{
+  "workbook_id": "verification-construction-v3-stage6c-fresh-calibration-workbook-v1",
+  "schema_version": 1,
+  "frozen": false,
+  "cases": [
+    {
+      "case_id": "V3-201",
+      "source_candidate_id": "NOAA-DEPTH",
+      "split": "calibration",
+      "origin_family_id": "official:noaa",
+      "claim_text": "The average depth of the ocean is approximately 3,682 meters.",
+      "evidence": [
+        {
+          "evidence_id": "V3-201:E1",
+          "title": "How deep is the ocean?",
+          "url": "https://oceanexplorer.noaa.gov/ocean-fact/ocean-depth/",
+          "source_class": "official_html",
+          "passage": "The average depth of the ocean is 3,682 meters, or 12,080 feet."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "distance",
+        "comparator_or_relation": "approximately_equal",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 61,
+          "quoted_text": "The average depth of the ocean is approximately 3,682 meters."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-201:E1",
+            "start_char": 0,
+            "end_char": 63,
+            "quoted_text": "The average depth of the ocean is 3,682 meters, or 12,080 feet."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Navigation-only proposal; requires human annotation.",
+          "Accessible public HTML; no document download."
+        ],
+        "model_calls": 0
+      },
+      "annotation": null,
+      "approval": null
+    },
+    {
+      "case_id": "V3-202",
+      "source_candidate_id": "NOAA-COVERAGE",
+      "split": "calibration",
+      "origin_family_id": "official:noaa",
+      "claim_text": "The ocean covers approximately 70 percent of Earth's surface.",
+      "evidence": [
+        {
+          "evidence_id": "V3-202:E1",
+          "title": "How much of the ocean has been explored?",
+          "url": "https://oceanexplorer.noaa.gov/ocean-fact/explored/",
+          "source_class": "official_html",
+          "passage": "The ocean covers approximately 70% of Earth's surface."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "percentage",
+        "comparator_or_relation": "approximately_equal",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 61,
+          "quoted_text": "The ocean covers approximately 70 percent of Earth's surface."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-202:E1",
+            "start_char": 0,
+            "end_char": 54,
+            "quoted_text": "The ocean covers approximately 70% of Earth's surface."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Navigation-only proposal; requires human annotation.",
+          "Accessible public HTML; no document download."
+        ],
+        "model_calls": 0
+      },
+      "annotation": null,
+      "approval": null
+    },
+    {
+      "case_id": "V3-203",
+      "source_candidate_id": "BLS-BASE-VALUE",
+      "split": "calibration",
+      "origin_family_id": "official:bls",
+      "claim_text": "The current CPI base-period index is 100.",
+      "evidence": [
+        {
+          "evidence_id": "V3-203:E1",
+          "title": "CPI - All Urban Consumers - Field Definitions",
+          "url": "https://www.bls.gov/help/def/cu.htm",
+          "source_class": "official_html",
+          "passage": "The current base year is 1982-84=100 or more recent."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "count",
+        "comparator_or_relation": "equal",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 41,
+          "quoted_text": "The current CPI base-period index is 100."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-203:E1",
+            "start_char": 0,
+            "end_char": 52,
+            "quoted_text": "The current base year is 1982-84=100 or more recent."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Navigation-only proposal; requires human annotation.",
+          "Accessible public HTML; no document download."
+        ],
+        "model_calls": 0
+      },
+      "annotation": null,
+      "approval": null
+    },
+    {
+      "case_id": "V3-204",
+      "source_candidate_id": "BLS-BASE-RANGE",
+      "split": "calibration",
+      "origin_family_id": "official:bls",
+      "claim_text": "The standard current CPI base period runs from 1982 through 1984.",
+      "evidence": [
+        {
+          "evidence_id": "V3-204:E1",
+          "title": "CPI - All Urban Consumers - Field Definitions",
+          "url": "https://www.bls.gov/help/def/cu.htm",
+          "source_class": "official_html",
+          "passage": "The current base year is 1982-84=100 or more recent."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "date_range",
+        "comparator_or_relation": "range",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 65,
+          "quoted_text": "The standard current CPI base period runs from 1982 through 1984."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-204:E1",
+            "start_char": 0,
+            "end_char": 52,
+            "quoted_text": "The current base year is 1982-84=100 or more recent."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Navigation-only proposal; requires human annotation.",
+          "Accessible public HTML; no document download."
+        ],
+        "model_calls": 0
+      },
+      "annotation": null,
+      "approval": null
+    },
+    {
+      "case_id": "V3-205",
+      "source_candidate_id": "SEC-CREATED",
+      "split": "calibration",
+      "origin_family_id": "official:sec",
+      "claim_text": "The Securities Exchange Act of 1934 created the SEC.",
+      "evidence": [
+        {
+          "evidence_id": "V3-205:E1",
+          "title": "Opening Remarks Before the SEC's 90th Anniversary Event",
+          "url": "https://www.sec.gov/newsroom/speeches-statements/gensler-remarks-90thsec-060624",
+          "source_class": "official_html",
+          "passage": "President Roosevelt worked with Congress to enact the Securities Exchange Act of 1934\u2014creating the SEC and making June 6 our official birthday."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_status",
+        "comparator_or_relation": "created_in",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 52,
+          "quoted_text": "The Securities Exchange Act of 1934 created the SEC."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-205:E1",
+            "start_char": 0,
+            "end_char": 143,
+            "quoted_text": "President Roosevelt worked with Congress to enact the Securities Exchange Act of 1934\u2014creating the SEC and making June 6 our official birthday."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Navigation-only proposal; requires human annotation.",
+          "Accessible public HTML; no document download."
+        ],
+        "model_calls": 0
+      },
+      "annotation": null,
+      "approval": null
+    },
+    {
+      "case_id": "V3-206",
+      "source_candidate_id": "SEC-ANNIVERSARY",
+      "split": "calibration",
+      "origin_family_id": "official:sec",
+      "claim_text": "The SEC celebrated its 90th anniversary on 6 June 2024.",
+      "evidence": [
+        {
+          "evidence_id": "V3-206:E1",
+          "title": "Opening Remarks Before the SEC's 90th Anniversary Event",
+          "url": "https://www.sec.gov/newsroom/speeches-statements/gensler-remarks-90thsec-060624",
+          "source_class": "official_html",
+          "passage": "Opening Remarks Before the SEC's 90th Anniversary Event. June 6, 2024. We celebrate the 90th anniversary of a milestone in American history."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "date",
+        "comparator_or_relation": "on",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 55,
+          "quoted_text": "The SEC celebrated its 90th anniversary on 6 June 2024."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-206:E1",
+            "start_char": 0,
+            "end_char": 140,
+            "quoted_text": "Opening Remarks Before the SEC's 90th Anniversary Event. June 6, 2024. We celebrate the 90th anniversary of a milestone in American history."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Navigation-only proposal; requires human annotation.",
+          "Accessible public HTML; no document download."
+        ],
+        "model_calls": 0
+      },
+      "annotation": null,
+      "approval": null
+    },
+    {
+      "case_id": "V3-207",
+      "source_candidate_id": "FED-CREATED",
+      "split": "calibration",
+      "origin_family_id": "official:federal-reserve",
+      "claim_text": "The Federal Reserve System was created on 23 December 1913.",
+      "evidence": [
+        {
+          "evidence_id": "V3-207:E1",
+          "title": "About the Federal Reserve System",
+          "url": "https://www.federalreserve.gov/publications/2017-ar-overview.htm",
+          "source_class": "official_html",
+          "passage": "The Federal Reserve System, which serves as the nation's central bank, was created by an act of Congress on December 23, 1913."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "date",
+        "comparator_or_relation": "created_on",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 59,
+          "quoted_text": "The Federal Reserve System was created on 23 December 1913."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-207:E1",
+            "start_char": 0,
+            "end_char": 126,
+            "quoted_text": "The Federal Reserve System, which serves as the nation's central bank, was created by an act of Congress on December 23, 1913."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Navigation-only proposal; requires human annotation.",
+          "Accessible public HTML; no document download."
+        ],
+        "model_calls": 0
+      },
+      "annotation": null,
+      "approval": null
+    },
+    {
+      "case_id": "V3-208",
+      "source_candidate_id": "FED-BANKS",
+      "split": "calibration",
+      "origin_family_id": "official:federal-reserve",
+      "claim_text": "The Federal Reserve System has 12 regional Reserve Banks.",
+      "evidence": [
+        {
+          "evidence_id": "V3-208:E1",
+          "title": "About the Federal Reserve System",
+          "url": "https://www.federalreserve.gov/publications/2017-ar-overview.htm",
+          "source_class": "official_html",
+          "passage": "The System consists of a seven-member Board of Governors with headquarters in Washington, D.C., and the 12 Reserve Banks located in major cities throughout the United States."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "count",
+        "comparator_or_relation": "equal",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 57,
+          "quoted_text": "The Federal Reserve System has 12 regional Reserve Banks."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-208:E1",
+            "start_char": 0,
+            "end_char": 174,
+            "quoted_text": "The System consists of a seven-member Board of Governors with headquarters in Washington, D.C., and the 12 Reserve Banks located in major cities throughout the United States."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Navigation-only proposal; requires human annotation.",
+          "Accessible public HTML; no document download."
+        ],
+        "model_calls": 0
+      },
+      "annotation": null,
+      "approval": null
+    },
+    {
+      "case_id": "V3-209",
+      "source_candidate_id": "NHGRI-BASES",
+      "split": "calibration",
+      "origin_family_id": "official:nhgri",
+      "claim_text": "The human genome contains about 3 billion bases.",
+      "evidence": [
+        {
+          "evidence_id": "V3-209:E1",
+          "title": "Deoxyribonucleic Acid (DNA) Fact Sheet",
+          "url": "https://www.genome.gov/about-genomics/fact-sheets/Deoxyribonucleic-Acid-Fact-Sheet",
+          "source_class": "official_html",
+          "passage": "The complete DNA instruction book, or genome, for a human contains about 3 billion bases and about 20,000 genes on 23 pairs of chromosomes."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "count",
+        "comparator_or_relation": "approximately_equal",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 48,
+          "quoted_text": "The human genome contains about 3 billion bases."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-209:E1",
+            "start_char": 0,
+            "end_char": 139,
+            "quoted_text": "The complete DNA instruction book, or genome, for a human contains about 3 billion bases and about 20,000 genes on 23 pairs of chromosomes."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Navigation-only proposal; requires human annotation.",
+          "Accessible public HTML; no document download."
+        ],
+        "model_calls": 0
+      },
+      "annotation": null,
+      "approval": null
+    },
+    {
+      "case_id": "V3-210",
+      "source_candidate_id": "NHGRI-CHROMOSOMES",
+      "split": "calibration",
+      "origin_family_id": "official:nhgri",
+      "claim_text": "A typical human cell has 46 chromosomes.",
+      "evidence": [
+        {
+          "evidence_id": "V3-210:E1",
+          "title": "Chromosome Abnormalities Fact Sheet",
+          "url": "https://www.genome.gov/about-genomics/fact-sheets/Chromosome-Abnormalities-Fact-Sheet",
+          "source_class": "official_html",
+          "passage": "The typical number of chromosomes in a human cell is 46: 23 pairs, holding an estimated total of 20,000 to 25,000 genes."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "count",
+        "comparator_or_relation": "equal",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 40,
+          "quoted_text": "A typical human cell has 46 chromosomes."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-210:E1",
+            "start_char": 0,
+            "end_char": 120,
+            "quoted_text": "The typical number of chromosomes in a human cell is 46: 23 pairs, holding an estimated total of 20,000 to 25,000 genes."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Navigation-only proposal; requires human annotation.",
+          "Accessible public HTML; no document download."
+        ],
+        "model_calls": 0
+      },
+      "annotation": null,
+      "approval": null
+    },
+    {
+      "case_id": "V3-211",
+      "source_candidate_id": "LOC-FOUNDED",
+      "split": "calibration",
+      "origin_family_id": "official:library-of-congress",
+      "claim_text": "The Library of Congress was established on 24 April 1800.",
+      "evidence": [
+        {
+          "evidence_id": "V3-211:E1",
+          "title": "Bicentennial of the Library of Congress",
+          "url": "https://www.loc.gov/loc/lcib/0005/proclaim.html",
+          "source_class": "official_html",
+          "passage": "The Library of Congress was established in the District of Columbia on April 24, 1800."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "date",
+        "comparator_or_relation": "established_on",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 57,
+          "quoted_text": "The Library of Congress was established on 24 April 1800."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-211:E1",
+            "start_char": 0,
+            "end_char": 86,
+            "quoted_text": "The Library of Congress was established in the District of Columbia on April 24, 1800."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Navigation-only proposal; requires human annotation.",
+          "Accessible public HTML; no document download."
+        ],
+        "model_calls": 0
+      },
+      "annotation": null,
+      "approval": null
+    },
+    {
+      "case_id": "V3-212",
+      "source_candidate_id": "LOC-DAILY-ADDITIONS",
+      "split": "calibration",
+      "origin_family_id": "official:library-of-congress",
+      "claim_text": "The Library of Congress adds more than 10,000 items each working day.",
+      "evidence": [
+        {
+          "evidence_id": "V3-212:E1",
+          "title": "Fascinating Facts",
+          "url": "https://www.loc.gov/about/fascinating-facts",
+          "source_class": "official_html",
+          "passage": "Each working day the Library receives some 15,000 items and adds more than 10,000 items to its collections."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "count",
+        "comparator_or_relation": "greater_than",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 69,
+          "quoted_text": "The Library of Congress adds more than 10,000 items each working day."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-212:E1",
+            "start_char": 0,
+            "end_char": 107,
+            "quoted_text": "Each working day the Library receives some 15,000 items and adds more than 10,000 items to its collections."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Navigation-only proposal; requires human annotation.",
+          "Accessible public HTML; no document download."
+        ],
+        "model_calls": 0
+      },
+      "annotation": null,
+      "approval": null
+    },
+    {
+      "case_id": "V3-213",
+      "source_candidate_id": "UN-START",
+      "split": "calibration",
+      "origin_family_id": "official:un",
+      "claim_text": "The United Nations officially began on 24 October 1945.",
+      "evidence": [
+        {
+          "evidence_id": "V3-213:E1",
+          "title": "History of the United Nations",
+          "url": "https://www.un.org/en/about-us/history-of-the-un",
+          "source_class": "official_html",
+          "passage": "The United Nations officially began, on 24 October 1945, when it came into existence after its Charter had been ratified."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "date",
+        "comparator_or_relation": "started_on",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 55,
+          "quoted_text": "The United Nations officially began on 24 October 1945."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-213:E1",
+            "start_char": 0,
+            "end_char": 121,
+            "quoted_text": "The United Nations officially began, on 24 October 1945, when it came into existence after its Charter had been ratified."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Navigation-only proposal; requires human annotation.",
+          "Accessible public HTML; no document download."
+        ],
+        "model_calls": 0
+      },
+      "annotation": null,
+      "approval": null
+    },
+    {
+      "case_id": "V3-214",
+      "source_candidate_id": "UN-MEMBERS",
+      "split": "calibration",
+      "origin_family_id": "official:un",
+      "claim_text": "The United Nations currently has 193 Member States.",
+      "evidence": [
+        {
+          "evidence_id": "V3-214:E1",
+          "title": "About Us",
+          "url": "https://www.un.org/en/about-us/",
+          "source_class": "official_html",
+          "passage": "The United Nations is an international organization founded in 1945. Currently made up of 193 Member States."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "count",
+        "comparator_or_relation": "equal",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 51,
+          "quoted_text": "The United Nations currently has 193 Member States."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-214:E1",
+            "start_char": 0,
+            "end_char": 108,
+            "quoted_text": "The United Nations is an international organization founded in 1945. Currently made up of 193 Member States."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Navigation-only proposal; requires human annotation.",
+          "Accessible public HTML; no document download."
+        ],
+        "model_calls": 0
+      },
+      "annotation": null,
+      "approval": null
+    },
+    {
+      "case_id": "V3-215",
+      "source_candidate_id": "ILO-CREATED",
+      "split": "calibration",
+      "origin_family_id": "official:ilo",
+      "claim_text": "The International Labour Organization was created in 1919.",
+      "evidence": [
+        {
+          "evidence_id": "V3-215:E1",
+          "title": "About the ILO",
+          "url": "https://www.ilo.org/about-ilo",
+          "source_class": "official_html",
+          "passage": "The ILO was created in 1919, as part of the Treaty of Versailles that ended World War I."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_status",
+        "comparator_or_relation": "created_in",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 58,
+          "quoted_text": "The International Labour Organization was created in 1919."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-215:E1",
+            "start_char": 0,
+            "end_char": 88,
+            "quoted_text": "The ILO was created in 1919, as part of the Treaty of Versailles that ended World War I."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Navigation-only proposal; requires human annotation.",
+          "Accessible public HTML; no document download."
+        ],
+        "model_calls": 0
+      },
+      "annotation": null,
+      "approval": null
+    },
+    {
+      "case_id": "V3-216",
+      "source_candidate_id": "ILO-MEMBERS",
+      "split": "calibration",
+      "origin_family_id": "official:ilo",
+      "claim_text": "The International Labour Organization has 187 Member States.",
+      "evidence": [
+        {
+          "evidence_id": "V3-216:E1",
+          "title": "ILO Member States",
+          "url": "https://www.ilo.org/about-ilo/ilo-member-states",
+          "source_class": "official_html",
+          "passage": "The ILO has 187 Member States."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "count",
+        "comparator_or_relation": "equal",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 60,
+          "quoted_text": "The International Labour Organization has 187 Member States."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-216:E1",
+            "start_char": 0,
+            "end_char": 30,
+            "quoted_text": "The ILO has 187 Member States."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Navigation-only proposal; requires human annotation.",
+          "Accessible public HTML; no document download."
+        ],
+        "model_calls": 0
+      },
+      "annotation": null,
+      "approval": null
+    },
+    {
+      "case_id": "V3-217",
+      "source_candidate_id": "CERN-RING",
+      "split": "calibration",
+      "origin_family_id": "official:cern",
+      "claim_text": "The Large Hadron Collider has a 27-kilometre ring.",
+      "evidence": [
+        {
+          "evidence_id": "V3-217:E1",
+          "title": "The Large Hadron Collider",
+          "url": "https://home.cern/science/accelerators/large-hadron-collider/",
+          "source_class": "official_html",
+          "passage": "The LHC consists of a 27-kilometre ring of superconducting magnets."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "distance",
+        "comparator_or_relation": "equal",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 50,
+          "quoted_text": "The Large Hadron Collider has a 27-kilometre ring."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-217:E1",
+            "start_char": 0,
+            "end_char": 67,
+            "quoted_text": "The LHC consists of a 27-kilometre ring of superconducting magnets."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Navigation-only proposal; requires human annotation.",
+          "Accessible public HTML; no document download."
+        ],
+        "model_calls": 0
+      },
+      "annotation": null,
+      "approval": null
+    },
+    {
+      "case_id": "V3-218",
+      "source_candidate_id": "CERN-START",
+      "split": "calibration",
+      "origin_family_id": "official:cern",
+      "claim_text": "The Large Hadron Collider first started up on 10 September 2008.",
+      "evidence": [
+        {
+          "evidence_id": "V3-218:E1",
+          "title": "The Large Hadron Collider",
+          "url": "https://home.cern/science/accelerators/large-hadron-collider/",
+          "source_class": "official_html",
+          "passage": "It first started up on 10 September 2008, and remains the latest addition to CERN's accelerator complex."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "date",
+        "comparator_or_relation": "started_on",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 64,
+          "quoted_text": "The Large Hadron Collider first started up on 10 September 2008."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-218:E1",
+            "start_char": 0,
+            "end_char": 104,
+            "quoted_text": "It first started up on 10 September 2008, and remains the latest addition to CERN's accelerator complex."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Navigation-only proposal; requires human annotation.",
+          "Accessible public HTML; no document download."
+        ],
+        "model_calls": 0
+      },
+      "annotation": null,
+      "approval": null
+    },
+    {
+      "case_id": "V3-219",
+      "source_candidate_id": "SMITHSONIAN-FOUNDED",
+      "split": "calibration",
+      "origin_family_id": "official:smithsonian",
+      "claim_text": "The Smithsonian Institution was established on 10 August 1846.",
+      "evidence": [
+        {
+          "evidence_id": "V3-219:E1",
+          "title": "Our History",
+          "url": "https://www.si.edu/about/history",
+          "source_class": "official_html",
+          "passage": "On August 10, 1846, the U.S. Senate passed the act organizing the Smithsonian Institution, which was signed into law by President James K. Polk."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "date",
+        "comparator_or_relation": "established_on",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 62,
+          "quoted_text": "The Smithsonian Institution was established on 10 August 1846."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-219:E1",
+            "start_char": 0,
+            "end_char": 144,
+            "quoted_text": "On August 10, 1846, the U.S. Senate passed the act organizing the Smithsonian Institution, which was signed into law by President James K. Polk."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Navigation-only proposal; requires human annotation.",
+          "Accessible public HTML; no document download."
+        ],
+        "model_calls": 0
+      },
+      "annotation": null,
+      "approval": null
+    },
+    {
+      "case_id": "V3-220",
+      "source_candidate_id": "SMITHSONIAN-MUSEUMS",
+      "split": "calibration",
+      "origin_family_id": "official:smithsonian",
+      "claim_text": "The Smithsonian complex includes 21 museums.",
+      "evidence": [
+        {
+          "evidence_id": "V3-220:E1",
+          "title": "About the Smithsonian",
+          "url": "https://www.si.edu/about/",
+          "source_class": "official_html",
+          "passage": "The Smithsonian Institution is the world's largest museum, education, and research complex, with 21 museums, 14 education and research centers, and the National Zoo."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "count",
+        "comparator_or_relation": "equal",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 44,
+          "quoted_text": "The Smithsonian complex includes 21 museums."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-220:E1",
+            "start_char": 0,
+            "end_char": 165,
+            "quoted_text": "The Smithsonian Institution is the world's largest museum, education, and research complex, with 21 museums, 14 education and research centers, and the National Zoo."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Navigation-only proposal; requires human annotation.",
+          "Accessible public HTML; no document download."
+        ],
+        "model_calls": 0
+      },
+      "annotation": null,
+      "approval": null
+    }
+  ]
+}

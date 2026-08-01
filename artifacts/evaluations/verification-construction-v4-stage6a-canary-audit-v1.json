@@ -1,0 +1,75 @@
+{
+  "audit_id": "verification-construction-v4-stage6a-canary-audit-v1",
+  "status": "failed_safe",
+  "exit_criterion_met": false,
+  "safety_boundary_passed": true,
+  "provider_attempts": 1,
+  "completed_paid_operations": 1,
+  "duplicate_provider_attempts": 0,
+  "estimated_cost_usd": 0.0002862,
+  "failure": {
+    "layer": "temporal_provider_wire_to_domain_conversion",
+    "error_type": "ValidationError",
+    "safe_error": "1 validation error for AssistedTemporalEvidenceBinding\n  Value error, temporal binding requires an effective date or status [type=value_error, input_value={'evidence_id': UUID('85b... 'retrospective': False}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/value_error",
+    "diagnosis": "The provider returned an exact date quote but omitted reference_date, claimed_interval, effective_interval and observed_status. The wire schema admitted a temporal binding with no typed temporal fact; the domain contract rejected it.",
+    "paid_receipt_disposition": "completed_measured",
+    "retry_permitted": false
+  },
+  "gates": {
+    "offline_remediation_passed": true,
+    "consumed_v4_6_evidence_preserved": true,
+    "fresh_receipt_identity": true,
+    "one_call_ceiling_respected": true,
+    "no_automatic_retry": true,
+    "attempt_cost_observable": true,
+    "cost_within_ceiling": true,
+    "failure_was_fail_closed": true,
+    "duplicate_paid_operations_zero": true,
+    "dataset_exposure_zero": true,
+    "fresh_temporal_schema_validated": false,
+    "cached_replay_validated": false
+  },
+  "artifacts": [
+    {
+      "path": "src/claim_polygraph_ng/analysis/assisted_verification_construction.py",
+      "sha256": "aaac900566f699ee085e82993aadc6ed712e17d5b48777bc799c8273785f56ea",
+      "bytes": 32507
+    },
+    {
+      "path": "tests/unit/test_v3_assisted_boundary.py",
+      "sha256": "30ecebca4cad3cad231b14477c6a2a565b404ca7c8dc4ccf5a6ce2a6b5c41bfb",
+      "bytes": 32205
+    },
+    {
+      "path": "scripts/freeze_v4_stage6a_canary.py",
+      "sha256": "af8ecf671db5656d4f530752dccf552d42c1a4bf58eff9c0f775ed727bb2fa8f",
+      "bytes": 4743
+    },
+    {
+      "path": "scripts/run_v4_stage6a_canary.py",
+      "sha256": "c0d21201187c905d3bc46705c25ce7aa97c7dacc346aa62dbc7a58a45dede36e",
+      "bytes": 5641
+    },
+    {
+      "path": "scripts/audit_v4_stage6a_canary.py",
+      "sha256": "1cee47775d1678989801b74a8ad5e25a363ed4dc724a1c285231cc3024b2c016",
+      "bytes": 4767
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage6a-offline-remediation-v1.json",
+      "sha256": "165170f388a35cc175ce5e2b30d9954a2b23abd56671e88b73b8b26487079447",
+      "bytes": 1411
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage6a-canary-manifest-v1.json",
+      "sha256": "babb9f225c297e6badb53292e2eb5f3373bf5a7c652eb1c8af3322fdd5b8c355",
+      "bytes": 1355
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage6a-canary-result-v1.json",
+      "sha256": "d70fe774b1354416de2eae1e38e1b2ef7be425ff6158ae164a9ccddb10a7a925",
+      "bytes": 1122
+    }
+  ],
+  "next_stage": "V4.6b temporal wire completeness remediation using offline fixtures before any fresh canary decision"
+}

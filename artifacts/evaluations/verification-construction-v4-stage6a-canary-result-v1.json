@@ -1,0 +1,31 @@
+{
+  "artifact_id": "verification-construction-v4-stage6a-canary-result-v1",
+  "status": "failed_safe",
+  "manifest_sha256": "babb9f225c297e6badb53292e2eb5f3373bf5a7c652eb1c8af3322fdd5b8c355",
+  "model": "gpt-4o-mini",
+  "provider_attempts": 1,
+  "completed_paid_operations": 1,
+  "failed_paid_operations": 0,
+  "input_tokens": 1144,
+  "output_tokens": 191,
+  "estimated_cost_usd": 0.0002862,
+  "estimated_cost_upper_bound_usd": 0.0002862,
+  "receipt_statuses": [
+    "completed"
+  ],
+  "usage_dispositions": [
+    "measured"
+  ],
+  "dataset_exposure": {
+    "benchmark": 0,
+    "development": 0,
+    "calibration": 0,
+    "held_out": 0
+  },
+  "result": {
+    "disposition": "safe_failure",
+    "error_type": "ValidationError",
+    "error": "1 validation error for AssistedTemporalEvidenceBinding\n  Value error, temporal binding requires an effective date or status [type=value_error, input_value={'evidence_id': UUID('85b... 'retrospective': False}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/value_error",
+    "cached_replay_equal": false
+  }
+}

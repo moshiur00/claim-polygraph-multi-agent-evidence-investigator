@@ -81,6 +81,7 @@ def test_report_round_trip_and_exports(tmp_path) -> None:
     assert "## Citation audit" in markdown
     assert "## Provenance inspection" in markdown
     assert "## Assertion-level verification" in markdown
+    assert "**Comparative construction attempts:**" in markdown
     assert "## Argument ledger" in markdown
     assert "## Judgment policy" in markdown
     assert "## Judgment readiness" in markdown

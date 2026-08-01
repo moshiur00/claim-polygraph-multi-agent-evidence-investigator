@@ -40,6 +40,89 @@ type Source = {
   url: string; canonical_url: string; distribution_medium: string;
   social_context: SocialContext | null; social_eligibility: SocialEligibility | null;
 };
+type StructuredReportAssertion = {
+  assertion_id: string; claim_id: string; sentence: string; cited_evidence_ids: string[];
+  asserted_stance: string; required_phrases: string[]; material: boolean; critical: boolean;
+  section: string; ordinal: number;
+};
+type CitationEvidenceLink = {
+  evidence_id: string; passage: string; stance: string; matched_phrases: string[];
+};
+type CitationFinding = {
+  assertion_id: string; sentence: string; material: boolean; critical: boolean;
+  status: string; links: CitationEvidenceLink[]; missing_phrases: string[];
+  issue_codes: string[]; explanation: string;
+};
+type CitationAssurancePacket = {
+  claim_id: string; approved_evidence_ids: string[]; findings: CitationFinding[];
+  supported_count: number; partial_count: number; unsupported_count: number;
+  contradictory_count: number; out_of_packet_count: number; full_support_rate: number;
+};
+type CitationRevision = {
+  assertion_id: string; attempt_number: number; original_sentence: string;
+  revised_sentence: string; cited_evidence_ids: string[]; rationale: string;
+  verdict_label_changed: boolean;
+};
+type FullReportAssurance = {
+  publication_status: string; material_sentence_count: number;
+  audited_material_sentence_count: number; critical_failure_count: number;
+  original_assertions: StructuredReportAssertion[]; final_assertions: StructuredReportAssertion[];
+  initial_audit: CitationAssurancePacket; final_audit: CitationAssurancePacket;
+  revisions: CitationRevision[]; blocking_reasons: string[]; maximum_revision_attempts: number;
+};
+type VerificationFinding = {
+  code: string; severity: string; message: string; recommended_action: string;
+  readiness_impact: string; evidence_ids: string[];
+};
+type ContextValueObservation = {
+  raw_text: string; normalized_text: string; origin: string;
+  evidence_id: string | null; source_id: string | null;
+  start_char: number | null; end_char: number | null; unit_hint: string | null;
+};
+type NormalizedNumericValue = {
+  value: string | number; unit: string | null; dimension: string;
+  scale: string | number; tolerance: string | number | null;
+};
+type TemporalInstant = { value: string; precision: string };
+type TemporalInterval = {
+  start: TemporalInstant | null; end: TemporalInstant | null;
+  start_inclusive: boolean; end_inclusive: boolean;
+};
+type VerificationPacket = {
+  claim_id: string; verification_version: string; approved_evidence_ids: string[];
+  numerical_assertions: Array<{
+    assertion_id: string; claim_id: string; claim_text_span: string; comparator: string;
+    operation: string; expected_values: NormalizedNumericValue[]; evidence_ids: string[];
+    state: string; normalized_result: NormalizedNumericValue | null; expression: string | null;
+    rounding_rule: string | null; issues: string[]; limitations: string[];
+    findings: VerificationFinding[];
+  }>;
+  temporal_assertions: Array<{
+    assertion_id: string; claim_id: string; claim_text_span: string; relation: string;
+    reference_date: TemporalInstant | null; claimed_interval: TemporalInterval | null;
+    requires_reference_date: boolean;
+    observations: Array<{
+      evidence_id: string; publication_date: TemporalInstant | null;
+      effective_interval: TemporalInterval | null; observed_status: string | null;
+      retrospective: boolean;
+    }>;
+    state: string; issues: string[]; limitations: string[]; findings: VerificationFinding[];
+  }>;
+  comparative_constructions: Array<{
+    construction_id: string; claim_id: string; claim_text_span: string;
+    left_subject: string; right_subject: string; compared_property: string;
+    comparator: string; dimension: string; state: string; assertion_id: string | null;
+    evidence_ids: string[]; failure_code: string | null; explanation: string;
+    construction_version: string;
+  }>;
+  temporal_constructions: Array<{
+    construction_id: string; claim_id: string; claim_text_span: string;
+    left_subject: string; right_subject: string; relation: string;
+    state: string; assertion_id: string | null; evidence_ids: string[];
+    failure_code: string | null; explanation: string; construction_version: string;
+  }>;
+  limitations: string[]; findings: VerificationFinding[];
+};
 type Report = {
   investigation: Investigation;
   claim: {
@@ -91,10 +174,19 @@ type Report = {
     social_policy_finding_count: number; blocking_social_policy_finding_count: number;
   } | null;
   context_verification: {
-    numerical: { required: boolean; status: string; claim_values: string[]; evidence_values: string[]; issues: string[] };
-    temporal: { required: boolean; status: string; reference_date: string | null; issues: string[] };
+    numerical: {
+      required: boolean; status: string; claim_values: string[]; evidence_values: string[];
+      claim_units: string[]; evidence_units: string[]; exactness_terms: string[]; issues: string[];
+      claim_observations: ContextValueObservation[]; evidence_observations: ContextValueObservation[];
+      findings: VerificationFinding[];
+    };
+    temporal: {
+      required: boolean; status: string; reference_date: string | null;
+      source_publication_dates: string[]; issues: string[]; findings: VerificationFinding[];
+    };
     limitations: string[];
   } | null;
+  verification_packet: VerificationPacket | null;
   argument_ledger: {
     propositions: Array<{ proposition_id: string; text: string; material: boolean }>;
     arguments: Array<{ proposition_id: string; resolution: string; supporting_evidence_ids: string[]; contradictory_evidence_ids: string[]; qualifying_evidence_ids: string[]; unresolved_reasons: string[] }>;
@@ -106,11 +198,7 @@ type Report = {
     changed: boolean; applied: boolean; human_review_required: boolean;
     reason_codes: string[]; rationale: string;
   } | null;
-  full_report_assurance: {
-    publication_status: string; material_sentence_count: number;
-    audited_material_sentence_count: number; critical_failure_count: number;
-    revisions: unknown[]; blocking_reasons: string[];
-  } | null;
+  full_report_assurance: FullReportAssurance | null;
   social_evidence_policy: {
     policy_version: string;
     findings: Array<{
@@ -138,7 +226,14 @@ type ReviewRequest = {
 type ReviewHistory = {
   request: ReviewRequest;
   findings: Array<{ finding_id: string; summary: string; kind: string }>;
-  decisions: Array<{ decision_id: string; kind: string; reviewer_identity: string; rationale: string; proposed_verdict: string | null; created_at: string }>;
+  decisions: Array<{
+    decision_id: string; kind: string; reviewer_identity: string; rationale: string;
+    proposed_verdict: string | null; created_at: string;
+    verification_construction_id?: string | null;
+    verification_disposition?: string | null;
+    corrected_claim_text_span?: string | null; corrected_value?: string | null;
+    corrected_unit?: string | null; corrected_evidence_ids?: string[];
+  }>;
   approvals: Array<{ approval_id: string; approver_identity: string; decision: string }>;
   revisions: Array<{ revision_id: string; revised_verdict: string }>;
   events: Array<{ sequence: number; action: string; actor_identity: string }>;
@@ -192,6 +287,8 @@ type AuthoritativeJob = InvestigationJob & {
     }>;
     artifacts: Array<{ artifact_type: string; artifact_id: string; schema_version: number }>;
     evidence_families: unknown[]; approved_evidence_ids: string[];
+    verification_construction_ids: string[];
+    verification_construction_states: Record<string, string>;
     unresolved_questions: Array<{ question_id: string; requirement_ids: string[]; question_summary: string }>;
     budget: {
       maximum_rounds: number; maximum_concurrent_roles: number; maximum_search_calls: number;
@@ -231,6 +328,649 @@ const canonicalStance = (value: string) => ({
   qualifies: "qualifying", qualifying: "qualifying",
   context: "context",
 }[value] ?? value);
+
+const canonicalVerdictLabel = (report: Report, graph: GraphSnapshot | null) =>
+  graph?.final_verdict ?? report.judgment_policy?.enforced_label ?? report.verdict.label;
+
+const canonicalCitationSummary = (report: Report) => {
+  if (report.full_report_assurance) {
+    const audit = report.full_report_assurance.final_audit;
+    return {
+      rate: Math.round(audit.full_support_rate * 100),
+      supported: audit.supported_count,
+      total: audit.findings.length,
+      status: report.full_report_assurance.publication_status,
+      authority: "Full-report citation assurance",
+    };
+  }
+  const supported = report.audits.filter((audit) => audit.support_level === "full").length;
+  return {
+    rate: report.audits.length ? Math.round(supported / report.audits.length * 100) : 0,
+    supported,
+    total: report.audits.length,
+    status: "legacy_fallback",
+    authority: "Legacy sentence-audit fallback",
+  };
+};
+
+const canonicalVerificationSummary = (report: Report) => {
+  const packet = report.verification_packet;
+  const numerical = packet?.numerical_assertions ?? [];
+  const temporal = packet?.temporal_assertions ?? [];
+  const assertions = [...numerical, ...temporal];
+  const requiredNumerical = report.context_verification?.numerical.required
+    ?? report.plan.requires_numerical_check;
+  const requiredTemporal = report.context_verification?.temporal.required
+    ?? report.plan.requires_temporal_check;
+  const missingRequired =
+    (requiredNumerical && numerical.length === 0 ? 1 : 0)
+    + (requiredTemporal && temporal.length === 0 ? 1 : 0);
+  const unresolved = assertions.filter((assertion) =>
+    ["insufficient", "error"].includes(assertion.state)).length + missingRequired;
+  const completed = assertions.filter((assertion) =>
+    ["verified", "contradicted", "qualified", "not_applicable"].includes(assertion.state)).length;
+  const required = requiredNumerical || requiredTemporal;
+  const completeness = assertions.length
+    ? Math.round(completed / assertions.length * 100)
+    : required ? 0 : 100;
+  const findings = [
+    ...(packet?.findings ?? []),
+    ...numerical.flatMap((assertion) => assertion.findings ?? []),
+    ...temporal.flatMap((assertion) => assertion.findings ?? []),
+  ];
+  return {
+    completeness,
+    unresolved,
+    requiredNumerical,
+    requiredTemporal,
+    findings,
+    authority: packet ? "Assertion-level verification packet" : "Legacy compatibility fallback",
+  };
+};
+
+const auditFilterOptions = [
+  ["all", "All assertions"],
+  ["problems", "Problems only"],
+  ["critical", "Critical only"],
+  ["supported", "Supported"],
+  ["partial", "Partial"],
+  ["unsupported", "Unsupported"],
+  ["revised", "Revised"],
+] as const;
+
+function CitationAuditView({
+  report,
+  sources,
+  evidence,
+  openEvidence,
+}: {
+  report: Report;
+  sources: Map<string, Source>;
+  evidence: Evidence[];
+  openEvidence: (evidenceId: string) => void;
+}) {
+  const [filter, setFilter] = useState<(typeof auditFilterOptions)[number][0]>("all");
+  const assurance = report.full_report_assurance;
+  const fallbackFindings: CitationFinding[] = report.audits.map((audit) => ({
+    assertion_id: audit.sentence_id,
+    sentence: audit.sentence,
+    material: true,
+    critical: false,
+    status: audit.support_level === "full" ? "supported" : audit.support_level === "none" ? "unsupported" : audit.support_level,
+    links: audit.cited_evidence_ids.map((id) => {
+      const record = evidence.find((item) => item.evidence_id === id);
+      return {
+        evidence_id: id,
+        passage: record?.passage ?? "The cited evidence record is not available in this report.",
+        stance: record?.stance ?? "unknown",
+        matched_phrases: [],
+      };
+    }),
+    missing_phrases: [],
+    issue_codes: audit.issue_type ? [audit.issue_type] : [],
+    explanation: audit.explanation ?? (
+      audit.support_level === "full"
+        ? "The cited evidence supports this material sentence."
+        : "The legacy audit did not provide a detailed explanation."
+    ),
+  }));
+  const findings = assurance?.final_audit.findings ?? fallbackFindings;
+  const initialByAssertion = new Map(
+    assurance?.initial_audit.findings.map((finding) => [finding.assertion_id, finding]) ?? [],
+  );
+  const assertionById = new Map(
+    assurance?.final_assertions.map((assertion) => [assertion.assertion_id, assertion]) ?? [],
+  );
+  const revisionsByAssertion = new Map<string, CitationRevision[]>();
+  for (const revision of assurance?.revisions ?? []) {
+    revisionsByAssertion.set(
+      revision.assertion_id,
+      [...(revisionsByAssertion.get(revision.assertion_id) ?? []), revision],
+    );
+  }
+  const visibleFindings = findings.filter((finding) => {
+    if (filter === "all") return true;
+    if (filter === "problems") return finding.status !== "supported";
+    if (filter === "critical") return finding.critical;
+    if (filter === "revised") return revisionsByAssertion.has(finding.assertion_id);
+    return finding.status === filter;
+  });
+  const supportedCount = assurance?.final_audit.supported_count
+    ?? findings.filter((finding) => finding.status === "supported").length;
+  const partialCount = assurance?.final_audit.partial_count
+    ?? findings.filter((finding) => finding.status === "partial").length;
+  const unsupportedCount = (assurance?.final_audit.unsupported_count ?? 0)
+    + (assurance?.final_audit.contradictory_count ?? 0)
+    + (assurance?.final_audit.out_of_packet_count ?? 0)
+    || findings.filter((finding) => !["supported", "partial"].includes(finding.status)).length;
+  const supportRate = Math.round(
+    (assurance?.final_audit.full_support_rate
+      ?? (findings.length ? supportedCount / findings.length : 0)) * 100,
+  );
+  const publicationStatus = assurance?.publication_status ?? (
+    findings.every((finding) => finding.status === "supported") ? "ready" : "blocked"
+  );
+
+  return <div className="citation-audit-dashboard">
+    <section className={`citation-gate ${publicationStatus === "ready" ? "ready" : "blocked"}`}>
+      <div>
+        <span>FULL-REPORT CITATION ASSURANCE</span>
+        <h2>{publicationStatus === "ready" ? "Citation gate passed" : "Publication blocked by citation assurance"}</h2>
+        <p>{publicationStatus === "ready"
+          ? "Every critical assertion passed and the material-sentence support rate meets the publication threshold."
+          : assurance?.blocking_reasons[0] ?? "One or more material assertions still lack complete support."}</p>
+      </div>
+      <dl>
+        <div><dt>Full support</dt><dd>{supportRate}%</dd></div>
+        <div><dt>Material coverage</dt><dd>{assurance ? `${assurance.audited_material_sentence_count}/${assurance.material_sentence_count}` : `${findings.length}/${findings.length}`}</dd></div>
+        <div><dt>Critical failures</dt><dd>{assurance?.critical_failure_count ?? findings.filter((finding) => finding.critical && finding.status !== "supported").length}</dd></div>
+        <div><dt>Revision attempts</dt><dd>{assurance?.revisions.length ?? report.audits.filter((audit) => audit.suggested_revision).length}</dd></div>
+      </dl>
+    </section>
+
+    <section className="citation-metrics" aria-label="Citation audit status summary">
+      <article><span>SUPPORTED</span><strong>{supportedCount}</strong><small>Complete approved-passage match</small></article>
+      <article><span>PARTIAL</span><strong>{partialCount}</strong><small>Only part of the assertion is supported</small></article>
+      <article><span>OTHER FAILURES</span><strong>{unsupportedCount}</strong><small>Unsupported, contradictory, or outside packet</small></article>
+      <article><span>PUBLICATION THRESHOLD</span><strong>95%</strong><small>With zero critical failures</small></article>
+    </section>
+
+    {(assurance?.blocking_reasons.length ?? 0) > 0 && <section className="citation-blockers">
+      <span>WHY PUBLICATION IS BLOCKED</span>
+      {assurance?.blocking_reasons.map((reason, index) => <p key={reason}><b>{index + 1}</b>{reason}</p>)}
+    </section>}
+
+    <section className="citation-controls" aria-label="Filter citation findings">
+      <div><span>ASSERTION INVENTORY</span><b>{visibleFindings.length} of {findings.length} shown</b></div>
+      <div>{auditFilterOptions.map(([value, label]) => <button
+        className={filter === value ? "active" : ""}
+        key={value}
+        onClick={() => setFilter(value)}
+      >{label}</button>)}</div>
+    </section>
+
+    <div className="citation-findings">
+      {visibleFindings.map((finding) => {
+        const assertion = assertionById.get(finding.assertion_id);
+        const initial = initialByAssertion.get(finding.assertion_id);
+        const revisions = revisionsByAssertion.get(finding.assertion_id) ?? [];
+        const lastRevision = revisions.at(-1);
+        const assertionNumber = findings.findIndex((item) => item.assertion_id === finding.assertion_id) + 1;
+        const citationIds = assertion?.cited_evidence_ids.length
+          ? assertion.cited_evidence_ids
+          : finding.links.map((link) => link.evidence_id);
+        const linkByEvidence = new Map(finding.links.map((link) => [link.evidence_id, link]));
+        return <article className={`citation-finding audit-${finding.status}`} key={finding.assertion_id}>
+          <header>
+            <div>
+              <b>Sentence {assertionNumber}</b>
+              <span>{titleCase(assertion?.section ?? "report assertion")}</span>
+              {(assertion?.critical ?? finding.critical) && <em className="critical">Critical</em>}
+              {(assertion?.material ?? finding.material) && <em>Material</em>}
+            </div>
+            <div>
+              {initial && initial.status !== finding.status && <small>{titleCase(initial.status)} →</small>}
+              <strong className={`audit-status-${finding.status}`}>{titleCase(finding.status)}</strong>
+            </div>
+          </header>
+
+          <blockquote>{finding.sentence}</blockquote>
+
+          <div className="citation-diagnosis">
+            <section>
+              <span>WHY THIS STATUS</span>
+              <p>{finding.explanation}</p>
+            </section>
+            <dl>
+              <div><dt>Expected stance</dt><dd>{titleCase(canonicalStance(assertion?.asserted_stance ?? "not recorded"))}</dd></div>
+              <div><dt>Approved citations</dt><dd>{citationIds.length}</dd></div>
+              <div><dt>Audit phase</dt><dd>{initial ? "Final re-audit" : "Legacy sentence audit"}</dd></div>
+            </dl>
+          </div>
+
+          {finding.issue_codes.length > 0 && <div className="audit-issues">
+            <span>ISSUES</span>
+            {finding.issue_codes.map((issue) => <b key={issue}>{titleCase(issue)}</b>)}
+          </div>}
+
+          {(finding.missing_phrases.length > 0 || (assertion?.required_phrases.length ?? 0) > 0) && <div className="phrase-audit">
+            <section><span>REQUIRED SUPPORT</span>{assertion?.required_phrases.map((phrase) => <mark key={phrase}>{phrase}</mark>)}</section>
+            <section><span>STILL MISSING</span>{finding.missing_phrases.length
+              ? finding.missing_phrases.map((phrase) => <mark className="missing" key={phrase}>{phrase}</mark>)
+              : <b>None</b>}</section>
+          </div>}
+
+          <div className="citation-mappings">
+            <div className="citation-subhead"><span>CITATION-TO-PASSAGE MAPPING</span><b>{citationIds.length} reference{citationIds.length === 1 ? "" : "s"}</b></div>
+            {citationIds.map((evidenceId) => {
+              const record = evidence.find((item) => item.evidence_id === evidenceId);
+              const source = record ? sources.get(record.source_id) : null;
+              const link = linkByEvidence.get(evidenceId);
+              return <details key={evidenceId}>
+                <summary>
+                  <span>{shortId(evidenceId)}</span>
+                  <b>{source?.publisher ?? source?.title ?? "Evidence record unavailable"}</b>
+                  <em>{titleCase(canonicalStance(link?.stance ?? record?.stance ?? "unknown"))}</em>
+                </summary>
+                <div>
+                  {link?.matched_phrases.length ? <section className="matched-phrases"><span>MATCHED PHRASES</span>{link.matched_phrases.map((phrase) => <mark key={phrase}>{phrase}</mark>)}</section> : <p className="no-match">No required phrase match was recorded for this citation.</p>}
+                  <blockquote>“{link?.passage ?? record?.passage ?? "The cited passage is not available in this report."}”</blockquote>
+                  <dl>
+                    <div><dt>Source type</dt><dd>{titleCase(source?.source_type ?? "unknown")}</dd></div>
+                    <div><dt>Evidence family</dt><dd>{record?.evidence_family_id ? shortId(record.evidence_family_id) : "Unassigned"}</dd></div>
+                    <div><dt>Approved use</dt><dd>{titleCase(record?.evidentiary_use ?? "not recorded")}</dd></div>
+                    <div><dt>Packet status</dt><dd>{assurance?.final_audit.approved_evidence_ids.includes(evidenceId) === false ? "Outside approved packet" : "Approved"}</dd></div>
+                  </dl>
+                  <div className="citation-actions">
+                    {record && <button onClick={() => openEvidence(evidenceId)}>Open full evidence record →</button>}
+                    {source?.url && <a href={source.url} target="_blank" rel="noreferrer">Open original source ↗</a>}
+                  </div>
+                </div>
+              </details>;
+            })}
+            {!citationIds.length && <p className="citation-empty">No evidence citation is attached to this assertion.</p>}
+          </div>
+
+          {lastRevision && <details className="revision-comparison">
+            <summary>Bounded revision · attempt {lastRevision.attempt_number}</summary>
+            <div>
+              <section><span>ORIGINAL</span><p>{lastRevision.original_sentence}</p></section>
+              <section><span>REVISED AND RE-AUDITED</span><p>{lastRevision.revised_sentence}</p></section>
+              <footer><b>Rationale</b><p>{lastRevision.rationale}</p><small>Verdict label changed: {lastRevision.verdict_label_changed ? "Yes" : "No"}</small></footer>
+            </div>
+          </details>}
+        </article>;
+      })}
+      {!visibleFindings.length && <p className="citation-empty">No assertions match this filter.</p>}
+    </div>
+
+    <details className="citation-method">
+      <summary>How to interpret citation assurance</summary>
+      <div>
+        <section><b>What it checks</b><p>Material report assertions must link to approved passages with the required wording and expected evidence stance. Critical failures and support below 95% block publication.</p></section>
+        <section><b>What it does not prove</b><p>A citation match does not establish that a source is correct, authoritative, independent, or contextually complete. Those safeguards are evaluated in Evidence, Verification, Provenance, and Social evidence.</p></section>
+        <section><b>Revision boundary</b><p>Bounded revision may narrow unsupported wording to an approved passage. It cannot add assertions, introduce unapproved evidence, or change the verdict label.</p></section>
+      </div>
+    </details>
+  </div>;
+}
+
+const verificationFilterOptions = [
+  ["all", "All assertions"],
+  ["problems", "Problems only"],
+  ["numerical", "Numerical"],
+  ["temporal", "Temporal"],
+  ["verified", "Verified"],
+] as const;
+
+const formatNumericValue = (value: NormalizedNumericValue) => {
+  const scaled = String(value.scale) === "1" ? "" : ` × ${value.scale}`;
+  const tolerance = value.tolerance == null ? "" : ` ± ${value.tolerance}`;
+  return `${value.value}${scaled}${value.unit ? ` ${value.unit}` : ""}${tolerance}`;
+};
+
+const formatInstant = (value: TemporalInstant | null) => (
+  value ? `${value.value} (${titleCase(value.precision)} precision)` : "Not supplied"
+);
+
+const formatInterval = (value: TemporalInterval | null) => {
+  if (!value) return "Not supplied";
+  const start = value.start ? formatInstant(value.start) : "Open";
+  const end = value.end ? formatInstant(value.end) : "Open";
+  return `${value.start_inclusive ? "[" : "("}${start} → ${end}${value.end_inclusive ? "]" : ")"}`;
+};
+
+const observationCategory = (observation: ContextValueObservation) => {
+  if (observation.unit_hint === "percent" || observation.raw_text.includes("%")) return "Percentages";
+  if (observation.unit_hint && observation.unit_hint !== "unknown") return "Measurements";
+  const numeric = Number(observation.normalized_text.replace("%", ""));
+  if (/^\d{4}$/.test(observation.raw_text) && numeric >= 1500 && numeric <= 2200) return "Dates and years";
+  if (Number.isFinite(numeric) && Number.isInteger(numeric)) return "Counts and identifiers";
+  return "Unclassified values";
+};
+
+const observationExcerpt = (observation: ContextValueObservation, evidence: Evidence[]) => {
+  const record = evidence.find((item) => item.evidence_id === observation.evidence_id);
+  if (!record || observation.start_char == null || observation.end_char == null) return null;
+  const start = Math.max(0, observation.start_char - 55);
+  const end = Math.min(record.passage.length, observation.end_char + 55);
+  return `${start ? "…" : ""}${record.passage.slice(start, end).trim()}${end < record.passage.length ? "…" : ""}`;
+};
+
+function VerificationEvidenceTrace({
+  evidenceId,
+  evidence,
+  sources,
+  approved,
+  openEvidence,
+}: {
+  evidenceId: string;
+  evidence: Evidence[];
+  sources: Map<string, Source>;
+  approved: string[];
+  openEvidence: (evidenceId: string) => void;
+}) {
+  const record = evidence.find((item) => item.evidence_id === evidenceId);
+  const source = record ? sources.get(record.source_id) : null;
+  return <details className="verification-evidence">
+    <summary>
+      <span>{shortId(evidenceId)}</span>
+      <b>{source?.publisher ?? source?.title ?? "Evidence record unavailable"}</b>
+      <em>{approved.includes(evidenceId) ? "Approved" : "Outside packet"}</em>
+    </summary>
+    <div>
+      <blockquote>“{record?.passage ?? "The cited passage is not available in this report."}”</blockquote>
+      <dl>
+        <div><dt>Stance</dt><dd>{titleCase(canonicalStance(record?.stance ?? "unknown"))}</dd></div>
+        <div><dt>Source type</dt><dd>{titleCase(source?.source_type ?? "unknown")}</dd></div>
+        <div><dt>Evidence family</dt><dd>{record?.evidence_family_id ? shortId(record.evidence_family_id) : "Unassigned"}</dd></div>
+        <div><dt>Approved use</dt><dd>{titleCase(record?.evidentiary_use ?? "not recorded")}</dd></div>
+      </dl>
+      <div className="verification-actions">
+        {record && <button onClick={() => openEvidence(evidenceId)}>Open full evidence record →</button>}
+        {source?.url && <a href={source.url} target="_blank" rel="noreferrer">Open original source ↗</a>}
+      </div>
+    </div>
+  </details>;
+}
+
+function VerificationDashboard({
+  report,
+  sources,
+  evidence,
+  openEvidence,
+  prepareClaimEdit,
+  openReviewBrief,
+}: {
+  report: Report;
+  sources: Map<string, Source>;
+  evidence: Evidence[];
+  openEvidence: (evidenceId: string) => void;
+  prepareClaimEdit: () => void;
+  openReviewBrief: () => void;
+}) {
+  const [filter, setFilter] = useState<(typeof verificationFilterOptions)[number][0]>("all");
+  const packet = report.verification_packet;
+  const context = report.context_verification;
+  const numerical = packet?.numerical_assertions ?? [];
+  const temporal = packet?.temporal_assertions ?? [];
+  const numericalConstruction = packet?.comparative_constructions?.[0] ?? null;
+  const temporalConstruction = packet?.temporal_constructions?.[0] ?? null;
+  const assertions = [
+    ...numerical.map((item) => ({ id: item.assertion_id, kind: "numerical" as const, state: item.state, item })),
+    ...temporal.map((item) => ({ id: item.assertion_id, kind: "temporal" as const, state: item.state, item })),
+  ];
+  const resolvedStates = new Set(["verified", "contradicted", "qualified", "not_applicable"]);
+  const problemStates = new Set(["insufficient", "error"]);
+  const completed = assertions.filter((item) => resolvedStates.has(item.state)).length;
+  const verified = assertions.filter((item) => item.state === "verified").length;
+  const contradicted = assertions.filter((item) => item.state === "contradicted").length;
+  const qualified = assertions.filter((item) => item.state === "qualified").length;
+  const numericalRequired = context?.numerical.required ?? report.plan.requires_numerical_check;
+  const temporalRequired = context?.temporal.required ?? report.plan.requires_temporal_check;
+  const requirementCount = Number(numericalRequired) + Number(temporalRequired);
+  const missingRequiredAssertions =
+    (numericalRequired && numerical.length === 0 ? 1 : 0)
+    + (temporalRequired && temporal.length === 0 ? 1 : 0);
+  const unresolvedAssertions = assertions.filter((item) => problemStates.has(item.state)).length;
+  const unresolved = unresolvedAssertions + missingRequiredAssertions;
+  const verificationRequired = Boolean(
+    numericalRequired || temporalRequired,
+  );
+  const verificationState = unresolved
+    ? "human_review_required"
+    : assertions.length
+      ? completed === assertions.length ? "complete" : "incomplete"
+      : verificationRequired ? "not_evaluated" : "not_required";
+  const visible = assertions.filter((assertion) => {
+    if (filter === "all") return true;
+    if (filter === "problems") return problemStates.has(assertion.state);
+    if (filter === "verified") return assertion.state === "verified";
+    return assertion.kind === filter;
+  });
+  const allFindings = [
+    ...(packet?.findings ?? []),
+    ...numerical.flatMap((item) => item.findings ?? []),
+    ...temporal.flatMap((item) => item.findings ?? []),
+    ...(report.context_verification?.numerical.findings ?? []),
+    ...(report.context_verification?.temporal.findings ?? []),
+  ].filter((finding, index, values) => (
+    values.findIndex((item) => item.code === finding.code && item.message === finding.message) === index
+  ));
+  const blockingFindings = allFindings.filter((finding) => finding.severity === "blocking");
+  const readinessImpact = blockingFindings.some((finding) => finding.readiness_impact === "publication_block")
+    ? "Publication blocked"
+    : allFindings.some((finding) => finding.readiness_impact === "human_review")
+      ? "Human review required"
+      : allFindings.some((finding) => finding.readiness_impact === "readiness_signal")
+        ? "Readiness qualified"
+        : "No verification restriction";
+  const evidenceObservations = context?.numerical.evidence_observations ?? [];
+  const groupedObservations = Object.entries(
+    evidenceObservations.reduce<Record<string, ContextValueObservation[]>>((groups, observation) => {
+      const category = observationCategory(observation);
+      groups[category] = [...(groups[category] ?? []), observation];
+      return groups;
+    }, {}),
+  );
+
+  return <div className="verification-workspace">
+    <section className={`verification-gate state-${verificationState}`}>
+      <div>
+        <span>ASSERTION-LEVEL VERIFICATION</span>
+        <h2>{verificationState === "complete"
+          ? "Verification complete"
+          : verificationState === "not_required"
+            ? "No numerical or temporal check required"
+            : verificationState === "not_evaluated"
+              ? "Required verification was not performed"
+              : "Verification requires attention"}</h2>
+        <p>{unresolved
+          ? missingRequiredAssertions
+            ? `${missingRequiredAssertions} required check${missingRequiredAssertions === 1 ? "" : "s"} could not be constructed as a typed assertion. ${unresolvedAssertions ? `${unresolvedAssertions} constructed assertion${unresolvedAssertions === 1 ? "" : "s"} also remain unresolved.` : ""}`
+            : `${unresolvedAssertions} constructed assertion${unresolvedAssertions === 1 ? "" : "s"} remain insufficient or failed. The unresolved state is preserved instead of being converted into a pass.`
+          : assertions.length
+            ? "Every detected numerical and temporal assertion reached a typed terminal state."
+            : verificationRequired
+              ? "The legacy check requested verification, but no typed assertion could be constructed."
+              : "The investigation plan did not identify a material numerical or time-sensitive assertion."}</p>
+      </div>
+      <dl>
+        <div><dt>Readiness impact</dt><dd>{readinessImpact}</dd></div>
+        <div><dt>Packet version</dt><dd>{packet?.verification_version ?? "Legacy only"}</dd></div>
+        <div><dt>Approved evidence available</dt><dd>{packet?.approved_evidence_ids.length ?? evidence.length}</dd></div>
+        <div><dt>Completeness</dt><dd>{assertions.length ? `${Math.round(completed / assertions.length * 100)}%` : verificationRequired ? "0%" : "N/A"}</dd></div>
+      </dl>
+    </section>
+
+    <section className="verification-metrics" aria-label="Verification result summary">
+      <article><span>REQUIREMENTS</span><strong>{requirementCount}</strong><small>{Number(numericalRequired)} numerical · {Number(temporalRequired)} temporal</small></article>
+      <article><span>ASSERTIONS CONSTRUCTED</span><strong>{assertions.length}</strong><small>Safe typed verification inputs</small></article>
+      <article><span>ASSERTIONS VERIFIED</span><strong>{verified}</strong><small>{contradicted} contradicted · {qualified} qualified</small></article>
+      <article><span>CONSTRUCTION FAILURES</span><strong>{missingRequiredAssertions}</strong><small>{unresolvedAssertions} additional constructed assertion issue(s)</small></article>
+    </section>
+
+    {verificationRequired && <section className="verification-requirements">
+      <header><div><span>WHY VERIFICATION WAS REQUESTED</span><h2>Requirement and construction status</h2></div><p>The requirement is distinct from the assertion. A plan may require a check even when the system cannot safely identify its operands.</p></header>
+      <div>
+        {numericalRequired && <article className={numerical.length ? "constructed" : "failed"}>
+          <div><em>NUMERICAL</em><strong>{numerical.length ? "Typed assertion constructed" : "Construction failed"}</strong></div>
+          <blockquote>{report.claim.text}</blockquote>
+          <dl>
+            <div><dt>Requirement source</dt><dd>{report.plan.requires_numerical_check ? "Persisted investigation plan" : "Deterministic claim-context detection"}</dd></div>
+            <div><dt>Comparison</dt><dd>{numericalConstruction ? `${numericalConstruction.left_subject} ${titleCase(numericalConstruction.comparator)} ${numericalConstruction.right_subject}` : "No typed comparison constructed"}</dd></div>
+            <div><dt>Compared property</dt><dd>{numericalConstruction ? `${titleCase(numericalConstruction.compared_property)} · ${titleCase(numericalConstruction.dimension)}` : "Not resolved"}</dd></div>
+            <div><dt>Evidence bound to assertion</dt><dd>{numericalConstruction?.evidence_ids.length ?? 0}</dd></div>
+            <div><dt>Outcome</dt><dd>{numerical.length ? `${numerical.length} assertion(s) available` : "Verification was not run"}</dd></div>
+          </dl>
+        </article>}
+        {temporalRequired && <article className={temporal.length ? "constructed" : "failed"}>
+          <div><em>TEMPORAL</em><strong>{temporal.length ? "Typed assertion constructed" : "Construction failed"}</strong></div>
+          <blockquote>{report.claim.text}</blockquote>
+          <dl>
+            <div><dt>Requirement source</dt><dd>{report.plan.requires_temporal_check ? "Persisted investigation plan" : "Deterministic time-sensitive wording detection"}</dd></div>
+            <div><dt>Reference date</dt><dd>{context?.temporal.reference_date ?? report.claim.reference_date ?? "Not supplied"}</dd></div>
+            <div><dt>Temporal relation</dt><dd>{temporalConstruction ? `${temporalConstruction.left_subject} ${titleCase(temporalConstruction.relation)} ${temporalConstruction.right_subject}` : "No typed relation constructed"}</dd></div>
+            <div><dt>Evidence bound to assertion</dt><dd>{temporalConstruction?.evidence_ids.length ?? temporal.flatMap((item) => item.observations).length}</dd></div>
+            <div><dt>Expected structure</dt><dd>Relation, reference date, effective interval and approved evidence binding</dd></div>
+            <div><dt>Outcome</dt><dd>{temporal.length ? `${temporal.length} assertion(s) available` : "Verification was not run"}</dd></div>
+          </dl>
+        </article>}
+      </div>
+    </section>}
+
+    {verificationRequired && <section className="verification-trace">
+      <div><span>VERIFICATION TRACE</span><h2>What happened in this investigation</h2></div>
+      <ol>
+        <li className="complete"><i>1</i><div><b>Requirement recorded</b><small>{requirementCount} numerical or temporal requirement(s)</small></div></li>
+        <li className={missingRequiredAssertions ? "failed" : "complete"}><i>2</i><div><b>Typed assertion construction</b><small>{missingRequiredAssertions ? `${missingRequiredAssertions} required structure(s) could not be built safely` : `${assertions.length} assertion(s) constructed`}</small></div></li>
+        <li className={assertions.length ? "complete" : "skipped"}><i>3</i><div><b>Evidence binding</b><small>{assertions.length ? "Approved evidence references recorded" : "Skipped because no typed assertion existed"}</small></div></li>
+        <li className={assertions.length ? unresolvedAssertions ? "failed" : "complete" : "skipped"}><i>4</i><div><b>Deterministic verification</b><small>{assertions.length ? `${completed} of ${assertions.length} reached a terminal state` : "Not run; no calculation or temporal relation was guessed"}</small></div></li>
+        <li className={unresolved ? "failed" : "complete"}><i>5</i><div><b>Readiness routing</b><small>{unresolved ? "Human review required" : "No verification escalation recorded"}</small></div></li>
+      </ol>
+    </section>}
+
+    {unresolved > 0 && <section className="verification-recovery">
+      <div><span>AVAILABLE NEXT ACTIONS</span><h2>Resolve the verification gap</h2><p>These actions navigate or prepare existing workflows. They do not silently rerun research or create a paid model call.</p></div>
+      <div>
+        <button onClick={prepareClaimEdit}>Prepare a clarified claim</button>
+        <button onClick={() => evidence[0] && openEvidence(evidence[0].evidence_id)} disabled={!evidence.length}>Inspect retained evidence</button>
+        <button onClick={openReviewBrief}>Open human-review brief</button>
+      </div>
+      <small>Marking a requirement “not applicable” needs a persisted reviewer decision and is intentionally not offered as an informal dashboard toggle.</small>
+    </section>}
+
+    {allFindings.length > 0 && <section className="verification-findings">
+      <div><span>ACTIONABLE VERIFICATION FINDINGS</span><b>{blockingFindings.length} blocking</b></div>
+      {allFindings.map((finding) => <article className={`severity-${finding.severity}`} key={`${finding.code}:${finding.message}`}>
+        <em>{titleCase(finding.severity)}</em>
+        <div><b>{titleCase(finding.code)}</b><p>{finding.message}</p><small><strong>How to resolve:</strong> {finding.recommended_action}</small></div>
+        <span>{titleCase(finding.readiness_impact)}</span>
+      </article>)}
+    </section>}
+
+    {assertions.length > 0 && <section className="verification-controls">
+      <div><span>VERIFICATION ASSERTIONS</span><b>{visible.length} of {assertions.length} shown</b></div>
+      <div>{verificationFilterOptions.map(([value, label]) => <button
+        className={filter === value ? "active" : ""}
+        key={value}
+        onClick={() => setFilter(value)}
+      >{label}</button>)}</div>
+    </section>}
+
+    {assertions.length > 0 && <div className="verification-assertions">
+      {visible.map((assertion, index) => assertion.kind === "numerical" ? (() => {
+        const item = assertion.item;
+        return <article className={`verification-assertion state-${item.state}`} key={item.assertion_id}>
+          <header><div><b>Numerical assertion {index + 1}</b><span>{titleCase(item.operation)} · {titleCase(item.comparator)}</span></div><strong>{titleCase(item.state)}</strong></header>
+          <blockquote>{item.claim_text_span}</blockquote>
+          <section className="numeric-comparison">
+            <div><span>EXPECTED</span>{item.expected_values.map((value, valueIndex) => <b key={valueIndex}>{formatNumericValue(value)}</b>)}</div>
+            <i>→</i>
+            <div><span>EVIDENCE-GROUNDED RESULT</span><b>{item.normalized_result ? formatNumericValue(item.normalized_result) : "Not established"}</b></div>
+          </section>
+          {(item.expression || item.rounding_rule) && <dl className="verification-calculation">
+            {item.expression && <div><dt>Calculation</dt><dd>{item.expression}</dd></div>}
+            {item.rounding_rule && <div><dt>Rounding rule</dt><dd>{item.rounding_rule}</dd></div>}
+          </dl>}
+          {[...(item.findings ?? [])].map((finding) => <div className={`assertion-finding severity-${finding.severity}`} key={finding.code}><b>{finding.message}</b><p>{finding.recommended_action}</p></div>)}
+          {item.evidence_ids.length > 0 && <section className="verification-evidence-list"><span>APPROVED EVIDENCE USED</span>{item.evidence_ids.map((id) => <VerificationEvidenceTrace key={id} evidenceId={id} evidence={evidence} sources={sources} approved={packet?.approved_evidence_ids ?? []} openEvidence={openEvidence} />)}</section>}
+          {item.limitations.length > 0 && <details className="assertion-limitations"><summary>Assertion limitations</summary>{item.limitations.map((limitation) => <p key={limitation}>{limitation}</p>)}</details>}
+        </article>;
+      })() : (() => {
+        const item = assertion.item;
+        return <article className={`verification-assertion state-${item.state}`} key={item.assertion_id}>
+          <header><div><b>Temporal assertion {index + 1}</b><span>{titleCase(item.relation)}</span></div><strong>{titleCase(item.state)}</strong></header>
+          <blockquote>{item.claim_text_span}</blockquote>
+          <section className="temporal-specification">
+            <dl>
+              <div><dt>Reference date required</dt><dd>{item.requires_reference_date ? "Yes" : "No"}</dd></div>
+              <div><dt>Reference date</dt><dd>{formatInstant(item.reference_date)}</dd></div>
+              <div><dt>Claimed interval</dt><dd>{formatInterval(item.claimed_interval)}</dd></div>
+            </dl>
+          </section>
+          {[...(item.findings ?? [])].map((finding) => <div className={`assertion-finding severity-${finding.severity}`} key={finding.code}><b>{finding.message}</b><p>{finding.recommended_action}</p></div>)}
+          <section className="temporal-observations">
+            <div><span>TEMPORAL EVIDENCE TIMELINE</span><b>{item.observations.length} observation{item.observations.length === 1 ? "" : "s"}</b></div>
+            {item.observations.map((observation) => <article key={observation.evidence_id}>
+              <i />
+              <div>
+                <b>{shortId(observation.evidence_id)}</b>
+                <dl>
+                  <div><dt>Publication date</dt><dd>{formatInstant(observation.publication_date)}</dd></div>
+                  <div><dt>Effective interval</dt><dd>{formatInterval(observation.effective_interval)}</dd></div>
+                  <div><dt>Observed status</dt><dd>{observation.observed_status ?? "Not supplied"}</dd></div>
+                  <div><dt>Retrospective</dt><dd>{observation.retrospective ? "Yes" : "No"}</dd></div>
+                </dl>
+                <VerificationEvidenceTrace evidenceId={observation.evidence_id} evidence={evidence} sources={sources} approved={packet?.approved_evidence_ids ?? []} openEvidence={openEvidence} />
+              </div>
+            </article>)}
+            {!item.observations.length && <p>No typed effective-date or status observation was available.</p>}
+          </section>
+          {item.limitations.length > 0 && <details className="assertion-limitations"><summary>Assertion limitations</summary>{item.limitations.map((limitation) => <p key={limitation}>{limitation}</p>)}</details>}
+        </article>;
+      })())}
+      {!visible.length && <p className="verification-empty">No assertions match this filter.</p>}
+    </div>}
+
+    {context && <details className="legacy-context">
+      <summary>Compatibility diagnostic · raw context extraction</summary>
+      <div>
+        <section>
+          <span>NUMERICAL EXTRACTION</span>
+          <dl>
+            <div><dt>Legacy status</dt><dd>{titleCase(context.numerical.status)}</dd></div>
+            <div><dt>Claim operands</dt><dd>{context.numerical.claim_observations.length}</dd></div>
+            <div><dt>Evidence tokens</dt><dd>{context.numerical.evidence_observations.length}</dd></div>
+            <div><dt>Exactness terms</dt><dd>{context.numerical.exactness_terms.join(", ") || "None"}</dd></div>
+          </dl>
+          <div className="value-observations">{context.numerical.claim_observations.map((observation, index) => <article key={`claim:${index}`}><b>{observation.raw_text}</b><span>Claim · {observation.unit_hint ?? "unit unknown"}</span><small>{observation.start_char == null ? "Offset unavailable" : `Characters ${observation.start_char}–${observation.end_char}`}</small></article>)}</div>
+          {!context.numerical.claim_observations.length && <p>No explicit claim operand was extracted. A required check cannot pass on evidence numbers alone.</p>}
+        </section>
+        <section>
+          <span>EVIDENCE VALUE PROVENANCE</span>
+          <p className="diagnostic-warning">These are unclassified tokens found in retained passages. They are not operands, corroboration, or proof until a typed assertion binds them to the claim.</p>
+          <div className="observation-groups">{groupedObservations.map(([category, observations]) => <details key={category}>
+            <summary><b>{category}</b><span>{observations.length} token{observations.length === 1 ? "" : "s"}</span></summary>
+            <div className="value-observations">{observations.slice(0, 6).map((observation, index) => <article key={`${observation.evidence_id}:${observation.start_char}:${index}`}><b>{observation.raw_text}</b><span>{observation.evidence_id ? shortId(observation.evidence_id) : "Unknown evidence"} · {observation.unit_hint ?? "unit unknown"}</span><small>{observationExcerpt(observation, evidence) ?? (observation.start_char == null ? "Offset unavailable" : `Passage characters ${observation.start_char}–${observation.end_char}`)}</small>{observation.evidence_id && <button onClick={() => openEvidence(observation.evidence_id!)}>Inspect passage →</button>}</article>)}</div>
+            {observations.length > 6 && <p>{observations.length - 6} additional token(s) hidden in this category.</p>}
+          </details>)}</div>
+          {!evidenceObservations.length && <p>No numerical evidence token was extracted.</p>}
+        </section>
+      </div>
+    </details>}
+
+    <details className="verification-method">
+      <summary>How to interpret verification</summary>
+      <div>
+        <section><b>Verified is narrow</b><p>It means the typed comparator, values or dates, approved evidence, and bounded calculation agree. It is not a general truth score.</p></section>
+        <section><b>Publication date is not effective date</b><p>A later article may describe an earlier event. Temporal verification keeps publication, effective interval, reference date, and retrospective use separate.</p></section>
+        <section><b>Fail-closed compatibility</b><p>Raw strings can aid diagnosis but cannot become proof until values, units, dates, and evidence links are typed.</p></section>
+      </div>
+    </details>
+  </div>;
+}
+
 const authoritativeGraphSnapshot = (value: AuthoritativeJob): GraphSnapshot | null => {
   if (!value.graph) return null;
   const phaseIndex = graphOrder.indexOf(value.graph.phase as typeof graphOrder[number]);
@@ -262,6 +1002,9 @@ export default function Home() {
   const [inputMode, setInputMode] = useState<"manual_claim" | "article_text" | "public_url">("manual_claim");
   const [claimCandidates, setClaimCandidates] = useState<ClaimCandidate[]>([]);
   const [decisionKind, setDecisionKind] = useState("approve");
+  const [verificationDisposition, setVerificationDisposition] = useState("none");
+  const [correctedValue, setCorrectedValue] = useState("");
+  const [correctedUnit, setCorrectedUnit] = useState("");
   const [revisedVerdict, setRevisedVerdict] = useState("mixed");
   const [rationale, setRationale] = useState("The cited evidence supports this review decision.");
   const [reviewer, setReviewer] = useState("Md Moshiur Rahman");
@@ -409,8 +1152,9 @@ export default function Home() {
   const blockingSocialCount = report?.social_evidence_policy?.findings.filter(
     (finding) => finding.severity === "blocking",
   ).length ?? 0;
-  const citationRate = report?.audits.length
-    ? Math.round(report.audits.filter((audit) => audit.support_level === "full").length / report.audits.length * 100) : 0;
+  const citationSummary = report ? canonicalCitationSummary(report) : null;
+  const verificationSummary = report ? canonicalVerificationSummary(report) : null;
+  const resolvedVerdict = report ? canonicalVerdictLabel(report, graph) : null;
   const reviewPending = graph?.status === "review_required" && (review?.decisions.length ?? 0) === 0;
   const liveNodeIndex = liveStage ? Math.max(0, graphOrder.indexOf(liveStage as typeof graphOrder[number])) : 0;
   const completedGraphNodes = graph?.completed_nodes.filter((node) => graphOrder.includes(node as typeof graphOrder[number])).length ?? 0;
@@ -425,6 +1169,23 @@ export default function Home() {
   const effectiveDecisionKind = allowedReviewDecisions.includes(decisionKind)
     ? decisionKind
     : allowedReviewDecisions[0] ?? "reject";
+  const reviewConstructions = [
+    ...(report?.verification_packet?.comparative_constructions ?? []),
+    ...(report?.verification_packet?.temporal_constructions ?? []),
+  ];
+  const reviewConstruction = reviewConstructions.find(
+    (construction) => construction.state !== "constructed",
+  ) ?? reviewConstructions[0] ?? null;
+  const verificationDispositionOptions = effectiveDecisionKind === "approve"
+    ? [["none", "No construction decision"], ["accept", "Accept construction"], ["not_applicable", "Mark requirement not applicable"]]
+    : effectiveDecisionKind === "revise"
+      ? [["none", "No construction decision"], ["correct", "Correct construction"]]
+      : effectiveDecisionKind === "request_evidence"
+        ? [["none", "No construction decision"], ["request_evidence", "Request evidence for construction"]]
+        : [["none", "No construction decision"]];
+  const effectiveVerificationDisposition = verificationDispositionOptions.some(
+    ([value]) => value === verificationDisposition,
+  ) ? verificationDisposition : "none";
   const researchResultsByAssignment = useMemo(
     () => new Map(job?.graph?.research_results.map((result) => [result.assignment_id, result]) ?? []),
     [job],
@@ -440,14 +1201,10 @@ export default function Home() {
     return signals.filter((signal) => normalized.includes(signal)).length >= 2 || normalized.includes("Ã");
   });
   const citationReady = report?.full_report_assurance?.publication_status === "ready";
-  const judgmentReady = report?.readiness?.state !== "human_review_required" && !report?.verdict.human_review_required;
-  const socialPolicyReady = !report?.social_evidence_policy?.publication_blocked;
-  const authoritativePublicationReady = report?.publication_decision
-    ? report.publication_decision.publication_allowed
-    : true;
   const overallPublicationReady = Boolean(
-    report && citationReady && judgmentReady && socialPolicyReady
-    && authoritativePublicationReady && contaminatedEvidence.length === 0,
+    report
+    && report.publication_decision
+    && report.publication_decision.publication_allowed,
   );
   const reviewerRecommendation = overallPublicationReady
     ? "Publish"
@@ -497,6 +1254,16 @@ export default function Home() {
     try {
       const decision: Record<string, unknown> = { kind: effectiveDecisionKind, reviewer_identity: reviewer, rationale };
       if (effectiveDecisionKind === "revise") decision.revised_verdict = revisedVerdict;
+      if (reviewConstruction && effectiveVerificationDisposition !== "none") {
+        decision.verification_construction_id = reviewConstruction.construction_id;
+        decision.verification_disposition = effectiveVerificationDisposition;
+      }
+      if (effectiveVerificationDisposition === "correct") {
+        decision.corrected_claim_text_span = reviewConstruction?.claim_text_span;
+        if (correctedValue.trim()) decision.corrected_value = correctedValue.trim();
+        if (correctedUnit.trim()) decision.corrected_unit = correctedUnit.trim();
+        if (selected) decision.corrected_evidence_ids = [selected.evidence_id];
+      }
       const result = await request<AuthoritativeJob>(
         `/api/authoritative-jobs/${job.job.job_id}/review`,
         {
@@ -531,6 +1298,7 @@ export default function Home() {
         <nav aria-label="Investigations">
           <button className="nav-item selected"><span>◎</span>Investigations</button>
           <button className="nav-item"><span>◇</span>Review queue<b>{reviewPending ? 1 : 0}</b></button>
+          <a className="nav-item" href="/annotation"><span>✓</span>V3 annotation</a>
           <button className="nav-item"><span>◌</span>System health</button>
         </nav>
         <div className="investigation-list">
@@ -662,6 +1430,8 @@ export default function Home() {
                 <h2>{job.interruption.allowed_decisions.includes("approve") ? "Confirm provisional verdict" : "Evidence retrieval needs attention"}</h2>
                 <p className="reason">{job.interruption.route_reason}</p>
                 <label>Decision<select value={effectiveDecisionKind} onChange={(event) => setDecisionKind(event.target.value)}>{reviewDecisionOptions.filter(([value]) => allowedReviewDecisions.includes(value)).map(([value, label]) => <option value={value} key={value}>{label}</option>)}</select></label>
+                {reviewConstruction && <label>Verification construction decision<select value={effectiveVerificationDisposition} onChange={(event) => setVerificationDisposition(event.target.value)}>{verificationDispositionOptions.map(([value, label]) => <option value={value} key={value}>{label}</option>)}</select><small>Applies to construction {shortId(reviewConstruction.construction_id)} and is persisted in the immutable review record.</small></label>}
+                {effectiveVerificationDisposition === "correct" && <div className="review-correction-grid"><label>Correct value<input value={correctedValue} onChange={(event) => setCorrectedValue(event.target.value)} placeholder="Exact reviewed value" /></label><label>Correct unit<input value={correctedUnit} onChange={(event) => setCorrectedUnit(event.target.value)} placeholder="Normalized unit" /></label><small>The currently selected approved evidence passage will be attached to this correction.</small></div>}
                 {effectiveDecisionKind === "revise" && <label>Revised verdict<select value={revisedVerdict} onChange={(event) => setRevisedVerdict(event.target.value)}>{["supported", "contradicted", "mixed", "misleading", "unsupported", "unverifiable"].map((label) => <option value={label} key={label}>{titleCase(label)}</option>)}</select></label>}
                 <label>Review rationale<textarea value={rationale} onChange={(event) => setRationale(event.target.value)} /></label>
                 <label>Reviewer identity<input value={reviewer} onChange={(event) => setReviewer(event.target.value)} /></label>
@@ -681,12 +1451,12 @@ export default function Home() {
           <>
             <section className={`report-lifecycle ${overallPublicationReady ? "ready" : "provisional"}`}>
               <div><span>{overallPublicationReady ? "PUBLICATION-READY REPORT" : "PROVISIONAL REPORT · HUMAN DECISION PENDING"}</span><h2>The automated investigation is complete</h2><p>{overallPublicationReady ? "The recorded safeguards permit publication. A journalist should still inspect decisive evidence before use." : "The complete evidence-assisted report is available below. Publication remains blocked until a human reviews the evidence, limitations, and automated recommendation."}</p></div>
-              <div><small>WORKFLOW POSITION</small><strong>{reviewPending ? "Human review" : overallPublicationReady ? "Ready to publish" : titleCase(graph?.status ?? report.investigation.status)}</strong><em>{evidence.length} evidence passage{evidence.length === 1 ? "" : "s"} · {report.audits.length} audited sentence{report.audits.length === 1 ? "" : "s"}</em></div>
+              <div><small>WORKFLOW POSITION</small><strong>{reviewPending ? "Human review" : overallPublicationReady ? "Ready to publish" : titleCase(graph?.status ?? report.investigation.status)}</strong><em>{evidence.length} evidence passage{evidence.length === 1 ? "" : "s"} · {citationSummary?.total ?? 0} canonical citation finding{citationSummary?.total === 1 ? "" : "s"}</em></div>
             </section>
             <div className="summary-row">
-              <div><span>{graph?.final_verdict ? "FINAL VERDICT" : "PROVISIONAL VERDICT"}</span><strong>{titleCase(graph?.final_verdict ?? report.verdict.label)}</strong></div>
+              <div><span>{graph?.final_verdict ? "FINAL VERDICT" : "PROVISIONAL VERDICT"}</span><strong>{titleCase(resolvedVerdict ?? report.verdict.label)}</strong><small>{graph?.final_verdict ? "Review-resumed graph decision" : report.judgment_policy ? "Judgment-policy enforced label" : "Persisted verdict fallback"}</small></div>
               <div><span>CONFIDENCE <button className="info-dot" aria-label="Explain confidence" title="A calibrated probability of verdict correctness. A dash means the system has not been empirically calibrated and will not invent a probability.">?</button></span><strong>{report.verdict.confidence == null ? "—" : `${Math.round(report.verdict.confidence * 100)}%`}</strong><small>{report.verdict.confidence == null ? "Not calibrated" : "Calibrated probability"}</small></div>
-              <div><span>CITATION SUPPORT <button className="info-dot" aria-label="Explain citation support" title="Material report sentences marked fully supported by their cited evidence, divided by all audited material sentences.">?</button></span><strong>{citationRate}%</strong><small>{report.audits.filter((audit) => audit.support_level === "full").length}/{report.audits.length} audited sentences</small></div>
+              <div><span>CITATION SUPPORT <button className="info-dot" aria-label="Explain citation support" title="Material report assertions marked fully supported in the final full-report citation-assurance audit.">?</button></span><strong>{citationSummary?.rate ?? 0}%</strong><small>{citationSummary?.supported ?? 0}/{citationSummary?.total ?? 0} · {citationSummary?.authority}</small></div>
               <div><span>INDEPENDENT FAMILIES <button className="info-dot" aria-label="Explain evidence families" title="Groups of sources that appear to originate independently. Multiple pages repeating one original report count as one family.">?</button></span><strong>{report.independence_analysis?.independent_family_count ?? "—"}</strong><small>Target {report.plan.minimum_independent_families}</small></div>
               <div><span>EVIDENCE ITEMS</span><strong>{evidence.length}</strong></div>
             </div>
@@ -706,14 +1476,14 @@ export default function Home() {
             </div>
             {section === "Review brief" && <div className="review-brief-dashboard">
               <section className={`review-recommendation ${overallPublicationReady ? "publishable" : "hold"}`}>
-                <div><span>REVIEW RECOMMENDATION</span><h2>{reviewerRecommendation}</h2><p>{overallPublicationReady ? "The packet passes both judgment-readiness and full-report citation gates, with no detected passage-hygiene warning." : "Do not treat citation-ready as publication-ready. One or more evidence, verification, provenance, or passage-quality safeguards still requires attention."}</p></div>
-                <div className="review-verdict"><small>PROVISIONAL FACTUAL VERDICT</small><strong>{titleCase(report.verdict.label)}</strong><em>{report.verdict.confidence == null ? "Confidence not calibrated" : `${Math.round(report.verdict.confidence * 100)}% calibrated confidence`}</em></div>
+                <div><span>REVIEW RECOMMENDATION</span><h2>{reviewerRecommendation}</h2><p>{overallPublicationReady ? "The persisted authoritative publication decision permits publication. A journalist should still inspect decisive evidence." : report.publication_decision ? "The authoritative publication decision records one or more blocking safeguards." : "No authoritative publication decision is available, so the dashboard fails closed and treats this report as provisional."}</p></div>
+                <div className="review-verdict"><small>PROVISIONAL FACTUAL VERDICT</small><strong>{titleCase(resolvedVerdict ?? report.verdict.label)}</strong><em>{report.verdict.confidence == null ? "Confidence not calibrated" : `${Math.round(report.verdict.confidence * 100)}% calibrated confidence`}</em></div>
               </section>
               <section className="review-gates">
                 <article><span>JUDGMENT READINESS</span><strong>{titleCase(report.readiness?.state ?? "not reported")}</strong><p>{report.readiness?.state === "human_review_required" ? "Blocking safeguards remain; the verdict is provisional." : "The deterministic readiness gate does not require escalation."}</p></article>
                 <article><span>CITATION ASSURANCE</span><strong>{titleCase(report.full_report_assurance?.publication_status ?? "not reported")}</strong><p>{citationReady ? "The report sentences passed citation matching. This does not establish source authority or independence." : "The report has citation-assurance failures."}</p></article>
                 <article><span>INDEPENDENCE</span><strong>{titleCase(report.provenance?.requirement_state ?? "not reported")}</strong><p>{report.provenance ? `${report.provenance.confirmed_independent_lower_bound} confirmed; up to ${report.provenance.possible_independent_upper_bound} possible; ${report.provenance.unresolved_dependency_count} unresolved relationship(s).` : "No provenance assessment was recorded."}</p></article>
-                <article><span>VERIFICATION</span><strong>{Math.round((report.readiness?.verification_completeness ?? 0) * 100)}% complete</strong><p>{report.context_verification?.temporal.issues.join(" ") || report.context_verification?.numerical.issues.join(" ") || "No unresolved numerical or temporal issue was recorded."}</p></article>
+                <article><span>VERIFICATION</span><strong>{verificationSummary?.completeness ?? 0}% complete</strong><p>{verificationSummary?.unresolved ? `${verificationSummary.unresolved} required assertion-level check(s) remain unresolved.` : "No unresolved assertion-level verification check was recorded."}</p><small>{verificationSummary?.authority}</small></article>
                 <article><span>SOURCE QUALITY</span><strong>{report.readiness?.source_quality_unknown_count ?? 0} unknown signal(s)</strong><p>Unknown quality is not evidence that a source is poor, but it prevents the system from claiming verified authority.</p></article>
                 <article><span>PASSAGE HYGIENE</span><strong>{contaminatedEvidence.length ? `${contaminatedEvidence.length} warning(s)` : "Clean"}</strong><p>{contaminatedEvidence.length ? "Retained passages appear to include navigation text, export controls, encoding damage, or other page boilerplate." : "No common navigation or encoding contamination was detected."}</p></article>
                 <article className={blockingSocialCount ? "gate-blocked" : ""}><span>SOCIAL EVIDENCE</span><strong>{socialEvidence.length ? `${socialEvidence.length} item(s)` : "None retained"}</strong><p>{blockingSocialCount ? `${blockingSocialCount} blocking social-evidence finding(s) prevent publication.` : socialRiskCount ? `${socialRiskCount} social-source risk signal(s) require inspection.` : "No unresolved social-evidence risk was recorded."}</p></article>
@@ -738,6 +1508,8 @@ export default function Home() {
                 <div className="decision-intro"><span>YOUR JUDGMENT</span><h2>Record the editorial decision</h2><p>The automated verdict is advisory. Review the report first, then approve, revise, request stronger evidence, or reject the packet. Only actions permitted by the authoritative workflow are shown.</p><dl><div><dt>Automated recommendation</dt><dd>{reviewerRecommendation}</dd></div><div><dt>Provisional verdict</dt><dd>{titleCase(job.interruption.provisional_verdict)}</dd></div><div><dt>Audit history</dt><dd>{review?.chain_valid ? "Verified" : "Pending"}</dd></div></dl></div>
                 <div className="decision-form">
                   <label>Editorial decision<select value={effectiveDecisionKind} onChange={(event) => setDecisionKind(event.target.value)}>{reviewDecisionOptions.filter(([value]) => allowedReviewDecisions.includes(value)).map(([value, label]) => <option value={value} key={value}>{label}</option>)}</select></label>
+                  {reviewConstruction && <label>Verification construction decision<select value={effectiveVerificationDisposition} onChange={(event) => setVerificationDisposition(event.target.value)}>{verificationDispositionOptions.map(([value, label]) => <option value={value} key={value}>{label}</option>)}</select><small>Applies to construction {shortId(reviewConstruction.construction_id)} and is written to the durable review history.</small></label>}
+                  {effectiveVerificationDisposition === "correct" && <div className="review-correction-grid"><label>Correct value<input value={correctedValue} onChange={(event) => setCorrectedValue(event.target.value)} placeholder="Exact reviewed value" /></label><label>Correct unit<input value={correctedUnit} onChange={(event) => setCorrectedUnit(event.target.value)} placeholder="Normalized unit" /></label><small>Correction is bound to the selected approved evidence passage.</small></div>}
                   {effectiveDecisionKind === "revise" && <label>Revised verdict<select value={revisedVerdict} onChange={(event) => setRevisedVerdict(event.target.value)}>{["supported", "contradicted", "mixed", "misleading", "unsupported", "unverifiable"].map((label) => <option value={label} key={label}>{titleCase(label)}</option>)}</select></label>}
                   <label>Decision rationale<textarea value={rationale} onChange={(event) => setRationale(event.target.value)} placeholder="Explain what you verified and why this action is justified." /></label>
                   <div className="identity-row"><label>Reviewer<input value={reviewer} onChange={(event) => setReviewer(event.target.value)} /></label>{["approve", "revise"].includes(effectiveDecisionKind) && <label>Distinct approver<input value={approver} onChange={(event) => setApprover(event.target.value)} /></label>}</div>
@@ -749,7 +1521,7 @@ export default function Home() {
             </div>}
             {section === "Overview" && <div className="report-dashboard">
               <section className="report-card verdict-card">
-                <span>DECISION</span><h2>{titleCase(graph?.final_verdict ?? report.verdict.label)}</h2>
+                <span>DECISION</span><h2>{titleCase(resolvedVerdict ?? report.verdict.label)}</h2>
                 <p>{report.readiness?.state === "human_review_required" ? "The evidence points to this verdict, but one or more safeguards require human review." : "The evidence packet has passed the current deterministic readiness checks."}</p>
                 <dl><div><dt>Readiness</dt><dd>{titleCase(report.readiness?.state ?? "not reported")}</dd></div><div><dt>Publication</dt><dd>{titleCase(report.full_report_assurance?.publication_status ?? "not reported")}</dd></div><div><dt>Critical citation failures</dt><dd>{report.full_report_assurance?.critical_failure_count ?? "—"}</dd></div></dl>
               </section>
@@ -763,8 +1535,8 @@ export default function Home() {
                 <dl><div><dt>Confirmed independent lower bound</dt><dd>{report.provenance?.confirmed_independent_lower_bound ?? "—"}</dd></div><div><dt>Possible upper bound</dt><dd>{report.provenance?.possible_independent_upper_bound ?? "—"}</dd></div><div><dt>Unresolved relationships</dt><dd>{report.provenance?.unresolved_dependency_count ?? "—"}</dd></div></dl>
               </section>
               <section className="report-card">
-                <span>VERIFICATION</span><h2>{Math.round((report.readiness?.verification_completeness ?? 0) * 100)}% complete</h2>
-                <dl><div><dt>Material claim coverage</dt><dd>{Math.round((report.readiness?.material_coverage ?? 0) * 100)}%</dd></div><div><dt>Numerical check required</dt><dd>{report.plan.requires_numerical_check ? "Yes" : "No"}</dd></div><div><dt>Temporal check required</dt><dd>{report.plan.requires_temporal_check ? "Yes" : "No"}</dd></div></dl>
+                <span>VERIFICATION</span><h2>{verificationSummary?.completeness ?? 0}% complete</h2>
+                <dl><div><dt>Unresolved typed checks</dt><dd>{verificationSummary?.unresolved ?? "—"}</dd></div><div><dt>Numerical check required</dt><dd>{verificationSummary?.requiredNumerical ? "Yes" : "No"}</dd></div><div><dt>Temporal check required</dt><dd>{verificationSummary?.requiredTemporal ? "Yes" : "No"}</dd></div><div><dt>Authority</dt><dd>{verificationSummary?.authority ?? "Not reported"}</dd></div></dl>
               </section>
               <section className={`report-card social-overview-card ${blockingSocialCount ? "blocked" : ""}`}>
                 <span>SOCIAL-EVIDENCE GOVERNANCE</span><h2>{blockingSocialCount ? "Publication blocked" : socialEvidence.length ? "Review trace available" : "No social evidence retained"}</h2>
@@ -927,12 +1699,23 @@ export default function Home() {
               </section>
               <p className="transparency-note"><b>Transparency boundary:</b> this view exposes the persisted explanation, evidence links, deterministic challenges, and policy decisions. It does not expose or reconstruct private model chain-of-thought.</p>
             </div>}
-            {section === "Verification" && <div className="verification-dashboard">
-              <section className="report-card"><span>NUMERICAL CONTEXT</span><h2>{titleCase(report.context_verification?.numerical.status ?? "not reported")}</h2><dl><div><dt>Required</dt><dd>{report.context_verification?.numerical.required ? "Yes" : "No"}</dd></div><div><dt>Claim values</dt><dd>{report.context_verification?.numerical.claim_values.join(", ") || "None extracted"}</dd></div><div><dt>Evidence values</dt><dd>{report.context_verification?.numerical.evidence_values.slice(0, 8).join(", ") || "None extracted"}</dd></div></dl></section>
-              <section className="report-card"><span>TEMPORAL CONTEXT</span><h2>{titleCase(report.context_verification?.temporal.status ?? "not reported")}</h2><dl><div><dt>Required</dt><dd>{report.context_verification?.temporal.required ? "Yes" : "No"}</dd></div><div><dt>Reference date</dt><dd>{report.context_verification?.temporal.reference_date ?? "Not specified"}</dd></div><div><dt>Issues</dt><dd>{report.context_verification?.temporal.issues.length ?? 0}</dd></div></dl></section>
-              <section className="reason-list"><span>READINESS SIGNALS</span>{report.readiness?.reason_codes.map((reason) => <div key={reason}><b>{titleCase(reason)}</b><p>A persisted safeguard contributing to the current readiness state.</p></div>)}</section>
-              <section className="reason-list"><span>KNOWN LIMITATIONS</span>{[...(report.context_verification?.limitations ?? []), ...(report.readiness?.limitations ?? [])].map((limitation, index) => <div key={index}><b>Limitation {index + 1}</b><p>{limitation}</p></div>)}</section>
-            </div>}
+            {section === "Verification" && <VerificationDashboard
+              report={report}
+              sources={sources}
+              evidence={evidence}
+              openEvidence={(id) => {
+                const evidenceIndex = evidence.findIndex((item) => item.evidence_id === id);
+                if (evidenceIndex >= 0) {
+                  setSelectedEvidence(evidenceIndex);
+                  setSection("Evidence");
+                }
+              }}
+              prepareClaimEdit={() => {
+                setClaim(report.claim.text);
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }}
+              openReviewBrief={() => setSection("Review brief")}
+            />}
             {section === "System architecture" && <div className="architecture-dashboard">
               <section className="architecture-hero">
                 <span>ACCEPTED ARCHITECTURE · ADR 0021</span>
@@ -952,7 +1735,7 @@ export default function Home() {
             </div>}
             {["Evidence", "Citation audit", "Review history"].includes(section) && <div className="content-grid">
               <section className="evidence-panel">
-                <div className="panel-title"><div><span>{section.toUpperCase()}</span><h2>{section === "Evidence" ? "Evidence packet" : section}</h2></div><span className="filter">{section === "Evidence" ? `${evidence.length} passages` : `${section === "Citation audit" ? report.audits.length : review?.events.length ?? 0} records`}</span></div>
+                <div className="panel-title"><div><span>{section.toUpperCase()}</span><h2>{section === "Evidence" ? "Evidence packet" : section}</h2></div><span className="filter">{section === "Evidence" ? `${evidence.length} passages` : `${section === "Citation audit" ? report.full_report_assurance?.final_audit.findings.length ?? report.audits.length : review?.events.length ?? 0} records`}</span></div>
                 {section === "Evidence" && <div className="evidence-layout">
                   <div className="evidence-list">
                     {evidence.map((item, index) => {
@@ -965,13 +1748,24 @@ export default function Home() {
                     {selected ? <><div className="passage-meta"><span>EXACT PASSAGE</span><b>{shortId(selected.evidence_id)}</b></div><blockquote>“{selected.passage}”</blockquote><dl><div><dt>Source</dt><dd>{sources.get(selected.source_id)?.url ? <a href={sources.get(selected.source_id)?.url} target="_blank" rel="noreferrer">{sources.get(selected.source_id)?.title ?? "Open source"} ↗</a> : sources.get(selected.source_id)?.title ?? "Stored source"}</dd></div><div><dt>Publisher</dt><dd>{sources.get(selected.source_id)?.publisher ?? "Not recorded"}</dd></div><div><dt>Source type</dt><dd>{titleCase(sources.get(selected.source_id)?.source_type ?? "unknown")}</dd></div><div><dt>Distribution</dt><dd>{titleCase(sources.get(selected.source_id)?.distribution_medium ?? "unknown")}</dd></div><div><dt>Approved use</dt><dd>{titleCase(selected.evidentiary_use)}</dd></div><div><dt>Stance</dt><dd>{titleCase(canonicalStance(selected.stance))}</dd></div><div><dt>Relevance <button className="info-dot" title="Claim-to-passage topical match. It is not a truth, quality, or confidence score." aria-label="Explain relevance score">?</button></dt><dd>{Math.round(selected.relevance_score * 100)}%</dd></div><div><dt>Evidence family</dt><dd>{selected.evidence_family_id ? shortId(selected.evidence_family_id) : "Unassigned"}</dd></div></dl><div className="score-explanation"><b>What {Math.round(selected.relevance_score * 100)}% means</b><p>The passage was rated as highly related to this claim. This score does not establish that the passage is correct or independent; those are evaluated separately.</p></div>{sources.get(selected.source_id)?.distribution_medium === "social_platform" && <div className="social-evidence-callout"><b>Social-source constraints apply</b><p>This item can only be used as {titleCase(selected.evidentiary_use)}. Inspect identity, authenticity, original-source linkage, corroboration, and policy findings before relying on it.</p><button onClick={() => setSection("Social evidence")}>Open full social trace →</button></div>}<div className="support-note">Citation data loaded from the authoritative report.</div></> : <p className="empty-copy">Select an evidence passage.</p>}
                   </article>
                 </div>}
-                {section === "Citation audit" && <div className="citation-records">{report.audits.map((audit, index) => <article key={audit.sentence_id ?? index}><div><b>Sentence {index + 1}</b><em className={`support-${audit.support_level}`}>{titleCase(audit.support_level)}</em><span>{audit.cited_evidence_ids.length} citation{audit.cited_evidence_ids.length === 1 ? "" : "s"}</span></div><blockquote>{audit.sentence}</blockquote>{audit.explanation && <p>{audit.explanation}</p>}{audit.issue_type && <small>Issue: {titleCase(audit.issue_type)}</small>}{audit.suggested_revision && <details><summary>Suggested bounded revision</summary><p>{audit.suggested_revision}</p></details>}<div className="citation-links">{audit.cited_evidence_ids.map((id) => <button key={id} onClick={() => { const evidenceIndex = evidence.findIndex((item) => item.evidence_id === id); setSelectedEvidence(Math.max(0, evidenceIndex)); setSection("Evidence"); }}>{shortId(id)} →</button>)}</div></article>)}</div>}
-                {section === "Review history" && <div className="record-list">{review?.events.map((event) => <article key={event.sequence}><b>{event.sequence}. {titleCase(event.action)}</b><span>{event.actor_identity}</span></article>)}{!review && <p className="empty-copy">Start a review workflow to create an immutable history.</p>}</div>}
+                {section === "Citation audit" && <CitationAuditView
+                  report={report}
+                  sources={sources}
+                  evidence={evidence}
+                  openEvidence={(id) => {
+                    const evidenceIndex = evidence.findIndex((item) => item.evidence_id === id);
+                    if (evidenceIndex >= 0) {
+                      setSelectedEvidence(evidenceIndex);
+                      setSection("Evidence");
+                    }
+                  }}
+                />}
+                {section === "Review history" && <div className="record-list">{review?.events.map((event) => <article key={event.sequence}><b>{event.sequence}. {titleCase(event.action)}</b><span>{event.actor_identity}</span></article>)}{review?.decisions.filter((decision) => decision.verification_disposition).map((decision) => <article key={`construction-${decision.decision_id}`}><b>Verification construction: {titleCase(decision.verification_disposition!)}</b><span>{decision.verification_construction_id ? shortId(decision.verification_construction_id) : "Unknown construction"} · persisted with decision {shortId(decision.decision_id)}{decision.corrected_value ? ` · ${decision.corrected_value} ${decision.corrected_unit ?? ""}` : ""}{decision.corrected_evidence_ids?.length ? ` · ${decision.corrected_evidence_ids.length} approved evidence binding(s)` : ""}</span></article>)}{!review && <p className="empty-copy">Start a review workflow to create an immutable history.</p>}</div>}
               </section>
               <aside className="review-panel">
                 <div className="review-kicker">HUMAN REVIEW</div>
                 {!graph ? <div className="approved-state"><div className="approval-mark">{report.verdict.human_review_required ? "!" : "✓"}</div><h2>{report.verdict.human_review_required ? "Human review required" : "No human review required"}</h2><p>{report.verdict.human_review_required ? report.verdict.review_reason ?? "The persisted report requires review, but its live graph thread is not loaded in this browser." : "This completed report was publication-ready under the recorded deterministic safeguards."}</p><dl><div><dt>Verdict</dt><dd>{titleCase(report.verdict.label)}</dd></div><div><dt>Publication</dt><dd>{titleCase(report.full_report_assurance?.publication_status ?? "recorded")}</dd></div><div><dt>Review record</dt><dd>{review ? `${review.events.length} event(s)` : "None required"}</dd></div></dl></div>
-                  : reviewPending ? <><h2>{job?.interruption?.allowed_decisions.includes("approve") ? "Confirm final verdict" : "Evidence retrieval needs attention"}</h2><p className="reason">{review?.request.reason}</p><label>Decision<select value={effectiveDecisionKind} onChange={(event) => setDecisionKind(event.target.value)}>{reviewDecisionOptions.filter(([value]) => allowedReviewDecisions.includes(value)).map(([value, label]) => <option value={value} key={value}>{label}</option>)}</select></label>{effectiveDecisionKind === "revise" && <label>Revised verdict<select value={revisedVerdict} onChange={(event) => setRevisedVerdict(event.target.value)}>{["supported", "contradicted", "mixed", "misleading", "unsupported", "unverifiable"].map((label) => <option value={label} key={label}>{titleCase(label)}</option>)}</select></label>}<label>Review rationale<textarea value={rationale} onChange={(event) => setRationale(event.target.value)} /></label><label>Reviewer identity<input value={reviewer} onChange={(event) => setReviewer(event.target.value)} /></label>{["approve", "revise"].includes(effectiveDecisionKind) && <label>Distinct approver identity<input value={approver} onChange={(event) => setApprover(event.target.value)} /></label>}<button className="primary" onClick={saveDecision} disabled={busy || rationale.trim().length < 3 || reviewer.trim().length < 3 || (["approve", "revise"].includes(effectiveDecisionKind) && (approver.trim().length < 3 || approver.trim().toLocaleLowerCase() === reviewer.trim().toLocaleLowerCase()))}>{busy ? "Saving…" : "Save decision & resume graph"}</button><small className="immutable">The decision is appended to the immutable audit history.</small></>
+                  : reviewPending ? <><h2>{job?.interruption?.allowed_decisions.includes("approve") ? "Confirm final verdict" : "Evidence retrieval needs attention"}</h2><p className="reason">{review?.request.reason}</p><label>Decision<select value={effectiveDecisionKind} onChange={(event) => setDecisionKind(event.target.value)}>{reviewDecisionOptions.filter(([value]) => allowedReviewDecisions.includes(value)).map(([value, label]) => <option value={value} key={value}>{label}</option>)}</select></label>{reviewConstruction && <label>Verification construction decision<select value={effectiveVerificationDisposition} onChange={(event) => setVerificationDisposition(event.target.value)}>{verificationDispositionOptions.map(([value, label]) => <option value={value} key={value}>{label}</option>)}</select></label>}{effectiveDecisionKind === "revise" && <label>Revised verdict<select value={revisedVerdict} onChange={(event) => setRevisedVerdict(event.target.value)}>{["supported", "contradicted", "mixed", "misleading", "unsupported", "unverifiable"].map((label) => <option value={label} key={label}>{titleCase(label)}</option>)}</select></label>}<label>Review rationale<textarea value={rationale} onChange={(event) => setRationale(event.target.value)} /></label><label>Reviewer identity<input value={reviewer} onChange={(event) => setReviewer(event.target.value)} /></label>{["approve", "revise"].includes(effectiveDecisionKind) && <label>Distinct approver identity<input value={approver} onChange={(event) => setApprover(event.target.value)} /></label>}<button className="primary" onClick={saveDecision} disabled={busy || rationale.trim().length < 3 || reviewer.trim().length < 3 || (["approve", "revise"].includes(effectiveDecisionKind) && (approver.trim().length < 3 || approver.trim().toLocaleLowerCase() === reviewer.trim().toLocaleLowerCase()))}>{busy ? "Saving…" : "Save decision & resume graph"}</button><small className="immutable">The decision is appended to the immutable audit history.</small></>
                   : <div className="approved-state"><div className="approval-mark">{graph.status === "complete" ? "✓" : "!"}</div><h2>{titleCase(graph.status)}</h2><p>The graph resumed from its SQLite checkpoint without repeating completed research nodes.</p><dl><div><dt>Final verdict</dt><dd>{graph.final_verdict ? titleCase(graph.final_verdict) : "Not issued"}</dd></div><div><dt>Reviewer</dt><dd>{graph.reviewer_identity ?? "—"}</dd></div><div><dt>Audit chain</dt><dd>{review?.chain_valid ? "Verified" : "Pending"}</dd></div></dl></div>}
               </aside>
             </div>

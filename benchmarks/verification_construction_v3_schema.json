@@ -1,0 +1,41 @@
+{
+  "schema_id": "verification-construction-real-world-v3",
+  "schema_version": 1,
+  "case_id_pattern": "^V3-[0-9]{3}$",
+  "required_case_fields": [
+    "case_id",
+    "split",
+    "claim_text",
+    "evidence_packet_path",
+    "dimension",
+    "gold_label",
+    "gold_claim_span",
+    "gold_evidence_spans",
+    "expected_verification_state",
+    "ambiguity_notes",
+    "annotator_identity",
+    "distinct_approver_identity"
+  ],
+  "allowed_splits": ["development", "calibration", "held_out"],
+  "allowed_gold_labels": [
+    "deterministic_constructible",
+    "fallback_eligible",
+    "unconstructible",
+    "not_applicable"
+  ],
+  "constructible_case_requirements": {
+    "gold_claim_span_required": true,
+    "gold_evidence_spans_required": true,
+    "expected_verification_state_required": true,
+    "exact_evidence_offsets_required": true
+  },
+  "prohibited_fields": [
+    "model_generated_verdict",
+    "model_generated_verification_state",
+    "unreviewed_confidence"
+  ],
+  "separation_of_duties": {
+    "distinct_approver_required": true,
+    "held_out_labels_hidden_from_runtime": true
+  }
+}

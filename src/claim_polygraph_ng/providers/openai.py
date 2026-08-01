@@ -51,9 +51,13 @@ _FAST_TASKS = frozenset(
 )
 _NON_REASONING_MODEL_PREFIXES = ("gpt-4o", "gpt-4.1")
 _PRICING_VERSION = "openai-list-prices-2026-07-26"
+_MODEL_PRICING_VERSIONS = {
+    "gpt-5.6-luna": "openai-list-prices-2026-07-30",
+}
 _TOKEN_PRICES_PER_MILLION = {
     "gpt-4o-mini": (Decimal("0.15"), Decimal("0.075"), Decimal("0.60")),
     "gpt-5.4-mini": (Decimal("0.75"), Decimal("0.075"), Decimal("4.50")),
+    "gpt-5.6-luna": (Decimal("1.00"), Decimal("0.10"), Decimal("6.00")),
 }
 
 
@@ -96,7 +100,7 @@ class _VerdictSemantics(DomainModel):
 class OpenAIStructuredModelProvider:
     """Generate validated artifacts through the hosted OpenAI Responses API."""
 
-    prompt_version = "openai-responses-structured-v13"
+    prompt_version = "openai-responses-structured-v17"
 
     def __init__(
         self,
@@ -194,7 +198,11 @@ class OpenAIStructuredModelProvider:
                     "schema": schema,
                 }
             },
-            "max_output_tokens": 2_048,
+            "max_output_tokens": (
+                1_200
+                if task is ModelTask.ASSIST_VERIFICATION_CONSTRUCTION
+                else 2_048
+            ),
             "store": False,
         }
         if not selected_model.startswith(_NON_REASONING_MODEL_PREFIXES):
@@ -287,6 +295,13 @@ def _strict_openai_schema(schema: dict[str, object]) -> dict[str, object]:
         if isinstance(value, dict):
             value.pop("default", None)
             value.pop("format", None)
+            pattern = value.get("pattern")
+            if isinstance(pattern, str) and any(
+                token in pattern for token in ("(?=", "(?!", "(?<=", "(?<!")
+            ):
+                # OpenAI Structured Outputs does not accept regex lookaround.
+                # Pydantic still validates the returned value after generation.
+                value.pop("pattern")
             properties = value.get("properties")
             if isinstance(properties, dict):
                 value["required"] = list(properties)
@@ -370,7 +385,11 @@ def _model_call_usage(
         cached_input_tokens=cached_input_tokens,
         output_tokens=output_tokens,
         estimated_cost_usd=estimated_cost,
-        pricing_version=_PRICING_VERSION if estimated_cost is not None else None,
+        pricing_version=(
+            _MODEL_PRICING_VERSIONS.get(model, _PRICING_VERSION)
+            if estimated_cost is not None
+            else None
+        ),
     )
 
 

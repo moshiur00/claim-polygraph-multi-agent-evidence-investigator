@@ -1,0 +1,17 @@
+{
+  "audit_id": "verification-construction-v3-stage0-audit-v1",
+  "manifest_id": "verification-construction-v3-stage0",
+  "checked_artifact_count": 3,
+  "manifest_valid": true,
+  "schema_contract_valid": true,
+  "sampling_quotas_valid": true,
+  "budget_contract_valid": true,
+  "promotion_thresholds_frozen": true,
+  "provider_selected": false,
+  "model_calls": 0,
+  "network_calls": 0,
+  "search_calls": 0,
+  "estimated_cost_usd": 0.0,
+  "stage_exit_passed": true,
+  "next_stage": "V3.1 dataset assembly"
+}

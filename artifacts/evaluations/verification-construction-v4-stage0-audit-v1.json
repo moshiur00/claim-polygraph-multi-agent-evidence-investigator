@@ -1,0 +1,20 @@
+{
+  "audit_id": "verification-construction-v4-stage0-audit-v1",
+  "status": "passed",
+  "valid": true,
+  "errors": [],
+  "failure_categories": 15,
+  "retired_v3_benchmark_artifacts": 16,
+  "provider_selected": false,
+  "model_calls": 0,
+  "network_calls": 0,
+  "search_calls": 0,
+  "paid_operations": 0,
+  "fresh_calibration_cases_collected": 0,
+  "fresh_held_out_cases_collected": 0,
+  "manifest": {
+    "path": "artifacts/evaluations/verification-construction-v4-stage0-manifest-v1.json",
+    "sha256": "f354e12c11e23131607825bc15d9ccc2ac75ec0a540a6e39d38e4e48550d6b76"
+  },
+  "exit_criterion_met": true
+}

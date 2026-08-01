@@ -1,0 +1,73 @@
+{
+  "artifact_id": "verification-construction-v3-stage5c-synthetic-canary-v1",
+  "status": "passed",
+  "synthetic_fixture": true,
+  "fresh_receipt_identity": true,
+  "fixture_sha256": "424006bea116a0b37f2ab19380a9bf9420ef98ae5bf09a9237b7da7d80c61c90",
+  "prompt_version": "verification-construction-v3-dev-v3",
+  "model": "gpt-5.6-luna",
+  "provider_attempts": 1,
+  "completed_paid_operations": 1,
+  "input_tokens": 1092,
+  "output_tokens": 624,
+  "estimated_cost_usd": 0.004836,
+  "benchmark_cases_loaded": 0,
+  "development_cases_exposed_to_model": 0,
+  "calibration_cases_exposed_to_model": 0,
+  "held_out_cases_exposed_to_model": 0,
+  "telemetry": {
+    "spans": 2,
+    "traces": 2,
+    "metric_series": 2
+  },
+  "receipt_statuses": [
+    "completed"
+  ],
+  "result": {
+    "disposition": "validated_proposal",
+    "proposal": {
+      "kind": "temporal_status",
+      "failed_construction_id": "9582f152-7360-55f7-a2f9-9b59f2c9d66a",
+      "claim_text_span": "Regulation Y began applying on 14 June 2019.",
+      "left_subject": null,
+      "right_subject": null,
+      "comparator": null,
+      "dimension": null,
+      "left_value": null,
+      "right_value": null,
+      "evidence_bindings": [],
+      "temporal_relation": "started",
+      "reference_date": null,
+      "claimed_interval": {
+        "start": {
+          "value": "2019-06-14",
+          "precision": "day"
+        },
+        "end": null,
+        "start_inclusive": true,
+        "end_inclusive": false
+      },
+      "requires_reference_date": false,
+      "claimed_status": "applying",
+      "temporal_bindings": [
+        {
+          "evidence_id": "e2ed902f-f6f3-579b-8a05-168a3d70231d",
+          "start_char": 0,
+          "end_char": 73,
+          "quoted_text": "The official register states Regulation Y began applying on 14 June 2019.",
+          "effective_interval": {
+            "start": {
+              "value": "2019-06-14",
+              "precision": "day"
+            },
+            "end": null,
+            "start_inclusive": true,
+            "end_inclusive": false
+          },
+          "observed_status": "applying",
+          "retrospective": true
+        }
+      ]
+    }
+  }
+}

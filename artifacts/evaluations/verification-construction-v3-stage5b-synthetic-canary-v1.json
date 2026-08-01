@@ -1,0 +1,30 @@
+{
+  "artifact_id": "verification-construction-v3-stage5b-synthetic-canary-v1",
+  "status": "failed_safe",
+  "synthetic_fixture": true,
+  "fixture_sha256": "010d45c8c953e85e591fc360f1c9743b9973551d9e17ad115ac28cb009237101",
+  "prompt_version": "verification-construction-v3-dev-v2",
+  "model": "gpt-5.6-luna",
+  "provider_attempts": 1,
+  "completed_paid_operations": 0,
+  "input_tokens": 0,
+  "output_tokens": 0,
+  "estimated_cost_usd": 0.0,
+  "benchmark_cases_loaded": 0,
+  "development_cases_exposed_to_model": 0,
+  "calibration_cases_exposed_to_model": 0,
+  "held_out_cases_exposed_to_model": 0,
+  "telemetry": {
+    "spans": 1,
+    "traces": 1,
+    "metric_series": 0
+  },
+  "receipt_statuses": [
+    "failed_permanent"
+  ],
+  "result": {
+    "disposition": "safe_failure",
+    "error_type": "ModelOutputError",
+    "error": "OpenAI output failed schema validation: 3 validation errors for AssistedTemporalProviderProposal\nclaimed_interval.start.value\n  Input should be a valid date or datetime, invalid character in year [type=date_from_datetime_parsing, input_value='25 May 2018', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/date_from_datetime_parsing\ntemporal_bindings.0.effective_interval.start.value\n  Input should be a valid date or datetime, invalid character in year [type=date_from_datetime_parsing, input_value='25 May 2018', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/date_from_datetime_parsing\ntemporal_bindings\n  Tuple should have at least 1 item after validation, not 0 [type=too_short, input_value=[{'evidence_id': 'd740a9e...'retrospective': False}], input_type=list]\n    For further information visit https://errors.pydantic.dev/2.13/v/too_short"
+  }
+}

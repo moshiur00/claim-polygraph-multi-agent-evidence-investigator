@@ -1,0 +1,40 @@
+{
+  "manifest_id": "verification-construction-v4-stage6c-canary-manifest-v1",
+  "status": "frozen",
+  "final_authorized_canary": true,
+  "provider": "openai",
+  "model": "gpt-4o-mini",
+  "prompt_version": "verification-construction-v3-remediation-v6",
+  "canonicalization_version": "assisted-canonicalization-v4.6b",
+  "maximum_provider_attempts": 1,
+  "maximum_calls_per_fixture": 1,
+  "maximum_input_tokens": 6000,
+  "maximum_output_tokens": 900,
+  "automatic_retries": 0,
+  "maximum_total_cost_usd": 0.25,
+  "fixture": {
+    "canary_id": "v4.6c-final-synthetic-temporal-canary-v1",
+    "kind": "temporal_status",
+    "claim_text": "License S took effect on 6 April 2020.",
+    "evidence_text": "The fictional licensing register states that License S took effect on 6 April 2020.",
+    "fixture_sha256": "a6bf58f1d83934ff557e99aa5a5edbc5b1e303766e938ae0b391de8732831829"
+  },
+  "fresh_receipt_identity": true,
+  "dataset_exposure": {
+    "benchmark": 0,
+    "development": 0,
+    "calibration": 0,
+    "held_out": 0
+  },
+  "budget_amendment": {
+    "path": "artifacts/evaluations/verification-construction-v4-canary-budget-amendment-v1.json",
+    "sha256": "2fa0a48b2e58ba615cc66c9c25b0090a730ee52dfbef7327157c173ef033e746"
+  },
+  "offline_remediation": {
+    "path": "artifacts/evaluations/verification-construction-v4-stage6b-temporal-wire-v1.json",
+    "sha256": "26eda0b0c1da9f684bef2be20923a4906574d131305f16745f798d63162d2daf"
+  },
+  "model_calls_before_execution": 0,
+  "network_calls_before_execution": 0,
+  "paid_operations_before_execution": 0
+}

@@ -1,0 +1,819 @@
+{
+  "workbook_id": "verification-construction-v4-stage8-fresh-calibration-workbook-v1",
+  "schema_version": 1,
+  "frozen": false,
+  "cases": [
+    {
+      "case_id": "V3-301",
+      "source_candidate_id": "V4-NATO-MEMBERS",
+      "split": "calibration",
+      "origin_family_id": "official:nato",
+      "claim_text": "NATO has 32 member countries.",
+      "evidence": [
+        {
+          "evidence_id": "V3-301:E1",
+          "title": "NATO member countries",
+          "url": "https://www.nato.int/en/about-us/organization/nato-member-countries",
+          "source_class": "official_html",
+          "passage": "At present, NATO has 32 member countries."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "count",
+        "comparator_or_relation": "equal",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 29,
+          "quoted_text": "NATO has 32 member countries."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-301:E1",
+            "start_char": 0,
+            "end_char": 41,
+            "quoted_text": "At present, NATO has 32 member countries."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": null,
+      "approval": null
+    },
+    {
+      "case_id": "V3-302",
+      "source_candidate_id": "V4-NATO-SUCCESS",
+      "split": "calibration",
+      "origin_family_id": "official:nato",
+      "claim_text": "NATO is the world's most successful military alliance.",
+      "evidence": [
+        {
+          "evidence_id": "V3-302:E1",
+          "title": "What is NATO?",
+          "url": "https://www.nato.int/content/what-is-nato/en.html",
+          "source_class": "official_html",
+          "passage": "There are currently 32 members."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "count",
+        "comparator_or_relation": "qualitative_superlative",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 54,
+          "quoted_text": "NATO is the world's most successful military alliance."
+        },
+        "evidence_spans": [],
+        "suggested_gold_label": "not_applicable",
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": null,
+      "approval": null
+    },
+    {
+      "case_id": "V3-303",
+      "source_candidate_id": "V4-FTC-CREATED",
+      "split": "calibration",
+      "origin_family_id": "official:ftc",
+      "claim_text": "The Federal Trade Commission was created on September 26, 1914.",
+      "evidence": [
+        {
+          "evidence_id": "V3-303:E1",
+          "title": "Our History",
+          "url": "https://www.ftc.gov/about-ftc/history",
+          "source_class": "official_html",
+          "passage": "The Federal Trade Commission was created on September 26, 1914, when President Woodrow Wilson signed the Federal Trade Commission Act into law."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "created_on",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 63,
+          "quoted_text": "The Federal Trade Commission was created on September 26, 1914."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-303:E1",
+            "start_char": 0,
+            "end_char": 143,
+            "quoted_text": "The Federal Trade Commission was created on September 26, 1914, when President Woodrow Wilson signed the Federal Trade Commission Act into law."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": null,
+      "approval": null
+    },
+    {
+      "case_id": "V3-304",
+      "source_candidate_id": "V4-FTC-TERM",
+      "split": "calibration",
+      "origin_family_id": "official:ftc",
+      "claim_text": "Federal Trade Commissioners serve seven-year terms.",
+      "evidence": [
+        {
+          "evidence_id": "V3-304:E1",
+          "title": "Commissioners",
+          "url": "https://www.ftc.gov/about-ftc/commissioners-staff/commissioners",
+          "source_class": "official_html",
+          "passage": "The Commission is headed by five Commissioners, nominated by the President and confirmed by the Senate, each serving a seven-year term."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "duration",
+        "comparator_or_relation": "equal",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 51,
+          "quoted_text": "Federal Trade Commissioners serve seven-year terms."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-304:E1",
+            "start_char": 0,
+            "end_char": 135,
+            "quoted_text": "The Commission is headed by five Commissioners, nominated by the President and confirmed by the Senate, each serving a seven-year term."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": null,
+      "approval": null
+    },
+    {
+      "case_id": "V3-305",
+      "source_candidate_id": "V4-OECD-FORCE",
+      "split": "calibration",
+      "origin_family_id": "official:oecd",
+      "claim_text": "The OECD Convention entered into force on 30 September 1961.",
+      "evidence": [
+        {
+          "evidence_id": "V3-305:E1",
+          "title": "Our history",
+          "url": "https://www.oecd.org/en/about/history.html",
+          "source_class": "official_html",
+          "passage": "The Convention transforming the OEEC into the OECD was signed at the Chateau de la Muette in Paris on 14 December 1960 and entered into force on 30 September 1961."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "entered_into_force_on",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 60,
+          "quoted_text": "The OECD Convention entered into force on 30 September 1961."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-305:E1",
+            "start_char": 0,
+            "end_char": 163,
+            "quoted_text": "The Convention transforming the OEEC into the OECD was signed at the Chateau de la Muette in Paris on 14 December 1960 and entered into force on 30 September 1961."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": null,
+      "approval": null
+    },
+    {
+      "case_id": "V3-306",
+      "source_candidate_id": "V4-OECD-MEMBERS",
+      "split": "calibration",
+      "origin_family_id": "official:oecd",
+      "claim_text": "The OECD has 38 Members.",
+      "evidence": [
+        {
+          "evidence_id": "V3-306:E1",
+          "title": "Partnerships in OECD Bodies",
+          "url": "https://www.oecd.org/en/about/legal/partnerships-in-oecd-bodies.html",
+          "source_class": "official_html",
+          "passage": "Alongside the Organisation's 38 Members, other countries and economies may be invited to participate in any of its committees and other bodies."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "count",
+        "comparator_or_relation": "equal",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 24,
+          "quoted_text": "The OECD has 38 Members."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-306:E1",
+            "start_char": 0,
+            "end_char": 143,
+            "quoted_text": "Alongside the Organisation's 38 Members, other countries and economies may be invited to participate in any of its committees and other bodies."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": null,
+      "approval": null
+    },
+    {
+      "case_id": "V3-307",
+      "source_candidate_id": "V4-ISO-MEMBERS",
+      "split": "calibration",
+      "origin_family_id": "official:iso",
+      "claim_text": "ISO has 176 members.",
+      "evidence": [
+        {
+          "evidence_id": "V3-307:E1",
+          "title": "ISO Members",
+          "url": "https://www.iso.org/about/members",
+          "source_class": "official_html",
+          "passage": "The International Organization for Standardization is a network of 176 national standards bodies."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "count",
+        "comparator_or_relation": "equal",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 20,
+          "quoted_text": "ISO has 176 members."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-307:E1",
+            "start_char": 0,
+            "end_char": 97,
+            "quoted_text": "The International Organization for Standardization is a network of 176 national standards bodies."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": null,
+      "approval": null
+    },
+    {
+      "case_id": "V3-308",
+      "source_candidate_id": "V4-ISO-BEST",
+      "split": "calibration",
+      "origin_family_id": "official:iso",
+      "claim_text": "ISO is the world's best standards organization.",
+      "evidence": [
+        {
+          "evidence_id": "V3-308:E1",
+          "title": "About ISO",
+          "url": "https://www.iso.org/about",
+          "source_class": "official_html",
+          "passage": "ISO brings global experts together to agree on the best way of doing things."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "count",
+        "comparator_or_relation": "qualitative_superlative",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 47,
+          "quoted_text": "ISO is the world's best standards organization."
+        },
+        "evidence_spans": [],
+        "suggested_gold_label": "not_applicable",
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": null,
+      "approval": null
+    },
+    {
+      "case_id": "V3-309",
+      "source_candidate_id": "V4-BOE-FOUNDED",
+      "split": "calibration",
+      "origin_family_id": "official:bank-of-england",
+      "claim_text": "The Bank of England was founded on 27 July 1694.",
+      "evidence": [
+        {
+          "evidence_id": "V3-309:E1",
+          "title": "History",
+          "url": "https://www.bankofengland.co.uk/about/history",
+          "source_class": "official_html",
+          "passage": "The Bank of England opened for business on 1 August 1694, after it was founded on 27 July 1694."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "founded_on",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 48,
+          "quoted_text": "The Bank of England was founded on 27 July 1694."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-309:E1",
+            "start_char": 0,
+            "end_char": 95,
+            "quoted_text": "The Bank of England opened for business on 1 August 1694, after it was founded on 27 July 1694."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": null,
+      "approval": null
+    },
+    {
+      "case_id": "V3-310",
+      "source_candidate_id": "V4-BOE-RELIABLE",
+      "split": "calibration",
+      "origin_family_id": "official:bank-of-england",
+      "claim_text": "The Bank of England is the world's most reliable central bank.",
+      "evidence": [
+        {
+          "evidence_id": "V3-310:E1",
+          "title": "What does the Bank of England do?",
+          "url": "https://www.bankofengland.co.uk/about",
+          "source_class": "official_html",
+          "passage": "The Bank of England is the central bank of the United Kingdom."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "count",
+        "comparator_or_relation": "qualitative_superlative",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 62,
+          "quoted_text": "The Bank of England is the world's most reliable central bank."
+        },
+        "evidence_spans": [],
+        "suggested_gold_label": "not_applicable",
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": null,
+      "approval": null
+    },
+    {
+      "case_id": "V3-311",
+      "source_candidate_id": "V4-STATCAN-MANDATE",
+      "split": "calibration",
+      "origin_family_id": "official:statistics-canada",
+      "claim_text": "Statistics Canada has been mandated since 1918.",
+      "evidence": [
+        {
+          "evidence_id": "V3-311:E1",
+          "title": "A glimpse into history",
+          "url": "https://www.statcan.gc.ca/en/about/history",
+          "source_class": "official_html",
+          "passage": "Canada's central statistical agency, which we know today as Statistics Canada, has been mandated since 1918 to provide statistical information to the people of Canada and to the world."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_interval_or_status",
+        "comparator_or_relation": "active_since",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 47,
+          "quoted_text": "Statistics Canada has been mandated since 1918."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-311:E1",
+            "start_char": 0,
+            "end_char": 184,
+            "quoted_text": "Canada's central statistical agency, which we know today as Statistics Canada, has been mandated since 1918 to provide statistical information to the people of Canada and to the world."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": null,
+      "approval": null
+    },
+    {
+      "case_id": "V3-312",
+      "source_candidate_id": "V4-STATCAN-SURVEYS",
+      "split": "calibration",
+      "origin_family_id": "official:statistics-canada",
+      "claim_text": "Statistics Canada conducts more than 450 active surveys.",
+      "evidence": [
+        {
+          "evidence_id": "V3-312:E1",
+          "title": "About Statistics Canada",
+          "url": "https://www.statcan.gc.ca/en/about",
+          "source_class": "official_html",
+          "passage": "Statistics Canada has more than 450 active surveys on virtually all aspects of life in Canada."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "count",
+        "comparator_or_relation": "greater_than",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 56,
+          "quoted_text": "Statistics Canada conducts more than 450 active surveys."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-312:E1",
+            "start_char": 0,
+            "end_char": 94,
+            "quoted_text": "Statistics Canada has more than 450 active surveys on virtually all aspects of life in Canada."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": null,
+      "approval": null
+    },
+    {
+      "case_id": "V3-313",
+      "source_candidate_id": "V4-RBA-OPERATIONS",
+      "split": "calibration",
+      "origin_family_id": "official:reserve-bank-australia",
+      "claim_text": "The Reserve Bank of Australia commenced operations on 14 January 1960.",
+      "evidence": [
+        {
+          "evidence_id": "V3-313:E1",
+          "title": "Fifty Years of the Reserve Bank",
+          "url": "https://www.rba.gov.au/about-rba/history/anniversary/",
+          "source_class": "official_html",
+          "passage": "The Reserve Bank of Australia commenced operations as Australia's central bank on 14 January 1960."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "started_on",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 70,
+          "quoted_text": "The Reserve Bank of Australia commenced operations on 14 January 1960."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-313:E1",
+            "start_char": 0,
+            "end_char": 98,
+            "quoted_text": "The Reserve Bank of Australia commenced operations as Australia's central bank on 14 January 1960."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": null,
+      "approval": null
+    },
+    {
+      "case_id": "V3-314",
+      "source_candidate_id": "V4-RBA-STAFF",
+      "split": "calibration",
+      "origin_family_id": "official:reserve-bank-australia",
+      "claim_text": "The Reserve Bank opened for business with 1,800 staff.",
+      "evidence": [
+        {
+          "evidence_id": "V3-314:E1",
+          "title": "Fifty Years of the Reserve Bank",
+          "url": "https://www.rba.gov.au/about-rba/history/anniversary/",
+          "source_class": "official_html",
+          "passage": "On 14 January 1960, when the Reserve Bank opened for business it had 1,800 staff from the Commonwealth Bank."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "count",
+        "comparator_or_relation": "equal",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 54,
+          "quoted_text": "The Reserve Bank opened for business with 1,800 staff."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-314:E1",
+            "start_char": 0,
+            "end_char": 108,
+            "quoted_text": "On 14 January 1960, when the Reserve Bank opened for business it had 1,800 staff from the Commonwealth Bank."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": null,
+      "approval": null
+    },
+    {
+      "case_id": "V3-315",
+      "source_candidate_id": "V4-FAA-ACT",
+      "split": "calibration",
+      "origin_family_id": "official:faa",
+      "claim_text": "The Federal Aviation Act was signed on August 23, 1958.",
+      "evidence": [
+        {
+          "evidence_id": "V3-315:E1",
+          "title": "A Brief History of the FAA",
+          "url": "https://www.faa.gov/about/history/brief_history",
+          "source_class": "official_html",
+          "passage": "On August 23, 1958, the President signed the Federal Aviation Act."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "signed_on",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 55,
+          "quoted_text": "The Federal Aviation Act was signed on August 23, 1958."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-315:E1",
+            "start_char": 0,
+            "end_char": 66,
+            "quoted_text": "On August 23, 1958, the President signed the Federal Aviation Act."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": null,
+      "approval": null
+    },
+    {
+      "case_id": "V3-316",
+      "source_candidate_id": "V4-FAA-OPERATIONS",
+      "split": "calibration",
+      "origin_family_id": "official:faa",
+      "claim_text": "The Federal Aviation Agency began operations on December 31, 1958.",
+      "evidence": [
+        {
+          "evidence_id": "V3-316:E1",
+          "title": "A Brief History of the FAA",
+          "url": "https://www.faa.gov/about/history/brief_history",
+          "source_class": "official_html",
+          "passage": "Sixty days later, on December 31, the Federal Aviation Agency began operations."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "started_on",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 66,
+          "quoted_text": "The Federal Aviation Agency began operations on December 31, 1958."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-316:E1",
+            "start_char": 0,
+            "end_char": 79,
+            "quoted_text": "Sixty days later, on December 31, the Federal Aviation Agency began operations."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": null,
+      "approval": null
+    },
+    {
+      "case_id": "V3-317",
+      "source_candidate_id": "V4-SSA-CREATED",
+      "split": "calibration",
+      "origin_family_id": "official:ssa",
+      "claim_text": "The Social Security Board was created on August 14, 1935 at 3:30 p.m.",
+      "evidence": [
+        {
+          "evidence_id": "V3-317:E1",
+          "title": "Organizational History",
+          "url": "https://www.ssa.gov/history/orghist.html",
+          "source_class": "official_html",
+          "passage": "The SSB was created at the moment President Roosevelt inked his signature on the Social Security Act (August 14, 1935 at 3:30 p.m.)."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "created_on",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 69,
+          "quoted_text": "The Social Security Board was created on August 14, 1935 at 3:30 p.m."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-317:E1",
+            "start_char": 0,
+            "end_char": 132,
+            "quoted_text": "The SSB was created at the moment President Roosevelt inked his signature on the Social Security Act (August 14, 1935 at 3:30 p.m.)."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": null,
+      "approval": null
+    },
+    {
+      "case_id": "V3-318",
+      "source_candidate_id": "V4-SSA-INDEPENDENT",
+      "split": "calibration",
+      "origin_family_id": "official:ssa",
+      "claim_text": "SSA returned to independent agency status on March 31, 1995.",
+      "evidence": [
+        {
+          "evidence_id": "V3-318:E1",
+          "title": "Organizational History",
+          "url": "https://www.ssa.gov/history/orghist.html",
+          "source_class": "official_html",
+          "passage": "On March 31, 1995 at a ceremony at SSA Headquarters in Baltimore, SSA once again became an independent agency."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "status_changed_on",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 60,
+          "quoted_text": "SSA returned to independent agency status on March 31, 1995."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-318:E1",
+            "start_char": 0,
+            "end_char": 110,
+            "quoted_text": "On March 31, 1995 at a ceremony at SSA Headquarters in Baltimore, SSA once again became an independent agency."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": null,
+      "approval": null
+    },
+    {
+      "case_id": "V3-319",
+      "source_candidate_id": "V4-USPTO-FIRST",
+      "split": "calibration",
+      "origin_family_id": "official:uspto",
+      "claim_text": "The first U.S. patent was granted on July 31, 1790.",
+      "evidence": [
+        {
+          "evidence_id": "V3-319:E1",
+          "title": "America's innovative history",
+          "url": "https://www.uspto.gov/about-us/history/freedom250/americas-innovative-history",
+          "source_class": "official_html",
+          "passage": "On July 31, 1790, the first patent was granted to Samuel Hopkins for improvements in the making of pot ash and pearl ash."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "granted_on",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 51,
+          "quoted_text": "The first U.S. patent was granted on July 31, 1790."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-319:E1",
+            "start_char": 0,
+            "end_char": 121,
+            "quoted_text": "On July 31, 1790, the first patent was granted to Samuel Hopkins for improvements in the making of pot ash and pearl ash."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": null,
+      "approval": null
+    },
+    {
+      "case_id": "V3-320",
+      "source_candidate_id": "V4-USPTO-INNOVATIVE",
+      "split": "calibration",
+      "origin_family_id": "official:uspto",
+      "claim_text": "The USPTO is the most innovative federal agency.",
+      "evidence": [
+        {
+          "evidence_id": "V3-320:E1",
+          "title": "About Us",
+          "url": "https://www.uspto.gov/about-us",
+          "source_class": "official_html",
+          "passage": "The USPTO is the federal agency that grants patents, registers trademarks, and advises the Administration on intellectual property policy."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "count",
+        "comparator_or_relation": "qualitative_superlative",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 48,
+          "quoted_text": "The USPTO is the most innovative federal agency."
+        },
+        "evidence_spans": [],
+        "suggested_gold_label": "not_applicable",
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": null,
+      "approval": null
+    }
+  ]
+}

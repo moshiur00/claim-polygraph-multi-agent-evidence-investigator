@@ -1,0 +1,62 @@
+{
+  "audit_id": "verification-construction-v4-stage9d-temporal-remediation-audit-v1",
+  "status": "passed",
+  "exit_criterion_met": true,
+  "fresh_calibration_collection_authorized": true,
+  "exposed_failure_count": 9,
+  "failure_taxonomy": {
+    "missing_typed_or_reconstructible_temporal_fact": 3,
+    "normalized_date_not_exactly_bound": 3,
+    "status_not_exactly_bound": 2,
+    "quote_not_exactly_bound": 1
+  },
+  "exposed_case_ids": [
+    "V3-327",
+    "V3-328",
+    "V3-330",
+    "V3-332",
+    "V3-333",
+    "V3-335",
+    "V3-336",
+    "V3-337",
+    "V3-338"
+  ],
+  "provider_responsibility": [
+    "select exact claim span",
+    "select exact evidence span",
+    "copy explicit claim date/status text",
+    "copy explicit evidence date/status text"
+  ],
+  "deterministic_responsibility": [
+    "parse dates",
+    "derive date precision",
+    "construct instants and intervals",
+    "validate exact grounding",
+    "reject ambiguity or missing operands"
+  ],
+  "prompt_version": "verification-construction-v4.9d-v8",
+  "temporal_wire_version": "assisted-temporal-facts-v4.9d",
+  "temporal_schema_sha256": "33b947abc44b86fc5631dc4e75e1708547463b81572ea8d80ee2b60c5015cb2b",
+  "full_unit_tests_passed": 532,
+  "model_calls": 0,
+  "network_calls": 0,
+  "paid_operations": 0,
+  "held_out_cases_loaded": 0,
+  "prior_calibration_sha256": "6768037d21b9b1a4c8248e8c6721be584d0480acbbd8f174c251761a9fd00555",
+  "gates": {
+    "all_nine_failures_adjudicated": true,
+    "provider_no_longer_builds_typed_dates": true,
+    "provider_facts_require_exact_claim_or_quote_text": true,
+    "deterministic_date_precision_and_interval_construction": true,
+    "ambiguous_or_partial_dates_fail_closed": true,
+    "status_requires_exact_text": true,
+    "legacy_numerical_contracts_unchanged": true,
+    "full_unit_suite_passed": true,
+    "prior_calibration_not_rerun": true,
+    "model_calls_zero": true,
+    "network_calls_zero": true,
+    "paid_operations_zero": true,
+    "held_out_cases_loaded_zero": true
+  },
+  "next_action": "Collect and independently approve a fresh non-overlapping calibration set"
+}

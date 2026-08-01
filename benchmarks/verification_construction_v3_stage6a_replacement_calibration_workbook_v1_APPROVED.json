@@ -1,0 +1,1482 @@
+{
+  "workbook_id": "verification-construction-v3-stage6a-replacement-calibration-workbook-v1",
+  "schema_version": 1,
+  "frozen": false,
+  "cases": [
+    {
+      "case_id": "V3-101",
+      "source_candidate_id": "NASA-ROTATION",
+      "split": "calibration",
+      "origin_family_id": "official:nasa-mars",
+      "claim_text": "A day on Mars lasts 24.6 hours.",
+      "evidence": [
+        {
+          "evidence_id": "V3-101:E1",
+          "title": "Mars Facts",
+          "url": "https://science.nasa.gov/mars/facts/?print=detailedfacts",
+          "source_class": "official_or_fact_check",
+          "passage": "As Mars orbits the Sun, it completes one rotation every 24.6 hours, which is very similar to one day on Earth (23.9 hours)."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "duration",
+        "comparator_or_relation": "equal",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 31,
+          "quoted_text": "A day on Mars lasts 24.6 hours."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-101:E1",
+            "start_char": 0,
+            "end_char": 123,
+            "quoted_text": "As Mars orbits the Sun, it completes one rotation every 24.6 hours, which is very similar to one day on Earth (23.9 hours)."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Navigation-only proposal; requires human annotation.",
+          "No benchmark model call was used."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-31",
+        "dimension_bucket": "duration",
+        "comparator_or_relation": "equal",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 31,
+          "quoted_text": "A day on Mars lasts 24.6 hours."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-101:E1",
+            "start_char": 0,
+            "end_char": 123,
+            "quoted_text": "As Mars orbits the Sun, it completes one rotation every 24.6 hours, which is very similar to one day on Earth (23.9 hours)."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": [
+          "A day on Mars” is interpreted as one complete Martian rotation, and “hours” refers to Earth hours."
+        ]
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-07-31",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-102",
+      "source_candidate_id": "NASA-YEAR",
+      "split": "calibration",
+      "origin_family_id": "official:nasa-mars",
+      "claim_text": "A Martian year is equal to 687 Earth days.",
+      "evidence": [
+        {
+          "evidence_id": "V3-102:E1",
+          "title": "Mars Facts",
+          "url": "https://science.nasa.gov/mars/facts/?print=detailedfacts",
+          "source_class": "official_or_fact_check",
+          "passage": "A year on Mars lasts 669.6 sols, which is the same as 687 Earth days."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "duration",
+        "comparator_or_relation": "equal",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 42,
+          "quoted_text": "A Martian year is equal to 687 Earth days."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-102:E1",
+            "start_char": 0,
+            "end_char": 69,
+            "quoted_text": "A year on Mars lasts 669.6 sols, which is the same as 687 Earth days."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Navigation-only proposal; requires human annotation.",
+          "No benchmark model call was used."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-31",
+        "dimension_bucket": "duration",
+        "comparator_or_relation": "equal",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 42,
+          "quoted_text": "A Martian year is equal to 687 Earth days."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-102:E1",
+            "start_char": 0,
+            "end_char": 69,
+            "quoted_text": "A year on Mars lasts 669.6 sols, which is the same as 687 Earth days."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": [
+          "687 Earth days is a rounded conventional duration; the evidence additionally expresses the Martian year as 669.6 sols."
+        ]
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-07-31",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-103",
+      "source_candidate_id": "WHO-FORCE",
+      "split": "calibration",
+      "origin_family_id": "official:who-history",
+      "claim_text": "WHO's Constitution entered into force on 7 April 1948.",
+      "evidence": [
+        {
+          "evidence_id": "V3-103:E1",
+          "title": "WHO History",
+          "url": "https://www.who.int/about/history/",
+          "source_class": "official_or_fact_check",
+          "passage": "WHO's Constitution came into force on 7 April 1948 - a date we now celebrate every year as World Health Day."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "date",
+        "comparator_or_relation": "entered_into_force_on",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 54,
+          "quoted_text": "WHO's Constitution entered into force on 7 April 1948."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-103:E1",
+            "start_char": 0,
+            "end_char": 108,
+            "quoted_text": "WHO's Constitution came into force on 7 April 1948 - a date we now celebrate every year as World Health Day."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Navigation-only proposal; requires human annotation.",
+          "No benchmark model call was used."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-31",
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "entered_into_force_on",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 54,
+          "quoted_text": "WHO's Constitution entered into force on 7 April 1948."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-103:E1",
+            "start_char": 0,
+            "end_char": 108,
+            "quoted_text": "WHO's Constitution came into force on 7 April 1948 - a date we now celebrate every year as World Health Day."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": [
+          "Entered into force” and “came into force” are treated as equivalent temporal-event wording"
+        ]
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-07-31",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-104",
+      "source_candidate_id": "WHO-SIGNED",
+      "split": "calibration",
+      "origin_family_id": "official:who-history",
+      "claim_text": "WHO's Constitution was signed on 22 July 1946.",
+      "evidence": [
+        {
+          "evidence_id": "V3-104:E1",
+          "title": "WHO History",
+          "url": "https://www.who.int/about/history/",
+          "source_class": "official_or_fact_check",
+          "passage": "The Conference drafted and adopted the Constitution of the World Health Organization, signed 22 July 1946 by representatives of 51 Members of the UN and of 10 other nations."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "date",
+        "comparator_or_relation": "signed_on",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 46,
+          "quoted_text": "WHO's Constitution was signed on 22 July 1946."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-104:E1",
+            "start_char": 0,
+            "end_char": 173,
+            "quoted_text": "The Conference drafted and adopted the Constitution of the World Health Organization, signed 22 July 1946 by representatives of 51 Members of the UN and of 10 other nations."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Navigation-only proposal; requires human annotation.",
+          "No benchmark model call was used."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-31",
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "signed_on",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 46,
+          "quoted_text": "WHO's Constitution was signed on 22 July 1946."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-104:E1",
+            "start_char": 0,
+            "end_char": 173,
+            "quoted_text": "The Conference drafted and adopted the Constitution of the World Health Organization, signed 22 July 1946 by representatives of 51 Members of the UN and of 10 other nations."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": [
+          "WHO’s Constitution” is treated as equivalent to “the Constitution of the World Health Organization,” and “signed 22 July 1946” expresses the same date relation as “signed on 22 July 1946."
+        ]
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-07-31",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-105",
+      "source_candidate_id": "NIST-SECOND",
+      "split": "calibration",
+      "origin_family_id": "official:nist-si",
+      "claim_text": "The SI definition of the second fixes the cesium frequency at 9,192,631,770 hertz.",
+      "evidence": [
+        {
+          "evidence_id": "V3-105:E1",
+          "title": "Definitions of SI Base Units",
+          "url": "https://www.nist.gov/si-redefinition/definitions-si-base-units",
+          "source_class": "official_or_fact_check",
+          "passage": "The second is defined by taking the fixed numerical value of the cesium frequency to be 9,192,631,770 when expressed in the unit Hz."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "frequency",
+        "comparator_or_relation": "equal",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 82,
+          "quoted_text": "The SI definition of the second fixes the cesium frequency at 9,192,631,770 hertz."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-105:E1",
+            "start_char": 0,
+            "end_char": 132,
+            "quoted_text": "The second is defined by taking the fixed numerical value of the cesium frequency to be 9,192,631,770 when expressed in the unit Hz."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Navigation-only proposal; requires human annotation.",
+          "No benchmark model call was used."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-31",
+        "dimension_bucket": "percentage_or_rate",
+        "comparator_or_relation": "equal",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 82,
+          "quoted_text": "The SI definition of the second fixes the cesium frequency at 9,192,631,770 hertz."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-105:E1",
+            "start_char": 0,
+            "end_char": 132,
+            "quoted_text": "The second is defined by taking the fixed numerical value of the cesium frequency to be 9,192,631,770 when expressed in the unit Hz."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": [
+          "Frequency is treated as a rate. “Hertz” and “Hz” are equivalent unit expressions, and the evidence states that the numerical value is fixed."
+        ]
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-07-31",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-106",
+      "source_candidate_id": "NIST-MOLE",
+      "split": "calibration",
+      "origin_family_id": "official:nist-si",
+      "claim_text": "One mole contains exactly 6.02214076 x 10^23 elementary entities.",
+      "evidence": [
+        {
+          "evidence_id": "V3-106:E1",
+          "title": "Definitions of SI Base Units",
+          "url": "https://www.nist.gov/si-redefinition/definitions-si-base-units",
+          "source_class": "official_or_fact_check",
+          "passage": "One mole contains exactly 6.02214076 x 10^23 elementary entities."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "count",
+        "comparator_or_relation": "equal",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 65,
+          "quoted_text": "One mole contains exactly 6.02214076 x 10^23 elementary entities."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-106:E1",
+            "start_char": 0,
+            "end_char": 65,
+            "quoted_text": "One mole contains exactly 6.02214076 x 10^23 elementary entities."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Navigation-only proposal; requires human annotation.",
+          "No benchmark model call was used."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-31",
+        "dimension_bucket": "count",
+        "comparator_or_relation": "equal",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 65,
+          "quoted_text": "One mole contains exactly 6.02214076 x 10^23 elementary entities."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-106:E1",
+            "start_char": 0,
+            "end_char": 65,
+            "quoted_text": "One mole contains exactly 6.02214076 x 10^23 elementary entities."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": [
+          "The notation “x 10^23” is interpreted as multiplication by 10 to the power of 23."
+        ]
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-07-31",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-107",
+      "source_candidate_id": "CENSUS-POPULATION",
+      "split": "calibration",
+      "origin_family_id": "official:us-census-2020",
+      "claim_text": "The United States population was 331,449,281 on 1 April 2020.",
+      "evidence": [
+        {
+          "evidence_id": "V3-107:E1",
+          "title": "The 2020 Census: Our Growing Nation",
+          "url": "https://www.census.gov/newsroom/blogs/director/2021/04/2020-census-our-growing-nation.html",
+          "source_class": "official_or_fact_check",
+          "passage": "According to the 2020 Census, there were 331,449,281 people living in the United States as of April 1, 2020, which represents a growth of 7.4% since 2010."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "count",
+        "comparator_or_relation": "equal_as_of",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 61,
+          "quoted_text": "The United States population was 331,449,281 on 1 April 2020."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-107:E1",
+            "start_char": 0,
+            "end_char": 154,
+            "quoted_text": "According to the 2020 Census, there were 331,449,281 people living in the United States as of April 1, 2020, which represents a growth of 7.4% since 2010."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Navigation-only proposal; requires human annotation.",
+          "No benchmark model call was used."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-31",
+        "dimension_bucket": "count",
+        "comparator_or_relation": "equal_as_of",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 61,
+          "quoted_text": "The United States population was 331,449,281 on 1 April 2020."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-107:E1",
+            "start_char": 0,
+            "end_char": 154,
+            "quoted_text": "According to the 2020 Census, there were 331,449,281 people living in the United States as of April 1, 2020, which represents a growth of 7.4% since 2010."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": [
+          "1 April 2020” and “April 1, 2020” are equivalent date formats, and “population was” is treated as equivalent to the census count of people living in the United States as of that date."
+        ]
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-07-31",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-108",
+      "source_candidate_id": "CENSUS-GROWTH",
+      "split": "calibration",
+      "origin_family_id": "official:us-census-2020",
+      "claim_text": "The U.S. population grew 7.4 percent from 2010 to 2020.",
+      "evidence": [
+        {
+          "evidence_id": "V3-108:E1",
+          "title": "The 2020 Census: Our Growing Nation",
+          "url": "https://www.census.gov/newsroom/blogs/director/2021/04/2020-census-our-growing-nation.html",
+          "source_class": "official_or_fact_check",
+          "passage": "According to the 2020 Census, there were 331,449,281 people living in the United States as of April 1, 2020, which represents a growth of 7.4% since 2010."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "percentage_or_rate",
+        "comparator_or_relation": "equal_over_interval",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 55,
+          "quoted_text": "The U.S. population grew 7.4 percent from 2010 to 2020."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-108:E1",
+            "start_char": 0,
+            "end_char": 154,
+            "quoted_text": "According to the 2020 Census, there were 331,449,281 people living in the United States as of April 1, 2020, which represents a growth of 7.4% since 2010."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Navigation-only proposal; requires human annotation.",
+          "No benchmark model call was used."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-31",
+        "dimension_bucket": "percentage_or_rate",
+        "comparator_or_relation": "equal_over_interval",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 55,
+          "quoted_text": "The U.S. population grew 7.4 percent from 2010 to 2020."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-108:E1",
+            "start_char": 0,
+            "end_char": 154,
+            "quoted_text": "According to the 2020 Census, there were 331,449,281 people living in the United States as of April 1, 2020, which represents a growth of 7.4% since 2010."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": [
+          "7.4 percent” and “7.4%” are equivalent. “Since 2010” in the 2020 Census context is interpreted as growth over the 2010–2020 interval."
+        ]
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-07-31",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-109",
+      "source_candidate_id": "EPA-GALLON",
+      "split": "calibration",
+      "origin_family_id": "official:epa-conversions",
+      "claim_text": "One U.S. gallon converts to 3.785 liters.",
+      "evidence": [
+        {
+          "evidence_id": "V3-109:E1",
+          "title": "EPA ExpoBox Unit Conversion Table",
+          "url": "https://www.epa.gov/expobox/epa-expobox-unit-conversion-table",
+          "source_class": "official_or_fact_check",
+          "passage": "gallons (gal) | 3.785 | liters (L)"
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "volume",
+        "comparator_or_relation": "conversion",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 41,
+          "quoted_text": "One U.S. gallon converts to 3.785 liters."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-109:E1",
+            "start_char": 0,
+            "end_char": 34,
+            "quoted_text": "gallons (gal) | 3.785 | liters (L)"
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Navigation-only proposal; requires human annotation.",
+          "No benchmark model call was used."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-31",
+        "dimension_bucket": "distance_or_mass",
+        "comparator_or_relation": "conversion",
+        "gold_label": "unconstructible",
+        "claim_span": null,
+        "evidence_spans": [],
+        "expected_verification_state": null,
+        "ambiguity_notes": [
+          "The claim is a valid volume conversion, but the frozen dimension taxonomy has no volume bucket. Assigning it to distance_or_mass would not preserve the physical dimension safely."
+        ]
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-07-31",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-110",
+      "source_candidate_id": "EPA-POUND",
+      "split": "calibration",
+      "origin_family_id": "official:epa-conversions",
+      "claim_text": "One pound converts to 454 grams.",
+      "evidence": [
+        {
+          "evidence_id": "V3-110:E1",
+          "title": "EPA ExpoBox Unit Conversion Table",
+          "url": "https://www.epa.gov/expobox/epa-expobox-unit-conversion-table",
+          "source_class": "official_or_fact_check",
+          "passage": "pounds (lb) | 454 | grams (g)"
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "mass",
+        "comparator_or_relation": "conversion",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 32,
+          "quoted_text": "One pound converts to 454 grams."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-110:E1",
+            "start_char": 0,
+            "end_char": 29,
+            "quoted_text": "pounds (lb) | 454 | grams (g)"
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Navigation-only proposal; requires human annotation.",
+          "No benchmark model call was used."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-31",
+        "dimension_bucket": "distance_or_mass",
+        "comparator_or_relation": "conversion",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 32,
+          "quoted_text": "One pound converts to 454 grams."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-110:E1",
+            "start_char": 0,
+            "end_char": 29,
+            "quoted_text": "pounds (lb) | 454 | grams (g)"
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": [
+          "The evidence presents 454 grams as the tabulated pound-to-gram conversion; the value is understood as a rounded conversion."
+        ]
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-07-31",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-111",
+      "source_candidate_id": "FDA-CUP",
+      "split": "calibration",
+      "origin_family_id": "official:fda-household-measures",
+      "claim_text": "For U.S. nutrition labeling, one cup means 240 milliliters.",
+      "evidence": [
+        {
+          "evidence_id": "V3-111:E1",
+          "title": "Metric Equivalents of Household Measures",
+          "url": "https://www.fda.gov/regulatory-information/search-fda-guidance-documents/guidance-industry-guidelines-determining-metric-equivalents-household-measures",
+          "source_class": "official_or_fact_check",
+          "passage": "For purposes of nutrition labeling, 1 cup means 240 mL, 1 tablespoon means 15 mL, 1 teaspoon means 5 mL, 1 fluid ounce means 30 mL, and 1 ounce means 28 g."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "volume",
+        "comparator_or_relation": "conversion",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 59,
+          "quoted_text": "For U.S. nutrition labeling, one cup means 240 milliliters."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-111:E1",
+            "start_char": 0,
+            "end_char": 155,
+            "quoted_text": "For purposes of nutrition labeling, 1 cup means 240 mL, 1 tablespoon means 15 mL, 1 teaspoon means 5 mL, 1 fluid ounce means 30 mL, and 1 ounce means 28 g."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Navigation-only proposal; requires human annotation.",
+          "No benchmark model call was used."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-31",
+        "dimension_bucket": "distance_or_mass",
+        "comparator_or_relation": "conversion",
+        "gold_label": "unconstructible",
+        "claim_span": null,
+        "evidence_spans": [],
+        "expected_verification_state": null,
+        "ambiguity_notes": [
+          "The claim is a valid nutrition-labeling volume conversion, but the frozen dimension taxonomy has no volume bucket. Assigning cups and milliliters to distance_or_mass would not preserve the physical dimension safely."
+        ]
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-07-31",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-112",
+      "source_candidate_id": "FDA-TEASPOON",
+      "split": "calibration",
+      "origin_family_id": "official:fda-household-measures",
+      "claim_text": "For U.S. nutrition labeling, one teaspoon means 5 milliliters.",
+      "evidence": [
+        {
+          "evidence_id": "V3-112:E1",
+          "title": "Metric Equivalents of Household Measures",
+          "url": "https://www.fda.gov/regulatory-information/search-fda-guidance-documents/guidance-industry-guidelines-determining-metric-equivalents-household-measures",
+          "source_class": "official_or_fact_check",
+          "passage": "For purposes of nutrition labeling, 1 cup means 240 mL, 1 tablespoon means 15 mL, 1 teaspoon means 5 mL, 1 fluid ounce means 30 mL, and 1 ounce means 28 g."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "volume",
+        "comparator_or_relation": "conversion",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 62,
+          "quoted_text": "For U.S. nutrition labeling, one teaspoon means 5 milliliters."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-112:E1",
+            "start_char": 0,
+            "end_char": 155,
+            "quoted_text": "For purposes of nutrition labeling, 1 cup means 240 mL, 1 tablespoon means 15 mL, 1 teaspoon means 5 mL, 1 fluid ounce means 30 mL, and 1 ounce means 28 g."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Navigation-only proposal; requires human annotation.",
+          "No benchmark model call was used."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-31",
+        "dimension_bucket": "distance_or_mass",
+        "comparator_or_relation": "conversion",
+        "gold_label": "unconstructible",
+        "claim_span": null,
+        "evidence_spans": [],
+        "expected_verification_state": null,
+        "ambiguity_notes": [
+          "The claim is a valid nutrition-labeling volume conversion, but the frozen dimension taxonomy has no volume bucket. Assigning teaspoons and milliliters to distance_or_mass would not preserve the physical dimension safely."
+        ]
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-07-31",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-113",
+      "source_candidate_id": "CDC-SLEEP-RANGE",
+      "split": "calibration",
+      "origin_family_id": "official:cdc-niosh-sleep",
+      "claim_text": "Most adults need between 7 and 8 hours of quality sleep each night.",
+      "evidence": [
+        {
+          "evidence_id": "V3-113:E1",
+          "title": "Basic Information about Sleep and Fatigue",
+          "url": "https://archive.cdc.gov/www_cdc_gov/niosh/emres/longhourstraining/sleepfatigue.html",
+          "source_class": "official_or_fact_check",
+          "passage": "How much sleep do you need? Most adults need 7 to 8 hours of quality sleep per night."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "duration",
+        "comparator_or_relation": "range",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 67,
+          "quoted_text": "Most adults need between 7 and 8 hours of quality sleep each night."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-113:E1",
+            "start_char": 0,
+            "end_char": 85,
+            "quoted_text": "How much sleep do you need? Most adults need 7 to 8 hours of quality sleep per night."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Navigation-only proposal; requires human annotation.",
+          "No benchmark model call was used."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-31",
+        "dimension_bucket": "duration",
+        "comparator_or_relation": "range",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 67,
+          "quoted_text": "Most adults need between 7 and 8 hours of quality sleep each night."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-113:E1",
+            "start_char": 0,
+            "end_char": 85,
+            "quoted_text": "How much sleep do you need? Most adults need 7 to 8 hours of quality sleep per night."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": [
+          "Between 7 and 8 hours” is equivalent to “7 to 8 hours,” and “each night” is equivalent to “per night."
+        ]
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-07-31",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-114",
+      "source_candidate_id": "CDC-SLEEP-LOW",
+      "split": "calibration",
+      "origin_family_id": "official:cdc-niosh-sleep",
+      "claim_text": "Some adults function well on 6 hours of sleep or less, but this is rare.",
+      "evidence": [
+        {
+          "evidence_id": "V3-114:E1",
+          "title": "Basic Information about Sleep and Fatigue",
+          "url": "https://archive.cdc.gov/www_cdc_gov/niosh/emres/longhourstraining/sleepfatigue.html",
+          "source_class": "official_or_fact_check",
+          "passage": "Some function well on 6 hours or less, but this is rare."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "duration",
+        "comparator_or_relation": "less_than_or_equal",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 72,
+          "quoted_text": "Some adults function well on 6 hours of sleep or less, but this is rare."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-114:E1",
+            "start_char": 0,
+            "end_char": 56,
+            "quoted_text": "Some function well on 6 hours or less, but this is rare."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Navigation-only proposal; requires human annotation.",
+          "No benchmark model call was used."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-31",
+        "dimension_bucket": "duration",
+        "comparator_or_relation": "less_than_or_equal",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 72,
+          "quoted_text": "Some adults function well on 6 hours of sleep or less, but this is rare."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-114:E1",
+            "start_char": 0,
+            "end_char": 56,
+            "quoted_text": "Some function well on 6 hours or less, but this is rare."
+          }
+        ],
+        "expected_verification_state": "qualified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-07-31",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-115",
+      "source_candidate_id": "DOE-B20",
+      "split": "calibration",
+      "origin_family_id": "official:doe-fuels-glossary",
+      "claim_text": "B20 fuel contains 20 percent biodiesel and 80 percent petroleum diesel by volume.",
+      "evidence": [
+        {
+          "evidence_id": "V3-115:E1",
+          "title": "Full Text Glossary",
+          "url": "https://www.energy.gov/cmei/fuels/full-text-glossary",
+          "source_class": "official_or_fact_check",
+          "passage": "B20: A mixture of 20% biodiesel and 80% petroleum diesel based on volume."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "percentage_or_rate",
+        "comparator_or_relation": "composition",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 81,
+          "quoted_text": "B20 fuel contains 20 percent biodiesel and 80 percent petroleum diesel by volume."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-115:E1",
+            "start_char": 0,
+            "end_char": 73,
+            "quoted_text": "B20: A mixture of 20% biodiesel and 80% petroleum diesel based on volume."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Navigation-only proposal; requires human annotation.",
+          "No benchmark model call was used."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-31",
+        "dimension_bucket": "percentage_or_rate",
+        "comparator_or_relation": "composition",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 81,
+          "quoted_text": "B20 fuel contains 20 percent biodiesel and 80 percent petroleum diesel by volume."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-115:E1",
+            "start_char": 0,
+            "end_char": 73,
+            "quoted_text": "B20: A mixture of 20% biodiesel and 80% petroleum diesel based on volume."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": [
+          "20 percent” and “20%” are equivalent, as are “80 percent” and “80%.” “By volume” is equivalent to “based on volume."
+        ]
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-07-31",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-116",
+      "source_candidate_id": "DOE-BARREL-ENERGY",
+      "split": "calibration",
+      "origin_family_id": "official:doe-fuels-glossary",
+      "claim_text": "A barrel of crude oil contains about 5.8 million Btu of energy.",
+      "evidence": [
+        {
+          "evidence_id": "V3-116:E1",
+          "title": "Full Text Glossary",
+          "url": "https://www.energy.gov/cmei/fuels/full-text-glossary",
+          "source_class": "official_or_fact_check",
+          "passage": "For crude oil, one barrel contains about 5.8 x 10^6 Btu of energy."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "energy",
+        "comparator_or_relation": "approximately_equal",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 63,
+          "quoted_text": "A barrel of crude oil contains about 5.8 million Btu of energy."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-116:E1",
+            "start_char": 0,
+            "end_char": 66,
+            "quoted_text": "For crude oil, one barrel contains about 5.8 x 10^6 Btu of energy."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Navigation-only proposal; requires human annotation.",
+          "No benchmark model call was used."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-31",
+        "dimension_bucket": "distance_or_mass",
+        "comparator_or_relation": "approximately_equal",
+        "gold_label": "unconstructible",
+        "claim_span": null,
+        "evidence_spans": [],
+        "expected_verification_state": null,
+        "ambiguity_notes": [
+          "The claim contains an approximate energy quantity measured in Btu, but the frozen dimension taxonomy has no energy bucket. Assigning energy to distance_or_mass would not preserve the physical dimension safely."
+        ]
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-07-31",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-117",
+      "source_candidate_id": "NWS-HPA",
+      "split": "calibration",
+      "origin_family_id": "official:nws-pressure",
+      "claim_text": "Standard sea-level pressure is 1013.25 hectopascals.",
+      "evidence": [
+        {
+          "evidence_id": "V3-117:E1",
+          "title": "Pressure",
+          "url": "https://www.weather.gov/source/zhu/ZHU_Training_Page/winds/pressure_winds/Pressure.htm",
+          "source_class": "official_or_fact_check",
+          "passage": "The standard pressure at sea-level is 1013.25 millibars and 1013.25 hPa."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "pressure",
+        "comparator_or_relation": "equal",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 52,
+          "quoted_text": "Standard sea-level pressure is 1013.25 hectopascals."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-117:E1",
+            "start_char": 0,
+            "end_char": 72,
+            "quoted_text": "The standard pressure at sea-level is 1013.25 millibars and 1013.25 hPa."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Navigation-only proposal; requires human annotation.",
+          "No benchmark model call was used."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-31",
+        "dimension_bucket": "pressure",
+        "comparator_or_relation": "equal",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 52,
+          "quoted_text": "Standard sea-level pressure is 1013.25 hectopascals."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-117:E1",
+            "start_char": 0,
+            "end_char": 72,
+            "quoted_text": "The standard pressure at sea-level is 1013.25 millibars and 1013.25 hPa."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": [
+          "“hPa” is the standard abbreviation for hectopascals. The evidence also gives the equivalent value in millibars."
+        ]
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-07-31",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-118",
+      "source_candidate_id": "NWS-CONVERSION",
+      "split": "calibration",
+      "origin_family_id": "official:nws-pressure",
+      "claim_text": "One hectopascal equals 100 pascals.",
+      "evidence": [
+        {
+          "evidence_id": "V3-118:E1",
+          "title": "Pressure",
+          "url": "https://www.weather.gov/source/zhu/ZHU_Training_Page/winds/pressure_winds/Pressure.htm",
+          "source_class": "official_or_fact_check",
+          "passage": "Thus, 1 hectopascal (hPa) equals 100 Pa which equals 1 millibar."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "pressure",
+        "comparator_or_relation": "conversion",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 35,
+          "quoted_text": "One hectopascal equals 100 pascals."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-118:E1",
+            "start_char": 0,
+            "end_char": 64,
+            "quoted_text": "Thus, 1 hectopascal (hPa) equals 100 Pa which equals 1 millibar."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Navigation-only proposal; requires human annotation.",
+          "No benchmark model call was used."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-31",
+        "dimension_bucket": "pressure",
+        "comparator_or_relation": "conversion",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 35,
+          "quoted_text": "One hectopascal equals 100 pascals."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-118:E1",
+            "start_char": 0,
+            "end_char": 64,
+            "quoted_text": "Thus, 1 hectopascal (hPa) equals 100 Pa which equals 1 millibar."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": [
+          "“Pa” is the standard abbreviation for pascals, and “hPa” is the standard abbreviation for hectopascals."
+        ]
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-07-31",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-119",
+      "source_candidate_id": "IEA-DEMAND",
+      "split": "calibration",
+      "origin_family_id": "official:iea-electricity-2026",
+      "claim_text": "Global electricity demand grew more than twice as fast as overall energy demand in 2025.",
+      "evidence": [
+        {
+          "evidence_id": "V3-119:E1",
+          "title": "Global Energy Review 2026: Electricity demand",
+          "url": "https://www.iea.org/reports/global-energy-review-2026/electricity-demand",
+          "source_class": "official_or_fact_check",
+          "passage": "Electricity grew around 3%; overall energy demand grew 1.3%."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "percentage_or_rate",
+        "comparator_or_relation": "greater_than_ratio",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 88,
+          "quoted_text": "Global electricity demand grew more than twice as fast as overall energy demand in 2025."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-119:E1",
+            "start_char": 0,
+            "end_char": 60,
+            "quoted_text": "Electricity grew around 3%; overall energy demand grew 1.3%."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Navigation-only proposal; requires human annotation.",
+          "No benchmark model call was used."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-31",
+        "dimension_bucket": "percentage_or_rate",
+        "comparator_or_relation": "greater_than_ratio",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 88,
+          "quoted_text": "Global electricity demand grew more than twice as fast as overall energy demand in 2025."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-119:E1",
+            "start_char": 0,
+            "end_char": 60,
+            "quoted_text": "Electricity grew around 3%; overall energy demand grew 1.3%."
+          }
+        ],
+        "expected_verification_state": "qualified",
+        "ambiguity_notes": [
+          "Using the stated values, 3% divided by 1.3% is approximately 2.31, which is greater than two.",
+          "The electricity-growth figure is approximate, and the selected passage does not explicitly repeat the 2025 reference year."
+        ]
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-07-31",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-120",
+      "source_candidate_id": "FACTCHECK-HOUSING",
+      "split": "calibration",
+      "origin_family_id": "factcheck:us-housing-prices",
+      "claim_text": "U.S. home-sale price measures rose no more than 37 percent during Joe Biden's presidency.",
+      "evidence": [
+        {
+          "evidence_id": "V3-120:E1",
+          "title": "Vance's Misleading Claims on Housing Prices and Illegal Immigration",
+          "url": "https://www.factcheck.org/2025/12/vances-misleading-claims-on-housing-prices-and-illegal-immigration/",
+          "source_class": "official_or_fact_check",
+          "passage": "Home sales price measures show at most a 37% increase."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "percentage_or_rate",
+        "comparator_or_relation": "less_than_or_equal",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 89,
+          "quoted_text": "U.S. home-sale price measures rose no more than 37 percent during Joe Biden's presidency."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-120:E1",
+            "start_char": 0,
+            "end_char": 54,
+            "quoted_text": "Home sales price measures show at most a 37% increase."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Navigation-only proposal; requires human annotation.",
+          "No benchmark model call was used."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-31",
+        "dimension_bucket": "percentage_or_rate",
+        "comparator_or_relation": "less_than_or_equal",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 89,
+          "quoted_text": "U.S. home-sale price measures rose no more than 37 percent during Joe Biden's presidency."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-120:E1",
+            "start_char": 0,
+            "end_char": 54,
+            "quoted_text": "Home sales price measures show at most a 37% increase."
+          }
+        ],
+        "expected_verification_state": "qualified",
+        "ambiguity_notes": [
+          "No more than 37 percent” is equivalent to “at most a 37% increase. The selected evidence does not explicitly repeat the temporal scope of Joe Biden’s presidency."
+        ]
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-07-31",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    }
+  ]
+}
