@@ -80,6 +80,16 @@ def validate_monotonic_graph_transition(
         "approved evidence",
     )
     _require_subset(
+        previous.verification_construction_ids,
+        current.verification_construction_ids,
+        "verification constructions",
+    )
+    if any(
+        current.verification_construction_states.get(construction_id) is not state
+        for construction_id, state in previous.verification_construction_states.items()
+    ):
+        raise ValueError("verification construction states are immutable")
+    _require_subset(
         previous.review_request_ids,
         current.review_request_ids,
         "review requests",

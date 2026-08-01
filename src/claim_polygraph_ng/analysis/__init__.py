@@ -5,6 +5,19 @@ from claim_polygraph_ng.analysis.aggregation import (
     constrain_parent_verdict,
 )
 from claim_polygraph_ng.analysis.argument_ledger import build_argument_ledger
+from claim_polygraph_ng.analysis.assisted_verification_construction import (
+    resolve_assisted_eligibility,
+)
+from claim_polygraph_ng.analysis.candidate_extraction import (
+    CANDIDATE_EXTRACTION_VERSION,
+    VerificationCandidate,
+    VerificationCandidateDatePrecision,
+    VerificationCandidateExtraction,
+    VerificationCandidateGroup,
+    VerificationCandidateGroupKind,
+    VerificationCandidateKind,
+    extract_verification_candidates,
+)
 from claim_polygraph_ng.analysis.canonicalization import (
     CANONICALIZATION_VERSION,
     CanonicalizationReason,
@@ -16,7 +29,15 @@ from claim_polygraph_ng.analysis.citation_assurance import (
     assure_full_report,
     audit_structured_assertions,
 )
+from claim_polygraph_ng.analysis.compound_construction import (
+    LINKED_ASSERTION_CONSTRUCTION_VERSION,
+    construct_linked_assertions,
+)
 from claim_polygraph_ng.analysis.consolidation import consolidate_evidence
+from claim_polygraph_ng.analysis.construction_eligibility import (
+    CONSTRUCTION_ELIGIBILITY_VERSION,
+    route_construction_eligibility,
+)
 from claim_polygraph_ng.analysis.context import verify_claim_context
 from claim_polygraph_ng.analysis.evidence_families import (
     EVIDENCE_FAMILY_VERSION,
@@ -105,11 +126,14 @@ from claim_polygraph_ng.analysis.temporal_verification import (
 from claim_polygraph_ng.analysis.verification_bridge import bridge_legacy_verification
 
 __all__ = [
+    "CANDIDATE_EXTRACTION_VERSION",
     "CANONICALIZATION_VERSION",
+    "CONSTRUCTION_ELIGIBILITY_VERSION",
     "EVIDENCE_FAMILY_VERSION",
     "EXACT_FINGERPRINT_VERSION",
     "INDEPENDENCE_FEATURE_VERSION",
     "JUDGMENT_POLICY_VERSION",
+    "LINKED_ASSERTION_CONSTRUCTION_VERSION",
     "NEAR_DUPLICATE_VERSION",
     "NUMERICAL_VERIFIER_VERSION",
     "PROVENANCE_LINK_VERSION",
@@ -144,6 +168,12 @@ __all__ = [
     "TemporalEvidenceFact",
     "TemporalFactStatus",
     "TemporalVerificationRequest",
+    "VerificationCandidate",
+    "VerificationCandidateDatePrecision",
+    "VerificationCandidateExtraction",
+    "VerificationCandidateGroup",
+    "VerificationCandidateGroupKind",
+    "VerificationCandidateKind",
     "aggregate_component_label",
     "analyze_source_independence",
     "assess_evidence_sufficiency",
@@ -161,12 +191,16 @@ __all__ = [
     "cluster_exact_duplicates",
     "consolidate_evidence",
     "constrain_parent_verdict",
+    "construct_linked_assertions",
     "deterministic_stance_label",
     "enforce_judgment_policy",
     "extract_provenance_links",
+    "extract_verification_candidates",
     "fingerprint_content",
     "infer_evidence_families",
     "normalize_exact_content",
+    "resolve_assisted_eligibility",
+    "route_construction_eligibility",
     "route_human_review",
     "route_research_roles",
     "route_targeted_research_roles",

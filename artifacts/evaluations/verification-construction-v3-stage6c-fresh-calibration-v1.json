@@ -1,0 +1,499 @@
+{
+  "evaluation_id": "verification-construction-v3-stage6c-fresh-calibration-v1",
+  "status": "completed_not_eligible_for_held_out",
+  "freeze_manifest_sha256": "0be34414c8c00065886a8a87dd713ef990ab36746edf85f66a9f4be3ebaff2a0",
+  "configuration_changed_after_freeze": false,
+  "calibration_executions": 1,
+  "case_count": 20,
+  "positive_gold_cases": 19,
+  "baseline_correct_constructions": 0,
+  "baseline_construction_recall": 0.0,
+  "constructions_succeeded": 5,
+  "correct_constructions": 5,
+  "newly_recovered_assertions": 5,
+  "unsafe_accepted_constructions": 0,
+  "construction_precision": 1.0,
+  "exact_evidence_span_validity": 1.0,
+  "overall_construction_recall": 0.2631578947368421,
+  "incremental_recall_gain": 0.2631578947368421,
+  "human_review_routing_recall": 1.0,
+  "provider_attempts": 7,
+  "completed_paid_operations": 7,
+  "duplicate_paid_operations": 0,
+  "estimated_cost_usd": 0.035871,
+  "cost_per_recovered_assertion_usd": 0.0071742,
+  "eligibility_counts": {
+    "numerical": 0,
+    "numerical_scalar": 3,
+    "numerical_range": 0,
+    "numerical_conversion": 0,
+    "temporal": 4,
+    "missing_reference_date": 1,
+    "excluded_qualitative": 12
+  },
+  "fresh_calibration_cases_exposed_to_model": 7,
+  "original_held_out_cases_loaded": 0,
+  "original_held_out_cases_exposed_to_model": 0,
+  "promotion_gates": {
+    "exact_evidence_span_validity": true,
+    "unsafe_accepted_constructions": true,
+    "construction_precision": true,
+    "incremental_recall_gain": true,
+    "overall_construction_recall": false,
+    "human_review_routing_recall": true,
+    "duplicate_paid_operations": true,
+    "publication_safety_regressions": true,
+    "cost_per_recovered_assertion": true
+  },
+  "eligible_for_held_out": false,
+  "thresholds_changed_after_results": false,
+  "results": [
+    {
+      "case_id": "V3-201",
+      "eligibility": "numerical_scalar",
+      "disposition": "validated_assisted_proposal",
+      "baseline_success": false,
+      "construction_succeeded": true,
+      "human_review_required": false,
+      "provider_attempt": true,
+      "proposal": {
+        "kind": "numerical_scalar",
+        "failed_construction_id": "ad10b072-28a0-5522-805a-7f914a43d6fa",
+        "claim_text_span": "approximately 3,682 meters",
+        "left_subject": null,
+        "right_subject": null,
+        "comparator": "equal",
+        "dimension": "distance",
+        "left_value": null,
+        "right_value": null,
+        "scalar_form": "single_value",
+        "scalar_subject": "approximately",
+        "numeric_operation": "direct",
+        "expected_values": [
+          {
+            "value": "3682",
+            "unit": "meters",
+            "dimension": "distance",
+            "scale": "0.045",
+            "tolerance": null
+          }
+        ],
+        "evidence_bindings": [
+          {
+            "evidence_id": "d52efd76-1a26-5319-b83c-d11b7dad5b6b",
+            "start_char": 34,
+            "end_char": 46,
+            "quoted_text": "3,682 meters"
+          }
+        ],
+        "temporal_relation": null,
+        "reference_date": null,
+        "claimed_interval": null,
+        "requires_reference_date": false,
+        "claimed_status": null,
+        "temporal_bindings": []
+      },
+      "gold_positive": true,
+      "correct_construction": true,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-202",
+      "eligibility": "numerical_scalar",
+      "disposition": "validated_assisted_proposal",
+      "baseline_success": false,
+      "construction_succeeded": true,
+      "human_review_required": false,
+      "provider_attempt": true,
+      "proposal": {
+        "kind": "numerical_scalar",
+        "failed_construction_id": "b8e24f72-1d90-571c-9ae3-42bfdc06fb33",
+        "claim_text_span": "The ocean covers approximately 70 percent of Earth's surface.",
+        "left_subject": null,
+        "right_subject": null,
+        "comparator": "equal",
+        "dimension": "percentage",
+        "left_value": null,
+        "right_value": null,
+        "scalar_form": "single_value",
+        "scalar_subject": "The ocean covers approximately",
+        "numeric_operation": "direct",
+        "expected_values": [
+          {
+            "value": "70",
+            "unit": "%",
+            "dimension": "percentage",
+            "scale": "1",
+            "tolerance": null
+          }
+        ],
+        "evidence_bindings": [
+          {
+            "evidence_id": "5963ff43-69b8-5ada-ba76-00148d4803ce",
+            "start_char": 0,
+            "end_char": 54,
+            "quoted_text": "The ocean covers approximately 70% of Earth's surface."
+          }
+        ],
+        "temporal_relation": null,
+        "reference_date": null,
+        "claimed_interval": null,
+        "requires_reference_date": false,
+        "claimed_status": null,
+        "temporal_bindings": []
+      },
+      "gold_positive": true,
+      "correct_construction": true,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-203",
+      "eligibility": "excluded_qualitative",
+      "disposition": "human_review_ineligible",
+      "baseline_success": false,
+      "construction_succeeded": false,
+      "human_review_required": true,
+      "provider_attempt": false,
+      "gold_positive": false,
+      "correct_construction": false,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-204",
+      "eligibility": "excluded_qualitative",
+      "disposition": "human_review_ineligible",
+      "baseline_success": false,
+      "construction_succeeded": false,
+      "human_review_required": true,
+      "provider_attempt": false,
+      "gold_positive": true,
+      "correct_construction": false,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-205",
+      "eligibility": "excluded_qualitative",
+      "disposition": "human_review_ineligible",
+      "baseline_success": false,
+      "construction_succeeded": false,
+      "human_review_required": true,
+      "provider_attempt": false,
+      "gold_positive": true,
+      "correct_construction": false,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-206",
+      "eligibility": "temporal",
+      "disposition": "human_review_safe_failure",
+      "baseline_success": false,
+      "construction_succeeded": false,
+      "human_review_required": true,
+      "provider_attempt": true,
+      "error_type": "ValueError",
+      "error": "provider date text does not match its declared precision",
+      "gold_positive": true,
+      "correct_construction": false,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-207",
+      "eligibility": "temporal",
+      "disposition": "human_review_safe_failure",
+      "baseline_success": false,
+      "construction_succeeded": false,
+      "human_review_required": true,
+      "provider_attempt": true,
+      "error_type": "ValueError",
+      "error": "provider date text does not match its declared precision",
+      "gold_positive": true,
+      "correct_construction": false,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-208",
+      "eligibility": "excluded_qualitative",
+      "disposition": "human_review_ineligible",
+      "baseline_success": false,
+      "construction_succeeded": false,
+      "human_review_required": true,
+      "provider_attempt": false,
+      "gold_positive": true,
+      "correct_construction": false,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-209",
+      "eligibility": "numerical_scalar",
+      "disposition": "validated_assisted_proposal",
+      "baseline_success": false,
+      "construction_succeeded": true,
+      "human_review_required": false,
+      "provider_attempt": true,
+      "proposal": {
+        "kind": "numerical_scalar",
+        "failed_construction_id": "0ed56801-f4ea-5fc7-ab4f-edf5539558ce",
+        "claim_text_span": "contains about 3 billion bases",
+        "left_subject": null,
+        "right_subject": null,
+        "comparator": "equal",
+        "dimension": "count",
+        "left_value": null,
+        "right_value": null,
+        "scalar_form": "single_value",
+        "scalar_subject": "contains about 3 billion bases",
+        "numeric_operation": "direct",
+        "expected_values": [
+          {
+            "value": "3",
+            "unit": "bases",
+            "dimension": "count",
+            "scale": "1E+9",
+            "tolerance": null
+          }
+        ],
+        "evidence_bindings": [
+          {
+            "evidence_id": "abf56044-7dc5-510b-bac6-b668f6a08164",
+            "start_char": 58,
+            "end_char": 88,
+            "quoted_text": "contains about 3 billion bases"
+          }
+        ],
+        "temporal_relation": null,
+        "reference_date": null,
+        "claimed_interval": null,
+        "requires_reference_date": false,
+        "claimed_status": null,
+        "temporal_bindings": []
+      },
+      "gold_positive": true,
+      "correct_construction": true,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-210",
+      "eligibility": "excluded_qualitative",
+      "disposition": "human_review_ineligible",
+      "baseline_success": false,
+      "construction_succeeded": false,
+      "human_review_required": true,
+      "provider_attempt": false,
+      "gold_positive": true,
+      "correct_construction": false,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-211",
+      "eligibility": "excluded_qualitative",
+      "disposition": "human_review_ineligible",
+      "baseline_success": false,
+      "construction_succeeded": false,
+      "human_review_required": true,
+      "provider_attempt": false,
+      "gold_positive": true,
+      "correct_construction": false,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-212",
+      "eligibility": "excluded_qualitative",
+      "disposition": "human_review_ineligible",
+      "baseline_success": false,
+      "construction_succeeded": false,
+      "human_review_required": true,
+      "provider_attempt": false,
+      "gold_positive": true,
+      "correct_construction": false,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-213",
+      "eligibility": "temporal",
+      "disposition": "validated_assisted_proposal",
+      "baseline_success": false,
+      "construction_succeeded": true,
+      "human_review_required": false,
+      "provider_attempt": true,
+      "proposal": {
+        "kind": "temporal_status",
+        "failed_construction_id": "6f4051a4-562a-5bdc-922d-86e5a4c29026",
+        "claim_text_span": "The United Nations officially began on 24 October 1945.",
+        "left_subject": null,
+        "right_subject": null,
+        "comparator": null,
+        "dimension": null,
+        "left_value": null,
+        "right_value": null,
+        "scalar_form": null,
+        "scalar_subject": null,
+        "numeric_operation": null,
+        "expected_values": [],
+        "evidence_bindings": [],
+        "temporal_relation": "started",
+        "reference_date": {
+          "value": "1945-10-24",
+          "precision": "day"
+        },
+        "claimed_interval": null,
+        "requires_reference_date": false,
+        "claimed_status": null,
+        "temporal_bindings": [
+          {
+            "evidence_id": "027c5009-676c-5eb1-b88a-2f93b2bb8ab8",
+            "start_char": 0,
+            "end_char": 55,
+            "quoted_text": "The United Nations officially began, on 24 October 1945",
+            "effective_interval": {
+              "start": {
+                "value": "1945-10-24",
+                "precision": "day"
+              },
+              "end": {
+                "value": "1945-10-24",
+                "precision": "day"
+              },
+              "start_inclusive": true,
+              "end_inclusive": true
+            },
+            "observed_status": null,
+            "retrospective": false
+          }
+        ]
+      },
+      "gold_positive": true,
+      "correct_construction": true,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-214",
+      "eligibility": "missing_reference_date",
+      "disposition": "human_review_ineligible",
+      "baseline_success": false,
+      "construction_succeeded": false,
+      "human_review_required": true,
+      "provider_attempt": false,
+      "gold_positive": true,
+      "correct_construction": false,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-215",
+      "eligibility": "excluded_qualitative",
+      "disposition": "human_review_ineligible",
+      "baseline_success": false,
+      "construction_succeeded": false,
+      "human_review_required": true,
+      "provider_attempt": false,
+      "gold_positive": true,
+      "correct_construction": false,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-216",
+      "eligibility": "excluded_qualitative",
+      "disposition": "human_review_ineligible",
+      "baseline_success": false,
+      "construction_succeeded": false,
+      "human_review_required": true,
+      "provider_attempt": false,
+      "gold_positive": true,
+      "correct_construction": false,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-217",
+      "eligibility": "excluded_qualitative",
+      "disposition": "human_review_ineligible",
+      "baseline_success": false,
+      "construction_succeeded": false,
+      "human_review_required": true,
+      "provider_attempt": false,
+      "gold_positive": true,
+      "correct_construction": false,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-218",
+      "eligibility": "temporal",
+      "disposition": "validated_assisted_proposal",
+      "baseline_success": false,
+      "construction_succeeded": true,
+      "human_review_required": false,
+      "provider_attempt": true,
+      "proposal": {
+        "kind": "temporal_status",
+        "failed_construction_id": "2b64daa1-449d-5334-9869-c061dbdf524e",
+        "claim_text_span": "The Large Hadron Collider first started up on 10 September 2008.",
+        "left_subject": null,
+        "right_subject": null,
+        "comparator": null,
+        "dimension": null,
+        "left_value": null,
+        "right_value": null,
+        "scalar_form": null,
+        "scalar_subject": null,
+        "numeric_operation": null,
+        "expected_values": [],
+        "evidence_bindings": [],
+        "temporal_relation": "started",
+        "reference_date": {
+          "value": "2008-09-10",
+          "precision": "day"
+        },
+        "claimed_interval": null,
+        "requires_reference_date": false,
+        "claimed_status": null,
+        "temporal_bindings": [
+          {
+            "evidence_id": "7f157599-7835-5406-81b8-c70870427ca8",
+            "start_char": 0,
+            "end_char": 40,
+            "quoted_text": "It first started up on 10 September 2008",
+            "effective_interval": {
+              "start": {
+                "value": "2008-09-10",
+                "precision": "day"
+              },
+              "end": {
+                "value": "2008-09-10",
+                "precision": "day"
+              },
+              "start_inclusive": true,
+              "end_inclusive": true
+            },
+            "observed_status": null,
+            "retrospective": true
+          }
+        ]
+      },
+      "gold_positive": true,
+      "correct_construction": true,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-219",
+      "eligibility": "excluded_qualitative",
+      "disposition": "human_review_ineligible",
+      "baseline_success": false,
+      "construction_succeeded": false,
+      "human_review_required": true,
+      "provider_attempt": false,
+      "gold_positive": true,
+      "correct_construction": false,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-220",
+      "eligibility": "excluded_qualitative",
+      "disposition": "human_review_ineligible",
+      "baseline_success": false,
+      "construction_succeeded": false,
+      "human_review_required": true,
+      "provider_attempt": false,
+      "gold_positive": true,
+      "correct_construction": false,
+      "unsafe_accepted": false
+    }
+  ]
+}

@@ -1,0 +1,1451 @@
+{
+  "workbook_id": "verification-construction-v4-stage10-fresh-held-out-workbook-v1",
+  "schema_version": 1,
+  "frozen": false,
+  "cases": [
+    {
+      "case_id": "V3-361",
+      "source_candidate_id": "V4-STAGE10-361",
+      "split": "held_out",
+      "origin_family_id": "official:nbs",
+      "claim_text": "Národná banka Slovenska was established on January 1, 1993.",
+      "evidence": [
+        {
+          "evidence_id": "V3-361:E1",
+          "title": "About the Bank",
+          "url": "https://nbs.sk/en/about-the-bank/",
+          "source_class": "official_html",
+          "passage": "Národná banka Slovenska was established on 1 January 1993."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "established_on",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 59,
+          "quoted_text": "Národná banka Slovenska was established on January 1, 1993."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-361:E1",
+            "start_char": 0,
+            "end_char": 58,
+            "quoted_text": "Národná banka Slovenska was established on 1 January 1993."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-08-01",
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "established_on",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 59,
+          "quoted_text": "Národná banka Slovenska was established on January 1, 1993."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-361:E1",
+            "start_char": 0,
+            "end_char": 58,
+            "quoted_text": "Národná banka Slovenska was established on 1 January 1993."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-08-01",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-362",
+      "source_candidate_id": "V4-STAGE10-362",
+      "split": "held_out",
+      "origin_family_id": "official:nbs",
+      "claim_text": "Slovakia became part of the Eurosystem on January 1, 2009.",
+      "evidence": [
+        {
+          "evidence_id": "V3-362:E1",
+          "title": "About the Bank",
+          "url": "https://nbs.sk/en/about-the-bank/",
+          "source_class": "official_html",
+          "passage": "From 1 January 2009, Slovakia became part of the Eurosystem."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "became_on",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 58,
+          "quoted_text": "Slovakia became part of the Eurosystem on January 1, 2009."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-362:E1",
+            "start_char": 0,
+            "end_char": 60,
+            "quoted_text": "From 1 January 2009, Slovakia became part of the Eurosystem."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-08-01",
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "became_on",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 58,
+          "quoted_text": "Slovakia became part of the Eurosystem on January 1, 2009."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-362:E1",
+            "start_char": 0,
+            "end_char": 60,
+            "quoted_text": "From 1 January 2009, Slovakia became part of the Eurosystem."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-08-01",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-363",
+      "source_candidate_id": "V4-STAGE10-363",
+      "split": "held_out",
+      "origin_family_id": "official:rbi",
+      "claim_text": "The Reserve Bank of India commenced operations on April 1, 1935.",
+      "evidence": [
+        {
+          "evidence_id": "V3-363:E1",
+          "title": "RBI History",
+          "url": "https://rbi.org.in/scripts/His_brief.aspx",
+          "source_class": "official_html",
+          "passage": "The Reserve Bank of India commenced operations on April 1, 1935."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "started_on",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 64,
+          "quoted_text": "The Reserve Bank of India commenced operations on April 1, 1935."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-363:E1",
+            "start_char": 0,
+            "end_char": 64,
+            "quoted_text": "The Reserve Bank of India commenced operations on April 1, 1935."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-08-01",
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "started_on",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 64,
+          "quoted_text": "The Reserve Bank of India commenced operations on April 1, 1935."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-363:E1",
+            "start_char": 0,
+            "end_char": 64,
+            "quoted_text": "The Reserve Bank of India commenced operations on April 1, 1935."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-08-01",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-364",
+      "source_candidate_id": "V4-STAGE10-364",
+      "split": "held_out",
+      "origin_family_id": "official:rbi",
+      "claim_text": "The Reserve Bank of India Act was enacted in 1934.",
+      "evidence": [
+        {
+          "evidence_id": "V3-364:E1",
+          "title": "RBI History",
+          "url": "https://rbi.org.in/scripts/His_brief.aspx",
+          "source_class": "official_html",
+          "passage": "The Reserve Bank of India Act, 1934 provides the statutory basis of the functioning of the Bank."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "enacted_in",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 50,
+          "quoted_text": "The Reserve Bank of India Act was enacted in 1934."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-364:E1",
+            "start_char": 0,
+            "end_char": 96,
+            "quoted_text": "The Reserve Bank of India Act, 1934 provides the statutory basis of the functioning of the Bank."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-08-01",
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "enacted_in",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 50,
+          "quoted_text": "The Reserve Bank of India Act was enacted in 1934."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-364:E1",
+            "start_char": 0,
+            "end_char": 96,
+            "quoted_text": "The Reserve Bank of India Act, 1934 provides the statutory basis of the functioning of the Bank."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-08-01",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-365",
+      "source_candidate_id": "V4-STAGE10-365",
+      "split": "held_out",
+      "origin_family_id": "official:bcb",
+      "claim_text": "Banco Central do Brasil was established on December 31, 1964.",
+      "evidence": [
+        {
+          "evidence_id": "V3-365:E1",
+          "title": "Historical composition",
+          "url": "https://www.bcb.gov.br/en/about/historicalcompositionboardgovernors",
+          "source_class": "official_html",
+          "passage": "Banco Central do Brasil was established on December 31, 1964."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "established_on",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 61,
+          "quoted_text": "Banco Central do Brasil was established on December 31, 1964."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-365:E1",
+            "start_char": 0,
+            "end_char": 61,
+            "quoted_text": "Banco Central do Brasil was established on December 31, 1964."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-08-01",
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "established_on",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 61,
+          "quoted_text": "Banco Central do Brasil was established on December 31, 1964."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-365:E1",
+            "start_char": 0,
+            "end_char": 61,
+            "quoted_text": "Banco Central do Brasil was established on December 31, 1964."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-08-01",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-366",
+      "source_candidate_id": "V4-STAGE10-366",
+      "split": "held_out",
+      "origin_family_id": "official:bcb",
+      "claim_text": "Banco Central do Brasil received statutory autonomy in February 2021.",
+      "evidence": [
+        {
+          "evidence_id": "V3-366:E1",
+          "title": "Who We Are",
+          "url": "https://www.bcb.gov.br/en/publications/who_we_are_2021",
+          "source_class": "official_html",
+          "passage": "Its autonomy is enforced by the Complementary Law 179, of February 2021."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "received_in",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 69,
+          "quoted_text": "Banco Central do Brasil received statutory autonomy in February 2021."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-366:E1",
+            "start_char": 0,
+            "end_char": 72,
+            "quoted_text": "Its autonomy is enforced by the Complementary Law 179, of February 2021."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-08-01",
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "received_in",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 69,
+          "quoted_text": "Banco Central do Brasil received statutory autonomy in February 2021."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-366:E1",
+            "start_char": 0,
+            "end_char": 72,
+            "quoted_text": "Its autonomy is enforced by the Complementary Law 179, of February 2021."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-08-01",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-367",
+      "source_candidate_id": "V4-STAGE10-367",
+      "split": "held_out",
+      "origin_family_id": "official:cbsl",
+      "claim_text": "The Central Bank of Ceylon commenced operations on August 28, 1950.",
+      "evidence": [
+        {
+          "evidence_id": "V3-367:E1",
+          "title": "Bank History",
+          "url": "https://www.cbsl.gov.lk/en/node/25",
+          "source_class": "official_html",
+          "passage": "The Central Bank of Ceylon commenced operations on August 28, 1950."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "started_on",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 67,
+          "quoted_text": "The Central Bank of Ceylon commenced operations on August 28, 1950."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-367:E1",
+            "start_char": 0,
+            "end_char": 67,
+            "quoted_text": "The Central Bank of Ceylon commenced operations on August 28, 1950."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-08-01",
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "started_on",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 67,
+          "quoted_text": "The Central Bank of Ceylon commenced operations on August 28, 1950."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-367:E1",
+            "start_char": 0,
+            "end_char": 67,
+            "quoted_text": "The Central Bank of Ceylon commenced operations on August 28, 1950."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-08-01",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-368",
+      "source_candidate_id": "V4-STAGE10-368",
+      "split": "held_out",
+      "origin_family_id": "official:cbsl",
+      "claim_text": "The Central Bank of Ceylon was renamed the Central Bank of Sri Lanka in 1985.",
+      "evidence": [
+        {
+          "evidence_id": "V3-368:E1",
+          "title": "Bank History",
+          "url": "https://www.cbsl.gov.lk/en/node/25",
+          "source_class": "official_html",
+          "passage": "It was renamed the Central Bank of Sri Lanka in 1985."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "renamed_in",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 77,
+          "quoted_text": "The Central Bank of Ceylon was renamed the Central Bank of Sri Lanka in 1985."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-368:E1",
+            "start_char": 0,
+            "end_char": 53,
+            "quoted_text": "It was renamed the Central Bank of Sri Lanka in 1985."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-08-01",
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "renamed_in",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 77,
+          "quoted_text": "The Central Bank of Ceylon was renamed the Central Bank of Sri Lanka in 1985."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-368:E1",
+            "start_char": 0,
+            "end_char": 53,
+            "quoted_text": "It was renamed the Central Bank of Sri Lanka in 1985."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-08-01",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-369",
+      "source_candidate_id": "V4-STAGE10-369",
+      "split": "held_out",
+      "origin_family_id": "official:sbp",
+      "claim_text": "The State Bank of Pakistan opened on July 1, 1948.",
+      "evidence": [
+        {
+          "evidence_id": "V3-369:E1",
+          "title": "State Bank history",
+          "url": "https://www.sbp.org.pk/about/history/history_1.htm",
+          "source_class": "official_html",
+          "passage": "The opening ceremony of the State Bank of Pakistan was held on July 1, 1948."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "started_on",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 50,
+          "quoted_text": "The State Bank of Pakistan opened on July 1, 1948."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-369:E1",
+            "start_char": 0,
+            "end_char": 76,
+            "quoted_text": "The opening ceremony of the State Bank of Pakistan was held on July 1, 1948."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-08-01",
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "started_on",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 50,
+          "quoted_text": "The State Bank of Pakistan opened on July 1, 1948."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-369:E1",
+            "start_char": 0,
+            "end_char": 76,
+            "quoted_text": "The opening ceremony of the State Bank of Pakistan was held on July 1, 1948."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-08-01",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-370",
+      "source_candidate_id": "V4-STAGE10-370",
+      "split": "held_out",
+      "origin_family_id": "official:sbp",
+      "claim_text": "The State Bank of Pakistan is more important than every other national institution.",
+      "evidence": [
+        {
+          "evidence_id": "V3-370:E1",
+          "title": "About SBP",
+          "url": "https://www.sbp.org.pk/about-sbp",
+          "source_class": "official_html",
+          "passage": "The State Bank of Pakistan Order of May 12, 1948 became the precursor to more comprehensive legislation."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "qualitative_superlative",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 83,
+          "quoted_text": "The State Bank of Pakistan is more important than every other national institution."
+        },
+        "evidence_spans": [],
+        "suggested_gold_label": "not_applicable",
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-08-01",
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "qualitative_superlative",
+        "gold_label": "not_applicable",
+        "claim_span": null,
+        "evidence_spans": [],
+        "expected_verification_state": null,
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-08-01",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-371",
+      "source_candidate_id": "V4-STAGE10-371",
+      "split": "held_out",
+      "origin_family_id": "official:bot",
+      "claim_text": "The Bank of Thailand Act was promulgated on April 16, 1942.",
+      "evidence": [
+        {
+          "evidence_id": "V3-371:E1",
+          "title": "History of the Bank of Thailand",
+          "url": "https://www.bot.or.th/en/about-us/history.html",
+          "source_class": "official_html",
+          "passage": "The Bank of Thailand Act was promulgated on 16 April 1942."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "promulgated_on",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 59,
+          "quoted_text": "The Bank of Thailand Act was promulgated on April 16, 1942."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-371:E1",
+            "start_char": 0,
+            "end_char": 58,
+            "quoted_text": "The Bank of Thailand Act was promulgated on 16 April 1942."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-08-01",
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "promulgated_on",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 59,
+          "quoted_text": "The Bank of Thailand Act was promulgated on April 16, 1942."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-371:E1",
+            "start_char": 0,
+            "end_char": 58,
+            "quoted_text": "The Bank of Thailand Act was promulgated on 16 April 1942."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-08-01",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-372",
+      "source_candidate_id": "V4-STAGE10-372",
+      "split": "held_out",
+      "origin_family_id": "official:bot",
+      "claim_text": "The Bank of Thailand's inauguration ceremony was held on December 10, 1942.",
+      "evidence": [
+        {
+          "evidence_id": "V3-372:E1",
+          "title": "History of the Bank of Thailand",
+          "url": "https://www.bot.or.th/en/about-us/history.html",
+          "source_class": "official_html",
+          "passage": "The inauguration ceremonies were held on 10 December 1942."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "inaugurated_on",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 75,
+          "quoted_text": "The Bank of Thailand's inauguration ceremony was held on December 10, 1942."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-372:E1",
+            "start_char": 0,
+            "end_char": 58,
+            "quoted_text": "The inauguration ceremonies were held on 10 December 1942."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-08-01",
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "inaugurated_on",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 75,
+          "quoted_text": "The Bank of Thailand's inauguration ceremony was held on December 10, 1942."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-372:E1",
+            "start_char": 0,
+            "end_char": 58,
+            "quoted_text": "The inauguration ceremonies were held on 10 December 1942."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-08-01",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-373",
+      "source_candidate_id": "V4-STAGE10-373",
+      "split": "held_out",
+      "origin_family_id": "official:bank-indonesia",
+      "claim_text": "Bank Indonesia was officially established on July 1, 1953.",
+      "evidence": [
+        {
+          "evidence_id": "V3-373:E1",
+          "title": "History of Bank Indonesia",
+          "url": "https://www.bi.go.id/en/tentang-bi/sejarah-bi/default.aspx",
+          "source_class": "official_html",
+          "passage": "On 1st July 1953, Bank Indonesia was officially established as the Central Bank of the Republic of Indonesia."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "established_on",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 58,
+          "quoted_text": "Bank Indonesia was officially established on July 1, 1953."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-373:E1",
+            "start_char": 0,
+            "end_char": 109,
+            "quoted_text": "On 1st July 1953, Bank Indonesia was officially established as the Central Bank of the Republic of Indonesia."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-08-01",
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "established_on",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 58,
+          "quoted_text": "Bank Indonesia was officially established on July 1, 1953."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-373:E1",
+            "start_char": 0,
+            "end_char": 109,
+            "quoted_text": "On 1st July 1953, Bank Indonesia was officially established as the Central Bank of the Republic of Indonesia."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-08-01",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-374",
+      "source_candidate_id": "V4-STAGE10-374",
+      "split": "held_out",
+      "origin_family_id": "official:bank-indonesia",
+      "claim_text": "Bank Indonesia's banking supervision function moved to OJK in 2011.",
+      "evidence": [
+        {
+          "evidence_id": "V3-374:E1",
+          "title": "History of Bank Indonesia",
+          "url": "https://www.bi.go.id/en/tentang-bi/sejarah-bi/default.aspx",
+          "source_class": "official_html",
+          "passage": "In 2011, banking regulation and surveillance was moved to OJK."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "moved_in",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 67,
+          "quoted_text": "Bank Indonesia's banking supervision function moved to OJK in 2011."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-374:E1",
+            "start_char": 0,
+            "end_char": 62,
+            "quoted_text": "In 2011, banking regulation and surveillance was moved to OJK."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-08-01",
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "moved_in",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 67,
+          "quoted_text": "Bank Indonesia's banking supervision function moved to OJK in 2011."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-374:E1",
+            "start_char": 0,
+            "end_char": 62,
+            "quoted_text": "In 2011, banking regulation and surveillance was moved to OJK."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-08-01",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-375",
+      "source_candidate_id": "V4-STAGE10-375",
+      "split": "held_out",
+      "origin_family_id": "official:bank-korea",
+      "claim_text": "The Bank of Korea was established on June 12, 1950.",
+      "evidence": [
+        {
+          "evidence_id": "V3-375:E1",
+          "title": "History and Mission",
+          "url": "https://www.bok.or.kr/eng/main/contents.do?menuNo=400079",
+          "source_class": "official_html",
+          "passage": "The Bank of Korea was established on June 12, 1950."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "established_on",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 51,
+          "quoted_text": "The Bank of Korea was established on June 12, 1950."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-375:E1",
+            "start_char": 0,
+            "end_char": 51,
+            "quoted_text": "The Bank of Korea was established on June 12, 1950."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-08-01",
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "established_on",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 51,
+          "quoted_text": "The Bank of Korea was established on June 12, 1950."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-375:E1",
+            "start_char": 0,
+            "end_char": 51,
+            "quoted_text": "The Bank of Korea was established on June 12, 1950."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-08-01",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-376",
+      "source_candidate_id": "V4-STAGE10-376",
+      "split": "held_out",
+      "origin_family_id": "official:bank-korea",
+      "claim_text": "The Bank of Korea Act was passed on May 5, 1950.",
+      "evidence": [
+        {
+          "evidence_id": "V3-376:E1",
+          "title": "History and Mission",
+          "url": "https://www.bok.or.kr/eng/main/contents.do?menuNo=400079",
+          "source_class": "official_html",
+          "passage": "The Bank of Korea Act was passed on May 5, 1950."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "passed_on",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 48,
+          "quoted_text": "The Bank of Korea Act was passed on May 5, 1950."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-376:E1",
+            "start_char": 0,
+            "end_char": 48,
+            "quoted_text": "The Bank of Korea Act was passed on May 5, 1950."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-08-01",
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "passed_on",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 48,
+          "quoted_text": "The Bank of Korea Act was passed on May 5, 1950."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-376:E1",
+            "start_char": 0,
+            "end_char": 48,
+            "quoted_text": "The Bank of Korea Act was passed on May 5, 1950."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-08-01",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-377",
+      "source_candidate_id": "V4-STAGE10-377",
+      "split": "held_out",
+      "origin_family_id": "official:cbuae",
+      "claim_text": "The Central Bank of the UAE was established in 1980.",
+      "evidence": [
+        {
+          "evidence_id": "V3-377:E1",
+          "title": "Our History",
+          "url": "https://www.centralbank.ae/en/about/about-cbuae/our-history/",
+          "source_class": "official_html",
+          "passage": "Union Law No. 10 of 1980 established the Central Bank of the UAE as a public institution."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "established_in",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 52,
+          "quoted_text": "The Central Bank of the UAE was established in 1980."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-377:E1",
+            "start_char": 0,
+            "end_char": 89,
+            "quoted_text": "Union Law No. 10 of 1980 established the Central Bank of the UAE as a public institution."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-08-01",
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "established_in",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 52,
+          "quoted_text": "The Central Bank of the UAE was established in 1980."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-377:E1",
+            "start_char": 0,
+            "end_char": 89,
+            "quoted_text": "Union Law No. 10 of 1980 established the Central Bank of the UAE as a public institution."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-08-01",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-378",
+      "source_candidate_id": "V4-STAGE10-378",
+      "split": "held_out",
+      "origin_family_id": "official:cbuae",
+      "claim_text": "The UAE Currency Board was established in 1973.",
+      "evidence": [
+        {
+          "evidence_id": "V3-378:E1",
+          "title": "Our History",
+          "url": "https://www.centralbank.ae/en/about/about-cbuae/our-history/",
+          "source_class": "official_html",
+          "passage": "The Currency Board was established under Union Law No. 2 of 1973."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "established_in",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 47,
+          "quoted_text": "The UAE Currency Board was established in 1973."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-378:E1",
+            "start_char": 0,
+            "end_char": 65,
+            "quoted_text": "The Currency Board was established under Union Law No. 2 of 1973."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-08-01",
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "established_in",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 47,
+          "quoted_text": "The UAE Currency Board was established in 1973."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-378:E1",
+            "start_char": 0,
+            "end_char": 65,
+            "quoted_text": "The Currency Board was established under Union Law No. 2 of 1973."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-08-01",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-379",
+      "source_candidate_id": "V4-STAGE10-379",
+      "split": "held_out",
+      "origin_family_id": "official:bnm",
+      "claim_text": "Bank Negara Malaysia was established on January 26, 1959.",
+      "evidence": [
+        {
+          "evidence_id": "V3-379:E1",
+          "title": "About Bank Negara Malaysia",
+          "url": "https://museum.bnm.gov.my/about/",
+          "source_class": "official_html",
+          "passage": "Bank Negara Malaysia was established on 26 January 1959 under the Central Bank of Malaya Act 1958."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "established_on",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 57,
+          "quoted_text": "Bank Negara Malaysia was established on January 26, 1959."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-379:E1",
+            "start_char": 0,
+            "end_char": 98,
+            "quoted_text": "Bank Negara Malaysia was established on 26 January 1959 under the Central Bank of Malaya Act 1958."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-08-01",
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "established_on",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 57,
+          "quoted_text": "Bank Negara Malaysia was established on January 26, 1959."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-379:E1",
+            "start_char": 0,
+            "end_char": 98,
+            "quoted_text": "Bank Negara Malaysia was established on 26 January 1959 under the Central Bank of Malaya Act 1958."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-08-01",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-380",
+      "source_candidate_id": "V4-STAGE10-380",
+      "split": "held_out",
+      "origin_family_id": "official:bnm",
+      "claim_text": "Bank Negara Malaysia has contributed more to nation building than every other statutory body.",
+      "evidence": [
+        {
+          "evidence_id": "V3-380:E1",
+          "title": "About Bank Negara Malaysia",
+          "url": "https://museum.bnm.gov.my/about/",
+          "source_class": "official_html",
+          "passage": "The museum explains the role that the Central Bank plays in nation building."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "qualitative_superlative",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 93,
+          "quoted_text": "Bank Negara Malaysia has contributed more to nation building than every other statutory body."
+        },
+        "evidence_spans": [],
+        "suggested_gold_label": "not_applicable",
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-08-01",
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "qualitative_superlative",
+        "gold_label": "not_applicable",
+        "claim_span": null,
+        "evidence_spans": [],
+        "expected_verification_state": null,
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-08-01",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    }
+  ]
+}

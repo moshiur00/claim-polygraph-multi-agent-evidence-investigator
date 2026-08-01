@@ -7,7 +7,10 @@ from uuid import UUID, uuid4
 from pydantic import Field, model_validator
 
 from claim_polygraph_ng.domain.base import DomainModel
-from claim_polygraph_ng.domain.graph import ReviewDecisionKind
+from claim_polygraph_ng.domain.graph import (
+    ReviewDecisionKind,
+    VerificationConstructionDisposition,
+)
 from claim_polygraph_ng.domain.models import VerdictLabel
 
 
@@ -69,12 +72,39 @@ class ReviewerDecisionRecord(DomainModel):
     reviewer_identity: str = Field(min_length=3, max_length=300)
     rationale: str = Field(min_length=3, max_length=5_000)
     proposed_verdict: VerdictLabel | None = None
+    verification_construction_id: UUID | None = None
+    verification_disposition: VerificationConstructionDisposition | None = None
+    corrected_left_subject: str | None = Field(default=None, min_length=1, max_length=500)
+    corrected_right_subject: str | None = Field(default=None, min_length=1, max_length=500)
+    corrected_comparator: str | None = Field(
+        default=None,
+        pattern=r"^[a-z_]+$",
+        max_length=100,
+    )
+    corrected_claim_text_span: str | None = Field(
+        default=None,
+        min_length=1,
+        max_length=2_000,
+    )
+    corrected_value: str | None = Field(default=None, min_length=1, max_length=200)
+    corrected_unit: str | None = Field(default=None, min_length=1, max_length=100)
+    corrected_evidence_ids: tuple[UUID, ...] = ()
     created_at: datetime = Field(default_factory=_now)
 
     @model_validator(mode="after")
     def validate_revision(self) -> "ReviewerDecisionRecord":
         if (self.kind is ReviewDecisionKind.REVISE) != (self.proposed_verdict is not None):
             raise ValueError("only revise decisions require a proposed verdict")
+        if (self.verification_disposition is None) != (
+            self.verification_construction_id is None
+        ):
+            raise ValueError(
+                "verification disposition and construction ID must be supplied together"
+            )
+        if len(set(self.corrected_evidence_ids)) != len(
+            self.corrected_evidence_ids
+        ):
+            raise ValueError("corrected evidence IDs must be unique")
         return self
 
 

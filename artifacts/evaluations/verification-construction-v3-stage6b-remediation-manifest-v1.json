@@ -1,0 +1,78 @@
+{
+  "manifest_id": "verification-construction-v3-stage6b-remediation-v1",
+  "created_at": "2026-07-31T00:52:15.856953+00:00",
+  "status": "remediation_frozen_awaiting_fresh_calibration_collection",
+  "prompt_version": "verification-construction-v3-remediation-v5",
+  "failed_v36a_disposition": "preserved_immutable_diagnostic_baseline",
+  "failed_v36a_artifacts": [
+    {
+      "path": "artifacts/evaluations/verification-construction-v3-stage6a-replacement-calibration-freeze-v1.json",
+      "sha256": "67f315aacf3622da54d39d2dcd0f91524936bb1549a6324a3818027cd2437edc"
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v3-stage6a-replacement-calibration-v1.json",
+      "sha256": "20775449d73b74d96894e3b30fe199c574050cb70e4e52cbc2049c49f57e1902"
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v3-stage6a-replacement-calibration-audit-v1.json",
+      "sha256": "e6bcd26398283fd37549792976f08b87e7174313f028971c82fa47364f70c89e"
+    }
+  ],
+  "remediation_scope": [
+    "numeric normalization",
+    "deterministic evidence-span reconstruction",
+    "safe temporal binding defaults",
+    "bounded scalar-subject canonicalization",
+    "expanded eligibility and units",
+    "bounded 1200-token structured response"
+  ],
+  "development_and_synthetic_only": true,
+  "replacement_calibration_used_for_tests": false,
+  "original_held_out_sealed": true,
+  "implementation_artifacts": [
+    {
+      "path": "src/claim_polygraph_ng/domain/verification.py",
+      "sha256": "e9720c09023d8f05025b1fc2880ad24d233a2ff6137606ae05eabedf41d2643d"
+    },
+    {
+      "path": "src/claim_polygraph_ng/analysis/assisted_verification_construction.py",
+      "sha256": "8080f3c91b75cee18401f2346235c5468a649995126351c6d05887a23a1ae081"
+    },
+    {
+      "path": "src/claim_polygraph_ng/analysis/bounded_assisted_construction.py",
+      "sha256": "9c5d6e1207bf81ae0610a52da395427229c185f4aae7ebbf77302a92731c1720"
+    },
+    {
+      "path": "src/claim_polygraph_ng/providers/openai.py",
+      "sha256": "6afe6d55bf9fe874dc5cb0d7dc8d0d77723271e0dd68b908dbaa067d0bddf227"
+    },
+    {
+      "path": "src/claim_polygraph_ng/providers/ollama.py",
+      "sha256": "77290df099f7bbf41e200f672fe1349ead9d49be8a6749703e7b6896dd44df3f"
+    },
+    {
+      "path": "tests/unit/test_v3_assisted_boundary.py",
+      "sha256": "2afdc1d15b1ee57470c4033064e0969cea1beb8cced0536d4714f25564ee475c"
+    },
+    {
+      "path": "benchmarks/verification_construction_v3_stage6b_synthetic_fixtures_v1.json",
+      "sha256": "2bf5f2f058d37b98dc84b4a827bf50ea372ace41c81b615251c1be3477892f2f"
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v3-stage6b-synthetic-audit-v1.json",
+      "sha256": "34eee63d2e9fa5a11a25aee073c8fdd53b5ef3e532e6d0e257ae238c2048d3ef"
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v3-stage6b-fresh-calibration-protocol-v1.json",
+      "sha256": "bb56014b18d51fa53d966898645ea727be3ad1b3e5bd11f466e584e1268cb069"
+    }
+  ],
+  "controls": {
+    "remediation_model_calls": 0,
+    "remediation_estimated_cost_usd": 0.0,
+    "original_calibration_cases_loaded_for_tuning": 0,
+    "replacement_calibration_cases_loaded_for_tuning": 0,
+    "original_held_out_cases_loaded": 0
+  },
+  "next_gate": "Collect twenty new cases from at least ten independent origin families, obtain human annotation and distinct approval, then freeze and execute one new calibration."
+}

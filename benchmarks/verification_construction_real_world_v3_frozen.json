@@ -1,0 +1,1411 @@
+{
+  "dataset_id": "verification-construction-real-world-v3",
+  "schema_version": 1,
+  "frozen": true,
+  "cases": [
+    {
+      "case_id": "V3-001",
+      "split": "held_out",
+      "claim_text": "A calendar year is exactly 365.25 days long.",
+      "evidence_packet_path": "benchmarks/verification_construction_v3_approved_frozen_v2.json",
+      "dimension": "duration",
+      "gold_label": "deterministic_constructible",
+      "gold_claim_span": "A calendar year is exactly 365.25 days long.",
+      "gold_evidence_spans": [
+        {
+          "evidence_id": "CPNG-001:E1",
+          "start_char": 0,
+          "end_char": 70,
+          "quoted_text": "Earth takes about 365.2422 days to make one revolution around the Sun."
+        },
+        {
+          "evidence_id": "CPNG-001:E2",
+          "start_char": 0,
+          "end_char": 82,
+          "quoted_text": "year, calendar: ... either 365 or 366 days. year, Julian: a period of 365.25 days."
+        }
+      ],
+      "expected_verification_state": "qualified",
+      "ambiguity_notes": [
+        "An ordinary civil-calendar year contains 365 or 366 days.",
+        "Exactly 365.25 days applies to the Julian-year convention, not every meaning of calendar year."
+      ],
+      "annotator_identity": "Md Moshiur Rahman",
+      "distinct_approver_identity": "Md Rashedul Islam"
+    },
+    {
+      "case_id": "V3-002",
+      "split": "calibration",
+      "claim_text": "Pure water always boils at 100 degrees Celsius.",
+      "evidence_packet_path": "benchmarks/verification_construction_v3_approved_frozen_v2.json",
+      "dimension": "temperature",
+      "gold_label": "deterministic_constructible",
+      "gold_claim_span": "Pure water always boils at 100 degrees Celsius.",
+      "gold_evidence_spans": [
+        {
+          "evidence_id": "CPNG-002:E1",
+          "start_char": 0,
+          "end_char": 94,
+          "quoted_text": "The boiling point of water increases by about 30 mK if the pressure is increased by 10^-3 atm."
+        },
+        {
+          "evidence_id": "CPNG-002:E2",
+          "start_char": 0,
+          "end_char": 121,
+          "quoted_text": "On ITS-90, the atmospheric boiling temperature of water turns out to be approximately 373.124 K (99.974 degrees Celsius)."
+        },
+        {
+          "evidence_id": "CPNG-002:E3",
+          "start_char": 0,
+          "end_char": 112,
+          "quoted_text": "Because of the normal decrease of barometric pressure with height, the nominal boiling point of water decreases."
+        }
+      ],
+      "expected_verification_state": "contradicted",
+      "ambiguity_notes": [
+        "The word “always” is contradicted because boiling temperature depends on pressure.",
+        "Even at atmospheric pressure, the cited ITS-90 value is approximately 99.974°C rather than exactly 100°C."
+      ],
+      "annotator_identity": "Md Moshiur Rahman",
+      "distinct_approver_identity": "Md Rashedul Islam"
+    },
+    {
+      "case_id": "V3-003",
+      "split": "held_out",
+      "claim_text": "Every adult human has exactly 206 bones.",
+      "evidence_packet_path": "benchmarks/verification_construction_v3_approved_frozen_v2.json",
+      "dimension": "count",
+      "gold_label": "deterministic_constructible",
+      "gold_claim_span": "Every adult human has exactly 206 bones.",
+      "gold_evidence_spans": [
+        {
+          "evidence_id": "CPNG-003:E1",
+          "start_char": 0,
+          "end_char": 149,
+          "quoted_text": "Human infants typically have 270 bones, fusing into around 206 in the human adult. Variability in number arises from some bones' anatomic variations."
+        },
+        {
+          "evidence_id": "CPNG-003:E2",
+          "start_char": 0,
+          "end_char": 80,
+          "quoted_text": "Accessory ossicles are inconstant, independent, and considered well formed bones"
+        }
+      ],
+      "expected_verification_state": "qualified",
+      "ambiguity_notes": [
+        "Around 206 is a typical adult count, not a universal exact count.",
+        "Anatomic variation and accessory ossicles defeat the quantifier “every.”"
+      ],
+      "annotator_identity": "Md Moshiur Rahman",
+      "distinct_approver_identity": "Md Rashedul Islam"
+    },
+    {
+      "case_id": "V3-004",
+      "split": "development",
+      "claim_text": "The World Health Organization still classifies COVID-19 as a public health emergency of international concern.",
+      "evidence_packet_path": "benchmarks/verification_construction_v3_approved_frozen_v2.json",
+      "dimension": null,
+      "gold_label": "fallback_eligible",
+      "gold_claim_span": "The World Health Organization still classifies COVID-19 as a public health emergency of international concern.",
+      "gold_evidence_spans": [
+        {
+          "evidence_id": "CPNG-004:E1",
+          "start_char": 0,
+          "end_char": 135,
+          "quoted_text": "COVID-19 is now an established and ongoing health issue which no longer constitutes a public health emergency of international concern."
+        },
+        {
+          "evidence_id": "CPNG-004:E2",
+          "start_char": 0,
+          "end_char": 118,
+          "quoted_text": "The World Health Organization announced that COVID-19 is no longer a public health emergency of international concern."
+        }
+      ],
+      "expected_verification_state": "contradicted",
+      "ambiguity_notes": [
+        "“Still classifies” is treated as an active-status assertion.",
+        "Both retained passages state that the emergency status ended."
+      ],
+      "annotator_identity": "Md Moshiur Rahman",
+      "distinct_approver_identity": "Md Rashedul Islam"
+    },
+    {
+      "case_id": "V3-005",
+      "split": "calibration",
+      "claim_text": "The Great Wall of China is visible from the Moon with the unaided human eye.",
+      "evidence_packet_path": "benchmarks/verification_construction_v3_approved_frozen_v2.json",
+      "dimension": "unknown",
+      "gold_label": "fallback_eligible",
+      "gold_claim_span": "The Great Wall of China is visible from the Moon with the unaided human eye.",
+      "gold_evidence_spans": [
+        {
+          "evidence_id": "CPNG-005:E1",
+          "start_char": 0,
+          "end_char": 91,
+          "quoted_text": "The Great Wall is not visible to the naked eye from orbit. It is not visible from the Moon."
+        }
+      ],
+      "expected_verification_state": "contradicted",
+      "ambiguity_notes": [
+        "Visibility with the unaided eye is treated as a boolean status under the stated viewing condition.",
+        "The NASA passage directly negates visibility from the Moon."
+      ],
+      "annotator_identity": "Md Moshiur Rahman",
+      "distinct_approver_identity": "Md Rashedul Islam"
+    },
+    {
+      "case_id": "V3-006",
+      "split": "held_out",
+      "claim_text": "Germany was the world's third-largest economy by nominal GDP in 2023.",
+      "evidence_packet_path": "benchmarks/verification_construction_v3_approved_frozen_v2.json",
+      "dimension": "count",
+      "gold_label": "fallback_eligible",
+      "gold_claim_span": "Germany was the world's third-largest economy by nominal GDP in 2023.",
+      "gold_evidence_spans": [
+        {
+          "evidence_id": "CPNG-006:E1",
+          "start_char": 0,
+          "end_char": 102,
+          "quoted_text": "For 2023 current-US-dollar GDP, the United States and China exceed Germany, and Germany exceeds Japan."
+        },
+        {
+          "evidence_id": "CPNG-006:E2",
+          "start_char": 0,
+          "end_char": 79,
+          "quoted_text": "Japan's economy is now the world's fourth-largest after it fell behind Germany."
+        }
+      ],
+      "expected_verification_state": "verified",
+      "ambiguity_notes": [
+        "“Third-largest” is represented as an ordinal rank in a count-like dimension.",
+        "The claim is limited to nominal GDP and calendar year 2023."
+      ],
+      "annotator_identity": "Md Moshiur Rahman",
+      "distinct_approver_identity": "Md Rashedul Islam"
+    },
+    {
+      "case_id": "V3-007",
+      "split": "calibration",
+      "claim_text": "Amazon was founded in 1994.",
+      "evidence_packet_path": "benchmarks/verification_construction_v3_approved_frozen_v2.json",
+      "dimension": null,
+      "gold_label": "fallback_eligible",
+      "gold_claim_span": "Amazon was founded in 1994.",
+      "gold_evidence_spans": [
+        {
+          "evidence_id": "CPNG-007:E1",
+          "start_char": 0,
+          "end_char": 55,
+          "quoted_text": "Amazon.com, Inc. was incorporated in 1994 in Washington"
+        },
+        {
+          "evidence_id": "CPNG-007:E2",
+          "start_char": 0,
+          "end_char": 103,
+          "quoted_text": "Jeff Bezos left a Wall Street investment firm in 1994 to start online bookseller Amazon.com in Seattle."
+        }
+      ],
+      "expected_verification_state": "qualified",
+      "ambiguity_notes": [
+        "“Founded” can refer to incorporation or the start of the business activity.",
+        "Both retained passages support 1994, while the virtual storefront opened in 1995."
+      ],
+      "annotator_identity": "Md Moshiur Rahman",
+      "distinct_approver_identity": "Md Rashedul Islam"
+    },
+    {
+      "case_id": "V3-008",
+      "split": "development",
+      "claim_text": "The European Union's General Data Protection Regulation began applying on 25 May 2018.",
+      "evidence_packet_path": "benchmarks/verification_construction_v3_approved_frozen_v2.json",
+      "dimension": null,
+      "gold_label": "fallback_eligible",
+      "gold_claim_span": "The European Union's General Data Protection Regulation began applying on 25 May 2018.",
+      "gold_evidence_spans": [
+        {
+          "evidence_id": "CPNG-008:E1",
+          "start_char": 0,
+          "end_char": 32,
+          "quoted_text": "It shall apply from 25 May 2018."
+        },
+        {
+          "evidence_id": "CPNG-008:E2",
+          "start_char": 0,
+          "end_char": 78,
+          "quoted_text": "The GDPR entered into force on 24 May 2016 and is applicable from 25 May 2018."
+        }
+      ],
+      "expected_verification_state": "verified",
+      "ambiguity_notes": [
+        "Application date is distinguished from the earlier entry-into-force date."
+      ],
+      "annotator_identity": "Md Moshiur Rahman",
+      "distinct_approver_identity": "Md Rashedul Islam"
+    },
+    {
+      "case_id": "V3-009",
+      "split": "development",
+      "claim_text": "One standard atmosphere equals exactly 101,325 pascals.",
+      "evidence_packet_path": "benchmarks/verification_construction_v3_approved_frozen_v2.json",
+      "dimension": "pressure",
+      "gold_label": "deterministic_constructible",
+      "gold_claim_span": "One standard atmosphere equals exactly 101,325 pascals.",
+      "gold_evidence_spans": [
+        {
+          "evidence_id": "V3-REMEDIATION-001:E1",
+          "start_char": 0,
+          "end_char": 28,
+          "quoted_text": "1 atm = 101 325 Pa (exactly)"
+        }
+      ],
+      "expected_verification_state": "verified",
+      "ambiguity_notes": [],
+      "annotator_identity": "Md Moshiur Rahman",
+      "distinct_approver_identity": "Md Rashedul Islam"
+    },
+    {
+      "case_id": "V3-010",
+      "split": "held_out",
+      "claim_text": "Taking vitamin C prevents the common cold.",
+      "evidence_packet_path": "benchmarks/verification_construction_v3_approved_frozen_v2.json",
+      "dimension": null,
+      "gold_label": "not_applicable",
+      "gold_claim_span": null,
+      "gold_evidence_spans": [],
+      "expected_verification_state": null,
+      "ambiguity_notes": [
+        "The claim is causal/preventive and contains no material numerical or temporal assertion for this constructor."
+      ],
+      "annotator_identity": "Md Moshiur Rahman",
+      "distinct_approver_identity": "Md Rashedul Islam"
+    },
+    {
+      "case_id": "V3-011",
+      "split": "held_out",
+      "claim_text": "Iceland gets 100 percent of its electricity from renewable sources.",
+      "evidence_packet_path": "benchmarks/verification_construction_v3_approved_frozen_v2.json",
+      "dimension": "percentage",
+      "gold_label": "deterministic_constructible",
+      "gold_claim_span": "Iceland gets 100 percent of its electricity from renewable sources.",
+      "gold_evidence_spans": [
+        {
+          "evidence_id": "CPNG-011:E1",
+          "start_char": 0,
+          "end_char": 45,
+          "quoted_text": "Renewables provide almost 100% of electricity"
+        }
+      ],
+      "expected_verification_state": "qualified",
+      "ambiguity_notes": [
+        "“Almost 100%” supports a near-total share but not an exact 100% equality.",
+        "No reference year is stated in the claim."
+      ],
+      "annotator_identity": "Md Moshiur Rahman",
+      "distinct_approver_identity": "Md Rashedul Islam"
+    },
+    {
+      "case_id": "V3-012",
+      "split": "held_out",
+      "claim_text": "Iceland gets 100 percent of its total energy from renewable sources.",
+      "evidence_packet_path": "benchmarks/verification_construction_v3_approved_frozen_v2.json",
+      "dimension": "percentage",
+      "gold_label": "deterministic_constructible",
+      "gold_claim_span": "Iceland gets 100 percent of its total energy from renewable sources.",
+      "gold_evidence_spans": [
+        {
+          "evidence_id": "CPNG-011:E1",
+          "start_char": 50,
+          "end_char": 135,
+          "quoted_text": "about 85% of primary energy; fossil fuels, mainly transport oil, supply the remainder"
+        }
+      ],
+      "expected_verification_state": "contradicted",
+      "ambiguity_notes": [
+        "“Total energy” is interpreted as primary energy because that is the retained evidence terminology.",
+        "The cited share is about 85%, not 100%."
+      ],
+      "annotator_identity": "Md Moshiur Rahman",
+      "distinct_approver_identity": "Md Rashedul Islam"
+    },
+    {
+      "case_id": "V3-013",
+      "split": "held_out",
+      "claim_text": "Iceland no longer uses fossil fuels.",
+      "evidence_packet_path": "benchmarks/verification_construction_v3_approved_frozen_v2.json",
+      "dimension": null,
+      "gold_label": "fallback_eligible",
+      "gold_claim_span": "Iceland no longer uses fossil fuels.",
+      "gold_evidence_spans": [
+        {
+          "evidence_id": "CPNG-011:E1",
+          "start_char": 79,
+          "end_char": 135,
+          "quoted_text": "fossil fuels, mainly transport oil, supply the remainder"
+        }
+      ],
+      "expected_verification_state": "contradicted",
+      "ambiguity_notes": [
+        "“No longer uses” is treated as an inactive-use status.",
+        "The evidence explicitly identifies continuing fossil-fuel use."
+      ],
+      "annotator_identity": "Md Moshiur Rahman",
+      "distinct_approver_identity": "Md Rashedul Islam"
+    },
+    {
+      "case_id": "V3-014",
+      "split": "development",
+      "claim_text": "Lightning never strikes the same place twice.",
+      "evidence_packet_path": "benchmarks/verification_construction_v3_approved_frozen_v2.json",
+      "dimension": "count",
+      "gold_label": "fallback_eligible",
+      "gold_claim_span": "Lightning never strikes the same place twice.",
+      "gold_evidence_spans": [
+        {
+          "evidence_id": "CPNG-012:E1",
+          "start_char": 0,
+          "end_char": 69,
+          "quoted_text": "Lightning can strike the same or nearly the same place more than once"
+        },
+        {
+          "evidence_id": "CPNG-012:E2",
+          "start_char": 0,
+          "end_char": 49,
+          "quoted_text": "Lightning often strikes the same place repeatedly"
+        }
+      ],
+      "expected_verification_state": "contradicted",
+      "ambiguity_notes": [
+        "“Never … twice” is normalized as no more than one strike at the same place.",
+        "Both passages state that repeat strikes occur."
+      ],
+      "annotator_identity": "Md Moshiur Rahman",
+      "distinct_approver_identity": "Md Rashedul Islam"
+    },
+    {
+      "case_id": "V3-015",
+      "split": "development",
+      "claim_text": "Tall structures do not need protection against repeated lightning strikes.",
+      "evidence_packet_path": "benchmarks/verification_construction_v3_approved_frozen_v2.json",
+      "dimension": null,
+      "gold_label": "not_applicable",
+      "gold_claim_span": null,
+      "gold_evidence_spans": [],
+      "expected_verification_state": null,
+      "ambiguity_notes": [
+        "The central assertion is a normative safety recommendation, not a numerical or temporal assertion.",
+        "The retained evidence discusses repeated-strike likelihood but does not itself define a protection requirement."
+      ],
+      "annotator_identity": "Md Moshiur Rahman",
+      "distinct_approver_identity": "Md Rashedul Islam"
+    },
+    {
+      "case_id": "V3-016",
+      "split": "development",
+      "claim_text": "Mount Everest is the tallest mountain from base to summit.",
+      "evidence_packet_path": "benchmarks/verification_construction_v3_approved_frozen_v2.json",
+      "dimension": "unknown",
+      "gold_label": "fallback_eligible",
+      "gold_claim_span": "Mount Everest is the tallest mountain from base to summit.",
+      "gold_evidence_spans": [
+        {
+          "evidence_id": "CPNG-013:E1",
+          "start_char": 41,
+          "end_char": 79,
+          "quoted_text": "Mauna Kea is tallest from base to peak"
+        },
+        {
+          "evidence_id": "CPNG-013:E2",
+          "start_char": 0,
+          "end_char": 80,
+          "quoted_text": "Measured from its base on the ocean floor, Mauna Kea is nearly 33,500 feet tall."
+        }
+      ],
+      "expected_verification_state": "contradicted",
+      "ambiguity_notes": [
+        "“Base to summit” permits a submerged base.",
+        "Under that definition, the retained evidence identifies Mauna Kea rather than Everest."
+      ],
+      "annotator_identity": "Md Moshiur Rahman",
+      "distinct_approver_identity": "Md Rashedul Islam"
+    },
+    {
+      "case_id": "V3-017",
+      "split": "development",
+      "claim_text": "Mount Everest is the point on Earth farthest from the planet's center.",
+      "evidence_packet_path": "benchmarks/verification_construction_v3_approved_frozen_v2.json",
+      "dimension": "unknown",
+      "gold_label": "fallback_eligible",
+      "gold_claim_span": "Mount Everest is the point on Earth farthest from the planet's center.",
+      "gold_evidence_spans": [
+        {
+          "evidence_id": "CPNG-013:E1",
+          "start_char": 85,
+          "end_char": 127,
+          "quoted_text": "Chimborazo is farthest from Earth's center"
+        },
+        {
+          "evidence_id": "CPNG-013:E3",
+          "start_char": 0,
+          "end_char": 110,
+          "quoted_text": "Because Earth bulges at the equator, Chimborazo's summit is farther from Earth's center than Everest's summit."
+        }
+      ],
+      "expected_verification_state": "contradicted",
+      "ambiguity_notes": [
+        "Distance from Earth’s center is distinct from elevation above mean sea level."
+      ],
+      "annotator_identity": "Md Moshiur Rahman",
+      "distinct_approver_identity": "Md Rashedul Islam"
+    },
+    {
+      "case_id": "V3-018",
+      "split": "calibration",
+      "claim_text": "The Nile is conclusively the world's longest river.",
+      "evidence_packet_path": "benchmarks/verification_construction_v3_approved_frozen_v2.json",
+      "dimension": "unknown",
+      "gold_label": "unconstructible",
+      "gold_claim_span": null,
+      "gold_evidence_spans": [],
+      "expected_verification_state": null,
+      "ambiguity_notes": [
+        "“Conclusively” requires a convention-independent river-length ranking, but the retained evidence explicitly conditions the ranking on a definition.",
+        "The wording cannot safely supply a single unqualified comparison assertion."
+      ],
+      "annotator_identity": "Md Moshiur Rahman",
+      "distinct_approver_identity": "Md Rashedul Islam"
+    },
+    {
+      "case_id": "V3-019",
+      "split": "calibration",
+      "claim_text": "The Nile carries more water than the Amazon.",
+      "evidence_packet_path": "benchmarks/verification_construction_v3_approved_frozen_v2.json",
+      "dimension": "speed",
+      "gold_label": "unconstructible",
+      "gold_claim_span": null,
+      "gold_evidence_spans": [],
+      "expected_verification_state": null,
+      "ambiguity_notes": [
+        "“Carries more water” is interpreted as discharge rate, but the retained evidence gives no explicit Nile-versus-Amazon discharge comparison or comparable values."
+      ],
+      "annotator_identity": "Md Moshiur Rahman",
+      "distinct_approver_identity": "Md Rashedul Islam"
+    },
+    {
+      "case_id": "V3-020",
+      "split": "held_out",
+      "claim_text": "Napoleon Bonaparte was unusually short for a French man of his time.",
+      "evidence_packet_path": "benchmarks/verification_construction_v3_approved_frozen_v2.json",
+      "dimension": "unknown",
+      "gold_label": "fallback_eligible",
+      "gold_claim_span": "Napoleon Bonaparte was unusually short for a French man of his time.",
+      "gold_evidence_spans": [
+        {
+          "evidence_id": "CPNG-015:E1",
+          "start_char": 69,
+          "end_char": 149,
+          "quoted_text": "Napoleon was about 1.67 metres, around or slightly above the average of his era."
+        }
+      ],
+      "expected_verification_state": "contradicted",
+      "ambiguity_notes": [
+        "“Unusually short” is interpreted relative to French men of the same era.",
+        "The retained passage places Napoleon around or slightly above the average."
+      ],
+      "annotator_identity": "Md Moshiur Rahman",
+      "distinct_approver_identity": "Md Rashedul Islam"
+    },
+    {
+      "case_id": "V3-021",
+      "split": "held_out",
+      "claim_text": "British caricatures accurately represented Napoleon's stature.",
+      "evidence_packet_path": "benchmarks/verification_construction_v3_approved_frozen_v2.json",
+      "dimension": null,
+      "gold_label": "fallback_eligible",
+      "gold_claim_span": "British caricatures accurately represented Napoleon's stature.",
+      "gold_evidence_spans": [
+        {
+          "evidence_id": "CPNG-015:E1",
+          "start_char": 69,
+          "end_char": 149,
+          "quoted_text": "Napoleon was about 1.67 metres, around or slightly above the average of his era."
+        },
+        {
+          "evidence_id": "CPNG-015:E2",
+          "start_char": 86,
+          "end_char": 153,
+          "quoted_text": "an intentionally tiny Napoleon, not an accurate physical proportion"
+        }
+      ],
+      "expected_verification_state": "contradicted",
+      "ambiguity_notes": [
+        "Accuracy is treated as a boolean representational status.",
+        "The museum description characterizes the depiction as intentionally diminutive rather than physically accurate."
+      ],
+      "annotator_identity": "Md Moshiur Rahman",
+      "distinct_approver_identity": "Md Rashedul Islam"
+    },
+    {
+      "case_id": "V3-022",
+      "split": "calibration",
+      "claim_text": "At 5,000 feet above sea level, atmospheric pressure is about 12.3 pounds per square inch.",
+      "evidence_packet_path": "benchmarks/verification_construction_v3_approved_frozen_v2.json",
+      "dimension": "pressure",
+      "gold_label": "deterministic_constructible",
+      "gold_claim_span": "At 5,000 feet above sea level, atmospheric pressure is about 12.3 pounds per square inch.",
+      "gold_evidence_spans": [
+        {
+          "evidence_id": "V3-REMEDIATION-002:E1",
+          "start_char": 0,
+          "end_char": 125,
+          "quoted_text": "At sea level, the air presses on a square inch of surface with 14.7 pounds pressure; at 5,000 feet with 12.3 pounds pressure."
+        }
+      ],
+      "expected_verification_state": "verified",
+      "ambiguity_notes": [],
+      "annotator_identity": "Md Moshiur Rahman",
+      "distinct_approver_identity": "Md Rashedul Islam"
+    },
+    {
+      "case_id": "V3-023",
+      "split": "calibration",
+      "claim_text": "Communities without 5G do not experience COVID-19 outbreaks.",
+      "evidence_packet_path": "benchmarks/verification_construction_v3_approved_frozen_v2.json",
+      "dimension": null,
+      "gold_label": "fallback_eligible",
+      "gold_claim_span": "Communities without 5G do not experience COVID-19 outbreaks.",
+      "gold_evidence_spans": [
+        {
+          "evidence_id": "CPNG-016:E1",
+          "start_char": 98,
+          "end_char": 141,
+          "quoted_text": "COVID-19 has spread in countries without 5G"
+        }
+      ],
+      "expected_verification_state": "contradicted",
+      "ambiguity_notes": [
+        "The claim is treated as an absence-of-outbreak status for places without 5G.",
+        "The retained passage supplies a direct counterexample class."
+      ],
+      "annotator_identity": "Md Moshiur Rahman",
+      "distinct_approver_identity": "Md Rashedul Islam"
+    },
+    {
+      "case_id": "V3-024",
+      "split": "held_out",
+      "claim_text": "Tesla delivered more than 1.8 million vehicles during 2023.",
+      "evidence_packet_path": "benchmarks/verification_construction_v3_approved_frozen_v2.json",
+      "dimension": "count",
+      "gold_label": "fallback_eligible",
+      "gold_claim_span": "Tesla delivered more than 1.8 million vehicles during 2023.",
+      "gold_evidence_spans": [
+        {
+          "evidence_id": "CPNG-017:E1",
+          "start_char": 0,
+          "end_char": 73,
+          "quoted_text": "Tesla reported 1,808,581 total vehicle deliveries for calendar year 2023."
+        }
+      ],
+      "expected_verification_state": "verified",
+      "ambiguity_notes": [
+        "1,808,581 is greater than 1.8 million.",
+        "The machine proposal misclassified the dimension as distance or mass; vehicle deliveries are a count."
+      ],
+      "annotator_identity": "Md Moshiur Rahman",
+      "distinct_approver_identity": "Md Rashedul Islam"
+    },
+    {
+      "case_id": "V3-025",
+      "split": "held_out",
+      "claim_text": "Tesla delivered more vehicles than any other automaker worldwide during 2023.",
+      "evidence_packet_path": "benchmarks/verification_construction_v3_approved_frozen_v2.json",
+      "dimension": "count",
+      "gold_label": "unconstructible",
+      "gold_claim_span": null,
+      "gold_evidence_spans": [],
+      "expected_verification_state": null,
+      "ambiguity_notes": [
+        "The universal “any other automaker” comparison requires a complete and consistently defined comparison set.",
+        "The retained passages mix Tesla deliveries with Toyota group sales, so the operands are not safely comparable."
+      ],
+      "annotator_identity": "Md Moshiur Rahman",
+      "distinct_approver_identity": "Md Rashedul Islam"
+    },
+    {
+      "case_id": "V3-026",
+      "split": "calibration",
+      "claim_text": "The United States annual unemployment rate was lower in 2023 than in 2020.",
+      "evidence_packet_path": "benchmarks/verification_construction_v3_approved_frozen_v2.json",
+      "dimension": "percentage",
+      "gold_label": "deterministic_constructible",
+      "gold_claim_span": "The United States annual unemployment rate was lower in 2023 than in 2020.",
+      "gold_evidence_spans": [
+        {
+          "evidence_id": "CPNG-018:E1",
+          "start_char": 0,
+          "end_char": 66,
+          "quoted_text": "The U.S. annual average unemployment rate was 3.6 percent in 2023."
+        },
+        {
+          "evidence_id": "CPNG-018:E2",
+          "start_char": 0,
+          "end_char": 70,
+          "quoted_text": "The U.S. annual average unemployment rate rose to 8.1 percent in 2020."
+        }
+      ],
+      "expected_verification_state": "verified",
+      "ambiguity_notes": [
+        "Both operands are annual average U.S. unemployment rates."
+      ],
+      "annotator_identity": "Md Moshiur Rahman",
+      "distinct_approver_identity": "Md Rashedul Islam"
+    },
+    {
+      "case_id": "V3-027",
+      "split": "calibration",
+      "claim_text": "Every month of 2023 had a lower United States unemployment rate than every month of 2020.",
+      "evidence_packet_path": "benchmarks/verification_construction_v3_approved_frozen_v2.json",
+      "dimension": "percentage",
+      "gold_label": "unconstructible",
+      "gold_claim_span": null,
+      "gold_evidence_spans": [],
+      "expected_verification_state": null,
+      "ambiguity_notes": [
+        "The claim universally quantifies over every month in two years.",
+        "The retained evidence contains annual averages and only one monthly 2023 observation, so the required month-by-month operands are missing."
+      ],
+      "annotator_identity": "Md Moshiur Rahman",
+      "distinct_approver_identity": "Md Rashedul Islam"
+    },
+    {
+      "case_id": "V3-028",
+      "split": "development",
+      "claim_text": "Drinking coffee causes dehydration in habitual coffee drinkers.",
+      "evidence_packet_path": "benchmarks/verification_construction_v3_approved_frozen_v2.json",
+      "dimension": null,
+      "gold_label": "not_applicable",
+      "gold_claim_span": null,
+      "gold_evidence_spans": [],
+      "expected_verification_state": null,
+      "ambiguity_notes": [
+        "The claim is causal and has no material numerical or temporal assertion for this constructor."
+      ],
+      "annotator_identity": "Md Moshiur Rahman",
+      "distinct_approver_identity": "Md Rashedul Islam"
+    },
+    {
+      "case_id": "V3-029",
+      "split": "development",
+      "claim_text": "Coffee should never count toward habitual coffee drinkers' daily fluid intake.",
+      "evidence_packet_path": "benchmarks/verification_construction_v3_approved_frozen_v2.json",
+      "dimension": null,
+      "gold_label": "fallback_eligible",
+      "gold_claim_span": "Coffee should never count toward habitual coffee drinkers' daily fluid intake.",
+      "gold_evidence_spans": [
+        {
+          "evidence_id": "CPNG-019:E1",
+          "start_char": 0,
+          "end_char": 148,
+          "quoted_text": "In 50 habitual male coffee drinkers, moderate coffee consumption produced no significant hydration differences compared with equal volumes of water."
+        },
+        {
+          "evidence_id": "CPNG-019:E3",
+          "start_char": 0,
+          "end_char": 96,
+          "quoted_text": "Water is the healthiest fluid, but drinks such as tea and coffee also count toward fluid intake."
+        }
+      ],
+      "expected_verification_state": "contradicted",
+      "ambiguity_notes": [
+        "“Daily” supplies the use context, while the material assertion is whether coffee counts toward fluid intake.",
+        "The retained guidance explicitly says coffee counts toward fluid intake."
+      ],
+      "annotator_identity": "Md Moshiur Rahman",
+      "distinct_approver_identity": "Md Rashedul Islam"
+    },
+    {
+      "case_id": "V3-030",
+      "split": "held_out",
+      "claim_text": "A university study proves that remote work makes all employees more productive.",
+      "evidence_packet_path": "benchmarks/verification_construction_v3_approved_frozen_v2.json",
+      "dimension": "percentage",
+      "gold_label": "not_applicable",
+      "gold_claim_span": null,
+      "gold_evidence_spans": [],
+      "expected_verification_state": null,
+      "ambiguity_notes": [
+        "The claim is a universal causal/productivity generalization without an explicit numerical or temporal operand."
+      ],
+      "annotator_identity": "Md Moshiur Rahman",
+      "distinct_approver_identity": "Md Rashedul Islam"
+    },
+    {
+      "case_id": "V3-031",
+      "split": "held_out",
+      "claim_text": "Standard sea-level atmospheric pressure is 1,013 hectopascals.",
+      "evidence_packet_path": "benchmarks/verification_construction_v3_approved_frozen_v2.json",
+      "dimension": "pressure",
+      "gold_label": "deterministic_constructible",
+      "gold_claim_span": "Standard sea-level atmospheric pressure is 1,013 hectopascals.",
+      "gold_evidence_spans": [
+        {
+          "evidence_id": "V3-REMEDIATION-003:E1",
+          "start_char": 0,
+          "end_char": 40,
+          "quoted_text": "Standard sea-level pressure is 1013 hPa."
+        }
+      ],
+      "expected_verification_state": "verified",
+      "ambiguity_notes": [],
+      "annotator_identity": "Md Moshiur Rahman",
+      "distinct_approver_identity": "Md Rashedul Islam"
+    },
+    {
+      "case_id": "V3-032",
+      "split": "held_out",
+      "claim_text": "A day on Venus lasts longer than a year on Venus.",
+      "evidence_packet_path": "benchmarks/verification_construction_v3_approved_frozen_v2.json",
+      "dimension": "duration",
+      "gold_label": "deterministic_constructible",
+      "gold_claim_span": "A day on Venus lasts longer than a year on Venus.",
+      "gold_evidence_spans": [
+        {
+          "evidence_id": "V3-WEB-001:E1",
+          "start_char": 0,
+          "end_char": 56,
+          "quoted_text": "Venus day is 243 Earth days; its year is 225 Earth days."
+        }
+      ],
+      "expected_verification_state": "verified",
+      "ambiguity_notes": [
+        "The comparison uses the same Earth-day unit for both durations."
+      ],
+      "annotator_identity": "Md Moshiur Rahman",
+      "distinct_approver_identity": "Md Rashedul Islam"
+    },
+    {
+      "case_id": "V3-033",
+      "split": "held_out",
+      "claim_text": "The Sun's corona can be hundreds of times hotter than its visible surface.",
+      "evidence_packet_path": "benchmarks/verification_construction_v3_approved_frozen_v2.json",
+      "dimension": "temperature",
+      "gold_label": "fallback_eligible",
+      "gold_claim_span": "The Sun's corona can be hundreds of times hotter than its visible surface.",
+      "gold_evidence_spans": [
+        {
+          "evidence_id": "V3-WEB-002:E1",
+          "start_char": 0,
+          "end_char": 67,
+          "quoted_text": "The surface is about 5,500°C; the corona reaches up to 2 million°C."
+        }
+      ],
+      "expected_verification_state": "verified",
+      "ambiguity_notes": [
+        "“Hundreds of times hotter” is treated as an order-of-magnitude comparison rather than an exact Celsius ratio.",
+        "The cited values support a difference of several hundredfold in ordinary-language magnitude."
+      ],
+      "annotator_identity": "Md Moshiur Rahman",
+      "distinct_approver_identity": "Md Rashedul Islam"
+    },
+    {
+      "case_id": "V3-034",
+      "split": "calibration",
+      "claim_text": "NOAA's daily climate database contains observations from more than 100,000 stations.",
+      "evidence_packet_path": "benchmarks/verification_construction_v3_approved_frozen_v2.json",
+      "dimension": "count",
+      "gold_label": "deterministic_constructible",
+      "gold_claim_span": "NOAA's daily climate database contains observations from more than 100,000 stations.",
+      "gold_evidence_spans": [
+        {
+          "evidence_id": "V3-WEB-003:E1",
+          "start_char": 0,
+          "end_char": 49,
+          "quoted_text": "The database includes more than 100,000 stations."
+        }
+      ],
+      "expected_verification_state": "verified",
+      "ambiguity_notes": [
+        "The claim and evidence use the same lower-bound station count."
+      ],
+      "annotator_identity": "Md Moshiur Rahman",
+      "distinct_approver_identity": "Md Rashedul Islam"
+    },
+    {
+      "case_id": "V3-035",
+      "split": "calibration",
+      "claim_text": "NOAA's daily climate station network spans 180 countries and territories.",
+      "evidence_packet_path": "benchmarks/verification_construction_v3_approved_frozen_v2.json",
+      "dimension": "count",
+      "gold_label": "deterministic_constructible",
+      "gold_claim_span": "NOAA's daily climate station network spans 180 countries and territories.",
+      "gold_evidence_spans": [
+        {
+          "evidence_id": "V3-WEB-004:E1",
+          "start_char": 0,
+          "end_char": 62,
+          "quoted_text": "Stations are distributed across 180 countries and territories."
+        }
+      ],
+      "expected_verification_state": "verified",
+      "ambiguity_notes": [
+        "Countries and territories are treated as one combined count category."
+      ],
+      "annotator_identity": "Md Moshiur Rahman",
+      "distinct_approver_identity": "Md Rashedul Islam"
+    },
+    {
+      "case_id": "V3-036",
+      "split": "development",
+      "claim_text": "Natural gas supplied a larger share of U.S. energy production than petroleum in 2024.",
+      "evidence_packet_path": "benchmarks/verification_construction_v3_approved_frozen_v2.json",
+      "dimension": "percentage",
+      "gold_label": "deterministic_constructible",
+      "gold_claim_span": "Natural gas supplied a larger share of U.S. energy production than petroleum in 2024.",
+      "gold_evidence_spans": [
+        {
+          "evidence_id": "V3-WEB-005:E1",
+          "start_char": 0,
+          "end_char": 62,
+          "quoted_text": "Natural gas supplied 38% and petroleum 35% of 2024 production."
+        }
+      ],
+      "expected_verification_state": "verified",
+      "ambiguity_notes": [
+        "Both shares refer to U.S. energy production in 2024."
+      ],
+      "annotator_identity": "Md Moshiur Rahman",
+      "distinct_approver_identity": "Md Rashedul Islam"
+    },
+    {
+      "case_id": "V3-037",
+      "split": "development",
+      "claim_text": "One petroleum barrel contains 42 U.S. gallons.",
+      "evidence_packet_path": "benchmarks/verification_construction_v3_approved_frozen_v2.json",
+      "dimension": "unknown",
+      "gold_label": "deterministic_constructible",
+      "gold_claim_span": "One petroleum barrel contains 42 U.S. gallons.",
+      "gold_evidence_spans": [
+        {
+          "evidence_id": "V3-WEB-006:E1",
+          "start_char": 0,
+          "end_char": 34,
+          "quoted_text": "One barrel equals 42 U.S. gallons."
+        }
+      ],
+      "expected_verification_state": "verified",
+      "ambiguity_notes": [
+        "The available taxonomy has no volume bucket; distance_or_mass is retained as the closest physical-quantity bucket."
+      ],
+      "annotator_identity": "Md Moshiur Rahman",
+      "distinct_approver_identity": "Md Rashedul Islam"
+    },
+    {
+      "case_id": "V3-038",
+      "split": "calibration",
+      "claim_text": "U.S. real GDP grew faster in the first quarter of 2026 than in the fourth quarter of 2025.",
+      "evidence_packet_path": "benchmarks/verification_construction_v3_approved_frozen_v2.json",
+      "dimension": "percentage",
+      "gold_label": "deterministic_constructible",
+      "gold_claim_span": "U.S. real GDP grew faster in the first quarter of 2026 than in the fourth quarter of 2025.",
+      "gold_evidence_spans": [
+        {
+          "evidence_id": "V3-WEB-007:E1",
+          "start_char": 0,
+          "end_char": 57,
+          "quoted_text": "Real GDP increased 2.1% in 2026 Q1 after 0.5% in 2025 Q4."
+        }
+      ],
+      "expected_verification_state": "verified",
+      "ambiguity_notes": [
+        "The comparison uses consecutive quarterly real-GDP growth rates."
+      ],
+      "annotator_identity": "Md Moshiur Rahman",
+      "distinct_approver_identity": "Md Rashedul Islam"
+    },
+    {
+      "case_id": "V3-039",
+      "split": "held_out",
+      "claim_text": "In 2020, an estimated 374 million new infections involved four curable sexually transmitted infections.",
+      "evidence_packet_path": "benchmarks/verification_construction_v3_approved_frozen_v2.json",
+      "dimension": "count",
+      "gold_label": "deterministic_constructible",
+      "gold_claim_span": "In 2020, an estimated 374 million new infections involved four curable sexually transmitted infections.",
+      "gold_evidence_spans": [
+        {
+          "evidence_id": "V3-WEB-008:E1",
+          "start_char": 0,
+          "end_char": 64,
+          "quoted_text": "WHO estimated 374 million new infections with four curable STIs."
+        }
+      ],
+      "expected_verification_state": "verified",
+      "ambiguity_notes": [
+        "The estimate and the set of four curable infections are both retained."
+      ],
+      "annotator_identity": "Md Moshiur Rahman",
+      "distinct_approver_identity": "Md Rashedul Islam"
+    },
+    {
+      "case_id": "V3-040",
+      "split": "held_out",
+      "claim_text": "The global share of people over age 60 is projected to rise from 12% in 2015 to 22% in 2050.",
+      "evidence_packet_path": "benchmarks/verification_construction_v3_approved_frozen_v2.json",
+      "dimension": "percentage",
+      "gold_label": "fallback_eligible",
+      "gold_claim_span": "The global share of people over age 60 is projected to rise from 12% in 2015 to 22% in 2050.",
+      "gold_evidence_spans": [
+        {
+          "evidence_id": "V3-WEB-009:E1",
+          "start_char": 0,
+          "end_char": 55,
+          "quoted_text": "The share over 60 is projected to rise from 12% to 22%."
+        }
+      ],
+      "expected_verification_state": "verified",
+      "ambiguity_notes": [
+        "The claim combines two percentage values with two temporal anchors.",
+        "The retained passage supplies the percentage transition but omits the years; the claim supplies 2015 and 2050."
+      ],
+      "annotator_identity": "Md Moshiur Rahman",
+      "distinct_approver_identity": "Md Rashedul Islam"
+    },
+    {
+      "case_id": "V3-041",
+      "split": "calibration",
+      "claim_text": "The World Bank's working-age population indicator covers ages 15 through 64.",
+      "evidence_packet_path": "benchmarks/verification_construction_v3_approved_frozen_v2.json",
+      "dimension": null,
+      "gold_label": "deterministic_constructible",
+      "gold_claim_span": "The World Bank's working-age population indicator covers ages 15 through 64.",
+      "gold_evidence_spans": [
+        {
+          "evidence_id": "V3-WEB-010:E1",
+          "start_char": 0,
+          "end_char": 59,
+          "quoted_text": "The indicator covers the population between ages 15 and 64."
+        }
+      ],
+      "expected_verification_state": "verified",
+      "ambiguity_notes": [
+        "“Through 64” is interpreted as an inclusive age interval."
+      ],
+      "annotator_identity": "Md Moshiur Rahman",
+      "distinct_approver_identity": "Md Rashedul Islam"
+    },
+    {
+      "case_id": "V3-042",
+      "split": "development",
+      "claim_text": "The EU population was estimated at 452.0 million on 1 January 2026.",
+      "evidence_packet_path": "benchmarks/verification_construction_v3_approved_frozen_v2.json",
+      "dimension": null,
+      "gold_label": "deterministic_constructible",
+      "gold_claim_span": "The EU population was estimated at 452.0 million on 1 January 2026.",
+      "gold_evidence_spans": [
+        {
+          "evidence_id": "V3-WEB-011:E1",
+          "start_char": 0,
+          "end_char": 68,
+          "quoted_text": "On 1 January 2026, the EU population was estimated at 452.0 million."
+        }
+      ],
+      "expected_verification_state": "verified",
+      "ambiguity_notes": [
+        "The date is treated as the temporal anchor for the population estimate."
+      ],
+      "annotator_identity": "Md Moshiur Rahman",
+      "distinct_approver_identity": "Md Rashedul Islam"
+    },
+    {
+      "case_id": "V3-043",
+      "split": "development",
+      "claim_text": "Eurostat projects the EU population to peak in 2029.",
+      "evidence_packet_path": "benchmarks/verification_construction_v3_approved_frozen_v2.json",
+      "dimension": null,
+      "gold_label": "deterministic_constructible",
+      "gold_claim_span": "Eurostat projects the EU population to peak in 2029.",
+      "gold_evidence_spans": [
+        {
+          "evidence_id": "V3-WEB-012:E1",
+          "start_char": 0,
+          "end_char": 61,
+          "quoted_text": "The population is projected to peak at 453.3 million in 2029."
+        }
+      ],
+      "expected_verification_state": "verified",
+      "ambiguity_notes": [
+        "The typed assertion concerns the projected peak year, with the peak value retained as context."
+      ],
+      "annotator_identity": "Md Moshiur Rahman",
+      "distinct_approver_identity": "Md Rashedul Islam"
+    },
+    {
+      "case_id": "V3-044",
+      "split": "development",
+      "claim_text": "Global electricity demand grew by 4.3% in 2024.",
+      "evidence_packet_path": "benchmarks/verification_construction_v3_approved_frozen_v2.json",
+      "dimension": "percentage",
+      "gold_label": "deterministic_constructible",
+      "gold_claim_span": "Global electricity demand grew by 4.3% in 2024.",
+      "gold_evidence_spans": [
+        {
+          "evidence_id": "V3-WEB-013:E1",
+          "start_char": 0,
+          "end_char": 47,
+          "quoted_text": "Global electricity demand rose by 4.3% in 2024."
+        }
+      ],
+      "expected_verification_state": "verified",
+      "ambiguity_notes": [
+        "“Grew” and “rose” are treated as equivalent positive-change relations."
+      ],
+      "annotator_identity": "Md Moshiur Rahman",
+      "distinct_approver_identity": "Md Rashedul Islam"
+    },
+    {
+      "case_id": "V3-045",
+      "split": "development",
+      "claim_text": "The fixed conversion rate for one euro is 1.95583 Deutsche Mark.",
+      "evidence_packet_path": "benchmarks/verification_construction_v3_approved_frozen_v2.json",
+      "dimension": "currency",
+      "gold_label": "deterministic_constructible",
+      "gold_claim_span": "The fixed conversion rate for one euro is 1.95583 Deutsche Mark.",
+      "gold_evidence_spans": [
+        {
+          "evidence_id": "V3-REMEDIATION-004:E1",
+          "start_char": 0,
+          "end_char": 31,
+          "quoted_text": "1 | DEM 1.95583 (Deutsche Mark)"
+        }
+      ],
+      "expected_verification_state": "verified",
+      "ambiguity_notes": [],
+      "annotator_identity": "Md Moshiur Rahman",
+      "distinct_approver_identity": "Md Rashedul Islam"
+    },
+    {
+      "case_id": "V3-046",
+      "split": "development",
+      "claim_text": "Advanced-economy growth was projected at 1.5% in 2025 and 1.6% in 2026.",
+      "evidence_packet_path": "benchmarks/verification_construction_v3_approved_frozen_v2.json",
+      "dimension": "percentage",
+      "gold_label": "fallback_eligible",
+      "gold_claim_span": "Advanced-economy growth was projected at 1.5% in 2025 and 1.6% in 2026.",
+      "gold_evidence_spans": [
+        {
+          "evidence_id": "V3-WEB-015:E1",
+          "start_char": 0,
+          "end_char": 53,
+          "quoted_text": "Growth is projected at 1.5% in 2025 and 1.6% in 2026."
+        }
+      ],
+      "expected_verification_state": "verified",
+      "ambiguity_notes": [
+        "The sentence contains two coordinated projection assertions and must preserve both year-value pairs."
+      ],
+      "annotator_identity": "Md Moshiur Rahman",
+      "distinct_approver_identity": "Md Rashedul Islam"
+    },
+    {
+      "case_id": "V3-047",
+      "split": "development",
+      "claim_text": "Each whole-number increase in earthquake magnitude represents ten times the measured amplitude.",
+      "evidence_packet_path": "benchmarks/verification_construction_v3_approved_frozen_v2.json",
+      "dimension": "unknown",
+      "gold_label": "fallback_eligible",
+      "gold_claim_span": "Each whole-number increase in earthquake magnitude represents ten times the measured amplitude.",
+      "gold_evidence_spans": [
+        {
+          "evidence_id": "V3-WEB-016:E1",
+          "start_char": 0,
+          "end_char": 79,
+          "quoted_text": "Each whole-number increase represents a tenfold increase in measured amplitude."
+        }
+      ],
+      "expected_verification_state": "verified",
+      "ambiguity_notes": [
+        "Measured amplitude is treated as a displacement-like physical quantity in the available taxonomy.",
+        "The relation is multiplicative, not an additive ten-unit increase."
+      ],
+      "annotator_identity": "Md Moshiur Rahman",
+      "distinct_approver_identity": "Md Rashedul Islam"
+    },
+    {
+      "case_id": "V3-048",
+      "split": "development",
+      "claim_text": "The Pacific Plate moves past the North American Plate at about two inches per year.",
+      "evidence_packet_path": "benchmarks/verification_construction_v3_approved_frozen_v2.json",
+      "dimension": "speed",
+      "gold_label": "deterministic_constructible",
+      "gold_claim_span": "The Pacific Plate moves past the North American Plate at about two inches per year.",
+      "gold_evidence_spans": [
+        {
+          "evidence_id": "V3-WEB-017:E1",
+          "start_char": 0,
+          "end_char": 67,
+          "quoted_text": "The Pacific Plate moves northwestward at about two inches per year."
+        }
+      ],
+      "expected_verification_state": "qualified",
+      "ambiguity_notes": [
+        "The retained passage supports the speed and direction but does not explicitly name the North American Plate in the quoted text."
+      ],
+      "annotator_identity": "Md Moshiur Rahman",
+      "distinct_approver_identity": "Md Rashedul Islam"
+    },
+    {
+      "case_id": "V3-049",
+      "split": "development",
+      "claim_text": "The speed of light in vacuum is exactly 299,792,458 metres per second.",
+      "evidence_packet_path": "benchmarks/verification_construction_v3_approved_frozen_v2.json",
+      "dimension": "speed",
+      "gold_label": "deterministic_constructible",
+      "gold_claim_span": "The speed of light in vacuum is exactly 299,792,458 metres per second.",
+      "gold_evidence_spans": [
+        {
+          "evidence_id": "V3-WEB-018:E1",
+          "start_char": 0,
+          "end_char": 56,
+          "quoted_text": "The speed of light in vacuum is 299 792 458 m/s exactly."
+        }
+      ],
+      "expected_verification_state": "verified",
+      "ambiguity_notes": [
+        "Comma-separated and space-separated digit grouping denote the same exact SI value."
+      ],
+      "annotator_identity": "Md Moshiur Rahman",
+      "distinct_approver_identity": "Md Rashedul Islam"
+    },
+    {
+      "case_id": "V3-050",
+      "split": "calibration",
+      "claim_text": "The world population reached eight billion on 15 November 2022.",
+      "evidence_packet_path": "benchmarks/verification_construction_v3_approved_frozen_v2.json",
+      "dimension": null,
+      "gold_label": "deterministic_constructible",
+      "gold_claim_span": "The world population reached eight billion on 15 November 2022.",
+      "gold_evidence_spans": [
+        {
+          "evidence_id": "V3-WEB-019:E1",
+          "start_char": 0,
+          "end_char": 62,
+          "quoted_text": "On 15 November 2022, the world's population reached 8 billion."
+        }
+      ],
+      "expected_verification_state": "verified",
+      "ambiguity_notes": [
+        "“Eight billion” and “8 billion” are equivalent count expressions anchored to the same date."
+      ],
+      "annotator_identity": "Md Moshiur Rahman",
+      "distinct_approver_identity": "Md Rashedul Islam"
+    },
+    {
+      "case_id": "V3-051",
+      "split": "calibration",
+      "claim_text": "Global life expectancy at birth reached 73.3 years in 2024.",
+      "evidence_packet_path": "benchmarks/verification_construction_v3_approved_frozen_v2.json",
+      "dimension": "duration",
+      "gold_label": "deterministic_constructible",
+      "gold_claim_span": "Global life expectancy at birth reached 73.3 years in 2024.",
+      "gold_evidence_spans": [
+        {
+          "evidence_id": "V3-WEB-020:E1",
+          "start_char": 0,
+          "end_char": 59,
+          "quoted_text": "Global life expectancy at birth reached 73.3 years in 2024."
+        }
+      ],
+      "expected_verification_state": "verified",
+      "ambiguity_notes": [
+        "Life expectancy is represented as a duration measured in years."
+      ],
+      "annotator_identity": "Md Moshiur Rahman",
+      "distinct_approver_identity": "Md Rashedul Islam"
+    },
+    {
+      "case_id": "V3-052",
+      "split": "held_out",
+      "claim_text": "NIH's All of Us database had data from more than 747,000 participants by June 2026.",
+      "evidence_packet_path": "benchmarks/verification_construction_v3_approved_frozen_v2.json",
+      "dimension": "count",
+      "gold_label": "unconstructible",
+      "gold_claim_span": null,
+      "gold_evidence_spans": [],
+      "expected_verification_state": null,
+      "ambiguity_notes": [
+        "The count threshold is present, but the retained evidence passage does not supply the “by June 2026” temporal provenance required by the claim."
+      ],
+      "annotator_identity": "Md Moshiur Rahman",
+      "distinct_approver_identity": "Md Rashedul Islam"
+    },
+    {
+      "case_id": "V3-053",
+      "split": "calibration",
+      "claim_text": "The fixed conversion rate for one euro is 7.53450 Croatian kuna.",
+      "evidence_packet_path": "benchmarks/verification_construction_v3_approved_frozen_v2.json",
+      "dimension": "currency",
+      "gold_label": "deterministic_constructible",
+      "gold_claim_span": "The fixed conversion rate for one euro is 7.53450 Croatian kuna.",
+      "gold_evidence_spans": [
+        {
+          "evidence_id": "V3-REMEDIATION-005:E1",
+          "start_char": 0,
+          "end_char": 21,
+          "quoted_text": "HRK 7.53450 per EUR 1"
+        }
+      ],
+      "expected_verification_state": "verified",
+      "ambiguity_notes": [],
+      "annotator_identity": "Md Moshiur Rahman",
+      "distinct_approver_identity": "Md Rashedul Islam"
+    },
+    {
+      "case_id": "V3-054",
+      "split": "calibration",
+      "claim_text": "The U.S. national average gasoline price was $3.11 in April 2025.",
+      "evidence_packet_path": "benchmarks/verification_construction_v3_approved_frozen_v2.json",
+      "dimension": "currency",
+      "gold_label": "unconstructible",
+      "gold_claim_span": null,
+      "gold_evidence_spans": [],
+      "expected_verification_state": null,
+      "ambiguity_notes": [
+        "The retained evidence supplies $3.11 but does not contain the April 2025 temporal anchor required by the claim."
+      ],
+      "annotator_identity": "Md Moshiur Rahman",
+      "distinct_approver_identity": "Md Rashedul Islam"
+    },
+    {
+      "case_id": "V3-055",
+      "split": "development",
+      "claim_text": "A 2025 climate study forecast a 0.12°C reduction in 2099 global mean surface temperature from energy-based adaptation.",
+      "evidence_packet_path": "benchmarks/verification_construction_v3_approved_frozen_v2.json",
+      "dimension": "temperature",
+      "gold_label": "fallback_eligible",
+      "gold_claim_span": "A 2025 climate study forecast a 0.12°C reduction in 2099 global mean surface temperature from energy-based adaptation.",
+      "gold_evidence_spans": [
+        {
+          "evidence_id": "V3-WEB-024:E1",
+          "start_char": 0,
+          "end_char": 73,
+          "quoted_text": "The forecast reduction in 2099 global mean surface temperature is 0.12°C."
+        }
+      ],
+      "expected_verification_state": "verified",
+      "ambiguity_notes": [
+        "The numeric forecast is clear, while the energy-based-adaptation attribution is additional causal context."
+      ],
+      "annotator_identity": "Md Moshiur Rahman",
+      "distinct_approver_identity": "Md Rashedul Islam"
+    },
+    {
+      "case_id": "V3-056",
+      "split": "calibration",
+      "claim_text": "The 2025 UK mid-year population estimate was 69,487,000.",
+      "evidence_packet_path": "benchmarks/verification_construction_v3_approved_frozen_v2.json",
+      "dimension": null,
+      "gold_label": "deterministic_constructible",
+      "gold_claim_span": "The 2025 UK mid-year population estimate was 69,487,000.",
+      "gold_evidence_spans": [
+        {
+          "evidence_id": "V3-WEB-025:E1",
+          "start_char": 0,
+          "end_char": 71,
+          "quoted_text": "The United Kingdom mid-year population estimate was 69,487,000 in 2025."
+        }
+      ],
+      "expected_verification_state": "verified",
+      "ambiguity_notes": [
+        "The mid-year estimate is treated as occurring during 2025."
+      ],
+      "annotator_identity": "Md Moshiur Rahman",
+      "distinct_approver_identity": "Md Rashedul Islam"
+    },
+    {
+      "case_id": "V3-057",
+      "split": "calibration",
+      "claim_text": "Jupiter's average atmospheric temperature at one bar is approximately minus 110 degrees Celsius.",
+      "evidence_packet_path": "benchmarks/verification_construction_v3_approved_frozen_v2.json",
+      "dimension": "temperature",
+      "gold_label": "fallback_eligible",
+      "gold_claim_span": "Jupiter's average atmospheric temperature at one bar is approximately minus 110 degrees Celsius.",
+      "gold_evidence_spans": [
+        {
+          "evidence_id": "V3-WEB-026:E1",
+          "start_char": 0,
+          "end_char": 64,
+          "quoted_text": "Average temperature is approximately -110°C at one bar pressure."
+        }
+      ],
+      "expected_verification_state": "verified",
+      "ambiguity_notes": [
+        "Temperature is the primary measured dimension; one bar is a required pressure condition.",
+        "The machine proposal selected pressure, but the asserted value is a temperature."
+      ],
+      "annotator_identity": "Md Moshiur Rahman",
+      "distinct_approver_identity": "Md Rashedul Islam"
+    },
+    {
+      "case_id": "V3-058",
+      "split": "held_out",
+      "claim_text": "The U.S. unemployment rate was 4.1% in June 2025.",
+      "evidence_packet_path": "benchmarks/verification_construction_v3_approved_frozen_v2.json",
+      "dimension": "percentage",
+      "gold_label": "deterministic_constructible",
+      "gold_claim_span": "The U.S. unemployment rate was 4.1% in June 2025.",
+      "gold_evidence_spans": [
+        {
+          "evidence_id": "V3-WEB-027:E1",
+          "start_char": 0,
+          "end_char": 51,
+          "quoted_text": "The unemployment rate was 4.1 percent in June 2025."
+        }
+      ],
+      "expected_verification_state": "verified",
+      "ambiguity_notes": [
+        "The percent symbol and the word “percent” are equivalent representations."
+      ],
+      "annotator_identity": "Md Moshiur Rahman",
+      "distinct_approver_identity": "Md Rashedul Islam"
+    },
+    {
+      "case_id": "V3-059",
+      "split": "calibration",
+      "claim_text": "In 2023, 8.58% of U.S. births were low birthweight.",
+      "evidence_packet_path": "benchmarks/verification_construction_v3_approved_frozen_v2.json",
+      "dimension": "percentage",
+      "gold_label": "unconstructible",
+      "gold_claim_span": null,
+      "gold_evidence_spans": [],
+      "expected_verification_state": null,
+      "ambiguity_notes": [
+        "The retained passage supplies 8.58% but not the 2023 temporal provenance or explicit U.S.-birth population context required by the claim.",
+        "The machine proposal incorrectly selected distance_or_mass because of the term “birthweight.”"
+      ],
+      "annotator_identity": "Md Moshiur Rahman",
+      "distinct_approver_identity": "Md Rashedul Islam"
+    },
+    {
+      "case_id": "V3-060",
+      "split": "held_out",
+      "claim_text": "Refrigerated food held above 40°F for at least two hours should be discarded after a power outage.",
+      "evidence_packet_path": "benchmarks/verification_construction_v3_approved_frozen_v2.json",
+      "dimension": "temperature",
+      "gold_label": "fallback_eligible",
+      "gold_claim_span": "Refrigerated food held above 40°F for at least two hours should be discarded after a power outage.",
+      "gold_evidence_spans": [
+        {
+          "evidence_id": "V3-WEB-029:E1",
+          "start_char": 0,
+          "end_char": 46,
+          "quoted_text": "Discard food above 40°F for two hours or more."
+        }
+      ],
+      "expected_verification_state": "verified",
+      "ambiguity_notes": [
+        "The rule combines a strict temperature threshold with a minimum duration.",
+        "Both conditions must be preserved; neither alone is sufficient."
+      ],
+      "annotator_identity": "Md Moshiur Rahman",
+      "distinct_approver_identity": "Md Rashedul Islam"
+    }
+  ]
+}

@@ -42,6 +42,38 @@ class ModelOutputError(ModelProviderError):
 
 
 _TASK_INSTRUCTIONS = {
+    ModelTask.ASSIST_VERIFICATION_CONSTRUCTION: (
+        "Verification construction prompt verification-construction-v4.9d-v8. "
+        "Return exactly the preflight-authorized construction kind. A numerical comparison "
+        "requires two explicit subjects and compatible values. A numerical_scalar response "
+        "may represent one explicit value, a two-bound range, or an exact two-value "
+        "conversion; copy every value and unit without calculation or substitution. "
+        "Return compact JSON only. Decimal fields must omit thousands separators and use "
+        "plain decimal or E notation; never put unit expressions into numeric scale fields. "
+        "For temporal_status construction, return exact date/status text copied from the "
+        "claim and each evidence quote. Do not build typed dates or intervals; deterministic "
+        "code owns date parsing, precision, and interval construction. A word such as still "
+        "or currently requires an explicit reference date; "
+        "never substitute the publication date or the current date. "
+        "Date value strings may preserve an explicit source form such as 25 May 2018 or "
+        "use ISO form 2018-05-25; declared precision must match the supplied text. "
+        "claim_text_span must be an exact contiguous substring containing the complete "
+        "comparison. For temporal work, copy the complete claim sentence including its "
+        "explicit year and never shorten a full date to only its month or day. Copy "
+        "evidence_id exactly. Calculate start_char and end_char against "
+        "the supplied retained passage, using a zero-based inclusive start and exclusive "
+        "end; quoted_text must equal that exact slice. Bind only approved evidence that "
+        "explicitly states the proposed operands, effective dates, or status. For temporal "
+        "bindings, prefer the complete exact evidence sentence containing the date and event "
+        "or status; never paraphrase quoted_text or observed_status. Preserve "
+        "written units, decimal precision, and date precision. Qualitative superlatives, "
+        "causal assertions, recommendations, and ordinary semantic claims do not belong "
+        "in this subsystem unless the response schema can represent their explicit "
+        "numerical or temporal relation without invention. Do not convert units, infer "
+        "omitted operands, use publication dates as event dates, treat nearby numbers as "
+        "evidence, browse, decide a verdict, assign a verification state, estimate "
+        "readiness, or make a publication decision."
+    ),
     ModelTask.NORMALIZE_CLAIM: (
         "Normalize the submitted claim without changing its meaning. Identify its type, "
         "entities, quantities, date, geography, ambiguities, and checkworthiness. Do not "
@@ -501,6 +533,7 @@ def _validate_task_invariants(
         ModelTask.REVIEW_CRITIQUE,
         ModelTask.EVALUATE_PASSAGE,
         ModelTask.CLASSIFY_PROVENANCE_RELATIONSHIP,
+        ModelTask.ASSIST_VERIFICATION_CONSTRUCTION,
     }:
         return
     if task is ModelTask.NORMALIZE_CLAIM:

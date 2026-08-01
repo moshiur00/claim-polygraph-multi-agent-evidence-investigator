@@ -1,0 +1,48 @@
+{
+  "audit_id": "verification-construction-v3-stage1-inventory-gate-audit-v1",
+  "policy_id": "verification-construction-v3-sampling-policy-v1",
+  "status": "insufficient_local_inventory",
+  "inputs": [
+    {
+      "path": "benchmarks/initial_claims_v1.json",
+      "sha256": "44270e74e3b20028d66dc907036ed3fd8236372d8e1bb8c65fadbcad7598b8a3"
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v3-sampling-policy-v1.json",
+      "sha256": "44ea9af8a52dd47934478fd1579a5e4e6e698348db95982fce2511d9a59fd265"
+    },
+    {
+      "path": "src/claim_polygraph_ng/evaluation/v3_dataset_assembly.py",
+      "sha256": "74c2259a879e0580fa48f19870401990590e3ee4bef8449cb56a747a3605e4b1"
+    }
+  ],
+  "inventory": {
+    "reviewed_parent_cases": 20,
+    "deterministically_extracted_atomic_candidates": 31,
+    "eligible_unique_claims": 31,
+    "eligible_origin_families": 20,
+    "target_cases": 60,
+    "required_origin_families": 40,
+    "case_shortfall": 29,
+    "family_shortfall": 20
+  },
+  "controls": {
+    "restricted_documents_downloaded": 0,
+    "new_copyrighted_passages_copied": 0,
+    "synthetic_cases_presented_as_real_world": 0,
+    "model_calls": 0,
+    "network_calls": 0,
+    "search_calls": 0,
+    "estimated_cost_usd": 0.0,
+    "split_assignment_performed": false,
+    "held_out_leakage_possible": false
+  },
+  "quota_gate_passed": false,
+  "stage_v3_1_exit_passed": false,
+  "blocking_reasons": [
+    "Only 31 of 60 required eligible unique claims are available locally.",
+    "Only 20 of 40 required independent origin families are available locally.",
+    "Applying split or dimension quotas to an incomplete inventory would violate the frozen sampling policy."
+  ],
+  "required_next_action": "Add at least 29 permitted naturally worded claims from at least 20 new independently reviewed origin families, then rerun the offline inventory gate."
+}

@@ -1,0 +1,52 @@
+{
+  "audit_id": "verification-construction-v4-stage9b-collection-audit-v1",
+  "status": "awaiting_human_review",
+  "collection_gate_passed": true,
+  "calibration_execution_authorized": false,
+  "workbook_sha256": "c1cf86b8a32ff4d0b240e399c32101c9e706a487a6acc2db7b2b7255fa7dc63f",
+  "case_count": 20,
+  "origin_family_count": 10,
+  "source_domain_count": 10,
+  "source_domains": [
+    "abs.gov.au",
+    "bankofcanada.ca",
+    "bis.org",
+    "boj.or.jp",
+    "bundesbank.de",
+    "cisa.gov",
+    "gao.gov",
+    "justice.gov",
+    "riksbank.se",
+    "stats.govt.nz"
+  ],
+  "label_counts": {
+    "deterministic_constructible": 17,
+    "fallback_eligible": 0,
+    "unconstructible": 0,
+    "not_applicable": 3
+  },
+  "annotator_identity_prefill": "Md Moshiur Rahman",
+  "distinct_approver_identity_prefill": "Md Rashedul Islam",
+  "human_annotations_completed": 0,
+  "distinct_approvals_completed": 0,
+  "model_calls": 0,
+  "network_calls_during_benchmark_execution": 0,
+  "paid_operations": 0,
+  "calibration_cases_exposed_to_model": 0,
+  "held_out_cases_loaded": 0,
+  "gates": {
+    "case_count_20": true,
+    "minimum_10_origin_families": true,
+    "exact_claim_reuse_zero": true,
+    "retired_domain_reuse_zero": true,
+    "calibration_only": true,
+    "exact_span_failures_zero": true,
+    "human_annotations_zero_before_review": true,
+    "approvals_zero_before_review": true,
+    "provider_model_calls_zero": true,
+    "pdf_sources_zero": true,
+    "calibration_execution_zero": true,
+    "held_out_cases_loaded_zero": true
+  },
+  "next_action": "Human annotation by Md Moshiur Rahman and distinct approval by Md Rashedul Islam"
+}

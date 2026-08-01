@@ -1,0 +1,695 @@
+{
+  "evaluation_id": "verification-construction-v4-stage9c-replacement-calibration-v1",
+  "status": "completed_not_eligible_for_held_out",
+  "freeze_manifest_sha256": "e4ffa0a748e92f8779bda4c5790a6aeb0c358b7290e6a3038f727c4856eaa39c",
+  "configuration_changed_after_freeze": false,
+  "calibration_executions": 1,
+  "model": "gpt-4o-mini",
+  "case_count": 20,
+  "positive_gold_cases": 17,
+  "baseline_correct_constructions": 0,
+  "baseline_construction_recall": 0.0,
+  "constructions_succeeded": 8,
+  "correct_constructions": 8,
+  "newly_recovered_assertions": 8,
+  "unsafe_accepted_constructions": 0,
+  "construction_precision": 1.0,
+  "construction_recall": 0.47058823529411764,
+  "incremental_recall_gain": 0.47058823529411764,
+  "human_review_routing_recall": 1.0,
+  "provider_attempts": 17,
+  "completed_paid_operations": 14,
+  "failed_paid_operations": 3,
+  "duplicate_paid_operations": 0,
+  "input_tokens": 20454,
+  "output_tokens": 3244,
+  "estimated_cost_usd": 0.0050145,
+  "estimated_cost_upper_bound_usd": 0.0050145,
+  "cost_per_recovered_assertion_usd": 0.0006268125,
+  "calibration_call_limit": 20,
+  "calibration_calls_remaining": 3,
+  "calibration_cases_loaded": 20,
+  "held_out_cases_loaded": 0,
+  "dataset_sha256": "9486d871c4a111eb35c1bf0f89faeeceb795692aec29eef20f50ec5d2d76fbe4",
+  "promotion_gates": {
+    "schema_validity": true,
+    "exact_span_validity": true,
+    "unsafe_accepted_constructions": true,
+    "construction_precision": true,
+    "overall_construction_recall": false,
+    "assisted_value": true,
+    "human_review_routing_recall": true,
+    "publication_safety_regressions": true,
+    "duplicate_paid_operations": true,
+    "cost_per_recovered_assertion": true
+  },
+  "eligible_for_fresh_held_out_collection": false,
+  "thresholds_changed_after_results": false,
+  "results": [
+    {
+      "case_id": "V3-321",
+      "disposition": "validated_assisted_proposal",
+      "eligibility": "temporal",
+      "construction_succeeded": true,
+      "human_review_required": false,
+      "provider_attempt": true,
+      "routes": [
+        "assisted"
+      ],
+      "proposal": {
+        "kind": "temporal_status",
+        "failed_construction_id": "c411ad99-8ab9-53d0-b96c-7e016c501f92",
+        "claim_text_span": "The BIS was established in 1930.",
+        "left_subject": null,
+        "right_subject": null,
+        "comparator": null,
+        "dimension": null,
+        "left_value": null,
+        "right_value": null,
+        "scalar_form": null,
+        "scalar_subject": null,
+        "numeric_operation": null,
+        "expected_values": [],
+        "evidence_bindings": [],
+        "temporal_relation": "on",
+        "reference_date": {
+          "value": "1930-01-01",
+          "precision": "year"
+        },
+        "claimed_interval": null,
+        "requires_reference_date": false,
+        "claimed_status": null,
+        "temporal_bindings": [
+          {
+            "evidence_id": "a94abddf-e2d3-57ac-87c0-4a78c8a1a23b",
+            "start_char": 0,
+            "end_char": 110,
+            "quoted_text": "Established in 1930, the Bank for International Settlements is the oldest international financial institution.",
+            "effective_interval": {
+              "start": {
+                "value": "1930-01-01",
+                "precision": "year"
+              },
+              "end": {
+                "value": "1930-01-01",
+                "precision": "year"
+              },
+              "start_inclusive": true,
+              "end_inclusive": true
+            },
+            "observed_status": null,
+            "retrospective": false
+          }
+        ]
+      },
+      "gold_positive": true,
+      "correct_construction": true,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-322",
+      "disposition": "validated_assisted_proposal",
+      "eligibility": "numerical_scalar",
+      "construction_succeeded": true,
+      "human_review_required": false,
+      "provider_attempt": true,
+      "routes": [
+        "assisted"
+      ],
+      "proposal": {
+        "kind": "numerical_scalar",
+        "failed_construction_id": "e7593fae-a56c-584a-8310-34135ba0bf75",
+        "claim_text_span": "The BIS is owned by 63 central banks.",
+        "left_subject": null,
+        "right_subject": null,
+        "comparator": "equal",
+        "dimension": "count",
+        "left_value": null,
+        "right_value": null,
+        "scalar_form": "single_value",
+        "scalar_subject": "BIS",
+        "numeric_operation": "direct",
+        "expected_values": [
+          {
+            "value": "63",
+            "unit": null,
+            "dimension": "count",
+            "scale": "1",
+            "tolerance": null
+          }
+        ],
+        "evidence_bindings": [
+          {
+            "evidence_id": "3204289c-b878-5aea-97a5-88ed9a75e70c",
+            "start_char": 41,
+            "end_char": 57,
+            "quoted_text": "63 central banks"
+          }
+        ],
+        "temporal_relation": null,
+        "reference_date": null,
+        "claimed_interval": null,
+        "requires_reference_date": false,
+        "claimed_status": null,
+        "temporal_bindings": []
+      },
+      "gold_positive": true,
+      "correct_construction": true,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-323",
+      "disposition": "validated_assisted_proposal",
+      "eligibility": "temporal",
+      "construction_succeeded": true,
+      "human_review_required": false,
+      "provider_attempt": true,
+      "routes": [
+        "assisted"
+      ],
+      "proposal": {
+        "kind": "temporal_status",
+        "failed_construction_id": "66a2e8e7-13b4-557a-ad0a-adcec9368473",
+        "claim_text_span": "GAO was created in 1921.",
+        "left_subject": null,
+        "right_subject": null,
+        "comparator": null,
+        "dimension": null,
+        "left_value": null,
+        "right_value": null,
+        "scalar_form": null,
+        "scalar_subject": null,
+        "numeric_operation": null,
+        "expected_values": [],
+        "evidence_bindings": [],
+        "temporal_relation": "on",
+        "reference_date": {
+          "value": "1921-01-01",
+          "precision": "year"
+        },
+        "claimed_interval": null,
+        "requires_reference_date": false,
+        "claimed_status": null,
+        "temporal_bindings": [
+          {
+            "evidence_id": "d9805887-6ebf-512b-8b5c-c04ae2e0414b",
+            "start_char": 0,
+            "end_char": 152,
+            "quoted_text": "The Budget and Accounting Act created GAO in 1921 when Congress realized the need to control growing government expenditures and debt after World War I.",
+            "effective_interval": {
+              "start": {
+                "value": "1921-01-01",
+                "precision": "year"
+              },
+              "end": {
+                "value": "1921-01-01",
+                "precision": "year"
+              },
+              "start_inclusive": true,
+              "end_inclusive": true
+            },
+            "observed_status": null,
+            "retrospective": false
+          }
+        ]
+      },
+      "gold_positive": true,
+      "correct_construction": true,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-324",
+      "disposition": "human_review_ineligible",
+      "construction_succeeded": false,
+      "human_review_required": true,
+      "provider_attempt": false,
+      "routes": [
+        "not_applicable"
+      ],
+      "gold_positive": false,
+      "correct_construction": false,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-325",
+      "disposition": "validated_assisted_proposal",
+      "eligibility": "temporal",
+      "construction_succeeded": true,
+      "human_review_required": false,
+      "provider_attempt": true,
+      "routes": [
+        "assisted"
+      ],
+      "proposal": {
+        "kind": "temporal_status",
+        "failed_construction_id": "62c1b6b4-ea33-586e-83a2-00505ec1ec12",
+        "claim_text_span": "The Department of Justice was created on July 1, 1870.",
+        "left_subject": null,
+        "right_subject": null,
+        "comparator": null,
+        "dimension": null,
+        "left_value": null,
+        "right_value": null,
+        "scalar_form": null,
+        "scalar_subject": null,
+        "numeric_operation": null,
+        "expected_values": [],
+        "evidence_bindings": [],
+        "temporal_relation": "on",
+        "reference_date": {
+          "value": "1870-07-01",
+          "precision": "day"
+        },
+        "claimed_interval": null,
+        "requires_reference_date": false,
+        "claimed_status": null,
+        "temporal_bindings": [
+          {
+            "evidence_id": "63a5bb58-340f-5ec2-9453-30d1691758f0",
+            "start_char": 85,
+            "end_char": 97,
+            "quoted_text": "July 1, 1870",
+            "effective_interval": {
+              "start": {
+                "value": "1870-07-01",
+                "precision": "day"
+              },
+              "end": {
+                "value": "1870-07-01",
+                "precision": "day"
+              },
+              "start_inclusive": true,
+              "end_inclusive": true
+            },
+            "observed_status": null,
+            "retrospective": false
+          }
+        ]
+      },
+      "gold_positive": true,
+      "correct_construction": true,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-326",
+      "disposition": "human_review_ineligible",
+      "construction_succeeded": false,
+      "human_review_required": true,
+      "provider_attempt": false,
+      "routes": [
+        "not_applicable"
+      ],
+      "gold_positive": false,
+      "correct_construction": false,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-327",
+      "disposition": "human_review_safe_failure",
+      "eligibility": "temporal",
+      "construction_succeeded": false,
+      "human_review_required": true,
+      "provider_attempt": true,
+      "routes": [
+        "assisted"
+      ],
+      "error_type": "ModelOutputError",
+      "error": "OpenAI output failed schema validation: 1 validation error for AssistedTemporalProviderProposal\n  Value error, temporal provider binding requires a typed or uniquely reconstructible evidence fact [type=value_error, input_value={'failed_construction_id'...retrospective': False}]}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/value_error",
+      "gold_positive": true,
+      "correct_construction": false,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-328",
+      "disposition": "human_review_safe_failure",
+      "eligibility": "temporal",
+      "construction_succeeded": false,
+      "human_review_required": true,
+      "provider_attempt": true,
+      "routes": [
+        "assisted"
+      ],
+      "error_type": "ValueError",
+      "error": "temporal claim date is not explicit in the claim span",
+      "gold_positive": true,
+      "correct_construction": false,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-329",
+      "disposition": "validated_assisted_proposal",
+      "eligibility": "temporal",
+      "construction_succeeded": true,
+      "human_review_required": false,
+      "provider_attempt": true,
+      "routes": [
+        "assisted"
+      ],
+      "proposal": {
+        "kind": "temporal_status",
+        "failed_construction_id": "6e0820fe-ab67-5a80-aa96-853df8e4fadc",
+        "claim_text_span": "The Bank of Canada Act received royal assent on July 3, 1934.",
+        "left_subject": null,
+        "right_subject": null,
+        "comparator": null,
+        "dimension": null,
+        "left_value": null,
+        "right_value": null,
+        "scalar_form": null,
+        "scalar_subject": null,
+        "numeric_operation": null,
+        "expected_values": [],
+        "evidence_bindings": [],
+        "temporal_relation": "on",
+        "reference_date": {
+          "value": "1934-07-03",
+          "precision": "day"
+        },
+        "claimed_interval": null,
+        "requires_reference_date": false,
+        "claimed_status": null,
+        "temporal_bindings": [
+          {
+            "evidence_id": "d92bb733-5f07-5ade-8a89-04352685b419",
+            "start_char": 0,
+            "end_char": 46,
+            "quoted_text": "The Act received royal assent on July 3, 1934.",
+            "effective_interval": {
+              "start": {
+                "value": "1934-07-03",
+                "precision": "day"
+              },
+              "end": {
+                "value": "1934-07-03",
+                "precision": "day"
+              },
+              "start_inclusive": true,
+              "end_inclusive": true
+            },
+            "observed_status": null,
+            "retrospective": false
+          }
+        ]
+      },
+      "gold_positive": true,
+      "correct_construction": true,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-330",
+      "disposition": "human_review_safe_failure",
+      "eligibility": "temporal",
+      "construction_succeeded": false,
+      "human_review_required": true,
+      "provider_attempt": true,
+      "routes": [
+        "assisted"
+      ],
+      "error_type": "ValueError",
+      "error": "temporal claim date is not explicit in the claim span",
+      "gold_positive": true,
+      "correct_construction": false,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-331",
+      "disposition": "validated_assisted_proposal",
+      "eligibility": "temporal",
+      "construction_succeeded": true,
+      "human_review_required": false,
+      "provider_attempt": true,
+      "routes": [
+        "assisted"
+      ],
+      "proposal": {
+        "kind": "temporal_status",
+        "failed_construction_id": "b12f3d5f-f8a7-5312-aaf2-7b334f86f134",
+        "claim_text_span": "The Bundesbank Act was passed on 26 July 1957.",
+        "left_subject": null,
+        "right_subject": null,
+        "comparator": null,
+        "dimension": null,
+        "left_value": null,
+        "right_value": null,
+        "scalar_form": null,
+        "scalar_subject": null,
+        "numeric_operation": null,
+        "expected_values": [],
+        "evidence_bindings": [],
+        "temporal_relation": "on",
+        "reference_date": {
+          "value": "1957-07-26",
+          "precision": "day"
+        },
+        "claimed_interval": null,
+        "requires_reference_date": false,
+        "claimed_status": null,
+        "temporal_bindings": [
+          {
+            "evidence_id": "47e1f27b-cfd8-5921-b552-a406ce752e92",
+            "start_char": 57,
+            "end_char": 82,
+            "quoted_text": "is passed on 26 July 1957",
+            "effective_interval": {
+              "start": {
+                "value": "1957-07-26",
+                "precision": "day"
+              },
+              "end": {
+                "value": "1957-07-26",
+                "precision": "day"
+              },
+              "start_inclusive": true,
+              "end_inclusive": true
+            },
+            "observed_status": null,
+            "retrospective": false
+          }
+        ]
+      },
+      "gold_positive": true,
+      "correct_construction": true,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-332",
+      "disposition": "human_review_safe_failure",
+      "eligibility": "temporal",
+      "construction_succeeded": false,
+      "human_review_required": true,
+      "provider_attempt": true,
+      "routes": [
+        "assisted"
+      ],
+      "error_type": "ValueError",
+      "error": "effective date is not explicit in bound evidence",
+      "gold_positive": true,
+      "correct_construction": false,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-333",
+      "disposition": "human_review_safe_failure",
+      "eligibility": "temporal",
+      "construction_succeeded": false,
+      "human_review_required": true,
+      "provider_attempt": true,
+      "routes": [
+        "assisted"
+      ],
+      "error_type": "ModelOutputError",
+      "error": "OpenAI output failed schema validation: 1 validation error for AssistedTemporalProviderProposal\n  Value error, temporal provider binding requires a typed or uniquely reconstructible evidence fact [type=value_error, input_value={'failed_construction_id'...retrospective': False}]}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/value_error",
+      "gold_positive": true,
+      "correct_construction": false,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-334",
+      "disposition": "validated_assisted_proposal",
+      "eligibility": "temporal",
+      "construction_succeeded": true,
+      "human_review_required": false,
+      "provider_attempt": true,
+      "routes": [
+        "assisted"
+      ],
+      "proposal": {
+        "kind": "temporal_status",
+        "failed_construction_id": "ff22e8b7-6a02-50fd-9d3c-0b271f9303dd",
+        "claim_text_span": "received the name Sveriges Riksbank in 1867",
+        "left_subject": null,
+        "right_subject": null,
+        "comparator": null,
+        "dimension": null,
+        "left_value": null,
+        "right_value": null,
+        "scalar_form": null,
+        "scalar_subject": null,
+        "numeric_operation": null,
+        "expected_values": [],
+        "evidence_bindings": [],
+        "temporal_relation": "on",
+        "reference_date": {
+          "value": "1867-01-01",
+          "precision": "year"
+        },
+        "claimed_interval": null,
+        "requires_reference_date": false,
+        "claimed_status": "Sveriges Riksbank",
+        "temporal_bindings": [
+          {
+            "evidence_id": "6359f755-b65f-54e9-aed3-78fd4246636e",
+            "start_char": 51,
+            "end_char": 165,
+            "quoted_text": "to found Riksens St\u00e4nders Bank (the Estates of the Realm Bank), which in 1867 received the name Sveriges Riksbank.",
+            "effective_interval": {
+              "start": {
+                "value": "1867-01-01",
+                "precision": "year"
+              },
+              "end": {
+                "value": "1867-01-01",
+                "precision": "year"
+              },
+              "start_inclusive": true,
+              "end_inclusive": true
+            },
+            "observed_status": "Sveriges Riksbank",
+            "retrospective": false
+          }
+        ]
+      },
+      "gold_positive": true,
+      "correct_construction": true,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-335",
+      "disposition": "human_review_safe_failure",
+      "eligibility": "temporal",
+      "construction_succeeded": false,
+      "human_review_required": true,
+      "provider_attempt": true,
+      "routes": [
+        "assisted"
+      ],
+      "error_type": "ValidationError",
+      "error": "1 validation error for AssistedConstructionProposal\n  Value error, status construction requires an exact claimed status [type=value_error, input_value={'kind': <AssistedConstru... retrospective=False),)}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/value_error",
+      "gold_positive": true,
+      "correct_construction": false,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-336",
+      "disposition": "human_review_safe_failure",
+      "eligibility": "temporal",
+      "construction_succeeded": false,
+      "human_review_required": true,
+      "provider_attempt": true,
+      "routes": [
+        "assisted"
+      ],
+      "error_type": "ModelOutputError",
+      "error": "OpenAI output failed schema validation: 1 validation error for AssistedTemporalProviderProposal\n  Value error, temporal provider binding requires a typed or uniquely reconstructible evidence fact [type=value_error, input_value={'failed_construction_id'...retrospective': False}]}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/value_error",
+      "gold_positive": true,
+      "correct_construction": false,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-337",
+      "disposition": "human_review_safe_failure",
+      "eligibility": "temporal",
+      "construction_succeeded": false,
+      "human_review_required": true,
+      "provider_attempt": true,
+      "routes": [
+        "assisted"
+      ],
+      "error_type": "ValidationError",
+      "error": "1 validation error for AssistedConstructionProposal\n  Value error, status construction requires an exact claimed status [type=value_error, input_value={'kind': <AssistedConstru... retrospective=False),)}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/value_error",
+      "gold_positive": true,
+      "correct_construction": false,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-338",
+      "disposition": "human_review_safe_failure",
+      "eligibility": "temporal",
+      "construction_succeeded": false,
+      "human_review_required": true,
+      "provider_attempt": true,
+      "routes": [
+        "assisted"
+      ],
+      "error_type": "ValueError",
+      "error": "proposal quote does not match the retained evidence span",
+      "gold_positive": true,
+      "correct_construction": false,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-339",
+      "disposition": "validated_assisted_proposal",
+      "eligibility": "numerical_scalar",
+      "construction_succeeded": true,
+      "human_review_required": false,
+      "provider_attempt": true,
+      "routes": [
+        "assisted"
+      ],
+      "proposal": {
+        "kind": "numerical_scalar",
+        "failed_construction_id": "840f3faf-f945-5c91-b108-779f42f19adf",
+        "claim_text_span": "Stats NZ has over 1,000 employees.",
+        "left_subject": null,
+        "right_subject": null,
+        "comparator": "greater_than",
+        "dimension": "count",
+        "left_value": null,
+        "right_value": null,
+        "scalar_form": "single_value",
+        "scalar_subject": "Stats NZ",
+        "numeric_operation": "direct",
+        "expected_values": [
+          {
+            "value": "1000",
+            "unit": "employees",
+            "dimension": "count",
+            "scale": "1",
+            "tolerance": null
+          }
+        ],
+        "evidence_bindings": [
+          {
+            "evidence_id": "aaa1b54e-a558-5917-b817-17c96e199950",
+            "start_char": 0,
+            "end_char": 62,
+            "quoted_text": "Stats NZ is a government department with over 1,000 employees."
+          }
+        ],
+        "temporal_relation": null,
+        "reference_date": null,
+        "claimed_interval": null,
+        "requires_reference_date": false,
+        "claimed_status": null,
+        "temporal_bindings": []
+      },
+      "gold_positive": true,
+      "correct_construction": true,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-340",
+      "disposition": "human_review_ineligible",
+      "construction_succeeded": false,
+      "human_review_required": true,
+      "provider_attempt": false,
+      "routes": [
+        "not_applicable"
+      ],
+      "gold_positive": false,
+      "correct_construction": false,
+      "unsafe_accepted": false
+    }
+  ]
+}

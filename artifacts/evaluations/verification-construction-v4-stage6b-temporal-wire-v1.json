@@ -1,0 +1,80 @@
+{
+  "audit_id": "verification-construction-v4-stage6b-temporal-wire-v1",
+  "status": "passed",
+  "canonicalization_version": "assisted-canonicalization-v4.6b",
+  "offline": true,
+  "targeted_tests_passed": 54,
+  "targeted_tests_failed": 0,
+  "model_calls": 0,
+  "network_calls": 0,
+  "search_calls": 0,
+  "paid_operations": 0,
+  "gates": {
+    "unique_day_reconstructed_before_domain_conversion": true,
+    "missing_date_rejected": true,
+    "ambiguous_dates_rejected": true,
+    "invalid_date_rejected_without_precision_downgrade": true,
+    "day_month_year_precision_tests_passed": true,
+    "provider_typed_fact_precedence_preserved": true,
+    "exact_span_grounding_remains_required": true,
+    "consumed_canary_evidence_preserved": true,
+    "model_calls_zero": true,
+    "network_calls_zero": true,
+    "paid_operations_zero": true
+  },
+  "preserved_canary_artifacts": [
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage6-canary-manifest-v1.json",
+      "sha256": "efac17962697f759a008694bf768179bec8f0948ea2d3877ec0d36ec94d696dd"
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage6-canary-result-v1.json",
+      "sha256": "fc6ca12f797a400296c36d6c587e6bf721c3e6ed59ae27370491cb338e3c7d8c"
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage6-canary-audit-v1.json",
+      "sha256": "30726fc1faadc2cf4001936b3fdbcd60a11c029112d89daab7e79f9bf64c7b76"
+    },
+    {
+      "path": "data/v4-stage6-paid-operations.db",
+      "sha256": "8b05747a054d8404caa22ad4c6d08f0a1d3598d9791e51e77105ced3041ecc50"
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage6a-canary-manifest-v1.json",
+      "sha256": "babb9f225c297e6badb53292e2eb5f3373bf5a7c652eb1c8af3322fdd5b8c355"
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage6a-canary-result-v1.json",
+      "sha256": "d70fe774b1354416de2eae1e38e1b2ef7be425ff6158ae164a9ccddb10a7a925"
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage6a-canary-audit-v1.json",
+      "sha256": "eee3c71406b4b7af83136e55249285449981a6b45862366982e6a779bc446118"
+    },
+    {
+      "path": "data/v4-stage6a-paid-operations.db",
+      "sha256": "1f36c1f6d4cd060f719131b5af4918c4731b05ef9a4ada2715c2b38872f93e27"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "src/claim_polygraph_ng/analysis/assisted_verification_construction.py",
+      "sha256": "c7ca465222eae2eef2a8812b0b822a331e0f17162f53faf5e41131169ebfc7f8",
+      "bytes": 36628
+    },
+    {
+      "path": "tests/unit/test_v3_assisted_boundary.py",
+      "sha256": "0d419a17b4ac1d5f50d8cf0152103d8d2faac2f6980ea9a1fd12897c2a02c31a",
+      "bytes": 37132
+    },
+    {
+      "path": "scripts/audit_v4_stage6b_temporal_wire.py",
+      "sha256": "304d4a3ca08b68ceb1b9a317fd53e9850049f3d0da53939af56d7dd05ea59c8b",
+      "bytes": 6444
+    }
+  ],
+  "exit_criterion_met": true,
+  "provider_canary_decision": "not_authorized_in_v4_6b",
+  "budget_note": "V4.0 froze two synthetic canary calls. V4.6 consumed two and the explicitly directed V4.6a remediation consumed one more. Another call requires an explicit budget amendment.",
+  "next_stage": "freeze a V4 canary-budget amendment before any additional provider call, or proceed with offline/development evaluation"
+}

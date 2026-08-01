@@ -1,0 +1,249 @@
+{
+  "audit_id": "verification-construction-v4-stage7a-remediation-audit-v1",
+  "status": "passed",
+  "exit_criterion_met": true,
+  "paid_execution_authorized": true,
+  "development_cases_loaded": 20,
+  "assisted_route_cases": 14,
+  "deterministic_route_cases": 1,
+  "unsafe_case_count": 0,
+  "unsafe_operand_count": 0,
+  "model_calls": 0,
+  "network_calls": 0,
+  "search_calls": 0,
+  "paid_operations": 0,
+  "calibration_cases_loaded": 0,
+  "held_out_cases_loaded": 0,
+  "gates": {
+    "final_canary_passed": true,
+    "development_budget_is_18": true,
+    "development_split_only_loaded": true,
+    "calibration_cases_loaded_zero": true,
+    "held_out_cases_loaded_zero": true,
+    "unsafe_accepted_constructions_zero": true,
+    "model_calls_zero_before_preflight_pass": true,
+    "network_calls_zero_before_preflight_pass": true,
+    "paid_operations_zero_before_preflight_pass": true
+  },
+  "results": [
+    {
+      "case_id": "V3-004",
+      "claim_text_sha256": "cb8683b0ac1b7d04beaebcf944ee9777a5f99f9d96fa2de843b03b2f51799116",
+      "gold_label": "fallback_eligible",
+      "routes": [
+        "assisted"
+      ],
+      "unsafe_construction_findings": []
+    },
+    {
+      "case_id": "V3-008",
+      "claim_text_sha256": "d95fd88c65fa1272574586890890d4e1caec6653e53e347e29b4a24ab4bc5fc0",
+      "gold_label": "fallback_eligible",
+      "routes": [
+        "assisted"
+      ],
+      "unsafe_construction_findings": []
+    },
+    {
+      "case_id": "V3-009",
+      "claim_text_sha256": "4a9203239094603c2b46e044462c33bba7ec909849192bda610b33b367c72fd4",
+      "gold_label": "deterministic_constructible",
+      "routes": [
+        "assisted"
+      ],
+      "unsafe_construction_findings": []
+    },
+    {
+      "case_id": "V3-014",
+      "claim_text_sha256": "6ab977407f1121dbf290485dd69104be5fbe67f593946c681c4e2aa4a25ec4c2",
+      "gold_label": "fallback_eligible",
+      "routes": [
+        "assisted"
+      ],
+      "unsafe_construction_findings": []
+    },
+    {
+      "case_id": "V3-015",
+      "claim_text_sha256": "b4cad2882577e59045845aba96776db7e82200dea2ece4ed9ce29adbd3159dc9",
+      "gold_label": "not_applicable",
+      "routes": [
+        "not_applicable"
+      ],
+      "unsafe_construction_findings": []
+    },
+    {
+      "case_id": "V3-016",
+      "claim_text_sha256": "1186f19d70cb683e49862f71a704b2ff0c387ce787ee87cd1b64dac5d15d9cb9",
+      "gold_label": "fallback_eligible",
+      "routes": [
+        "not_applicable"
+      ],
+      "unsafe_construction_findings": []
+    },
+    {
+      "case_id": "V3-017",
+      "claim_text_sha256": "3dd77cd972b09caba100e458d6308e26b1e3e45d9c4356c6e16181854f6e7197",
+      "gold_label": "fallback_eligible",
+      "routes": [
+        "not_applicable"
+      ],
+      "unsafe_construction_findings": []
+    },
+    {
+      "case_id": "V3-028",
+      "claim_text_sha256": "2c8f49d951f1c8486e9f69df200db3a556ee41fd33b8c7610ddb56c55a1dfd8f",
+      "gold_label": "not_applicable",
+      "routes": [
+        "not_applicable"
+      ],
+      "unsafe_construction_findings": []
+    },
+    {
+      "case_id": "V3-029",
+      "claim_text_sha256": "674ed983afa19e79a92e46b89c0e2fe1469f134f2d7e52384fdff256f231a4d7",
+      "gold_label": "fallback_eligible",
+      "routes": [
+        "assisted"
+      ],
+      "unsafe_construction_findings": []
+    },
+    {
+      "case_id": "V3-036",
+      "claim_text_sha256": "9ea621fd7fb9f489c8719a51c2d3166c1656b1f086ea98517be37490b6af0ff0",
+      "gold_label": "deterministic_constructible",
+      "routes": [
+        "assisted"
+      ],
+      "unsafe_construction_findings": []
+    },
+    {
+      "case_id": "V3-037",
+      "claim_text_sha256": "c9ac76b72b215d58682a0d5046ee60cf6bd70ed483a89904b3ab5f427870012d",
+      "gold_label": "deterministic_constructible",
+      "routes": [
+        "assisted"
+      ],
+      "unsafe_construction_findings": []
+    },
+    {
+      "case_id": "V3-042",
+      "claim_text_sha256": "3447b1c81fcc752fe5cc87df44b2f95751121349823cd3856f88c5edc1189c44",
+      "gold_label": "deterministic_constructible",
+      "routes": [
+        "assisted"
+      ],
+      "unsafe_construction_findings": []
+    },
+    {
+      "case_id": "V3-043",
+      "claim_text_sha256": "4d4b47e414321d9bf6284e5dca5ebdd2ed588c79aad199c3d5d332ff27ae0fdc",
+      "gold_label": "deterministic_constructible",
+      "routes": [
+        "assisted"
+      ],
+      "unsafe_construction_findings": []
+    },
+    {
+      "case_id": "V3-044",
+      "claim_text_sha256": "48ddd66262b5b7a5f28deabb53bed0fa2c47dcc7332e2fb1ba761d61ec738d9a",
+      "gold_label": "deterministic_constructible",
+      "routes": [
+        "assisted"
+      ],
+      "unsafe_construction_findings": []
+    },
+    {
+      "case_id": "V3-045",
+      "claim_text_sha256": "7e970f42478f3486074723f047e328c11fb0791ebc64b4506344ee714513b0a7",
+      "gold_label": "deterministic_constructible",
+      "routes": [
+        "assisted"
+      ],
+      "unsafe_construction_findings": []
+    },
+    {
+      "case_id": "V3-046",
+      "claim_text_sha256": "fb3c05b71feef015b316e8de500c0bba9cedd9522b7630926cf8693124408a5d",
+      "gold_label": "fallback_eligible",
+      "routes": [
+        "deterministic",
+        "assisted"
+      ],
+      "unsafe_construction_findings": []
+    },
+    {
+      "case_id": "V3-047",
+      "claim_text_sha256": "ff568fc536999eb6e894116e1d51c3152ff445cfad5609714c7f3b87a5b3eae1",
+      "gold_label": "fallback_eligible",
+      "routes": [
+        "not_applicable"
+      ],
+      "unsafe_construction_findings": []
+    },
+    {
+      "case_id": "V3-048",
+      "claim_text_sha256": "e1b3fdf891b3626468218130008d561bad21519ae19021fb544aa73d5b16da70",
+      "gold_label": "deterministic_constructible",
+      "routes": [
+        "not_applicable"
+      ],
+      "unsafe_construction_findings": []
+    },
+    {
+      "case_id": "V3-049",
+      "claim_text_sha256": "bc3e5eac0530b13c2d08e9f5be8941e28e62de748d6c4ea9e7f459bb671fe712",
+      "gold_label": "deterministic_constructible",
+      "routes": [
+        "assisted"
+      ],
+      "unsafe_construction_findings": []
+    },
+    {
+      "case_id": "V3-055",
+      "claim_text_sha256": "ce9547c5c641db8913933e9273e63215f5e581354fa9561d94eb13a118c306c1",
+      "gold_label": "fallback_eligible",
+      "routes": [
+        "assisted"
+      ],
+      "unsafe_construction_findings": []
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "src/claim_polygraph_ng/analysis/candidate_extraction.py",
+      "sha256": "bf10011ed77e3ccf7099663a27e09e6d7b663081fb1cd70bad82bdf2f3f3a266",
+      "bytes": 18803
+    },
+    {
+      "path": "src/claim_polygraph_ng/analysis/compound_construction.py",
+      "sha256": "38a0c751c607aadc7cac5d8602aa2511f1b5ff648afa43613e5c9227cbc392ca",
+      "bytes": 13064
+    },
+    {
+      "path": "scripts/audit_v4_stage7_development_preflight.py",
+      "sha256": "89890a923e6f514a3166acf72dd6f02269cf4c7939185ccb09595b5e45ad0c8d",
+      "bytes": 7129
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage6c-canary-audit-v1.json",
+      "sha256": "56db84cdaa1a0298459fc501be5663364b94c69cb909b1ee503edfbd36a66681",
+      "bytes": 2906
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-canary-budget-amendment-v1.json",
+      "sha256": "2fa0a48b2e58ba615cc66c9c25b0090a730ee52dfbef7327157c173ef033e746",
+      "bytes": 1156
+    },
+    {
+      "path": "benchmarks/verification_construction_v3_approved_frozen_v2.json",
+      "sha256": "6f45fd6c568135654a6af681c6c26fdea3f94505efc013064a0384b62f10e17a",
+      "bytes": 202949
+    }
+  ],
+  "remediation": {
+    "code": "date_value_overlap_removed",
+    "summary": "Values contained by typed date spans remain diagnostic but are non-material and cannot enter numerical groups or anchors.",
+    "candidate_extraction_version": "verification-candidate-extraction-v2"
+  },
+  "next_stage": "V4.7 development paid evaluation"
+}

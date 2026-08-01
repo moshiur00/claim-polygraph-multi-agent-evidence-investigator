@@ -1,0 +1,57 @@
+{
+  "manifest_id": "verification-construction-v3-stage6a-remediation-v1",
+  "created_at": "2026-07-30T19:27:13.869943+00:00",
+  "failed_configuration_disposition": "preserved_immutable_diagnostic_baseline",
+  "failed_baseline_artifacts": [
+    {
+      "path": "artifacts/evaluations/verification-construction-v3-stage6-calibration-freeze-v1.json",
+      "sha256": "01c77852a6e7160a6a8f7e18a476f5c55c96538f02d2edfc5766945c256b5888"
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v3-stage6-calibration-v1.json",
+      "sha256": "462dbc951305a47f5d00d8ac1db0c4bcc82053c87d3f0d94113b1860c259391f"
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v3-stage6-calibration-audit-v1.json",
+      "sha256": "e7eeb81777486165c6d4854d47820cdacdf240a51730eda2dbd4be69f8a57616"
+    }
+  ],
+  "remediation_configuration": {
+    "prompt_version": "verification-construction-v3-remediation-v4",
+    "development_and_synthetic_only": true,
+    "original_calibration_treated_as_exposed": true,
+    "fresh_replacement_calibration_required": true,
+    "replacement_calibration_execution_limit": 1,
+    "original_held_out_sealed": true,
+    "held_out_open_condition": "replacement_calibration_passes_all_frozen_gates",
+    "contracts": [
+      {
+        "path": "src/claim_polygraph_ng/analysis/assisted_verification_construction.py",
+        "sha256": "7f5d444ff8da2ef7e0ba356e9e95fb0545cd4a97396412403276e5948466e490"
+      },
+      {
+        "path": "src/claim_polygraph_ng/analysis/bounded_assisted_construction.py",
+        "sha256": "94048878ca1a3903863cf0ac0b7be6f6b199fa707ee13eadf4c141c3ef77cda5"
+      },
+      {
+        "path": "src/claim_polygraph_ng/providers/openai.py",
+        "sha256": "0d4b18880bd0ea46460d99d46394c428e24c2f26c3669ca82b171c409c86773a"
+      },
+      {
+        "path": "src/claim_polygraph_ng/providers/ollama.py",
+        "sha256": "ad53152aa2160b703def3cf966ce2a5acc25488a835a50915455aea42c397cf2"
+      }
+    ],
+    "replacement_review_packet": {
+      "path": "benchmarks/verification_construction_v3_stage6a_replacement_calibration_workbook_v1.json",
+      "sha256": "4da09807069f59a5768749afebbdff3bfbdda0a983db40c4259284c97e963f54"
+    }
+  },
+  "current_status": "awaiting_fresh_human_annotation_and_distinct_approval",
+  "controls": {
+    "model_calls": 0,
+    "estimated_cost_usd": 0.0,
+    "original_held_out_cases_loaded": 0,
+    "original_held_out_cases_exposed": 0
+  }
+}

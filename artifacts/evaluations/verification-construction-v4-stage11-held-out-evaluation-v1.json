@@ -1,0 +1,1023 @@
+{
+  "evaluation_id": "verification-construction-v4-stage11-held-out-evaluation-v1",
+  "status": "completed_eligible_for_v4_promotion",
+  "freeze_manifest_sha256": "378419621737acb274911081ccc329b871d937e33a59bbb0f248fc0ab9c4f5f8",
+  "configuration_changed_after_freeze": false,
+  "held_out_executions": 1,
+  "model": "gpt-4o-mini",
+  "case_count": 20,
+  "positive_gold_cases": 18,
+  "baseline_correct_constructions": 0,
+  "baseline_construction_recall": 0.0,
+  "constructions_succeeded": 15,
+  "correct_constructions": 15,
+  "newly_recovered_assertions": 15,
+  "unsafe_accepted_constructions": 0,
+  "construction_precision": 1.0,
+  "construction_recall": 0.8333333333333334,
+  "incremental_recall_gain": 0.8333333333333334,
+  "human_review_routing_recall": 1.0,
+  "provider_attempts": 18,
+  "completed_paid_operations": 18,
+  "failed_paid_operations": 0,
+  "duplicate_paid_operations": 0,
+  "input_tokens": 18172,
+  "output_tokens": 3945,
+  "estimated_cost_usd": 0.0050928,
+  "estimated_cost_upper_bound_usd": 0.0050928,
+  "cost_per_recovered_assertion_usd": 0.00033952,
+  "held_out_call_limit": 20,
+  "held_out_calls_remaining": 2,
+  "held_out_cases_loaded": 20,
+  "dataset_sha256": "5d58d587f3e848b56cbf5d02538b3ba5a5513b72ff5285ba7ee898cd2788c549",
+  "promotion_gates": {
+    "schema_validity": true,
+    "exact_span_validity": true,
+    "unsafe_accepted_constructions": true,
+    "construction_precision": true,
+    "overall_construction_recall": true,
+    "assisted_value": true,
+    "human_review_routing_recall": true,
+    "publication_safety_regressions": true,
+    "duplicate_paid_operations": true,
+    "cost_per_recovered_assertion": true
+  },
+  "eligible_for_v4_promotion": true,
+  "thresholds_changed_after_results": false,
+  "results": [
+    {
+      "case_id": "V3-361",
+      "disposition": "validated_assisted_proposal",
+      "eligibility": "temporal",
+      "construction_succeeded": true,
+      "human_review_required": false,
+      "provider_attempt": true,
+      "routes": [
+        "assisted"
+      ],
+      "proposal": {
+        "kind": "temporal_status",
+        "failed_construction_id": "672055f6-fdd2-574e-8944-78f83339ebab",
+        "claim_text_span": "N\u00e1rodn\u00e1 banka Slovenska was established on January 1, 1993.",
+        "left_subject": null,
+        "right_subject": null,
+        "comparator": null,
+        "dimension": null,
+        "left_value": null,
+        "right_value": null,
+        "scalar_form": null,
+        "scalar_subject": null,
+        "numeric_operation": null,
+        "expected_values": [],
+        "evidence_bindings": [],
+        "temporal_relation": "on",
+        "reference_date": {
+          "value": "1993-01-01",
+          "precision": "day"
+        },
+        "claimed_interval": null,
+        "requires_reference_date": false,
+        "claimed_status": null,
+        "temporal_bindings": [
+          {
+            "evidence_id": "fbc174ea-9b30-563f-ae3c-e334bb7c5301",
+            "start_char": 0,
+            "end_char": 58,
+            "quoted_text": "N\u00e1rodn\u00e1 banka Slovenska was established on 1 January 1993.",
+            "effective_interval": {
+              "start": {
+                "value": "1993-01-01",
+                "precision": "day"
+              },
+              "end": {
+                "value": "1993-01-01",
+                "precision": "day"
+              },
+              "start_inclusive": true,
+              "end_inclusive": true
+            },
+            "observed_status": null,
+            "retrospective": false
+          }
+        ]
+      },
+      "gold_positive": true,
+      "correct_construction": true,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-362",
+      "disposition": "validated_assisted_proposal",
+      "eligibility": "temporal",
+      "construction_succeeded": true,
+      "human_review_required": false,
+      "provider_attempt": true,
+      "routes": [
+        "assisted"
+      ],
+      "proposal": {
+        "kind": "temporal_status",
+        "failed_construction_id": "c968497c-19aa-5421-819c-e483600c6735",
+        "claim_text_span": "Slovakia became part of the Eurosystem on January 1, 2009.",
+        "left_subject": null,
+        "right_subject": null,
+        "comparator": null,
+        "dimension": null,
+        "left_value": null,
+        "right_value": null,
+        "scalar_form": null,
+        "scalar_subject": null,
+        "numeric_operation": null,
+        "expected_values": [],
+        "evidence_bindings": [],
+        "temporal_relation": "on",
+        "reference_date": {
+          "value": "2009-01-01",
+          "precision": "day"
+        },
+        "claimed_interval": null,
+        "requires_reference_date": false,
+        "claimed_status": null,
+        "temporal_bindings": [
+          {
+            "evidence_id": "e1d1c4be-a368-5bc8-99ee-8cb6eec50c5f",
+            "start_char": 0,
+            "end_char": 60,
+            "quoted_text": "From 1 January 2009, Slovakia became part of the Eurosystem.",
+            "effective_interval": {
+              "start": {
+                "value": "2009-01-01",
+                "precision": "day"
+              },
+              "end": {
+                "value": "2009-01-01",
+                "precision": "day"
+              },
+              "start_inclusive": true,
+              "end_inclusive": true
+            },
+            "observed_status": null,
+            "retrospective": false
+          }
+        ]
+      },
+      "gold_positive": true,
+      "correct_construction": true,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-363",
+      "disposition": "validated_assisted_proposal",
+      "eligibility": "temporal",
+      "construction_succeeded": true,
+      "human_review_required": false,
+      "provider_attempt": true,
+      "routes": [
+        "assisted"
+      ],
+      "proposal": {
+        "kind": "temporal_status",
+        "failed_construction_id": "826feba6-aba9-5399-8607-f18f5b02838a",
+        "claim_text_span": "The Reserve Bank of India commenced operations on April 1, 1935.",
+        "left_subject": null,
+        "right_subject": null,
+        "comparator": null,
+        "dimension": null,
+        "left_value": null,
+        "right_value": null,
+        "scalar_form": null,
+        "scalar_subject": null,
+        "numeric_operation": null,
+        "expected_values": [],
+        "evidence_bindings": [],
+        "temporal_relation": "on",
+        "reference_date": {
+          "value": "1935-04-01",
+          "precision": "day"
+        },
+        "claimed_interval": null,
+        "requires_reference_date": false,
+        "claimed_status": null,
+        "temporal_bindings": [
+          {
+            "evidence_id": "099cbb6a-313d-57ae-b155-fe5d9669872f",
+            "start_char": 0,
+            "end_char": 64,
+            "quoted_text": "The Reserve Bank of India commenced operations on April 1, 1935.",
+            "effective_interval": {
+              "start": {
+                "value": "1935-04-01",
+                "precision": "day"
+              },
+              "end": {
+                "value": "1935-04-01",
+                "precision": "day"
+              },
+              "start_inclusive": true,
+              "end_inclusive": true
+            },
+            "observed_status": null,
+            "retrospective": false
+          }
+        ]
+      },
+      "gold_positive": true,
+      "correct_construction": true,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-364",
+      "disposition": "validated_assisted_proposal",
+      "eligibility": "temporal",
+      "construction_succeeded": true,
+      "human_review_required": false,
+      "provider_attempt": true,
+      "routes": [
+        "assisted"
+      ],
+      "proposal": {
+        "kind": "temporal_status",
+        "failed_construction_id": "af47e280-253e-5f10-a614-a187eadf42e5",
+        "claim_text_span": "The Reserve Bank of India Act was enacted in 1934.",
+        "left_subject": null,
+        "right_subject": null,
+        "comparator": null,
+        "dimension": null,
+        "left_value": null,
+        "right_value": null,
+        "scalar_form": null,
+        "scalar_subject": null,
+        "numeric_operation": null,
+        "expected_values": [],
+        "evidence_bindings": [],
+        "temporal_relation": "on",
+        "reference_date": {
+          "value": "1934-01-01",
+          "precision": "year"
+        },
+        "claimed_interval": null,
+        "requires_reference_date": false,
+        "claimed_status": null,
+        "temporal_bindings": [
+          {
+            "evidence_id": "fccb3907-0d72-5d5f-b3d9-e9c50f113b83",
+            "start_char": 0,
+            "end_char": 96,
+            "quoted_text": "The Reserve Bank of India Act, 1934 provides the statutory basis of the functioning of the Bank.",
+            "effective_interval": {
+              "start": {
+                "value": "1934-01-01",
+                "precision": "year"
+              },
+              "end": {
+                "value": "1934-01-01",
+                "precision": "year"
+              },
+              "start_inclusive": true,
+              "end_inclusive": true
+            },
+            "observed_status": null,
+            "retrospective": false
+          }
+        ]
+      },
+      "gold_positive": true,
+      "correct_construction": true,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-365",
+      "disposition": "validated_assisted_proposal",
+      "eligibility": "temporal",
+      "construction_succeeded": true,
+      "human_review_required": false,
+      "provider_attempt": true,
+      "routes": [
+        "assisted"
+      ],
+      "proposal": {
+        "kind": "temporal_status",
+        "failed_construction_id": "6f56fcf8-a1d9-5f56-a891-7f9158dc9881",
+        "claim_text_span": "Banco Central do Brasil was established on December 31, 1964.",
+        "left_subject": null,
+        "right_subject": null,
+        "comparator": null,
+        "dimension": null,
+        "left_value": null,
+        "right_value": null,
+        "scalar_form": null,
+        "scalar_subject": null,
+        "numeric_operation": null,
+        "expected_values": [],
+        "evidence_bindings": [],
+        "temporal_relation": "on",
+        "reference_date": {
+          "value": "1964-12-31",
+          "precision": "day"
+        },
+        "claimed_interval": null,
+        "requires_reference_date": false,
+        "claimed_status": null,
+        "temporal_bindings": [
+          {
+            "evidence_id": "c11848fc-5016-5383-b8e4-ce720b1fd981",
+            "start_char": 0,
+            "end_char": 61,
+            "quoted_text": "Banco Central do Brasil was established on December 31, 1964.",
+            "effective_interval": {
+              "start": {
+                "value": "1964-12-31",
+                "precision": "day"
+              },
+              "end": {
+                "value": "1964-12-31",
+                "precision": "day"
+              },
+              "start_inclusive": true,
+              "end_inclusive": true
+            },
+            "observed_status": null,
+            "retrospective": false
+          }
+        ]
+      },
+      "gold_positive": true,
+      "correct_construction": true,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-366",
+      "disposition": "human_review_safe_failure",
+      "eligibility": "temporal",
+      "construction_succeeded": false,
+      "human_review_required": true,
+      "provider_attempt": true,
+      "routes": [
+        "assisted"
+      ],
+      "error_type": "ValueError",
+      "error": "temporal claim date is not explicit in the claim span",
+      "gold_positive": true,
+      "correct_construction": false,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-367",
+      "disposition": "validated_assisted_proposal",
+      "eligibility": "temporal",
+      "construction_succeeded": true,
+      "human_review_required": false,
+      "provider_attempt": true,
+      "routes": [
+        "assisted"
+      ],
+      "proposal": {
+        "kind": "temporal_status",
+        "failed_construction_id": "1fb8cfe6-7c59-56fa-ab1a-0ce376fcdbb0",
+        "claim_text_span": "The Central Bank of Ceylon commenced operations on August 28, 1950.",
+        "left_subject": null,
+        "right_subject": null,
+        "comparator": null,
+        "dimension": null,
+        "left_value": null,
+        "right_value": null,
+        "scalar_form": null,
+        "scalar_subject": null,
+        "numeric_operation": null,
+        "expected_values": [],
+        "evidence_bindings": [],
+        "temporal_relation": "on",
+        "reference_date": {
+          "value": "1950-08-28",
+          "precision": "day"
+        },
+        "claimed_interval": null,
+        "requires_reference_date": false,
+        "claimed_status": null,
+        "temporal_bindings": [
+          {
+            "evidence_id": "3aded2e4-2a54-515a-adcc-b359885a66be",
+            "start_char": 0,
+            "end_char": 67,
+            "quoted_text": "The Central Bank of Ceylon commenced operations on August 28, 1950.",
+            "effective_interval": {
+              "start": {
+                "value": "1950-08-28",
+                "precision": "day"
+              },
+              "end": {
+                "value": "1950-08-28",
+                "precision": "day"
+              },
+              "start_inclusive": true,
+              "end_inclusive": true
+            },
+            "observed_status": null,
+            "retrospective": false
+          }
+        ]
+      },
+      "gold_positive": true,
+      "correct_construction": true,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-368",
+      "disposition": "human_review_safe_failure",
+      "eligibility": "temporal",
+      "construction_succeeded": false,
+      "human_review_required": true,
+      "provider_attempt": true,
+      "routes": [
+        "assisted"
+      ],
+      "error_type": "ValueError",
+      "error": "proposal claim span is not present in the claim",
+      "gold_positive": true,
+      "correct_construction": false,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-369",
+      "disposition": "validated_assisted_proposal",
+      "eligibility": "temporal",
+      "construction_succeeded": true,
+      "human_review_required": false,
+      "provider_attempt": true,
+      "routes": [
+        "assisted"
+      ],
+      "proposal": {
+        "kind": "temporal_status",
+        "failed_construction_id": "9f75e03f-f9f7-5492-b17d-61b7663d5586",
+        "claim_text_span": "The State Bank of Pakistan opened on July 1, 1948.",
+        "left_subject": null,
+        "right_subject": null,
+        "comparator": null,
+        "dimension": null,
+        "left_value": null,
+        "right_value": null,
+        "scalar_form": null,
+        "scalar_subject": null,
+        "numeric_operation": null,
+        "expected_values": [],
+        "evidence_bindings": [],
+        "temporal_relation": "on",
+        "reference_date": {
+          "value": "1948-07-01",
+          "precision": "day"
+        },
+        "claimed_interval": null,
+        "requires_reference_date": false,
+        "claimed_status": null,
+        "temporal_bindings": [
+          {
+            "evidence_id": "9711f248-b26b-5640-8ae6-f51781d6de61",
+            "start_char": 0,
+            "end_char": 76,
+            "quoted_text": "The opening ceremony of the State Bank of Pakistan was held on July 1, 1948.",
+            "effective_interval": {
+              "start": {
+                "value": "1948-07-01",
+                "precision": "day"
+              },
+              "end": {
+                "value": "1948-07-01",
+                "precision": "day"
+              },
+              "start_inclusive": true,
+              "end_inclusive": true
+            },
+            "observed_status": null,
+            "retrospective": false
+          }
+        ]
+      },
+      "gold_positive": true,
+      "correct_construction": true,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-370",
+      "disposition": "human_review_ineligible",
+      "construction_succeeded": false,
+      "human_review_required": true,
+      "provider_attempt": false,
+      "routes": [
+        "not_applicable"
+      ],
+      "gold_positive": false,
+      "correct_construction": false,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-371",
+      "disposition": "validated_assisted_proposal",
+      "eligibility": "temporal",
+      "construction_succeeded": true,
+      "human_review_required": false,
+      "provider_attempt": true,
+      "routes": [
+        "assisted"
+      ],
+      "proposal": {
+        "kind": "temporal_status",
+        "failed_construction_id": "39971472-b064-5d0a-b86f-bde75ad60a96",
+        "claim_text_span": "The Bank of Thailand Act was promulgated on April 16, 1942.",
+        "left_subject": null,
+        "right_subject": null,
+        "comparator": null,
+        "dimension": null,
+        "left_value": null,
+        "right_value": null,
+        "scalar_form": null,
+        "scalar_subject": null,
+        "numeric_operation": null,
+        "expected_values": [],
+        "evidence_bindings": [],
+        "temporal_relation": "on",
+        "reference_date": {
+          "value": "1942-04-16",
+          "precision": "day"
+        },
+        "claimed_interval": null,
+        "requires_reference_date": false,
+        "claimed_status": null,
+        "temporal_bindings": [
+          {
+            "evidence_id": "0777ee47-f4eb-58db-8a65-87b71ff36d14",
+            "start_char": 0,
+            "end_char": 58,
+            "quoted_text": "The Bank of Thailand Act was promulgated on 16 April 1942.",
+            "effective_interval": {
+              "start": {
+                "value": "1942-04-16",
+                "precision": "day"
+              },
+              "end": {
+                "value": "1942-04-16",
+                "precision": "day"
+              },
+              "start_inclusive": true,
+              "end_inclusive": true
+            },
+            "observed_status": null,
+            "retrospective": false
+          }
+        ]
+      },
+      "gold_positive": true,
+      "correct_construction": true,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-372",
+      "disposition": "validated_assisted_proposal",
+      "eligibility": "temporal",
+      "construction_succeeded": true,
+      "human_review_required": false,
+      "provider_attempt": true,
+      "routes": [
+        "assisted"
+      ],
+      "proposal": {
+        "kind": "temporal_status",
+        "failed_construction_id": "54fec0f2-4b26-5fa7-8cec-933ef486c0d1",
+        "claim_text_span": "The Bank of Thailand's inauguration ceremony was held on December 10, 1942.",
+        "left_subject": null,
+        "right_subject": null,
+        "comparator": null,
+        "dimension": null,
+        "left_value": null,
+        "right_value": null,
+        "scalar_form": null,
+        "scalar_subject": null,
+        "numeric_operation": null,
+        "expected_values": [],
+        "evidence_bindings": [],
+        "temporal_relation": "on",
+        "reference_date": {
+          "value": "1942-12-10",
+          "precision": "day"
+        },
+        "claimed_interval": null,
+        "requires_reference_date": false,
+        "claimed_status": null,
+        "temporal_bindings": [
+          {
+            "evidence_id": "94be60c6-f2dd-54ec-883b-e175e49f6aaf",
+            "start_char": 0,
+            "end_char": 58,
+            "quoted_text": "The inauguration ceremonies were held on 10 December 1942.",
+            "effective_interval": {
+              "start": {
+                "value": "1942-12-10",
+                "precision": "day"
+              },
+              "end": {
+                "value": "1942-12-10",
+                "precision": "day"
+              },
+              "start_inclusive": true,
+              "end_inclusive": true
+            },
+            "observed_status": null,
+            "retrospective": false
+          }
+        ]
+      },
+      "gold_positive": true,
+      "correct_construction": true,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-373",
+      "disposition": "human_review_safe_failure",
+      "eligibility": "temporal",
+      "construction_succeeded": false,
+      "human_review_required": true,
+      "provider_attempt": true,
+      "routes": [
+        "assisted"
+      ],
+      "error_type": "ValueError",
+      "error": "effective date is not explicit in bound evidence",
+      "gold_positive": true,
+      "correct_construction": false,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-374",
+      "disposition": "validated_assisted_proposal",
+      "eligibility": "temporal",
+      "construction_succeeded": true,
+      "human_review_required": false,
+      "provider_attempt": true,
+      "routes": [
+        "assisted"
+      ],
+      "proposal": {
+        "kind": "temporal_status",
+        "failed_construction_id": "08f03f20-ab24-5aaf-9409-2e9c0d3402f6",
+        "claim_text_span": "Bank Indonesia's banking supervision function moved to OJK in 2011.",
+        "left_subject": null,
+        "right_subject": null,
+        "comparator": null,
+        "dimension": null,
+        "left_value": null,
+        "right_value": null,
+        "scalar_form": null,
+        "scalar_subject": null,
+        "numeric_operation": null,
+        "expected_values": [],
+        "evidence_bindings": [],
+        "temporal_relation": "on",
+        "reference_date": {
+          "value": "2011-01-01",
+          "precision": "year"
+        },
+        "claimed_interval": null,
+        "requires_reference_date": false,
+        "claimed_status": null,
+        "temporal_bindings": [
+          {
+            "evidence_id": "e44a5dde-b9da-5510-8a5d-8c5e06c0c0a1",
+            "start_char": 0,
+            "end_char": 62,
+            "quoted_text": "In 2011, banking regulation and surveillance was moved to OJK.",
+            "effective_interval": {
+              "start": {
+                "value": "2011-01-01",
+                "precision": "year"
+              },
+              "end": {
+                "value": "2011-01-01",
+                "precision": "year"
+              },
+              "start_inclusive": true,
+              "end_inclusive": true
+            },
+            "observed_status": null,
+            "retrospective": false
+          }
+        ]
+      },
+      "gold_positive": true,
+      "correct_construction": true,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-375",
+      "disposition": "validated_assisted_proposal",
+      "eligibility": "temporal",
+      "construction_succeeded": true,
+      "human_review_required": false,
+      "provider_attempt": true,
+      "routes": [
+        "assisted"
+      ],
+      "proposal": {
+        "kind": "temporal_status",
+        "failed_construction_id": "a80574e3-2a1f-5048-b0f6-5a393c991392",
+        "claim_text_span": "The Bank of Korea was established on June 12, 1950.",
+        "left_subject": null,
+        "right_subject": null,
+        "comparator": null,
+        "dimension": null,
+        "left_value": null,
+        "right_value": null,
+        "scalar_form": null,
+        "scalar_subject": null,
+        "numeric_operation": null,
+        "expected_values": [],
+        "evidence_bindings": [],
+        "temporal_relation": "on",
+        "reference_date": {
+          "value": "1950-06-12",
+          "precision": "day"
+        },
+        "claimed_interval": null,
+        "requires_reference_date": false,
+        "claimed_status": null,
+        "temporal_bindings": [
+          {
+            "evidence_id": "9b6941ff-35f4-5b90-b3da-097b00511049",
+            "start_char": 0,
+            "end_char": 51,
+            "quoted_text": "The Bank of Korea was established on June 12, 1950.",
+            "effective_interval": {
+              "start": {
+                "value": "1950-06-12",
+                "precision": "day"
+              },
+              "end": {
+                "value": "1950-06-12",
+                "precision": "day"
+              },
+              "start_inclusive": true,
+              "end_inclusive": true
+            },
+            "observed_status": null,
+            "retrospective": false
+          }
+        ]
+      },
+      "gold_positive": true,
+      "correct_construction": true,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-376",
+      "disposition": "validated_assisted_proposal",
+      "eligibility": "temporal",
+      "construction_succeeded": true,
+      "human_review_required": false,
+      "provider_attempt": true,
+      "routes": [
+        "assisted"
+      ],
+      "proposal": {
+        "kind": "temporal_status",
+        "failed_construction_id": "78561481-ef45-565d-99b0-c80d979d3871",
+        "claim_text_span": "The Bank of Korea Act was passed on May 5, 1950.",
+        "left_subject": null,
+        "right_subject": null,
+        "comparator": null,
+        "dimension": null,
+        "left_value": null,
+        "right_value": null,
+        "scalar_form": null,
+        "scalar_subject": null,
+        "numeric_operation": null,
+        "expected_values": [],
+        "evidence_bindings": [],
+        "temporal_relation": "on",
+        "reference_date": {
+          "value": "1950-05-05",
+          "precision": "day"
+        },
+        "claimed_interval": null,
+        "requires_reference_date": false,
+        "claimed_status": null,
+        "temporal_bindings": [
+          {
+            "evidence_id": "92661b93-91f4-5cd4-bce1-9a3e2f35b309",
+            "start_char": 22,
+            "end_char": 48,
+            "quoted_text": "was passed on May 5, 1950.",
+            "effective_interval": {
+              "start": {
+                "value": "1950-05-05",
+                "precision": "day"
+              },
+              "end": {
+                "value": "1950-05-05",
+                "precision": "day"
+              },
+              "start_inclusive": true,
+              "end_inclusive": true
+            },
+            "observed_status": null,
+            "retrospective": false
+          }
+        ]
+      },
+      "gold_positive": true,
+      "correct_construction": true,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-377",
+      "disposition": "validated_assisted_proposal",
+      "eligibility": "temporal",
+      "construction_succeeded": true,
+      "human_review_required": false,
+      "provider_attempt": true,
+      "routes": [
+        "assisted"
+      ],
+      "proposal": {
+        "kind": "temporal_status",
+        "failed_construction_id": "9896b21b-8f53-5037-81e9-960a3cdad3ff",
+        "claim_text_span": "The Central Bank of the UAE was established in 1980.",
+        "left_subject": null,
+        "right_subject": null,
+        "comparator": null,
+        "dimension": null,
+        "left_value": null,
+        "right_value": null,
+        "scalar_form": null,
+        "scalar_subject": null,
+        "numeric_operation": null,
+        "expected_values": [],
+        "evidence_bindings": [],
+        "temporal_relation": "on",
+        "reference_date": {
+          "value": "1980-01-01",
+          "precision": "year"
+        },
+        "claimed_interval": null,
+        "requires_reference_date": false,
+        "claimed_status": null,
+        "temporal_bindings": [
+          {
+            "evidence_id": "fb599460-a214-5a76-9243-2c9350a00187",
+            "start_char": 0,
+            "end_char": 89,
+            "quoted_text": "Union Law No. 10 of 1980 established the Central Bank of the UAE as a public institution.",
+            "effective_interval": {
+              "start": {
+                "value": "1980-01-01",
+                "precision": "year"
+              },
+              "end": {
+                "value": "1980-01-01",
+                "precision": "year"
+              },
+              "start_inclusive": true,
+              "end_inclusive": true
+            },
+            "observed_status": null,
+            "retrospective": false
+          }
+        ]
+      },
+      "gold_positive": true,
+      "correct_construction": true,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-378",
+      "disposition": "validated_assisted_proposal",
+      "eligibility": "temporal",
+      "construction_succeeded": true,
+      "human_review_required": false,
+      "provider_attempt": true,
+      "routes": [
+        "assisted"
+      ],
+      "proposal": {
+        "kind": "temporal_status",
+        "failed_construction_id": "85d3d96a-5da6-5d0a-9e0e-c61c554c5b6c",
+        "claim_text_span": "The UAE Currency Board was established in 1973.",
+        "left_subject": null,
+        "right_subject": null,
+        "comparator": null,
+        "dimension": null,
+        "left_value": null,
+        "right_value": null,
+        "scalar_form": null,
+        "scalar_subject": null,
+        "numeric_operation": null,
+        "expected_values": [],
+        "evidence_bindings": [],
+        "temporal_relation": "on",
+        "reference_date": {
+          "value": "1973-01-01",
+          "precision": "year"
+        },
+        "claimed_interval": null,
+        "requires_reference_date": false,
+        "claimed_status": null,
+        "temporal_bindings": [
+          {
+            "evidence_id": "f9b20f09-a338-5ade-ac03-b1700b69e92f",
+            "start_char": 0,
+            "end_char": 65,
+            "quoted_text": "The Currency Board was established under Union Law No. 2 of 1973.",
+            "effective_interval": {
+              "start": {
+                "value": "1973-01-01",
+                "precision": "year"
+              },
+              "end": {
+                "value": "1973-01-01",
+                "precision": "year"
+              },
+              "start_inclusive": true,
+              "end_inclusive": true
+            },
+            "observed_status": null,
+            "retrospective": false
+          }
+        ]
+      },
+      "gold_positive": true,
+      "correct_construction": true,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-379",
+      "disposition": "validated_assisted_proposal",
+      "eligibility": "temporal",
+      "construction_succeeded": true,
+      "human_review_required": false,
+      "provider_attempt": true,
+      "routes": [
+        "assisted"
+      ],
+      "proposal": {
+        "kind": "temporal_status",
+        "failed_construction_id": "d86a41f5-9e22-5405-9714-733ed856e483",
+        "claim_text_span": "Bank Negara Malaysia was established on January 26, 1959.",
+        "left_subject": null,
+        "right_subject": null,
+        "comparator": null,
+        "dimension": null,
+        "left_value": null,
+        "right_value": null,
+        "scalar_form": null,
+        "scalar_subject": null,
+        "numeric_operation": null,
+        "expected_values": [],
+        "evidence_bindings": [],
+        "temporal_relation": "on",
+        "reference_date": {
+          "value": "1959-01-26",
+          "precision": "day"
+        },
+        "claimed_interval": null,
+        "requires_reference_date": false,
+        "claimed_status": null,
+        "temporal_bindings": [
+          {
+            "evidence_id": "d51fa31e-6c34-5e53-8332-3a7fe5ebdb46",
+            "start_char": 25,
+            "end_char": 55,
+            "quoted_text": "established on 26 January 1959",
+            "effective_interval": {
+              "start": {
+                "value": "1959-01-26",
+                "precision": "day"
+              },
+              "end": {
+                "value": "1959-01-26",
+                "precision": "day"
+              },
+              "start_inclusive": true,
+              "end_inclusive": true
+            },
+            "observed_status": null,
+            "retrospective": false
+          }
+        ]
+      },
+      "gold_positive": true,
+      "correct_construction": true,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-380",
+      "disposition": "human_review_ineligible",
+      "construction_succeeded": false,
+      "human_review_required": true,
+      "provider_attempt": false,
+      "routes": [
+        "not_applicable"
+      ],
+      "gold_positive": false,
+      "correct_construction": false,
+      "unsafe_accepted": false
+    }
+  ]
+}

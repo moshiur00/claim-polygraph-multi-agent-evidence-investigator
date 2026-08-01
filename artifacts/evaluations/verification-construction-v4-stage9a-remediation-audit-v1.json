@@ -1,0 +1,321 @@
+{
+  "audit_id": "verification-construction-v4-stage9a-remediation-audit-v1",
+  "status": "passed",
+  "exit_criterion_met": true,
+  "fresh_calibration_collection_authorized": true,
+  "authoritative_eligibility": "typed extraction plus construction routing",
+  "legacy_text_classifier_authoritative": false,
+  "candidate_extraction_version": "verification-candidate-extraction-v3",
+  "assisted_prompt_version": "verification-construction-v4.9a-v7",
+  "assisted_canonicalization_version": "assisted-canonicalization-v4.9a",
+  "development_cases_loaded": 20,
+  "exposed_calibration_cases_loaded": 20,
+  "held_out_cases_loaded": 0,
+  "false_exclusions": [],
+  "unsafe_inclusions": [],
+  "exposed_routing_repairs": {
+    "V3-311": "temporal",
+    "V3-312": "numerical_scalar",
+    "V3-314": "numerical_scalar"
+  },
+  "model_calls": 0,
+  "network_calls": 0,
+  "paid_operations": 0,
+  "prior_calibration_sha256": "e3363c5e2ec7fd2ed8d8e6199ac25b53d8a251243420592fe0bd66810752eb17",
+  "gates": {
+    "development_false_exclusions_zero": true,
+    "development_unsafe_inclusions_zero": true,
+    "exposed_calibration_false_exclusions_zero": true,
+    "exposed_calibration_unsafe_inclusions_zero": true,
+    "three_routing_disagreements_resolved": true,
+    "temporal_exact_sentence_regressions_passed": true,
+    "ambiguous_temporal_repair_blocked": true,
+    "prior_calibration_not_rerun": true,
+    "provider_calls_zero": true,
+    "paid_operations_zero": true,
+    "held_out_cases_loaded_zero": true
+  },
+  "results": [
+    {
+      "scope": "development",
+      "case_id": "V3-004",
+      "gold_positive": true,
+      "construction_route_available": true,
+      "resolved_eligibility": "temporal"
+    },
+    {
+      "scope": "development",
+      "case_id": "V3-008",
+      "gold_positive": true,
+      "construction_route_available": true,
+      "resolved_eligibility": "temporal"
+    },
+    {
+      "scope": "development",
+      "case_id": "V3-009",
+      "gold_positive": true,
+      "construction_route_available": true,
+      "resolved_eligibility": "excluded_qualitative"
+    },
+    {
+      "scope": "development",
+      "case_id": "V3-014",
+      "gold_positive": true,
+      "construction_route_available": true,
+      "resolved_eligibility": "temporal"
+    },
+    {
+      "scope": "development",
+      "case_id": "V3-015",
+      "gold_positive": false,
+      "construction_route_available": false,
+      "resolved_eligibility": "excluded_qualitative"
+    },
+    {
+      "scope": "development",
+      "case_id": "V3-016",
+      "gold_positive": true,
+      "construction_route_available": true,
+      "resolved_eligibility": "numerical_scalar"
+    },
+    {
+      "scope": "development",
+      "case_id": "V3-017",
+      "gold_positive": true,
+      "construction_route_available": true,
+      "resolved_eligibility": "numerical_scalar"
+    },
+    {
+      "scope": "development",
+      "case_id": "V3-028",
+      "gold_positive": false,
+      "construction_route_available": false,
+      "resolved_eligibility": "excluded_qualitative"
+    },
+    {
+      "scope": "development",
+      "case_id": "V3-029",
+      "gold_positive": true,
+      "construction_route_available": true,
+      "resolved_eligibility": "temporal"
+    },
+    {
+      "scope": "development",
+      "case_id": "V3-036",
+      "gold_positive": true,
+      "construction_route_available": true,
+      "resolved_eligibility": "temporal"
+    },
+    {
+      "scope": "development",
+      "case_id": "V3-037",
+      "gold_positive": true,
+      "construction_route_available": true,
+      "resolved_eligibility": "numerical_conversion"
+    },
+    {
+      "scope": "development",
+      "case_id": "V3-042",
+      "gold_positive": true,
+      "construction_route_available": true,
+      "resolved_eligibility": "numerical_scalar"
+    },
+    {
+      "scope": "development",
+      "case_id": "V3-043",
+      "gold_positive": true,
+      "construction_route_available": true,
+      "resolved_eligibility": "temporal"
+    },
+    {
+      "scope": "development",
+      "case_id": "V3-044",
+      "gold_positive": true,
+      "construction_route_available": true,
+      "resolved_eligibility": "numerical_scalar"
+    },
+    {
+      "scope": "development",
+      "case_id": "V3-045",
+      "gold_positive": true,
+      "construction_route_available": true,
+      "resolved_eligibility": "excluded_qualitative"
+    },
+    {
+      "scope": "development",
+      "case_id": "V3-046",
+      "gold_positive": true,
+      "construction_route_available": true,
+      "resolved_eligibility": "excluded_qualitative"
+    },
+    {
+      "scope": "development",
+      "case_id": "V3-047",
+      "gold_positive": true,
+      "construction_route_available": true,
+      "resolved_eligibility": "numerical_scalar"
+    },
+    {
+      "scope": "development",
+      "case_id": "V3-048",
+      "gold_positive": true,
+      "construction_route_available": true,
+      "resolved_eligibility": "numerical_scalar"
+    },
+    {
+      "scope": "development",
+      "case_id": "V3-049",
+      "gold_positive": true,
+      "construction_route_available": true,
+      "resolved_eligibility": "numerical_scalar"
+    },
+    {
+      "scope": "development",
+      "case_id": "V3-055",
+      "gold_positive": true,
+      "construction_route_available": true,
+      "resolved_eligibility": "numerical_scalar"
+    },
+    {
+      "scope": "exposed_calibration",
+      "case_id": "V3-301",
+      "gold_positive": true,
+      "construction_route_available": true,
+      "resolved_eligibility": "numerical_scalar"
+    },
+    {
+      "scope": "exposed_calibration",
+      "case_id": "V3-302",
+      "gold_positive": false,
+      "construction_route_available": false,
+      "resolved_eligibility": "excluded_qualitative"
+    },
+    {
+      "scope": "exposed_calibration",
+      "case_id": "V3-303",
+      "gold_positive": true,
+      "construction_route_available": true,
+      "resolved_eligibility": "temporal"
+    },
+    {
+      "scope": "exposed_calibration",
+      "case_id": "V3-304",
+      "gold_positive": true,
+      "construction_route_available": true,
+      "resolved_eligibility": "numerical_scalar"
+    },
+    {
+      "scope": "exposed_calibration",
+      "case_id": "V3-305",
+      "gold_positive": true,
+      "construction_route_available": true,
+      "resolved_eligibility": "temporal"
+    },
+    {
+      "scope": "exposed_calibration",
+      "case_id": "V3-306",
+      "gold_positive": true,
+      "construction_route_available": true,
+      "resolved_eligibility": "numerical_scalar"
+    },
+    {
+      "scope": "exposed_calibration",
+      "case_id": "V3-307",
+      "gold_positive": true,
+      "construction_route_available": true,
+      "resolved_eligibility": "numerical_scalar"
+    },
+    {
+      "scope": "exposed_calibration",
+      "case_id": "V3-308",
+      "gold_positive": false,
+      "construction_route_available": false,
+      "resolved_eligibility": "excluded_qualitative"
+    },
+    {
+      "scope": "exposed_calibration",
+      "case_id": "V3-309",
+      "gold_positive": true,
+      "construction_route_available": true,
+      "resolved_eligibility": "temporal"
+    },
+    {
+      "scope": "exposed_calibration",
+      "case_id": "V3-310",
+      "gold_positive": false,
+      "construction_route_available": false,
+      "resolved_eligibility": "excluded_qualitative"
+    },
+    {
+      "scope": "exposed_calibration",
+      "case_id": "V3-311",
+      "gold_positive": true,
+      "construction_route_available": true,
+      "resolved_eligibility": "temporal"
+    },
+    {
+      "scope": "exposed_calibration",
+      "case_id": "V3-312",
+      "gold_positive": true,
+      "construction_route_available": true,
+      "resolved_eligibility": "numerical_scalar"
+    },
+    {
+      "scope": "exposed_calibration",
+      "case_id": "V3-313",
+      "gold_positive": true,
+      "construction_route_available": true,
+      "resolved_eligibility": "temporal"
+    },
+    {
+      "scope": "exposed_calibration",
+      "case_id": "V3-314",
+      "gold_positive": true,
+      "construction_route_available": true,
+      "resolved_eligibility": "numerical_scalar"
+    },
+    {
+      "scope": "exposed_calibration",
+      "case_id": "V3-315",
+      "gold_positive": true,
+      "construction_route_available": true,
+      "resolved_eligibility": "temporal"
+    },
+    {
+      "scope": "exposed_calibration",
+      "case_id": "V3-316",
+      "gold_positive": true,
+      "construction_route_available": true,
+      "resolved_eligibility": "temporal"
+    },
+    {
+      "scope": "exposed_calibration",
+      "case_id": "V3-317",
+      "gold_positive": true,
+      "construction_route_available": true,
+      "resolved_eligibility": "numerical"
+    },
+    {
+      "scope": "exposed_calibration",
+      "case_id": "V3-318",
+      "gold_positive": true,
+      "construction_route_available": true,
+      "resolved_eligibility": "temporal"
+    },
+    {
+      "scope": "exposed_calibration",
+      "case_id": "V3-319",
+      "gold_positive": true,
+      "construction_route_available": true,
+      "resolved_eligibility": "temporal"
+    },
+    {
+      "scope": "exposed_calibration",
+      "case_id": "V3-320",
+      "gold_positive": false,
+      "construction_route_available": false,
+      "resolved_eligibility": "excluded_qualitative"
+    }
+  ],
+  "next_action": "Collect and independently approve a fresh non-overlapping calibration set"
+}

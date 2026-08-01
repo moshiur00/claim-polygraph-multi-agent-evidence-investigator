@@ -1,0 +1,22 @@
+{
+  "benchmark_id": "verification-construction-v2",
+  "frozen": true,
+  "review_status": "approved_with_distinct_approval",
+  "annotator_identity": "Md Moshiur Rahman",
+  "distinct_approver_identity": "Md Rashedul Islam",
+  "approval_date": "2026-07-30",
+  "cases": [
+    {"case_id":"VC2-001","claim":"District A has a higher percentage than District B.","passage":"District A recorded 62 percent while District B recorded 58 percent.","expected_constructed":true,"expected_state":"verified"},
+    {"case_id":"VC2-002","claim":"Team A has a greater count than Team B.","passage":"Team A has 12 members while Team B has 10 members.","expected_constructed":true,"expected_state":"verified"},
+    {"case_id":"VC2-003","claim":"Chamber A has a higher pressure than Chamber B.","passage":"Chamber A measured 110 kilopascals while Chamber B measured 1 atmosphere.","expected_constructed":true,"expected_state":"verified"},
+    {"case_id":"VC2-004","claim":"Vehicle A is faster than Vehicle B.","passage":"Vehicle A reached 100 kilometres per hour while Vehicle B reached 70 miles per hour.","expected_constructed":true,"expected_state":"contradicted"},
+    {"case_id":"VC2-005","claim":"Plan A is more expensive than Plan B.","passage":"Plan A costs $120 while Plan B costs 100 USD.","expected_constructed":true,"expected_state":"verified"},
+    {"case_id":"VC2-006","claim":"Plan A is more expensive than Plan B.","passage":"Plan A costs 120 USD while Plan B costs 100 EUR.","expected_constructed":true,"expected_state":"error"},
+    {"case_id":"VC2-007","claim":"Event A occurred before Event B.","passage":"Event A occurred on 2020-01-02 while Event B occurred on 2021-03-04.","expected_constructed":true,"expected_state":"verified"},
+    {"case_id":"VC2-008","claim":"Event A happened after Event B.","passage":"Event A happened in 2019 while Event B happened in 2020.","expected_constructed":true,"expected_state":"contradicted"},
+    {"case_id":"VC2-009","claim":"District A has a higher percentage than District B.","passage":"District A published a rate, but District B did not publish one.","expected_constructed":false,"expected_state":null},
+    {"case_id":"VC2-010","claim":"Vehicle A is faster than Vehicle B.","passage":"Vehicle A was described as fast; no measured speed for Vehicle B was provided.","expected_constructed":false,"expected_state":null},
+    {"case_id":"VC2-011","claim":"Policy A occurred before Policy B.","passage":"Policy A was announced in 2020.","expected_constructed":false,"expected_state":null},
+    {"case_id":"VC2-012","claim":"Plan A is cheaper than Plan B.","passage":"Plan A costs £80 while Plan B costs 100 GBP.","expected_constructed":true,"expected_state":"verified"}
+  ]
+}

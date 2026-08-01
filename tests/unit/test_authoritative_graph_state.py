@@ -19,6 +19,7 @@ from claim_polygraph_ng.domain.graph import (
 )
 from claim_polygraph_ng.domain.investigation import ArtifactType
 from claim_polygraph_ng.domain.operations import ArtifactReference, AuthoritativeOperation
+from claim_polygraph_ng.domain.verification import AssertionConstructionState
 from claim_polygraph_ng.persistence.authoritative_graph import (
     AuthoritativeCheckpointConflictError,
     SQLiteAuthoritativeGraphCheckpointRepository,
@@ -166,6 +167,37 @@ def test_unsupported_future_state_version_is_rejected() -> None:
     payload["schema_version"] = 99
     with pytest.raises(ValueError, match="unsupported"):
         migrate_authoritative_graph_state(payload)
+
+
+def test_old_checkpoint_defaults_new_construction_state_and_progress_is_monotonic() -> None:
+    old_payload = _state().model_dump(mode="json")
+    old_payload.pop("verification_construction_ids", None)
+    old_payload.pop("verification_construction_states", None)
+    restored = migrate_authoritative_graph_state(old_payload)
+    assert restored.verification_construction_ids == ()
+    assert restored.verification_construction_states == {}
+
+    construction_id = uuid4()
+    progressed = restored.model_copy(
+        update={
+            "checkpoint_sequence": restored.checkpoint_sequence + 1,
+            "verification_construction_ids": (construction_id,),
+            "verification_construction_states": {
+                construction_id: AssertionConstructionState.CONSTRUCTED
+            },
+        }
+    )
+    validate_monotonic_graph_transition(restored, progressed)
+
+    erased = progressed.model_copy(
+        update={
+            "checkpoint_sequence": progressed.checkpoint_sequence + 1,
+            "verification_construction_ids": (),
+            "verification_construction_states": {},
+        }
+    )
+    with pytest.raises(ValueError, match="cannot disappear"):
+        validate_monotonic_graph_transition(progressed, erased)
 
 
 def test_stage9_3_schema_and_release_manifest_verifies() -> None:

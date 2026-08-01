@@ -1,0 +1,107 @@
+{
+  "audit_id": "verification-construction-v3-stage5-development-gate-v1",
+  "status": "passed",
+  "prompt_version": "verification-construction-v3-dev-v1",
+  "prompt_sha256": "0b1aa4ec79f5306159e68609f1b9773f69ee373d7818573656bbc98f9ab294be",
+  "dataset_sha256": "6f45fd6c568135654a6af681c6c26fdea3f94505efc013064a0384b62f10e17a",
+  "split_exposure": {
+    "development_cases_loaded": 20,
+    "development_assisted_cases": 9,
+    "development_control_cases": 11,
+    "calibration_cases_exposed_to_model": 0,
+    "held_out_cases_exposed_to_model": 0
+  },
+  "development_case_ids": [
+    "V3-004",
+    "V3-008",
+    "V3-009",
+    "V3-014",
+    "V3-015",
+    "V3-016",
+    "V3-017",
+    "V3-028",
+    "V3-029",
+    "V3-036",
+    "V3-037",
+    "V3-042",
+    "V3-043",
+    "V3-044",
+    "V3-045",
+    "V3-046",
+    "V3-047",
+    "V3-048",
+    "V3-049",
+    "V3-055"
+  ],
+  "assisted_case_ids": [
+    "V3-004",
+    "V3-008",
+    "V3-014",
+    "V3-016",
+    "V3-017",
+    "V3-029",
+    "V3-046",
+    "V3-047",
+    "V3-055"
+  ],
+  "control_case_ids": [
+    "V3-009",
+    "V3-015",
+    "V3-028",
+    "V3-036",
+    "V3-037",
+    "V3-042",
+    "V3-043",
+    "V3-044",
+    "V3-045",
+    "V3-048",
+    "V3-049"
+  ],
+  "validation_changes": [
+    "approved evidence IDs must all resolve before provider execution",
+    "left and right subjects must occur in the exact claim span",
+    "evidence bindings must be unique",
+    "every evidence quote must match exact retained-passage offsets"
+  ],
+  "execution": {
+    "model_calls": 0,
+    "network_calls": 0,
+    "paid_operations": 0,
+    "prompt_iterations": 1
+  },
+  "gates": {
+    "development_only_selection": true,
+    "calibration_sealed": true,
+    "held_out_sealed": true,
+    "versioned_prompt": true,
+    "structured_output": true,
+    "protected_decision_fields_absent": true,
+    "deterministic_fail_closed_validation": true
+  },
+  "artifacts": [
+    {
+      "path": "src/claim_polygraph_ng/analysis/assisted_verification_construction.py",
+      "sha256": "2e7455413de75a4aa8080ba4706f112c5389635303618820ecc9339ab6384c89"
+    },
+    {
+      "path": "src/claim_polygraph_ng/analysis/bounded_assisted_construction.py",
+      "sha256": "eff5b6fea6d5b35b26df124b0c3e6c1d0e99b5dde7efb01fc78d5e662586a73a"
+    },
+    {
+      "path": "src/claim_polygraph_ng/evaluation/v3_development.py",
+      "sha256": "cda8e75f54b76f4cbe8b0beeaf4e2e7c6779a2596e234bb3e2c4e016ef1ac39e"
+    },
+    {
+      "path": "src/claim_polygraph_ng/providers/ollama.py",
+      "sha256": "c196435d1f84dc985876a525a33e1b58ec2d68b41e15b5cd4905e9899aa068ac"
+    },
+    {
+      "path": "src/claim_polygraph_ng/providers/openai.py",
+      "sha256": "493d480929b524541d18d2668497765c93aa3bc0fa5b996de723463308982e89"
+    },
+    {
+      "path": "benchmarks/verification_construction_v3_approved_frozen_v2.json",
+      "sha256": "6f45fd6c568135654a6af681c6c26fdea3f94505efc013064a0384b62f10e17a"
+    }
+  ]
+}

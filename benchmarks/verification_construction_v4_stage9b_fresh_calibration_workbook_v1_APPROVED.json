@@ -1,0 +1,1433 @@
+{
+  "workbook_id": "verification-construction-v4-stage9b-fresh-calibration-workbook-v1",
+  "schema_version": 1,
+  "frozen": false,
+  "cases": [
+    {
+      "case_id": "V3-321",
+      "source_candidate_id": "V4-STAGE9B-321",
+      "split": "calibration",
+      "origin_family_id": "official:bis",
+      "claim_text": "The BIS was established in 1930.",
+      "evidence": [
+        {
+          "evidence_id": "V3-321:E1",
+          "title": "History - overview",
+          "url": "https://www.bis.org/about/history.htm",
+          "source_class": "official_html",
+          "passage": "Established in 1930, the Bank for International Settlements is the oldest international financial institution."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "established_in",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 32,
+          "quoted_text": "The BIS was established in 1930."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-321:E1",
+            "start_char": 0,
+            "end_char": 110,
+            "quoted_text": "Established in 1930, the Bank for International Settlements is the oldest international financial institution."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-31",
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "established_in",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 32,
+          "quoted_text": "The BIS was established in 1930."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-321:E1",
+            "start_char": 0,
+            "end_char": 110,
+            "quoted_text": "Established in 1930, the Bank for International Settlements is the oldest international financial institution."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-07-31",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-322",
+      "source_candidate_id": "V4-STAGE9B-322",
+      "split": "calibration",
+      "origin_family_id": "official:bis",
+      "claim_text": "The BIS is owned by 63 central banks.",
+      "evidence": [
+        {
+          "evidence_id": "V3-322:E1",
+          "title": "About BIS",
+          "url": "https://www.bis.org/about/index.htm",
+          "source_class": "official_html",
+          "passage": "Established in 1930, the BIS is owned by 63 central banks, representing countries from around the world that together account for about 95% of world GDP."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "count",
+        "comparator_or_relation": "equal",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 37,
+          "quoted_text": "The BIS is owned by 63 central banks."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-322:E1",
+            "start_char": 0,
+            "end_char": 153,
+            "quoted_text": "Established in 1930, the BIS is owned by 63 central banks, representing countries from around the world that together account for about 95% of world GDP."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-31",
+        "dimension_bucket": "count",
+        "comparator_or_relation": "equal",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 37,
+          "quoted_text": "The BIS is owned by 63 central banks."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-322:E1",
+            "start_char": 0,
+            "end_char": 153,
+            "quoted_text": "Established in 1930, the BIS is owned by 63 central banks, representing countries from around the world that together account for about 95% of world GDP."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-07-31",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-323",
+      "source_candidate_id": "V4-STAGE9B-323",
+      "split": "calibration",
+      "origin_family_id": "official:gao",
+      "claim_text": "GAO was created in 1921.",
+      "evidence": [
+        {
+          "evidence_id": "V3-323:E1",
+          "title": "History",
+          "url": "https://www.gao.gov/about/what-gao-does/history",
+          "source_class": "official_html",
+          "passage": "The Budget and Accounting Act created GAO in 1921 when Congress realized the need to control growing government expenditures and debt after World War I."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "created_in",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 24,
+          "quoted_text": "GAO was created in 1921."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-323:E1",
+            "start_char": 0,
+            "end_char": 152,
+            "quoted_text": "The Budget and Accounting Act created GAO in 1921 when Congress realized the need to control growing government expenditures and debt after World War I."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-31",
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "created_in",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 24,
+          "quoted_text": "GAO was created in 1921."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-323:E1",
+            "start_char": 0,
+            "end_char": 152,
+            "quoted_text": "The Budget and Accounting Act created GAO in 1921 when Congress realized the need to control growing government expenditures and debt after World War I."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-07-31",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-324",
+      "source_candidate_id": "V4-STAGE9B-324",
+      "split": "calibration",
+      "origin_family_id": "official:gao",
+      "claim_text": "GAO handles Congress's toughest audit assignments better than every other agency.",
+      "evidence": [
+        {
+          "evidence_id": "V3-324:E1",
+          "title": "History",
+          "url": "https://www.gao.gov/about/what-gao-does/history",
+          "source_class": "official_html",
+          "passage": "Today, our agency that once checked millions of government vouchers has become a multidisciplinary organization equipped to handle Congress’s toughest audit and evaluation assignments."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "count",
+        "comparator_or_relation": "qualitative_superlative",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 81,
+          "quoted_text": "GAO handles Congress's toughest audit assignments better than every other agency."
+        },
+        "evidence_spans": [],
+        "suggested_gold_label": "not_applicable",
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-31",
+        "dimension_bucket": "count",
+        "comparator_or_relation": "qualitative_superlative",
+        "gold_label": "not_applicable",
+        "claim_span": null,
+        "evidence_spans": [],
+        "expected_verification_state": null,
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-07-31",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-325",
+      "source_candidate_id": "V4-STAGE9B-325",
+      "split": "calibration",
+      "origin_family_id": "official:doj",
+      "claim_text": "The Department of Justice was created on July 1, 1870.",
+      "evidence": [
+        {
+          "evidence_id": "V3-325:E1",
+          "title": "DOJ history",
+          "url": "https://www.justice.gov/history/timeline/150-years-department-justice",
+          "source_class": "official_html",
+          "passage": "Creation of the U.S. Department of Justice and Civil Rights Enforcement, 1870-1872 — July 1, 1870"
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "created_on",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 54,
+          "quoted_text": "The Department of Justice was created on July 1, 1870."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-325:E1",
+            "start_char": 0,
+            "end_char": 97,
+            "quoted_text": "Creation of the U.S. Department of Justice and Civil Rights Enforcement, 1870-1872 — July 1, 1870"
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-31",
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "created_on",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 54,
+          "quoted_text": "The Department of Justice was created on July 1, 1870."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-325:E1",
+            "start_char": 0,
+            "end_char": 97,
+            "quoted_text": "Creation of the U.S. Department of Justice and Civil Rights Enforcement, 1870-1872 — July 1, 1870"
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-07-31",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-326",
+      "source_candidate_id": "V4-STAGE9B-326",
+      "split": "calibration",
+      "origin_family_id": "official:doj",
+      "claim_text": "The Department of Justice keeps the country safer than every other department.",
+      "evidence": [
+        {
+          "evidence_id": "V3-326:E1",
+          "title": "About DOJ",
+          "url": "https://www.justice.gov/about",
+          "source_class": "official_html",
+          "passage": "The mission of the Department of Justice is to uphold the rule of law, to keep our country safe, and to protect civil rights."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "count",
+        "comparator_or_relation": "qualitative_superlative",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 78,
+          "quoted_text": "The Department of Justice keeps the country safer than every other department."
+        },
+        "evidence_spans": [],
+        "suggested_gold_label": "not_applicable",
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-31",
+        "dimension_bucket": "count",
+        "comparator_or_relation": "qualitative_superlative",
+        "gold_label": "not_applicable",
+        "claim_span": null,
+        "evidence_spans": [],
+        "expected_verification_state": null,
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-07-31",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-327",
+      "source_candidate_id": "V4-STAGE9B-327",
+      "split": "calibration",
+      "origin_family_id": "official:cisa",
+      "claim_text": "The CISA Act was signed into law on November 16, 2018.",
+      "evidence": [
+        {
+          "evidence_id": "V3-327:E1",
+          "title": "CISA established",
+          "url": "https://www.cisa.gov/news-events/alerts/2018/11/19/cybersecurity-and-infrastructure-security-agency",
+          "source_class": "official_html",
+          "passage": "On November 16, 2018, the President signed into law the Cybersecurity and Infrastructure Security Agency Act of 2018."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "signed_on",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 54,
+          "quoted_text": "The CISA Act was signed into law on November 16, 2018."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-327:E1",
+            "start_char": 0,
+            "end_char": 117,
+            "quoted_text": "On November 16, 2018, the President signed into law the Cybersecurity and Infrastructure Security Agency Act of 2018."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-31",
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "signed_on",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 54,
+          "quoted_text": "The CISA Act was signed into law on November 16, 2018."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-327:E1",
+            "start_char": 0,
+            "end_char": 117,
+            "quoted_text": "On November 16, 2018, the President signed into law the Cybersecurity and Infrastructure Security Agency Act of 2018."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-07-31",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-328",
+      "source_candidate_id": "V4-STAGE9B-328",
+      "split": "calibration",
+      "origin_family_id": "official:cisa",
+      "claim_text": "CISA was established in November 2018.",
+      "evidence": [
+        {
+          "evidence_id": "V3-328:E1",
+          "title": "CISA established",
+          "url": "https://www.cisa.gov/news-events/alerts/2018/11/19/cybersecurity-and-infrastructure-security-agency",
+          "source_class": "official_html",
+          "passage": "Established in November 2018, CISA is responsible for protecting the Nation's critical infrastructure from physical and cyber threats."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "established_in",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 38,
+          "quoted_text": "CISA was established in November 2018."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-328:E1",
+            "start_char": 0,
+            "end_char": 134,
+            "quoted_text": "Established in November 2018, CISA is responsible for protecting the Nation's critical infrastructure from physical and cyber threats."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-31",
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "established_in",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 38,
+          "quoted_text": "CISA was established in November 2018."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-328:E1",
+            "start_char": 0,
+            "end_char": 134,
+            "quoted_text": "Established in November 2018, CISA is responsible for protecting the Nation's critical infrastructure from physical and cyber threats."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-07-31",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-329",
+      "source_candidate_id": "V4-STAGE9B-329",
+      "split": "calibration",
+      "origin_family_id": "official:bank-canada",
+      "claim_text": "The Bank of Canada Act received royal assent on July 3, 1934.",
+      "evidence": [
+        {
+          "evidence_id": "V3-329:E1",
+          "title": "Our history",
+          "url": "https://www.bankofcanada.ca/about/our-history/",
+          "source_class": "official_html",
+          "passage": "The Act received royal assent on July 3, 1934."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "received_assent_on",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 61,
+          "quoted_text": "The Bank of Canada Act received royal assent on July 3, 1934."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-329:E1",
+            "start_char": 0,
+            "end_char": 46,
+            "quoted_text": "The Act received royal assent on July 3, 1934."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-31",
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "received_assent_on",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 61,
+          "quoted_text": "The Bank of Canada Act received royal assent on July 3, 1934."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-329:E1",
+            "start_char": 0,
+            "end_char": 46,
+            "quoted_text": "The Act received royal assent on July 3, 1934."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-07-31",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-330",
+      "source_candidate_id": "V4-STAGE9B-330",
+      "split": "calibration",
+      "origin_family_id": "official:bank-canada",
+      "claim_text": "The Bank of Canada opened its doors in March 1935.",
+      "evidence": [
+        {
+          "evidence_id": "V3-330:E1",
+          "title": "Our history",
+          "url": "https://www.bankofcanada.ca/about/our-history/",
+          "source_class": "official_html",
+          "passage": "In March 1935, the Bank of Canada opened its doors as a privately owned institution with shares sold to the public."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "started_in",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 50,
+          "quoted_text": "The Bank of Canada opened its doors in March 1935."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-330:E1",
+            "start_char": 0,
+            "end_char": 115,
+            "quoted_text": "In March 1935, the Bank of Canada opened its doors as a privately owned institution with shares sold to the public."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-31",
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "started_in",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 50,
+          "quoted_text": "The Bank of Canada opened its doors in March 1935."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-330:E1",
+            "start_char": 0,
+            "end_char": 115,
+            "quoted_text": "In March 1935, the Bank of Canada opened its doors as a privately owned institution with shares sold to the public."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-07-31",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-331",
+      "source_candidate_id": "V4-STAGE9B-331",
+      "split": "calibration",
+      "origin_family_id": "official:bundesbank",
+      "claim_text": "The Bundesbank Act was passed on 26 July 1957.",
+      "evidence": [
+        {
+          "evidence_id": "V3-331:E1",
+          "title": "Timeline",
+          "url": "https://www.bundesbank.de/en/bundesbank/history",
+          "source_class": "official_html",
+          "passage": "The Bundesbank Act (Gesetz über die Deutsche Bundesbank) is passed on 26 July 1957 and enters into force on 1 August."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "passed_on",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 46,
+          "quoted_text": "The Bundesbank Act was passed on 26 July 1957."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-331:E1",
+            "start_char": 0,
+            "end_char": 117,
+            "quoted_text": "The Bundesbank Act (Gesetz über die Deutsche Bundesbank) is passed on 26 July 1957 and enters into force on 1 August."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-31",
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "passed_on",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 46,
+          "quoted_text": "The Bundesbank Act was passed on 26 July 1957."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-331:E1",
+            "start_char": 0,
+            "end_char": 117,
+            "quoted_text": "The Bundesbank Act (Gesetz über die Deutsche Bundesbank) is passed on 26 July 1957 and enters into force on 1 August."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-07-31",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-332",
+      "source_candidate_id": "V4-STAGE9B-332",
+      "split": "calibration",
+      "origin_family_id": "official:bundesbank",
+      "claim_text": "The Bundesbank Act entered into force on 1 August 1957.",
+      "evidence": [
+        {
+          "evidence_id": "V3-332:E1",
+          "title": "Timeline",
+          "url": "https://www.bundesbank.de/en/bundesbank/history",
+          "source_class": "official_html",
+          "passage": "The Bundesbank Act (Gesetz über die Deutsche Bundesbank) is passed on 26 July 1957 and enters into force on 1 August."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "entered_into_force_on",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 55,
+          "quoted_text": "The Bundesbank Act entered into force on 1 August 1957."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-332:E1",
+            "start_char": 0,
+            "end_char": 117,
+            "quoted_text": "The Bundesbank Act (Gesetz über die Deutsche Bundesbank) is passed on 26 July 1957 and enters into force on 1 August."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-31",
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "entered_into_force_on",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 55,
+          "quoted_text": "The Bundesbank Act entered into force on 1 August 1957."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-332:E1",
+            "start_char": 0,
+            "end_char": 117,
+            "quoted_text": "The Bundesbank Act (Gesetz über die Deutsche Bundesbank) is passed on 26 July 1957 and enters into force on 1 August."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-07-31",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-333",
+      "source_candidate_id": "V4-STAGE9B-333",
+      "split": "calibration",
+      "origin_family_id": "official:riksbank",
+      "claim_text": "Sveriges Riksbank was founded in 1668.",
+      "evidence": [
+        {
+          "evidence_id": "V3-333:E1",
+          "title": "History",
+          "url": "https://www.riksbank.se/en-gb/about-the-riksbank/history/",
+          "source_class": "official_html",
+          "passage": "In 1668, the Riksdag, Sweden's parliament, decided to found Riksens Ständers Bank (the Estates of the Realm Bank), which in 1867 received the name Sveriges Riksbank."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "founded_in",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 38,
+          "quoted_text": "Sveriges Riksbank was founded in 1668."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-333:E1",
+            "start_char": 0,
+            "end_char": 165,
+            "quoted_text": "In 1668, the Riksdag, Sweden's parliament, decided to found Riksens Ständers Bank (the Estates of the Realm Bank), which in 1867 received the name Sveriges Riksbank."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-31",
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "founded_in",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 38,
+          "quoted_text": "Sveriges Riksbank was founded in 1668."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-333:E1",
+            "start_char": 0,
+            "end_char": 165,
+            "quoted_text": "In 1668, the Riksdag, Sweden's parliament, decided to found Riksens Ständers Bank (the Estates of the Realm Bank), which in 1867 received the name Sveriges Riksbank."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-07-31",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-334",
+      "source_candidate_id": "V4-STAGE9B-334",
+      "split": "calibration",
+      "origin_family_id": "official:riksbank",
+      "claim_text": "Riksens Ständers Bank received the name Sveriges Riksbank in 1867.",
+      "evidence": [
+        {
+          "evidence_id": "V3-334:E1",
+          "title": "History",
+          "url": "https://www.riksbank.se/en-gb/about-the-riksbank/history/",
+          "source_class": "official_html",
+          "passage": "In 1668, the Riksdag, Sweden's parliament, decided to found Riksens Ständers Bank (the Estates of the Realm Bank), which in 1867 received the name Sveriges Riksbank."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "renamed_in",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 66,
+          "quoted_text": "Riksens Ständers Bank received the name Sveriges Riksbank in 1867."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-334:E1",
+            "start_char": 0,
+            "end_char": 165,
+            "quoted_text": "In 1668, the Riksdag, Sweden's parliament, decided to found Riksens Ständers Bank (the Estates of the Realm Bank), which in 1867 received the name Sveriges Riksbank."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-31",
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "renamed_in",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 66,
+          "quoted_text": "Riksens Ständers Bank received the name Sveriges Riksbank in 1867."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-334:E1",
+            "start_char": 0,
+            "end_char": 165,
+            "quoted_text": "In 1668, the Riksdag, Sweden's parliament, decided to found Riksens Ständers Bank (the Estates of the Realm Bank), which in 1867 received the name Sveriges Riksbank."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-07-31",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-335",
+      "source_candidate_id": "V4-STAGE9B-335",
+      "split": "calibration",
+      "origin_family_id": "official:boj",
+      "claim_text": "The Bank of Japan began operating on October 10, 1882.",
+      "evidence": [
+        {
+          "evidence_id": "V3-335:E1",
+          "title": "Outline of the Bank",
+          "url": "https://www.boj.or.jp/en/about/outline/",
+          "source_class": "official_html",
+          "passage": "The Bank of Japan was established under the Bank of Japan Act (promulgated in June 1882) and began operating on October 10, 1882, as the nation's central bank."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "started_on",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 54,
+          "quoted_text": "The Bank of Japan began operating on October 10, 1882."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-335:E1",
+            "start_char": 0,
+            "end_char": 159,
+            "quoted_text": "The Bank of Japan was established under the Bank of Japan Act (promulgated in June 1882) and began operating on October 10, 1882, as the nation's central bank."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-31",
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "started_on",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 54,
+          "quoted_text": "The Bank of Japan began operating on October 10, 1882."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-335:E1",
+            "start_char": 0,
+            "end_char": 159,
+            "quoted_text": "The Bank of Japan was established under the Bank of Japan Act (promulgated in June 1882) and began operating on October 10, 1882, as the nation's central bank."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-07-31",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-336",
+      "source_candidate_id": "V4-STAGE9B-336",
+      "split": "calibration",
+      "origin_family_id": "official:boj",
+      "claim_text": "The Bank of Japan Policy Board was established in June 1949.",
+      "evidence": [
+        {
+          "evidence_id": "V3-336:E1",
+          "title": "History",
+          "url": "https://www.boj.or.jp/en/about/outline/history/",
+          "source_class": "official_html",
+          "passage": "1949 | June | The Policy Board is established."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "established_in",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 60,
+          "quoted_text": "The Bank of Japan Policy Board was established in June 1949."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-336:E1",
+            "start_char": 0,
+            "end_char": 46,
+            "quoted_text": "1949 | June | The Policy Board is established."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-31",
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "established_in",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 60,
+          "quoted_text": "The Bank of Japan Policy Board was established in June 1949."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-336:E1",
+            "start_char": 0,
+            "end_char": 46,
+            "quoted_text": "1949 | June | The Policy Board is established."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-07-31",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-337",
+      "source_candidate_id": "V4-STAGE9B-337",
+      "split": "calibration",
+      "origin_family_id": "official:abs",
+      "claim_text": "The Australian Bureau of Statistics Act 1975 establishes the ABS as an independent statutory authority.",
+      "evidence": [
+        {
+          "evidence_id": "V3-337:E1",
+          "title": "Legislative framework",
+          "url": "https://www.abs.gov.au/about/legislation-and-policy/legislative-framework",
+          "source_class": "official_html",
+          "passage": "The Australian Bureau of Statistics Act 1975 establishes the ABS as an independent statutory authority."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_interval_or_status",
+        "comparator_or_relation": "established_by",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 103,
+          "quoted_text": "The Australian Bureau of Statistics Act 1975 establishes the ABS as an independent statutory authority."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-337:E1",
+            "start_char": 0,
+            "end_char": 103,
+            "quoted_text": "The Australian Bureau of Statistics Act 1975 establishes the ABS as an independent statutory authority."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-31",
+        "dimension_bucket": "temporal_interval_or_status",
+        "comparator_or_relation": "established_by",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 103,
+          "quoted_text": "The Australian Bureau of Statistics Act 1975 establishes the ABS as an independent statutory authority."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-337:E1",
+            "start_char": 0,
+            "end_char": 103,
+            "quoted_text": "The Australian Bureau of Statistics Act 1975 establishes the ABS as an independent statutory authority."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-07-31",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-338",
+      "source_candidate_id": "V4-STAGE9B-338",
+      "split": "calibration",
+      "origin_family_id": "official:abs",
+      "claim_text": "The Commonwealth Bureau of Census and Statistics was established in 1906.",
+      "evidence": [
+        {
+          "evidence_id": "V3-338:E1",
+          "title": "Labour statistics overview",
+          "url": "https://www.abs.gov.au/statistics/detailed-methodology-information/concepts-sources-methods/labour-statistics-concepts-sources-and-methods/2021/overview",
+          "source_class": "official_html",
+          "passage": "The Commonwealth Bureau of Census and Statistics was established in 1906 and was later replaced by the Australian Bureau of Statistics in 1974."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "established_in",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 73,
+          "quoted_text": "The Commonwealth Bureau of Census and Statistics was established in 1906."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-338:E1",
+            "start_char": 0,
+            "end_char": 143,
+            "quoted_text": "The Commonwealth Bureau of Census and Statistics was established in 1906 and was later replaced by the Australian Bureau of Statistics in 1974."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-31",
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "established_in",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 73,
+          "quoted_text": "The Commonwealth Bureau of Census and Statistics was established in 1906."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-338:E1",
+            "start_char": 0,
+            "end_char": 143,
+            "quoted_text": "The Commonwealth Bureau of Census and Statistics was established in 1906 and was later replaced by the Australian Bureau of Statistics in 1974."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-07-31",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-339",
+      "source_candidate_id": "V4-STAGE9B-339",
+      "split": "calibration",
+      "origin_family_id": "official:stats-nz",
+      "claim_text": "Stats NZ has over 1,000 employees.",
+      "evidence": [
+        {
+          "evidence_id": "V3-339:E1",
+          "title": "About us",
+          "url": "https://www.stats.govt.nz/about-us/",
+          "source_class": "official_html",
+          "passage": "Stats NZ is a government department with over 1,000 employees."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "count",
+        "comparator_or_relation": "greater_than",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 34,
+          "quoted_text": "Stats NZ has over 1,000 employees."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-339:E1",
+            "start_char": 0,
+            "end_char": 62,
+            "quoted_text": "Stats NZ is a government department with over 1,000 employees."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-31",
+        "dimension_bucket": "count",
+        "comparator_or_relation": "greater_than",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 34,
+          "quoted_text": "Stats NZ has over 1,000 employees."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-339:E1",
+            "start_char": 0,
+            "end_char": 62,
+            "quoted_text": "Stats NZ is a government department with over 1,000 employees."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-07-31",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-340",
+      "source_candidate_id": "V4-STAGE9B-340",
+      "split": "calibration",
+      "origin_family_id": "official:stats-nz",
+      "claim_text": "Stats NZ improves lives more than every other government department.",
+      "evidence": [
+        {
+          "evidence_id": "V3-340:E1",
+          "title": "About us",
+          "url": "https://www.stats.govt.nz/about-us/",
+          "source_class": "official_html",
+          "passage": "About Aotearoa, for Aotearoa – data that improves lives today and for generations to come."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "count",
+        "comparator_or_relation": "qualitative_superlative",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 68,
+          "quoted_text": "Stats NZ improves lives more than every other government department."
+        },
+        "evidence_spans": [],
+        "suggested_gold_label": "not_applicable",
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Prefilled review proposal; human confirmation is required.",
+          "Accessible official HTML; no PDF or restricted document was stored."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-31",
+        "dimension_bucket": "count",
+        "comparator_or_relation": "qualitative_superlative",
+        "gold_label": "not_applicable",
+        "claim_span": null,
+        "evidence_spans": [],
+        "expected_verification_state": null,
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-07-31",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    }
+  ]
+}

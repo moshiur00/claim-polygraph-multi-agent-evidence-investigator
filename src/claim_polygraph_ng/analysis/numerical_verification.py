@@ -155,6 +155,11 @@ _LINEAR_UNITS: dict[NumericDimension, dict[str, Decimal]] = {
         "kilopascal": Decimal("1000"),
         "atmosphere": Decimal("101325"),
     },
+    NumericDimension.SPEED: {
+        "metre_per_second": Decimal("1"),
+        "kilometre_per_hour": Decimal("0.2777777777777777777777777778"),
+        "mile_per_hour": Decimal("0.44704"),
+    },
     NumericDimension.PERCENTAGE: {
         "percent": Decimal("1"),
         "percentage_point": Decimal("1"),

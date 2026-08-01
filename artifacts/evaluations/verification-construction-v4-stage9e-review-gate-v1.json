@@ -1,0 +1,32 @@
+{
+  "audit_id": "verification-construction-v4-stage9e-review-gate-v1",
+  "status": "approved_awaiting_v4_9f_freeze",
+  "review_gate_passed": true,
+  "calibration_execution_authorized": false,
+  "approved_workbook": "benchmarks/verification_construction_v4_stage9e_fresh_calibration_workbook_v1_APPROVED.json",
+  "approved_workbook_sha256": "476a606579235a45907d48d2e0a0156d1abc7b45088d76e5f4ecf6ae4a484815",
+  "case_count": 20,
+  "annotated_cases": 20,
+  "distinctly_approved_cases": 20,
+  "exact_span_failures": 0,
+  "immutable_collection_changes": 0,
+  "annotator": "Md Moshiur Rahman",
+  "distinct_approver": "Md Rashedul Islam",
+  "annotation_dates": [
+    "2026-08-01"
+  ],
+  "approval_dates": [
+    "2026-08-01"
+  ],
+  "label_counts": {
+    "deterministic_constructible": 18,
+    "not_applicable": 2
+  },
+  "dimension_counts": {
+    "temporal_instant": 20
+  },
+  "model_calls": 0,
+  "paid_operations": 0,
+  "held_out_cases_loaded": 0,
+  "next_action": "Freeze the V4.9f replacement calibration configuration before its one allowed execution"
+}

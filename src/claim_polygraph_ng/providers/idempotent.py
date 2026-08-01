@@ -84,6 +84,7 @@ class IdempotentStructuredModelProvider:
         lease_seconds: int = 120,
         before_provider_start: Callable[[], None] | None = None,
         after_provider_success: Callable[[], None] | None = None,
+        unknown_cost_upper_bound_usd: float = 0.05,
     ) -> None:
         self._provider = provider
         self._ledger = ledger
@@ -93,6 +94,9 @@ class IdempotentStructuredModelProvider:
         self._lease_seconds = lease_seconds
         self._before_provider_start = before_provider_start
         self._after_provider_success = after_provider_success
+        if unknown_cost_upper_bound_usd < 0:
+            raise ValueError("unknown cost upper bound cannot be negative")
+        self._unknown_cost_upper_bound_usd = unknown_cost_upper_bound_usd
         self._last_usage: ModelCallUsage | None = None
         self.provider_id = f"idempotent:{provider.provider_id}"
 
@@ -103,22 +107,12 @@ class IdempotentStructuredModelProvider:
         response_model: type[StructuredResult],
         inputs: Mapping[str, JsonValue],
     ) -> StructuredResult:
-        model_for_task = getattr(self._provider, "model_for_task", None)
-        model = model_for_task(task) if callable(model_for_task) else getattr(
-            self._provider, "model", None
+        spec = self.operation_spec(
+            task=task,
+            response_model=response_model,
+            inputs=inputs,
         )
-        spec = canonical_paid_operation_spec(
-            investigation_id=self._investigation_id,
-            node_id=self._node_id,
-            kind=PaidOperationKind.MODEL,
-            provider=self._provider.provider_id,
-            model_or_engine=model,
-            task=task.value,
-            payload={
-                "response_model": response_model.__name__,
-                "inputs": inputs,
-            },
-        )
+        model = spec.model_or_engine
         claim = self._ledger.reserve(
             spec,
             worker_id=self._worker_id,
@@ -155,11 +149,16 @@ class IdempotentStructuredModelProvider:
                 inputs=inputs,
             )
         except Exception as error:
+            usage = _take_usage(self._provider)
+            self._last_usage = usage
             self._ledger.fail(
                 spec.operation_key,
                 worker_id=self._worker_id,
                 retryable=isinstance(error, ModelUnavailableError),
                 error=error,
+                usage=usage,
+                unknown_cost_upper_bound_usd=self._unknown_cost_upper_bound_usd,
+                duration_seconds=perf_counter() - started,
             )
             raise
         usage = _take_usage(self._provider)
@@ -171,9 +170,40 @@ class IdempotentStructuredModelProvider:
             worker_id=self._worker_id,
             result_payload=result.model_dump_json(),
             usage=usage,
+            unknown_cost_upper_bound_usd=self._unknown_cost_upper_bound_usd,
             duration_seconds=perf_counter() - started,
         )
         return result
+
+    def operation_spec(
+        self,
+        *,
+        task: ModelTask,
+        response_model: type[StructuredResult],
+        inputs: Mapping[str, JsonValue],
+    ) -> PaidOperationSpec:
+        """Expose the exact canonical receipt key for pre-call budget checks."""
+        model_for_task = getattr(self._provider, "model_for_task", None)
+        model = model_for_task(task) if callable(model_for_task) else getattr(
+            self._provider, "model", None
+        )
+        payload: dict[str, object] = {
+            "response_model": response_model.__name__,
+            "inputs": inputs,
+        }
+        if task is ModelTask.ASSIST_VERIFICATION_CONSTRUCTION:
+            payload["provider_prompt_version"] = getattr(
+                self._provider, "prompt_version", "unspecified"
+            )
+        return canonical_paid_operation_spec(
+            investigation_id=self._investigation_id,
+            node_id=self._node_id,
+            kind=PaidOperationKind.MODEL,
+            provider=self._provider.provider_id,
+            model_or_engine=model,
+            task=task.value,
+            payload=payload,
+        )
 
     def take_last_usage(self) -> ModelCallUsage | None:
         usage = self._last_usage

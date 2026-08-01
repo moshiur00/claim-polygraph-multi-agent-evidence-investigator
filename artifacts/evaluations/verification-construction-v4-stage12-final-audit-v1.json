@@ -1,0 +1,367 @@
+{
+  "audit_id": "verification-construction-v4-stage12-final-audit-v1",
+  "status": "closed_promoted",
+  "phase": "Verification Construction V4",
+  "engineering_closed": true,
+  "promoted": true,
+  "promotion_recommended": true,
+  "promotion_pending_explicit_adr_approval": false,
+  "promotion_approval": {
+    "adr": "0024",
+    "approver": "Md Moshiur Rahman",
+    "approved_on": "2026-08-01"
+  },
+  "held_out_configuration_may_be_retuned": false,
+  "held_out_cases_may_be_reused_for_future_promotion": false,
+  "gates": {
+    "replacement_calibration_passed": true,
+    "held_out_executed_exactly_once": true,
+    "held_out_not_replayed_during_v4_12": true,
+    "all_frozen_promotion_gates_passed": true,
+    "failure_adjudication_passed": true,
+    "recovery_audit_passed": true,
+    "frozen_artifact_integrity": true,
+    "all_v4_evaluation_json_readable": true,
+    "unsafe_accepted_constructions_zero": true,
+    "human_review_routing_recall_complete": true,
+    "duplicate_paid_operations_zero": true,
+    "configuration_and_thresholds_unchanged": true,
+    "documentation_reconciled": true,
+    "adr_0024_accepted": true
+  },
+  "failed_gates": [],
+  "integrity_errors": [],
+  "json_errors": [],
+  "failure_adjudication_artifact": {
+    "path": "artifacts/evaluations/verification-construction-v4-stage12-failure-adjudication-v1.json",
+    "sha256": "7ce8dba428e34db16565192ccef9fcf3df903726068973f0f2fec7ed620dfa76"
+  },
+  "recovery_artifact": {
+    "path": "artifacts/evaluations/verification-construction-v4-stage12-recovery-audit-v1.json",
+    "sha256": "daa1d5f72ef32089f7ee71bfd7d506bcee2d17ad24ae2450d319933dc646afca"
+  },
+  "held_out_summary": {
+    "cases": 20,
+    "constructible_cases": 18,
+    "correct_constructions": 15,
+    "construction_precision": 1.0,
+    "construction_recall": 0.8333333333333334,
+    "human_review_routing_recall": 1.0,
+    "unsafe_accepted_constructions": 0,
+    "duplicate_paid_operations": 0,
+    "estimated_cost_usd": 0.0050928,
+    "cost_per_recovered_assertion_usd": 0.00033952
+  },
+  "promotion_decision": "Promote the bounded V4 assisted-construction fallback under the accepted ADR 0024 safeguards.",
+  "future_work_boundary": "The V4.11 held-out split is permanently retired and cannot be rerun or used for tuning. Any successor must use new development, calibration, and held-out data.",
+  "validation_evidence": {
+    "focused_closure_and_recovery_tests_passed": 62,
+    "full_python_tests_passed": 728,
+    "full_python_tests_failed": 0,
+    "ruff_passed": true,
+    "validation_date": "2026-08-01"
+  },
+  "artifact_count": 60,
+  "release_manifest": [
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-canary-budget-amendment-audit-v1.json",
+      "sha256": "97ec5b3c57a8cca5943678cdc40bb3b1bcff3c84d37cc757361886f78629da77",
+      "bytes": 1595
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-canary-budget-amendment-v1.json",
+      "sha256": "2fa0a48b2e58ba615cc66c9c25b0090a730ee52dfbef7327157c173ef033e746",
+      "bytes": 1156
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-dataset-nonreuse-policy-v1.json",
+      "sha256": "6572f4635ec5dfda38728a75f3193796c04997948e7f347203ea1ffcf47e5d22",
+      "bytes": 4414
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-failure-taxonomy-v1.json",
+      "sha256": "2376aaea0fca99061cd653e5a2bb7d978e646fcee350970a41015ac901fce478",
+      "bytes": 3804
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage0-audit-v1.json",
+      "sha256": "2da7b381b2c92d267f3a5a12e9f9eb7265bae54297dcaa3c20811d76c53eca2e",
+      "bytes": 628
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage0-manifest-v1.json",
+      "sha256": "f354e12c11e23131607825bc15d9ccc2ac75ec0a540a6e39d38e4e48550d6b76",
+      "bytes": 2545
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage1-cost-observability-v1.json",
+      "sha256": "76137b424d0ab275079c34ba9844fab0df3c5eeddafd7546300d151cd3f8dbd8",
+      "bytes": 3449
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage10-collection-audit-v1.json",
+      "sha256": "6c007ff3c7e5cb33fe1110f4491e84e3ffa44bd92ab7233a905489e2ba5af0ea",
+      "bytes": 1505
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage10-review-gate-v1.json",
+      "sha256": "12aa92b71e0b1474ac20324d06c5697187c4c243e540c0e6f24681bc259a9e68",
+      "bytes": 1077
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage11-held-out-evaluation-freeze-v1.json",
+      "sha256": "378419621737acb274911081ccc329b871d937e33a59bbb0f248fc0ab9c4f5f8",
+      "bytes": 5570
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage11-held-out-evaluation-v1.json",
+      "sha256": "36f68a0389e81807ac56012e3ee0b72cf215ef0714ccfdd5dbbae7b127514ea6",
+      "bytes": 33258
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage12-failure-adjudication-v1.json",
+      "sha256": "7ce8dba428e34db16565192ccef9fcf3df903726068973f0f2fec7ed620dfa76",
+      "bytes": 2718
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage12-recovery-audit-v1.json",
+      "sha256": "daa1d5f72ef32089f7ee71bfd7d506bcee2d17ad24ae2450d319933dc646afca",
+      "bytes": 822
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage2-candidate-extraction-v1.json",
+      "sha256": "1bcf4444d5960618c85a0aa97ce9afff805e7585310f49b1654971bc634b9469",
+      "bytes": 35679
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage3-compound-assertions-v1.json",
+      "sha256": "f354fc30c0c977735ea3f915aa0edf5dca0f45e93b428fea588aa3bb493749fa",
+      "bytes": 24163
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage4-eligibility-v1.json",
+      "sha256": "b92692b6ab4d26dc5484260c754c8110b0441074ccfe347643fc129bf97e4d7f",
+      "bytes": 12084
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage5-offline-gate-v1.json",
+      "sha256": "39a64b23dc96eaeef83464556066f52529e75f835cd3d11b49b57da51c3c954d",
+      "bytes": 12331
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage6-canary-audit-v1.json",
+      "sha256": "30726fc1faadc2cf4001936b3fdbcd60a11c029112d89daab7e79f9bf64c7b76",
+      "bytes": 3530
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage6-canary-manifest-v1.json",
+      "sha256": "efac17962697f759a008694bf768179bec8f0948ea2d3877ec0d36ec94d696dd",
+      "bytes": 1988
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage6-canary-result-v1.json",
+      "sha256": "fc6ca12f797a400296c36d6c587e6bf721c3e6ed59ae27370491cb338e3c7d8c",
+      "bytes": 2650
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage6a-canary-audit-v1.json",
+      "sha256": "eee3c71406b4b7af83136e55249285449981a6b45862366982e6a779bc446118",
+      "bytes": 3316
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage6a-canary-manifest-v1.json",
+      "sha256": "babb9f225c297e6badb53292e2eb5f3373bf5a7c652eb1c8af3322fdd5b8c355",
+      "bytes": 1355
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage6a-canary-result-v1.json",
+      "sha256": "d70fe774b1354416de2eae1e38e1b2ef7be425ff6158ae164a9ccddb10a7a925",
+      "bytes": 1122
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage6a-offline-remediation-v1.json",
+      "sha256": "165170f388a35cc175ce5e2b30d9954a2b23abd56671e88b73b8b26487079447",
+      "bytes": 1411
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage6b-temporal-wire-v1.json",
+      "sha256": "26eda0b0c1da9f684bef2be20923a4906574d131305f16745f798d63162d2daf",
+      "bytes": 3417
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage6c-canary-audit-v1.json",
+      "sha256": "56db84cdaa1a0298459fc501be5663364b94c69cb909b1ee503edfbd36a66681",
+      "bytes": 2906
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage6c-canary-manifest-v1.json",
+      "sha256": "d6fd389fe6cc7192e9472c52b456a51c4ee1316cf0d001e4900bb66d87f4cd32",
+      "bytes": 1598
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage6c-canary-result-v1.json",
+      "sha256": "3cca3ba513126b9db85cd5eb25b1e153e7893e06fd254e0b8a66bae36256afd6",
+      "bytes": 2240
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage7-development-audit-v1.json",
+      "sha256": "21c2b98dfe84c0fc3e4a5b19895c76577b1f0a5aa27bdffb4865c76a1fb81fcc",
+      "bytes": 1967
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage7-development-preflight-v1.json",
+      "sha256": "6d9efc328734c84b67ceeb83c317dabc0fce68bef80d05a34df427ea3d76d74b",
+      "bytes": 1525
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage7-development-v1.json",
+      "sha256": "5c269540db9a7e260e5aa2d8f39fcf59b399b78f9ba9592363680691ec4ea649",
+      "bytes": 11476
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage7a-remediation-audit-v1.json",
+      "sha256": "b2e51a77d21303ef749831ec9badb7537efded468408d385f80a9950bea38dc9",
+      "bytes": 8118
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage7b-remediation-audit-v1.json",
+      "sha256": "80d943ebdc413a4dd13f72f8e2ec33973e59a3b14e590d584a66f260ba301a7e",
+      "bytes": 6010
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage8-collection-audit-v1.json",
+      "sha256": "493db172fb0b3ddeaa4a747d2e6aa96c0781542121be8eb0543d798b74dae883",
+      "bytes": 1676
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage8-review-gate-v1.json",
+      "sha256": "e2ee7123ac3807982599ceac7d4a18468be82a11f0aca14070abf7e61751812a",
+      "bytes": 1045
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage9-calibration-freeze-v1.json",
+      "sha256": "4f032aa2c69db4933e7ef8e8a1630f58c6bf9c79680aa6bb632ee03506ef6cb7",
+      "bytes": 4724
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage9-calibration-v1.json",
+      "sha256": "e3363c5e2ec7fd2ed8d8e6199ac25b53d8a251243420592fe0bd66810752eb17",
+      "bytes": 25325
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage9a-remediation-audit-v1.json",
+      "sha256": "47dbf915f2800ecd58f2e21a2d8bfefc83570d0e0b344ab7051392df560dc773",
+      "bytes": 9697
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage9b-collection-audit-v1.json",
+      "sha256": "889f487fc4308568e9f69f2bd11399874f7336547a1ce96317482c577f60adb8",
+      "bytes": 1686
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage9b-review-gate-v1.json",
+      "sha256": "a3e5e9ed37c595d0a598ebd2cd04fe8e9aaff94d8d1e690f7bd3734eff6974ae",
+      "bytes": 1037
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage9c-replacement-calibration-freeze-v1.json",
+      "sha256": "e4ffa0a748e92f8779bda4c5790a6aeb0c358b7290e6a3038f727c4856eaa39c",
+      "bytes": 4932
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage9c-replacement-calibration-v1.json",
+      "sha256": "6768037d21b9b1a4c8248e8c6721be584d0480acbbd8f174c251761a9fd00555",
+      "bytes": 23892
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage9d-temporal-remediation-audit-v1.json",
+      "sha256": "099b0b23cf9467a4a83098cd1598896d92369a46cb0b11fb1bc2e6878cd3b61f",
+      "bytes": 2160
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage9e-collection-audit-v1.json",
+      "sha256": "7301efae9bfaae7a40c22f56b204dbaabaaae15b9afebd9925d67f3754cafcc7",
+      "bytes": 1533
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage9e-review-gate-v1.json",
+      "sha256": "24104f3c0cfc7c77a0817f29cb33027df3b4b6f570fc9faa31b50cff468e6019",
+      "bytes": 1082
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage9f-replacement-calibration-freeze-v1.json",
+      "sha256": "fe0eb06d7e4c9a840e8584ed33aa59dab7a40170f0371dc7aa069c880865569a",
+      "bytes": 5143
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage9f-replacement-calibration-v1.json",
+      "sha256": "87a9d91958fd1c2e52a359e72dfc36c7e7b84fbb466ddaba65a32e3ef6c2f7c8",
+      "bytes": 36406
+    },
+    {
+      "path": "benchmarks/verification_construction_v4_stage10_fresh_held_out_workbook_v1_APPROVED.json",
+      "sha256": "5d58d587f3e848b56cbf5d02538b3ba5a5513b72ff5285ba7ee898cd2788c549",
+      "bytes": 51822
+    },
+    {
+      "path": "README.md",
+      "sha256": "940359dd9d1ae46f1efe91d3dfb50d80ccb366d0f654654ac1b4288173969ee0",
+      "bytes": 17747
+    },
+    {
+      "path": "docs/private/verification-construction-v4-stage12-closure.md",
+      "sha256": "7ae4e4724c850f4671aff69d70246b695721cd0dd24a191bbfd3effca6fd12ec",
+      "bytes": 4829
+    },
+    {
+      "path": "docs/adr/0024-promote-bounded-assisted-verification-construction-v4.md",
+      "sha256": "e9a808218c3126079d4884fb2513b449ba54ccc3ddd82aa8aa8174a0bc1d00ad",
+      "bytes": 3351
+    },
+    {
+      "path": "src/claim_polygraph_ng/analysis/candidate_extraction.py",
+      "sha256": "3db52dc953911e0c59ef0d05df83c9fc248c455e8a9a9dd3965e88e8345172fb",
+      "bytes": 19412
+    },
+    {
+      "path": "src/claim_polygraph_ng/analysis/compound_construction.py",
+      "sha256": "38a0c751c607aadc7cac5d8602aa2511f1b5ff648afa43613e5c9227cbc392ca",
+      "bytes": 13064
+    },
+    {
+      "path": "src/claim_polygraph_ng/analysis/construction_eligibility.py",
+      "sha256": "1928cd76af2e18dcda0894119e2ac3103129e0de9af7b1b402dc7d5125eac261",
+      "bytes": 9269
+    },
+    {
+      "path": "src/claim_polygraph_ng/analysis/assisted_verification_construction.py",
+      "sha256": "2933bccafe02afa970d954a574618f8be112ce0dc5cfabd8b8516a1b7802362d",
+      "bytes": 47683
+    },
+    {
+      "path": "src/claim_polygraph_ng/analysis/bounded_assisted_construction.py",
+      "sha256": "b03a339cf15c45bd6dc16038e75c7fcbf1d566128bb5136e292e00d7563cc35c",
+      "bytes": 10156
+    },
+    {
+      "path": "src/claim_polygraph_ng/persistence/paid_operations.py",
+      "sha256": "b50e1bfb8e0d860586a8393030b4152c2cc23214420eef1f60f20bdc63dcfaa4",
+      "bytes": 22234
+    },
+    {
+      "path": "scripts/freeze_v4_stage11_held_out_evaluation.py",
+      "sha256": "ba32439a56ae2e860b0d3015e12c40a74ecfe3f1658723cb50f8e5737f539966",
+      "bytes": 6756
+    },
+    {
+      "path": "scripts/run_v4_stage11_held_out_evaluation.py",
+      "sha256": "26a2090a6e653885838f64247547629d8cf67c873183f426a3f8d6a24ec9513b",
+      "bytes": 15479
+    },
+    {
+      "path": "scripts/run_v4_stage12_final_audit.py",
+      "sha256": "5ccc5c59369dd95b143b5ea932b3c1dd5dd972382782f96d0e67c07accd8d655",
+      "bytes": 14489
+    }
+  ]
+}

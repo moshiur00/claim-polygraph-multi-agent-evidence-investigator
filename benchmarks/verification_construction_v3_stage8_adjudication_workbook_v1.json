@@ -1,0 +1,684 @@
+{
+  "workbook_id": "verification-construction-v3-stage8-adjudication-workbook-v1",
+  "schema_version": 1,
+  "source_result_sha256": "3886b0b05f35cfcfe54a68281c00def4931f5f42fc3bf66540438a53ba5ccf9d",
+  "model_calls": 0,
+  "held_out_reruns": 0,
+  "annotator_identity_prefill": "Md Moshiur Rahman",
+  "distinct_approver_identity_prefill": "Md Rashedul Islam",
+  "instructions": [
+    "Review every prefilled decision against the frozen claim, approved evidence, gold annotation, and persisted provider result.",
+    "Change any decision or rationale that you do not independently accept.",
+    "Complete all five annotator checks.",
+    "The distinct approver must independently review each decision and complete all three approval checks.",
+    "Do not rerun or modify the held-out evaluation."
+  ],
+  "allowed_adjudication_decisions": [
+    "accept",
+    "revise",
+    "reject_unsafe",
+    "confirm_safe_failure"
+  ],
+  "cases": [
+    {
+      "case_id": "V3-001",
+      "claim_text": "A calendar year is exactly 365.25 days long.",
+      "gold_annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-30",
+        "dimension_bucket": "duration",
+        "comparator_or_relation": "equal",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 44,
+          "quoted_text": "A calendar year is exactly 365.25 days long."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "CPNG-001:E1",
+            "start_char": 0,
+            "end_char": 70,
+            "quoted_text": "Earth takes about 365.2422 days to make one revolution around the Sun."
+          },
+          {
+            "evidence_id": "CPNG-001:E2",
+            "start_char": 0,
+            "end_char": 82,
+            "quoted_text": "year, calendar: ... either 365 or 366 days. year, Julian: a period of 365.25 days."
+          }
+        ],
+        "expected_verification_state": "qualified",
+        "ambiguity_notes": [
+          "An ordinary civil-calendar year contains 365 or 366 days.",
+          "Exactly 365.25 days applies to the Julian-year convention, not every meaning of calendar year."
+        ]
+      },
+      "approved_evidence": [
+        {
+          "evidence_id": "CPNG-001:E1",
+          "title": "Doing the Math on Why We Have Leap Day",
+          "url": "https://www.jpl.nasa.gov/edu/news/doing-the-math-on-why-we-have-leap-day/",
+          "source_class": "official",
+          "passage": "Earth takes about 365.2422 days to make one revolution around the Sun."
+        },
+        {
+          "evidence_id": "CPNG-001:E2",
+          "title": "Astronomical Almanac Glossary",
+          "url": "https://aa.usno.navy.mil/faq/asa_glossary",
+          "source_class": "official",
+          "passage": "year, calendar: ... either 365 or 366 days. year, Julian: a period of 365.25 days."
+        }
+      ],
+      "held_out_disposition": "validated_assisted_proposal",
+      "validated_proposal": {
+        "kind": "numerical_scalar",
+        "failed_construction_id": "33eba6c7-c3e6-5b40-b624-9eeebe7ca0ac",
+        "claim_text_span": "A calendar year is exactly 365.25 days long.",
+        "left_subject": null,
+        "right_subject": null,
+        "comparator": "equal",
+        "dimension": "duration",
+        "left_value": null,
+        "right_value": null,
+        "scalar_form": "single_value",
+        "scalar_subject": "A calendar year",
+        "numeric_operation": "direct",
+        "expected_values": [
+          {
+            "value": "365.25",
+            "unit": "days",
+            "dimension": "duration",
+            "scale": "1",
+            "tolerance": null
+          }
+        ],
+        "evidence_bindings": [
+          {
+            "evidence_id": "9648dde1-251f-5e2e-bb63-64bcd1657e6f",
+            "start_char": 70,
+            "end_char": 82,
+            "quoted_text": "365.25 days."
+          }
+        ],
+        "temporal_relation": null,
+        "reference_date": null,
+        "claimed_interval": null,
+        "requires_reference_date": false,
+        "claimed_status": null,
+        "temporal_bindings": []
+      },
+      "safe_failure": null,
+      "prefilled_adjudication": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-31",
+        "decision": "revise",
+        "rationale": "The proposal binds only the Julian-year value and omits the decisive calendar-year and tropical-year qualification evidence.",
+        "checked_claim_span": true,
+        "checked_evidence_bindings": true,
+        "checked_material_operands": true,
+        "checked_expected_state_compatibility": true,
+        "checked_fail_closed_behavior": true,
+        "notes": [],
+        "review_status": "reviewed_and_accepted"
+      },
+      "distinct_approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-07-31",
+        "decision": "approve",
+        "checked_adjudication": true,
+        "checked_rationale": true,
+        "checked_safety_effect": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-011",
+      "claim_text": "Iceland gets 100 percent of its electricity from renewable sources.",
+      "gold_annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-30",
+        "dimension_bucket": "percentage_or_rate",
+        "comparator_or_relation": "equal",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 67,
+          "quoted_text": "Iceland gets 100 percent of its electricity from renewable sources."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "CPNG-011:E1",
+            "start_char": 0,
+            "end_char": 45,
+            "quoted_text": "Renewables provide almost 100% of electricity"
+          }
+        ],
+        "expected_verification_state": "qualified",
+        "ambiguity_notes": [
+          "\u201cAlmost 100%\u201d supports a near-total share but not an exact 100% equality.",
+          "No reference year is stated in the claim."
+        ]
+      },
+      "approved_evidence": [
+        {
+          "evidence_id": "CPNG-011:E1",
+          "title": "Government of Iceland: Energy",
+          "url": "https://mfa.is/topics/business-and-industry/energy/",
+          "source_class": "official",
+          "passage": "Renewables provide almost 100% of electricity and about 85% of primary energy; fossil fuels, mainly transport oil, supply the remainder."
+        },
+        {
+          "evidence_id": "CPNG-011:E2",
+          "title": "Orkustofnun numerical data: Electricity",
+          "url": "https://orkustofnun.is/en/information/numerical_data/electricity",
+          "source_class": "dataset",
+          "passage": "The authority publishes electricity generation tables by energy source, year, and month."
+        }
+      ],
+      "held_out_disposition": "validated_assisted_proposal",
+      "validated_proposal": {
+        "kind": "numerical_scalar",
+        "failed_construction_id": "ae46e24a-0793-5876-b450-fa0c12191171",
+        "claim_text_span": "Iceland gets 100 percent of its electricity from renewable sources.",
+        "left_subject": null,
+        "right_subject": null,
+        "comparator": "equal",
+        "dimension": "percentage",
+        "left_value": null,
+        "right_value": null,
+        "scalar_form": "single_value",
+        "scalar_subject": "Iceland gets",
+        "numeric_operation": "direct",
+        "expected_values": [
+          {
+            "value": "100",
+            "unit": "percent",
+            "dimension": "percentage",
+            "scale": "1",
+            "tolerance": null
+          }
+        ],
+        "evidence_bindings": [
+          {
+            "evidence_id": "6d7703f4-a258-5bf0-852f-c9f22f68c544",
+            "start_char": 0,
+            "end_char": 136,
+            "quoted_text": "Renewables provide almost 100% of electricity and about 85% of primary energy; fossil fuels, mainly transport oil, supply the remainder."
+          }
+        ],
+        "temporal_relation": null,
+        "reference_date": null,
+        "claimed_interval": null,
+        "requires_reference_date": false,
+        "claimed_status": null,
+        "temporal_bindings": []
+      },
+      "safe_failure": null,
+      "prefilled_adjudication": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-31",
+        "decision": "accept",
+        "rationale": "The proposal captures the 100 percent electricity assertion and binds the passage containing the material almost-100-percent qualification.",
+        "checked_claim_span": true,
+        "checked_evidence_bindings": true,
+        "checked_material_operands": true,
+        "checked_expected_state_compatibility": true,
+        "checked_fail_closed_behavior": true,
+        "notes": [],
+        "review_status": "reviewed_and_accepted"
+      },
+      "distinct_approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-07-31",
+        "decision": "approve",
+        "checked_adjudication": true,
+        "checked_rationale": true,
+        "checked_safety_effect": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-012",
+      "claim_text": "Iceland gets 100 percent of its total energy from renewable sources.",
+      "gold_annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-30",
+        "dimension_bucket": "percentage_or_rate",
+        "comparator_or_relation": "equal",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 68,
+          "quoted_text": "Iceland gets 100 percent of its total energy from renewable sources."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "CPNG-011:E1",
+            "start_char": 50,
+            "end_char": 135,
+            "quoted_text": "about 85% of primary energy; fossil fuels, mainly transport oil, supply the remainder"
+          }
+        ],
+        "expected_verification_state": "contradicted",
+        "ambiguity_notes": [
+          "\u201cTotal energy\u201d is interpreted as primary energy because that is the retained evidence terminology.",
+          "The cited share is about 85%, not 100%."
+        ]
+      },
+      "approved_evidence": [
+        {
+          "evidence_id": "CPNG-011:E1",
+          "title": "Government of Iceland: Energy",
+          "url": "https://mfa.is/topics/business-and-industry/energy/",
+          "source_class": "official",
+          "passage": "Renewables provide almost 100% of electricity and about 85% of primary energy; fossil fuels, mainly transport oil, supply the remainder."
+        },
+        {
+          "evidence_id": "CPNG-011:E2",
+          "title": "Orkustofnun numerical data: Electricity",
+          "url": "https://orkustofnun.is/en/information/numerical_data/electricity",
+          "source_class": "dataset",
+          "passage": "The authority publishes electricity generation tables by energy source, year, and month."
+        }
+      ],
+      "held_out_disposition": "validated_assisted_proposal",
+      "validated_proposal": {
+        "kind": "numerical_scalar",
+        "failed_construction_id": "5b32f4bc-eacb-5bd2-95f5-588c7f342070",
+        "claim_text_span": "Iceland gets 100 percent of its total energy from renewable sources.",
+        "left_subject": null,
+        "right_subject": null,
+        "comparator": "equal",
+        "dimension": "percentage",
+        "left_value": null,
+        "right_value": null,
+        "scalar_form": "single_value",
+        "scalar_subject": "Iceland gets",
+        "numeric_operation": "direct",
+        "expected_values": [
+          {
+            "value": "100",
+            "unit": "percent",
+            "dimension": "percentage",
+            "scale": "1",
+            "tolerance": null
+          }
+        ],
+        "evidence_bindings": [
+          {
+            "evidence_id": "5f5c2b3b-6258-53ff-92b1-7dffc3f9c03d",
+            "start_char": 0,
+            "end_char": 136,
+            "quoted_text": "Renewables provide almost 100% of electricity and about 85% of primary energy; fossil fuels, mainly transport oil, supply the remainder."
+          }
+        ],
+        "temporal_relation": null,
+        "reference_date": null,
+        "claimed_interval": null,
+        "requires_reference_date": false,
+        "claimed_status": null,
+        "temporal_bindings": []
+      },
+      "safe_failure": null,
+      "prefilled_adjudication": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-31",
+        "decision": "accept",
+        "rationale": "The proposal captures the total-energy percentage and binds the passage showing about 85 percent plus continuing fossil-fuel use.",
+        "checked_claim_span": true,
+        "checked_evidence_bindings": true,
+        "checked_material_operands": true,
+        "checked_expected_state_compatibility": true,
+        "checked_fail_closed_behavior": true,
+        "notes": [],
+        "review_status": "reviewed_and_accepted"
+      },
+      "distinct_approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-07-31",
+        "decision": "approve",
+        "checked_adjudication": true,
+        "checked_rationale": true,
+        "checked_safety_effect": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-024",
+      "claim_text": "Tesla delivered more than 1.8 million vehicles during 2023.",
+      "gold_annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-30",
+        "dimension_bucket": "count",
+        "comparator_or_relation": "greater_than",
+        "gold_label": "fallback_eligible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 59,
+          "quoted_text": "Tesla delivered more than 1.8 million vehicles during 2023."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "CPNG-017:E1",
+            "start_char": 0,
+            "end_char": 73,
+            "quoted_text": "Tesla reported 1,808,581 total vehicle deliveries for calendar year 2023."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": [
+          "1,808,581 is greater than 1.8 million.",
+          "The machine proposal misclassified the dimension as distance or mass; vehicle deliveries are a count."
+        ]
+      },
+      "approved_evidence": [
+        {
+          "evidence_id": "CPNG-017:E1",
+          "title": "Tesla Vehicle Production and Deliveries for 2023",
+          "url": "https://ir.tesla.com/press-release/tesla-vehicle-production-deliveries-and-date-financial-results-webcast-fourth-quarter-2023?quot=",
+          "source_class": "primary_document",
+          "passage": "Tesla reported 1,808,581 total vehicle deliveries for calendar year 2023."
+        },
+        {
+          "evidence_id": "CPNG-017:E2",
+          "title": "Sales, Production, and Export Results for 2023",
+          "url": "https://global.toyota/en/company/profile/production-sales-figures/202312.html",
+          "source_class": "primary_document",
+          "passage": "Toyota reported 11,233,039 worldwide 2023 sales across Toyota, Daihatsu, and Hino, far exceeding Tesla's 1,808,581 deliveries."
+        }
+      ],
+      "held_out_disposition": "human_review_safe_failure",
+      "validated_proposal": null,
+      "safe_failure": {
+        "error_type": "ValueError",
+        "error": "scalar value is not explicit in bound evidence"
+      },
+      "prefilled_adjudication": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-31",
+        "decision": "confirm_safe_failure",
+        "rationale": "No proposal passed validation because the proposed scalar was not explicitly bound to the approved evidence.",
+        "checked_claim_span": true,
+        "checked_evidence_bindings": true,
+        "checked_material_operands": true,
+        "checked_expected_state_compatibility": true,
+        "checked_fail_closed_behavior": true,
+        "notes": [],
+        "review_status": "reviewed_and_accepted"
+      },
+      "distinct_approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-07-31",
+        "decision": "approve",
+        "checked_adjudication": true,
+        "checked_rationale": true,
+        "checked_safety_effect": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-031",
+      "claim_text": "Standard sea-level atmospheric pressure is 1,013 hectopascals.",
+      "gold_annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-30",
+        "dimension_bucket": "pressure",
+        "comparator_or_relation": "approximately_equal",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 62,
+          "quoted_text": "Standard sea-level atmospheric pressure is 1,013 hectopascals."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-REMEDIATION-003:E1",
+            "start_char": 0,
+            "end_char": 40,
+            "quoted_text": "Standard sea-level pressure is 1013 hPa."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approved_evidence": [
+        {
+          "evidence_id": "V3-REMEDIATION-003:E1",
+          "title": "High and low pressure",
+          "url": "https://weather.metoffice.gov.uk/learn-about/weather/how-weather-works/high-and-low-pressure",
+          "source_class": "official_or_legal",
+          "passage": "Standard sea-level pressure is 1013 hPa."
+        }
+      ],
+      "held_out_disposition": "human_review_safe_failure",
+      "validated_proposal": null,
+      "safe_failure": {
+        "error_type": "ModelOutputError",
+        "error": "OpenAI output failed schema validation: 2 validation errors for AssistedScalarProviderProposal\nvalues.0.scale\n  Input should be greater than 0 [type=greater_than, input_value='0', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/greater_than\nvalues\n  Tuple should have at least 1 item after validation, not 0 [type=too_short, input_value=[{'value': '1013', 'unit'...'0', 'tolerance': None}], input_type=list]\n    For further information visit https://errors.pydantic.dev/2.13/v/too_short"
+      },
+      "prefilled_adjudication": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-31",
+        "decision": "confirm_safe_failure",
+        "rationale": "No proposal passed schema validation because the provider emitted an invalid zero scale.",
+        "checked_claim_span": true,
+        "checked_evidence_bindings": true,
+        "checked_material_operands": true,
+        "checked_expected_state_compatibility": true,
+        "checked_fail_closed_behavior": true,
+        "notes": [],
+        "review_status": "reviewed_and_accepted"
+      },
+      "distinct_approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-07-31",
+        "decision": "approve",
+        "checked_adjudication": true,
+        "checked_rationale": true,
+        "checked_safety_effect": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-039",
+      "claim_text": "In 2020, an estimated 374 million new infections involved four curable sexually transmitted infections.",
+      "gold_annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-30",
+        "dimension_bucket": "count",
+        "comparator_or_relation": "equal",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 103,
+          "quoted_text": "In 2020, an estimated 374 million new infections involved four curable sexually transmitted infections."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-WEB-008:E1",
+            "start_char": 0,
+            "end_char": 64,
+            "quoted_text": "WHO estimated 374 million new infections with four curable STIs."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": [
+          "The estimate and the set of four curable infections are both retained."
+        ]
+      },
+      "approved_evidence": [
+        {
+          "evidence_id": "V3-WEB-008:E1",
+          "title": "Sexually transmitted infections (STIs)",
+          "url": "https://www.who.int/en/news-room/fact-sheets/detail/sexually-transmitted-infections-%28stis%29",
+          "source_class": "official_or_legal",
+          "passage": "WHO estimated 374 million new infections with four curable STIs."
+        }
+      ],
+      "held_out_disposition": "validated_assisted_proposal",
+      "validated_proposal": {
+        "kind": "numerical_scalar",
+        "failed_construction_id": "643627d9-233a-5ebd-94cf-8511aed169ea",
+        "claim_text_span": "374 million new infections",
+        "left_subject": null,
+        "right_subject": null,
+        "comparator": "equal",
+        "dimension": "count",
+        "left_value": null,
+        "right_value": null,
+        "scalar_form": "single_value",
+        "scalar_subject": "new infections",
+        "numeric_operation": "direct",
+        "expected_values": [
+          {
+            "value": "374",
+            "unit": "infections",
+            "dimension": "count",
+            "scale": "1000000",
+            "tolerance": null
+          }
+        ],
+        "evidence_bindings": [
+          {
+            "evidence_id": "2acb6fc8-2b46-551a-aeb5-eaae88506487",
+            "start_char": 0,
+            "end_char": 64,
+            "quoted_text": "WHO estimated 374 million new infections with four curable STIs."
+          }
+        ],
+        "temporal_relation": null,
+        "reference_date": null,
+        "claimed_interval": null,
+        "requires_reference_date": false,
+        "claimed_status": null,
+        "temporal_bindings": []
+      },
+      "safe_failure": null,
+      "prefilled_adjudication": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-31",
+        "decision": "revise",
+        "rationale": "The construction captures the count but its claim span omits the 2020 reference and the four-infection scope that are material to the claim.",
+        "checked_claim_span": true,
+        "checked_evidence_bindings": true,
+        "checked_material_operands": true,
+        "checked_expected_state_compatibility": true,
+        "checked_fail_closed_behavior": true,
+        "notes": [],
+        "review_status": "reviewed_and_accepted"
+      },
+      "distinct_approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-07-31",
+        "decision": "approve",
+        "checked_adjudication": true,
+        "checked_rationale": true,
+        "checked_safety_effect": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-060",
+      "claim_text": "Refrigerated food held above 40\u00b0F for at least two hours should be discarded after a power outage.",
+      "gold_annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-30",
+        "dimension_bucket": "temperature",
+        "comparator_or_relation": "greater_than_with_minimum_duration",
+        "gold_label": "fallback_eligible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 98,
+          "quoted_text": "Refrigerated food held above 40\u00b0F for at least two hours should be discarded after a power outage."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-WEB-029:E1",
+            "start_char": 0,
+            "end_char": 46,
+            "quoted_text": "Discard food above 40\u00b0F for two hours or more."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": [
+          "The rule combines a strict temperature threshold with a minimum duration.",
+          "Both conditions must be preserved; neither alone is sufficient."
+        ]
+      },
+      "approved_evidence": [
+        {
+          "evidence_id": "V3-WEB-029:E1",
+          "title": "Hurricane Season: Be Prepared",
+          "url": "https://www.fda.gov/consumers/consumer-updates/hurricane-season-be-prepared",
+          "source_class": "official_or_legal",
+          "passage": "Discard food above 40\u00b0F for two hours or more."
+        }
+      ],
+      "held_out_disposition": "validated_assisted_proposal",
+      "validated_proposal": {
+        "kind": "numerical_scalar",
+        "failed_construction_id": "728b12b1-1230-5ddc-9492-d188b7472430",
+        "claim_text_span": "Refrigerated food held above 40\u00b0F",
+        "left_subject": null,
+        "right_subject": null,
+        "comparator": "greater_than",
+        "dimension": "temperature",
+        "left_value": null,
+        "right_value": null,
+        "scalar_form": "single_value",
+        "scalar_subject": "Refrigerated food held above",
+        "numeric_operation": "direct",
+        "expected_values": [
+          {
+            "value": "40",
+            "unit": "\u00b0F",
+            "dimension": "temperature",
+            "scale": "1",
+            "tolerance": null
+          }
+        ],
+        "evidence_bindings": [
+          {
+            "evidence_id": "621df765-b9bd-5898-89ba-1e9a002cb804",
+            "start_char": 0,
+            "end_char": 46,
+            "quoted_text": "Discard food above 40\u00b0F for two hours or more."
+          }
+        ],
+        "temporal_relation": null,
+        "reference_date": null,
+        "claimed_interval": null,
+        "requires_reference_date": false,
+        "claimed_status": null,
+        "temporal_bindings": []
+      },
+      "safe_failure": null,
+      "prefilled_adjudication": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-31",
+        "decision": "revise",
+        "rationale": "The construction captures the 40 degree threshold but omits the two-hour duration and discard condition in this compound rule.",
+        "checked_claim_span": true,
+        "checked_evidence_bindings": true,
+        "checked_material_operands": true,
+        "checked_expected_state_compatibility": true,
+        "checked_fail_closed_behavior": true,
+        "notes": [],
+        "review_status": "reviewed_and_accepted"
+      },
+      "distinct_approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-07-31",
+        "decision": "approve",
+        "checked_adjudication": true,
+        "checked_rationale": true,
+        "checked_safety_effect": true,
+        "notes": []
+      }
+    }
+  ],
+  "annotation_status": "complete",
+  "distinct_approval_status": "complete",
+  "stage_status": "human_adjudication_complete"
+}

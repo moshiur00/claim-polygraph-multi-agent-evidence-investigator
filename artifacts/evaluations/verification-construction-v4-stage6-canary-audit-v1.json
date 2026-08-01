@@ -1,0 +1,87 @@
+{
+  "audit_id": "verification-construction-v4-stage6-canary-audit-v1",
+  "status": "failed_safe",
+  "exit_criterion_met": false,
+  "safety_boundary_passed": true,
+  "provider_attempts": 2,
+  "completed_paid_operations": 2,
+  "duplicate_provider_attempts": 0,
+  "estimated_cost_usd": 0.00057465,
+  "estimated_cost_upper_bound_usd": 0.00057465,
+  "failure": {
+    "canary_id": "v4.6-synthetic-temporal-canary-v1",
+    "layer": "deterministic_post_provider_validation",
+    "error_type": "ValueError",
+    "safe_error": "observed status is not explicit in bound evidence",
+    "diagnosis": "The temporal wire fallback copied claimed_status into a date-only evidence binding. Deterministic grounding correctly rejected that status because it was outside the exact quote.",
+    "paid_receipt_disposition": "completed_measured",
+    "retry_permitted": false
+  },
+  "gates": {
+    "manifest_frozen_before_execution": true,
+    "provider_attempt_ceiling_respected": true,
+    "no_automatic_retry": true,
+    "all_attempts_cost_observable": true,
+    "cost_within_stage_ceiling": true,
+    "scalar_schema_validated": true,
+    "scalar_cached_replay_without_duplicate": true,
+    "temporal_failure_was_fail_closed": true,
+    "cancellation_before_reservation": true,
+    "duplicate_paid_operations_zero": true,
+    "benchmark_exposure_zero": true,
+    "both_branch_schemas_validate": false
+  },
+  "artifacts": [
+    {
+      "path": "scripts/freeze_v4_stage6_canary.py",
+      "sha256": "fa9d63b610c3ef9e63f39fd79c68d977c1ba44c457c622845d7a53c7bcdbdced",
+      "bytes": 3720
+    },
+    {
+      "path": "scripts/run_v4_stage6_canary.py",
+      "sha256": "b0e955fb62d43a004cc8c68a1d43898fb2b48d81abef048fc83fac21de475873",
+      "bytes": 8691
+    },
+    {
+      "path": "scripts/audit_v4_stage6_canary.py",
+      "sha256": "03a6d1de9dc3cda034b8d5cf38c9d8556dbcd0e7e709536d6c5cf77551b118a9",
+      "bytes": 5437
+    },
+    {
+      "path": "src/claim_polygraph_ng/analysis/assisted_verification_construction.py",
+      "sha256": "9d9b121b3a2e2f0084e30c5cc4b20b645cabd20c4bad9916786e84fd3be35b3c",
+      "bytes": 31099
+    },
+    {
+      "path": "src/claim_polygraph_ng/analysis/bounded_assisted_construction.py",
+      "sha256": "9c5d6e1207bf81ae0610a52da395427229c185f4aae7ebbf77302a92731c1720",
+      "bytes": 10093
+    },
+    {
+      "path": "src/claim_polygraph_ng/providers/idempotent.py",
+      "sha256": "996252153187b0b13dd7816a6e902eb24e7883001c95791abdd4939569e2da4d",
+      "bytes": 11095
+    },
+    {
+      "path": "src/claim_polygraph_ng/providers/openai.py",
+      "sha256": "6afe6d55bf9fe874dc5cb0d7dc8d0d77723271e0dd68b908dbaa067d0bddf227",
+      "bytes": 16676
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage5-offline-gate-v1.json",
+      "sha256": "39a64b23dc96eaeef83464556066f52529e75f835cd3d11b49b57da51c3c954d",
+      "bytes": 12331
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage6-canary-manifest-v1.json",
+      "sha256": "efac17962697f759a008694bf768179bec8f0948ea2d3877ec0d36ec94d696dd",
+      "bytes": 1988
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage6-canary-result-v1.json",
+      "sha256": "fc6ca12f797a400296c36d6c587e6bf721c3e6ed59ae27370491cb338e3c7d8c",
+      "bytes": 2650
+    }
+  ],
+  "next_stage": "V4.6a temporal binding remediation using offline fixtures, followed by a fresh synthetic canary identity"
+}

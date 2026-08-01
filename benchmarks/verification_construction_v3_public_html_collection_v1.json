@@ -1,0 +1,333 @@
+{
+  "collection_id": "verification-construction-v3-public-html-collection-v1",
+  "collected_at": "2026-07-30",
+  "collection_method": "Controlled manual public-web collection from accessible HTML; no model-assisted generation.",
+  "rights_policy": {
+    "allowed_content_type": "text/html",
+    "restricted_or_paywalled_sources_allowed": false,
+    "pdf_downloads_allowed": false,
+    "excerpt_policy": "Short source-grounding excerpts only; retain URL and access metadata instead of page copies."
+  },
+  "annotation_status": "pending_v3_2_human_annotation",
+  "cases": [
+    {
+      "collection_case_id": "V3-WEB-001",
+      "claim_text": "A day on Venus lasts longer than a year on Venus.",
+      "dimension": "duration",
+      "origin_family_id": "public_html:nasa",
+      "source_class": "official_or_legal",
+      "source_title": "Venus Facts",
+      "source_url": "https://science.nasa.gov/venus/venus-facts/",
+      "source_excerpt": "Venus day is 243 Earth days; its year is 225 Earth days.",
+      "retrieved_at": "2026-07-30"
+    },
+    {
+      "collection_case_id": "V3-WEB-002",
+      "claim_text": "The Sun's corona can be hundreds of times hotter than its visible surface.",
+      "dimension": "temperature",
+      "origin_family_id": "public_html:nasa",
+      "source_class": "official_or_legal",
+      "source_title": "Sun Facts",
+      "source_url": "https://science.nasa.gov/sun/facts/",
+      "source_excerpt": "The surface is about 5,500°C; the corona reaches up to 2 million°C.",
+      "retrieved_at": "2026-07-30"
+    },
+    {
+      "collection_case_id": "V3-WEB-003",
+      "claim_text": "NOAA's daily climate database contains observations from more than 100,000 stations.",
+      "dimension": "count",
+      "origin_family_id": "public_html:noaa",
+      "source_class": "official_or_legal",
+      "source_title": "Global Historical Climatology Network daily",
+      "source_url": "https://www.ncei.noaa.gov/products/land-based-station/global-historical-climatology-network-daily",
+      "source_excerpt": "The database includes more than 100,000 stations.",
+      "retrieved_at": "2026-07-30"
+    },
+    {
+      "collection_case_id": "V3-WEB-004",
+      "claim_text": "NOAA's daily climate station network spans 180 countries and territories.",
+      "dimension": "count",
+      "origin_family_id": "public_html:noaa",
+      "source_class": "official_or_legal",
+      "source_title": "Global Historical Climatology Network daily",
+      "source_url": "https://www.ncei.noaa.gov/products/land-based-station/global-historical-climatology-network-daily",
+      "source_excerpt": "Stations are distributed across 180 countries and territories.",
+      "retrieved_at": "2026-07-30"
+    },
+    {
+      "collection_case_id": "V3-WEB-005",
+      "claim_text": "Natural gas supplied a larger share of U.S. energy production than petroleum in 2024.",
+      "dimension": "percentage_or_rate",
+      "origin_family_id": "public_html:eia",
+      "source_class": "official_or_legal",
+      "source_title": "U.S. energy facts explained",
+      "source_url": "https://www.eia.gov/energyexplained/us-energy-facts/data-and-statistics.php",
+      "source_excerpt": "Natural gas supplied 38% and petroleum 35% of 2024 production.",
+      "retrieved_at": "2026-07-30"
+    },
+    {
+      "collection_case_id": "V3-WEB-006",
+      "claim_text": "One petroleum barrel contains 42 U.S. gallons.",
+      "dimension": "distance_or_mass",
+      "origin_family_id": "public_html:eia",
+      "source_class": "official_or_legal",
+      "source_title": "Energy units and calculators explained",
+      "source_url": "https://www.eia.gov/energyexplained/units-and-calculators/",
+      "source_excerpt": "One barrel equals 42 U.S. gallons.",
+      "retrieved_at": "2026-07-30"
+    },
+    {
+      "collection_case_id": "V3-WEB-007",
+      "claim_text": "U.S. real GDP grew faster in the first quarter of 2026 than in the fourth quarter of 2025.",
+      "dimension": "percentage_or_rate",
+      "origin_family_id": "public_html:bea",
+      "source_class": "official_or_legal",
+      "source_title": "Gross Domestic Product",
+      "source_url": "https://www.bea.gov/data/gdp/gross-domestic-product",
+      "source_excerpt": "Real GDP increased 2.1% in 2026 Q1 after 0.5% in 2025 Q4.",
+      "retrieved_at": "2026-07-30"
+    },
+    {
+      "collection_case_id": "V3-WEB-008",
+      "claim_text": "In 2020, an estimated 374 million new infections involved four curable sexually transmitted infections.",
+      "dimension": "count",
+      "origin_family_id": "public_html:who",
+      "source_class": "official_or_legal",
+      "source_title": "Sexually transmitted infections (STIs)",
+      "source_url": "https://www.who.int/en/news-room/fact-sheets/detail/sexually-transmitted-infections-%28stis%29",
+      "source_excerpt": "WHO estimated 374 million new infections with four curable STIs.",
+      "retrieved_at": "2026-07-30"
+    },
+    {
+      "collection_case_id": "V3-WEB-009",
+      "claim_text": "The global share of people over age 60 is projected to rise from 12% in 2015 to 22% in 2050.",
+      "dimension": "temporal_interval_or_status",
+      "origin_family_id": "public_html:who",
+      "source_class": "official_or_legal",
+      "source_title": "Ageing and health",
+      "source_url": "https://www.who.int/en/news-room/fact-sheets/detail/ageing-and-health",
+      "source_excerpt": "The share over 60 is projected to rise from 12% to 22%.",
+      "retrieved_at": "2026-07-30"
+    },
+    {
+      "collection_case_id": "V3-WEB-010",
+      "claim_text": "The World Bank's working-age population indicator covers ages 15 through 64.",
+      "dimension": "temporal_interval_or_status",
+      "origin_family_id": "public_html:world_bank",
+      "source_class": "official_or_legal",
+      "source_title": "World Development Indicators metadata glossary",
+      "source_url": "https://databank.worldbank.org/metadataglossary/world-development-indicators/series/SP.POP.1564.TO.ZS",
+      "source_excerpt": "The indicator covers the population between ages 15 and 64.",
+      "retrieved_at": "2026-07-30"
+    },
+    {
+      "collection_case_id": "V3-WEB-011",
+      "claim_text": "The EU population was estimated at 452.0 million on 1 January 2026.",
+      "dimension": "temporal_instant",
+      "origin_family_id": "public_html:eurostat",
+      "source_class": "official_or_legal",
+      "source_title": "EU population continued to grow in 2025",
+      "source_url": "https://ec.europa.eu/eurostat/web/products-eurostat-news/w/ddn-20260710-3",
+      "source_excerpt": "On 1 January 2026, the EU population was estimated at 452.0 million.",
+      "retrieved_at": "2026-07-30"
+    },
+    {
+      "collection_case_id": "V3-WEB-012",
+      "claim_text": "Eurostat projects the EU population to peak in 2029.",
+      "dimension": "temporal_instant",
+      "origin_family_id": "public_html:eurostat",
+      "source_class": "official_or_legal",
+      "source_title": "EU population projected to drop by 11.7% by 2100",
+      "source_url": "https://ec.europa.eu/eurostat/web/products-eurostat-news/w/ddn-20260416-1",
+      "source_excerpt": "The population is projected to peak at 453.3 million in 2029.",
+      "retrieved_at": "2026-07-30"
+    },
+    {
+      "collection_case_id": "V3-WEB-013",
+      "claim_text": "Global electricity demand grew by 4.3% in 2024.",
+      "dimension": "percentage_or_rate",
+      "origin_family_id": "public_html:iea",
+      "source_class": "official_or_legal",
+      "source_title": "Electricity 2025 executive summary",
+      "source_url": "https://www.iea.org/reports/electricity-2025/executive-summary",
+      "source_excerpt": "Global electricity demand rose by 4.3% in 2024.",
+      "retrieved_at": "2026-07-30"
+    },
+    {
+      "collection_case_id": "V3-WEB-014",
+      "claim_text": "Global electricity demand grew more than twice as fast as overall energy demand in 2025.",
+      "dimension": "percentage_or_rate",
+      "origin_family_id": "public_html:iea",
+      "source_class": "official_or_legal",
+      "source_title": "Global Energy Review 2026: Electricity demand",
+      "source_url": "https://www.iea.org/reports/global-energy-review-2026/electricity-demand",
+      "source_excerpt": "Electricity grew around 3%; overall energy demand grew 1.3%.",
+      "retrieved_at": "2026-07-30"
+    },
+    {
+      "collection_case_id": "V3-WEB-015",
+      "claim_text": "Advanced-economy growth was projected at 1.5% in 2025 and 1.6% in 2026.",
+      "dimension": "percentage_or_rate",
+      "origin_family_id": "public_html:imf",
+      "source_class": "official_or_legal",
+      "source_title": "World Economic Outlook Update, July 2025",
+      "source_url": "https://www.imf.org/-/media/Files/Publications/WEO/2025/update/july/english/text",
+      "source_excerpt": "Growth is projected at 1.5% in 2025 and 1.6% in 2026.",
+      "retrieved_at": "2026-07-30"
+    },
+    {
+      "collection_case_id": "V3-WEB-016",
+      "claim_text": "Each whole-number increase in earthquake magnitude represents ten times the measured amplitude.",
+      "dimension": "distance_or_mass",
+      "origin_family_id": "public_html:usgs",
+      "source_class": "official_or_legal",
+      "source_title": "Earthquake Magnitude, Energy Release, and Shaking Intensity",
+      "source_url": "https://www.usgs.gov/programs/earthquake-hazards/earthquake-magnitude-energy-release-and-shaking-intensity",
+      "source_excerpt": "Each whole-number increase represents a tenfold increase in measured amplitude.",
+      "retrieved_at": "2026-07-30"
+    },
+    {
+      "collection_case_id": "V3-WEB-017",
+      "claim_text": "The Pacific Plate moves past the North American Plate at about two inches per year.",
+      "dimension": "speed",
+      "origin_family_id": "public_html:usgs",
+      "source_class": "official_or_legal",
+      "source_title": "Earthquake Facts and Earthquake Fantasy",
+      "source_url": "https://www.usgs.gov/programs/earthquake-hazards/earthquake-facts-earthquake-fantasy",
+      "source_excerpt": "The Pacific Plate moves northwestward at about two inches per year.",
+      "retrieved_at": "2026-07-30"
+    },
+    {
+      "collection_case_id": "V3-WEB-018",
+      "claim_text": "The speed of light in vacuum is exactly 299,792,458 metres per second.",
+      "dimension": "speed",
+      "origin_family_id": "public_html:nist",
+      "source_class": "official_or_legal",
+      "source_title": "NIST Guide to the SI, Chapter 7",
+      "source_url": "https://www.nist.gov/pml/special-publication-811/nist-guide-si-chapter-7-rules-and-style-conventions-expressing-values",
+      "source_excerpt": "The speed of light in vacuum is 299 792 458 m/s exactly.",
+      "retrieved_at": "2026-07-30"
+    },
+    {
+      "collection_case_id": "V3-WEB-019",
+      "claim_text": "The world population reached eight billion on 15 November 2022.",
+      "dimension": "temporal_instant",
+      "origin_family_id": "public_html:un",
+      "source_class": "official_or_legal",
+      "source_title": "Population",
+      "source_url": "https://www.un.org/en/global-issues/population",
+      "source_excerpt": "On 15 November 2022, the world's population reached 8 billion.",
+      "retrieved_at": "2026-07-30"
+    },
+    {
+      "collection_case_id": "V3-WEB-020",
+      "claim_text": "Global life expectancy at birth reached 73.3 years in 2024.",
+      "dimension": "duration",
+      "origin_family_id": "public_html:un",
+      "source_class": "official_or_legal",
+      "source_title": "Population",
+      "source_url": "https://www.un.org/en/global-issues/population",
+      "source_excerpt": "Global life expectancy at birth reached 73.3 years in 2024.",
+      "retrieved_at": "2026-07-30"
+    },
+    {
+      "collection_case_id": "V3-WEB-021",
+      "claim_text": "NIH's All of Us database had data from more than 747,000 participants by June 2026.",
+      "dimension": "count",
+      "origin_family_id": "public_html:nih",
+      "source_class": "academic",
+      "source_title": "NIH News Releases",
+      "source_url": "https://www.nih.gov/news-events/news-releases",
+      "source_excerpt": "Data from more than 747,000 participants is available to scientists.",
+      "retrieved_at": "2026-07-30"
+    },
+    {
+      "collection_case_id": "V3-WEB-022",
+      "claim_text": "U.S. home-sale price measures rose no more than 37% during Joe Biden's presidency.",
+      "dimension": "currency",
+      "origin_family_id": "public_html:factcheck_org",
+      "source_class": "fact_check",
+      "source_title": "Vance's Misleading Claims on Housing Prices and Illegal Immigration",
+      "source_url": "https://www.factcheck.org/2025/12/vances-misleading-claims-on-housing-prices-and-illegal-immigration/",
+      "source_excerpt": "Home sales price measures show at most a 37% increase.",
+      "retrieved_at": "2026-07-30"
+    },
+    {
+      "collection_case_id": "V3-WEB-023",
+      "claim_text": "The U.S. national average gasoline price was $3.11 in April 2025.",
+      "dimension": "currency",
+      "origin_family_id": "public_html:factcheck_org",
+      "source_class": "fact_check",
+      "source_title": "Trump's False Claims about Gas, Egg Prices",
+      "source_url": "https://www.factcheck.org/2025/04/trumps-false-claims-about-gas-egg-prices/",
+      "source_excerpt": "The national average gasoline price was $3.11.",
+      "retrieved_at": "2026-07-30"
+    },
+    {
+      "collection_case_id": "V3-WEB-024",
+      "claim_text": "A 2025 climate study forecast a 0.12°C reduction in 2099 global mean surface temperature from energy-based adaptation.",
+      "dimension": "temperature",
+      "origin_family_id": "public_html:nature_communications",
+      "source_class": "academic",
+      "source_title": "Quantifying the global climate feedback from energy-based adaptation",
+      "source_url": "https://www.nature.com/ncomms/articles?page=437&searchType=journalSearch&sort=PubDate&type=&year=2025",
+      "source_excerpt": "The forecast reduction in 2099 global mean surface temperature is 0.12°C.",
+      "retrieved_at": "2026-07-30"
+    },
+    {
+      "collection_case_id": "V3-WEB-025",
+      "claim_text": "The 2025 UK mid-year population estimate was 69,487,000.",
+      "dimension": "temporal_instant",
+      "origin_family_id": "public_html:ons",
+      "source_class": "official_or_legal",
+      "source_title": "Population estimates",
+      "source_url": "https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates",
+      "source_excerpt": "The United Kingdom mid-year population estimate was 69,487,000 in 2025.",
+      "retrieved_at": "2026-07-30"
+    },
+    {
+      "collection_case_id": "V3-WEB-026",
+      "claim_text": "Jupiter's average atmospheric temperature at one bar is approximately minus 110 degrees Celsius.",
+      "dimension": "pressure",
+      "origin_family_id": "public_html:esa",
+      "source_class": "official_or_legal",
+      "source_title": "Facts about Jupiter",
+      "source_url": "https://www.esa.int/Science_Exploration/Space_Science/Juice/Facts_about_Jupiter",
+      "source_excerpt": "Average temperature is approximately -110°C at one bar pressure.",
+      "retrieved_at": "2026-07-30"
+    },
+    {
+      "collection_case_id": "V3-WEB-027",
+      "claim_text": "The U.S. unemployment rate was 4.1% in June 2025.",
+      "dimension": "percentage_or_rate",
+      "origin_family_id": "public_html:bls",
+      "source_class": "official_or_legal",
+      "source_title": "Unemployment rate little changed at 4.1 percent in June 2025",
+      "source_url": "https://www.bls.gov/opub/ted/2025/unemployment-rate-little-changed-at-4-1-percent-in-june-2025.htm",
+      "source_excerpt": "The unemployment rate was 4.1 percent in June 2025.",
+      "retrieved_at": "2026-07-30"
+    },
+    {
+      "collection_case_id": "V3-WEB-028",
+      "claim_text": "In 2023, 8.58% of U.S. births were low birthweight.",
+      "dimension": "distance_or_mass",
+      "origin_family_id": "public_html:cdc",
+      "source_class": "official_or_legal",
+      "source_title": "FastStats: Births and Natality",
+      "source_url": "https://www.cdc.gov/nchs/fastats/births.htm",
+      "source_excerpt": "The percent born low birthweight was 8.58%.",
+      "retrieved_at": "2026-07-30"
+    },
+    {
+      "collection_case_id": "V3-WEB-029",
+      "claim_text": "Refrigerated food held above 40°F for at least two hours should be discarded after a power outage.",
+      "dimension": "temperature",
+      "origin_family_id": "public_html:fda",
+      "source_class": "official_or_legal",
+      "source_title": "Hurricane Season: Be Prepared",
+      "source_url": "https://www.fda.gov/consumers/consumer-updates/hurricane-season-be-prepared",
+      "source_excerpt": "Discard food above 40°F for two hours or more.",
+      "retrieved_at": "2026-07-30"
+    }
+  ]
+}

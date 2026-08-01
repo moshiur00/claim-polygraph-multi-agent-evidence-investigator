@@ -1,0 +1,30 @@
+{
+  "audit_id": "verification-construction-v3-stage6e-fresh-calibration-audit-v1",
+  "status": "passed_promoted",
+  "freeze_integrity": true,
+  "calibration_executions": 1,
+  "configuration_changed_after_freeze": false,
+  "thresholds_changed_after_results": false,
+  "provider_attempts": 18,
+  "estimated_cost_usd": 0.07746600000000001,
+  "construction_precision": 1.0,
+  "overall_construction_recall": 0.9444444444444444,
+  "incremental_recall_gain": 0.9444444444444444,
+  "human_review_routing_recall": 1.0,
+  "unsafe_accepted_constructions": 0,
+  "failed_gates": [],
+  "eligible_for_original_held_out": true,
+  "original_held_out_cases_loaded": 0,
+  "original_held_out_cases_exposed_to_model": 0,
+  "decision": "The fresh calibration passed every frozen gate. The original held-out split may now be opened exactly once.",
+  "artifacts": [
+    {
+      "path": "artifacts/evaluations/verification-construction-v3-stage6e-fresh-calibration-freeze-v1.json",
+      "sha256": "36679ab13d922c0ec95591f324be2b629701d52e80c612431538a5742eef3db6"
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v3-stage6e-fresh-calibration-v1.json",
+      "sha256": "2cc03fe125ec8af1b1534bfcbc8a2f16e52f65d2baf65f2ed67ad0681616eba3"
+    }
+  ]
+}

@@ -1,0 +1,1471 @@
+{
+  "workbook_id": "verification-construction-v3-stage6e-fresh-calibration-workbook-v1",
+  "schema_version": 1,
+  "frozen": false,
+  "cases": [
+    {
+      "case_id": "V3-241",
+      "source_candidate_id": "UNICEF-ESTABLISHED",
+      "split": "calibration",
+      "origin_family_id": "official:unicef",
+      "claim_text": "UNICEF was established in 1946.",
+      "evidence": [
+        {
+          "evidence_id": "V3-241:E1",
+          "title": "UNICEF history",
+          "url": "https://www.unicef.org/history",
+          "source_class": "official_html",
+          "passage": "The United Nations International Children’s Emergency Fund (UNICEF) was established in 1946, in the aftermath of World War II."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "established_in",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 31,
+          "quoted_text": "UNICEF was established in 1946."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-241:E1",
+            "start_char": 0,
+            "end_char": 126,
+            "quoted_text": "The United Nations International Children’s Emergency Fund (UNICEF) was established in 1946, in the aftermath of World War II."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "AI-prepared review suggestion; requires human acceptance.",
+          "Accessible public HTML; no PDF or restricted document."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-31",
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "established_in",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 31,
+          "quoted_text": "UNICEF was established in 1946."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-241:E1",
+            "start_char": 0,
+            "end_char": 126,
+            "quoted_text": "The United Nations International Children’s Emergency Fund (UNICEF) was established in 1946, in the aftermath of World War II."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-07-31",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-242",
+      "source_candidate_id": "UNICEF-REACH",
+      "split": "calibration",
+      "origin_family_id": "official:unicef",
+      "claim_text": "UNICEF works in more than 190 countries and territories.",
+      "evidence": [
+        {
+          "evidence_id": "V3-242:E1",
+          "title": "Frequently Asked Questions",
+          "url": "https://www.unicef.org/about/frequently-asked-questions",
+          "source_class": "official_html",
+          "passage": "UNICEF works in more than 190 countries and territories and in the world’s toughest places to reach the children and young people in greatest need."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "count",
+        "comparator_or_relation": "greater_than",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 56,
+          "quoted_text": "UNICEF works in more than 190 countries and territories."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-242:E1",
+            "start_char": 0,
+            "end_char": 147,
+            "quoted_text": "UNICEF works in more than 190 countries and territories and in the world’s toughest places to reach the children and young people in greatest need."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "AI-prepared review suggestion; requires human acceptance.",
+          "Accessible public HTML; no PDF or restricted document."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-31",
+        "dimension_bucket": "count",
+        "comparator_or_relation": "greater_than",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 56,
+          "quoted_text": "UNICEF works in more than 190 countries and territories."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-242:E1",
+            "start_char": 0,
+            "end_char": 147,
+            "quoted_text": "UNICEF works in more than 190 countries and territories and in the world’s toughest places to reach the children and young people in greatest need."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-07-31",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-243",
+      "source_candidate_id": "WTO-FOUNDED",
+      "split": "calibration",
+      "origin_family_id": "official:wto",
+      "claim_text": "The World Trade Organization was founded on 1 January 1995.",
+      "evidence": [
+        {
+          "evidence_id": "V3-243:E1",
+          "title": "WTO accession has been a story of transformation",
+          "url": "https://www.wto.org/english/news_e/news20_e/ddgaw_14dec20_e.htm",
+          "source_class": "official_html",
+          "passage": "The Organization was founded on 1 January 1995 to serve the multilateral trade agreements negotiated by its 128 original Members."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "founded_on",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 59,
+          "quoted_text": "The World Trade Organization was founded on 1 January 1995."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-243:E1",
+            "start_char": 0,
+            "end_char": 129,
+            "quoted_text": "The Organization was founded on 1 January 1995 to serve the multilateral trade agreements negotiated by its 128 original Members."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "AI-prepared review suggestion; requires human acceptance.",
+          "Accessible public HTML; no PDF or restricted document."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-31",
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "founded_on",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 59,
+          "quoted_text": "The World Trade Organization was founded on 1 January 1995."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-243:E1",
+            "start_char": 0,
+            "end_char": 129,
+            "quoted_text": "The Organization was founded on 1 January 1995 to serve the multilateral trade agreements negotiated by its 128 original Members."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-07-31",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-244",
+      "source_candidate_id": "WTO-MEMBERS",
+      "split": "calibration",
+      "origin_family_id": "official:wto",
+      "claim_text": "Twenty-five years after its founding, the WTO accounted for 164 Members.",
+      "evidence": [
+        {
+          "evidence_id": "V3-244:E1",
+          "title": "WTO accession has been a story of transformation",
+          "url": "https://www.wto.org/english/news_e/news20_e/ddgaw_14dec20_e.htm",
+          "source_class": "official_html",
+          "passage": "The Organization was founded on 1 January 1995 to serve the multilateral trade agreements negotiated by its 128 original Members. 25 years later, the Organization accounts for 164 Members, through a remarkable series of 36 accessions."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "count",
+        "comparator_or_relation": "equal",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 72,
+          "quoted_text": "Twenty-five years after its founding, the WTO accounted for 164 Members."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-244:E1",
+            "start_char": 0,
+            "end_char": 234,
+            "quoted_text": "The Organization was founded on 1 January 1995 to serve the multilateral trade agreements negotiated by its 128 original Members. 25 years later, the Organization accounts for 164 Members, through a remarkable series of 36 accessions."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "AI-prepared review suggestion; requires human acceptance.",
+          "Accessible public HTML; no PDF or restricted document."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-31",
+        "dimension_bucket": "count",
+        "comparator_or_relation": "equal",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 72,
+          "quoted_text": "Twenty-five years after its founding, the WTO accounted for 164 Members."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-244:E1",
+            "start_char": 0,
+            "end_char": 234,
+            "quoted_text": "The Organization was founded on 1 January 1995 to serve the multilateral trade agreements negotiated by its 128 original Members. 25 years later, the Organization accounts for 164 Members, through a remarkable series of 36 accessions."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-07-31",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-245",
+      "source_candidate_id": "WMO-MEMBERS",
+      "split": "calibration",
+      "origin_family_id": "official:wmo",
+      "claim_text": "The World Meteorological Organization has 193 Members.",
+      "evidence": [
+        {
+          "evidence_id": "V3-245:E1",
+          "title": "WMO Members",
+          "url": "https://wmo.int/about/wmo-members",
+          "source_class": "official_html",
+          "passage": "WMO has 193 Members, including 187 Member States and 6 Territories, maintaining their own meteorological services."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "count",
+        "comparator_or_relation": "equal",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 54,
+          "quoted_text": "The World Meteorological Organization has 193 Members."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-245:E1",
+            "start_char": 0,
+            "end_char": 114,
+            "quoted_text": "WMO has 193 Members, including 187 Member States and 6 Territories, maintaining their own meteorological services."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "AI-prepared review suggestion; requires human acceptance.",
+          "Accessible public HTML; no PDF or restricted document."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-31",
+        "dimension_bucket": "count",
+        "comparator_or_relation": "equal",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 54,
+          "quoted_text": "The World Meteorological Organization has 193 Members."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-245:E1",
+            "start_char": 0,
+            "end_char": 114,
+            "quoted_text": "WMO has 193 Members, including 187 Member States and 6 Territories, maintaining their own meteorological services."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-07-31",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-246",
+      "source_candidate_id": "WMO-TERRITORIES",
+      "split": "calibration",
+      "origin_family_id": "official:wmo",
+      "claim_text": "The World Meteorological Organization includes 6 Territories.",
+      "evidence": [
+        {
+          "evidence_id": "V3-246:E1",
+          "title": "WMO Members",
+          "url": "https://wmo.int/about/wmo-members",
+          "source_class": "official_html",
+          "passage": "WMO has 193 Members, including 187 Member States and 6 Territories, maintaining their own meteorological services."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "count",
+        "comparator_or_relation": "equal",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 61,
+          "quoted_text": "The World Meteorological Organization includes 6 Territories."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-246:E1",
+            "start_char": 0,
+            "end_char": 114,
+            "quoted_text": "WMO has 193 Members, including 187 Member States and 6 Territories, maintaining their own meteorological services."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "AI-prepared review suggestion; requires human acceptance.",
+          "Accessible public HTML; no PDF or restricted document."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-31",
+        "dimension_bucket": "count",
+        "comparator_or_relation": "equal",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 61,
+          "quoted_text": "The World Meteorological Organization includes 6 Territories."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-246:E1",
+            "start_char": 0,
+            "end_char": 114,
+            "quoted_text": "WMO has 193 Members, including 187 Member States and 6 Territories, maintaining their own meteorological services."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-07-31",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-247",
+      "source_candidate_id": "ICAO-ESTABLISHED",
+      "split": "calibration",
+      "origin_family_id": "official:icao",
+      "claim_text": "The International Civil Aviation Organization was established in 1944.",
+      "evidence": [
+        {
+          "evidence_id": "V3-247:E1",
+          "title": "About ICAO",
+          "url": "https://www.icao.int/about-icao",
+          "source_class": "official_html",
+          "passage": "Since it was established in 1944, ICAO’s support and coordination has helped countries to diplomatically and technically realize a uniquely rapid and dependable network of global air mobility."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "established_in",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 70,
+          "quoted_text": "The International Civil Aviation Organization was established in 1944."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-247:E1",
+            "start_char": 0,
+            "end_char": 192,
+            "quoted_text": "Since it was established in 1944, ICAO’s support and coordination has helped countries to diplomatically and technically realize a uniquely rapid and dependable network of global air mobility."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "AI-prepared review suggestion; requires human acceptance.",
+          "Accessible public HTML; no PDF or restricted document."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-31",
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "established_in",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 70,
+          "quoted_text": "The International Civil Aviation Organization was established in 1944."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-247:E1",
+            "start_char": 0,
+            "end_char": 192,
+            "quoted_text": "Since it was established in 1944, ICAO’s support and coordination has helped countries to diplomatically and technically realize a uniquely rapid and dependable network of global air mobility."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-07-31",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-248",
+      "source_candidate_id": "ICAO-COUNTRIES",
+      "split": "calibration",
+      "origin_family_id": "official:icao",
+      "claim_text": "ICAO helps 193 countries cooperate and share their skies.",
+      "evidence": [
+        {
+          "evidence_id": "V3-248:E1",
+          "title": "About ICAO",
+          "url": "https://www.icao.int/about-icao",
+          "source_class": "official_html",
+          "passage": "The International Civil Aviation Organization (ICAO) is a United Nations agency which helps 193 countries to cooperate together and share their skies to their mutual benefit."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "count",
+        "comparator_or_relation": "equal",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 57,
+          "quoted_text": "ICAO helps 193 countries cooperate and share their skies."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-248:E1",
+            "start_char": 0,
+            "end_char": 174,
+            "quoted_text": "The International Civil Aviation Organization (ICAO) is a United Nations agency which helps 193 countries to cooperate together and share their skies to their mutual benefit."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "AI-prepared review suggestion; requires human acceptance.",
+          "Accessible public HTML; no PDF or restricted document."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-31",
+        "dimension_bucket": "count",
+        "comparator_or_relation": "equal",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 57,
+          "quoted_text": "ICAO helps 193 countries cooperate and share their skies."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-248:E1",
+            "start_char": 0,
+            "end_char": 174,
+            "quoted_text": "The International Civil Aviation Organization (ICAO) is a United Nations agency which helps 193 countries to cooperate together and share their skies to their mutual benefit."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-07-31",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-249",
+      "source_candidate_id": "INTERPOL-MEMBERS",
+      "split": "calibration",
+      "origin_family_id": "official:interpol",
+      "claim_text": "INTERPOL has 196 member countries.",
+      "evidence": [
+        {
+          "evidence_id": "V3-249:E1",
+          "title": "INTERPOL member countries",
+          "url": "https://www.interpol.int/en/Who-we-are/Member-countries",
+          "source_class": "official_html",
+          "passage": "INTERPOL has 196 member countries, making us the world’s largest police organization."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "count",
+        "comparator_or_relation": "equal",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 34,
+          "quoted_text": "INTERPOL has 196 member countries."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-249:E1",
+            "start_char": 0,
+            "end_char": 85,
+            "quoted_text": "INTERPOL has 196 member countries, making us the world’s largest police organization."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "AI-prepared review suggestion; requires human acceptance.",
+          "Accessible public HTML; no PDF or restricted document."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-31",
+        "dimension_bucket": "count",
+        "comparator_or_relation": "equal",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 34,
+          "quoted_text": "INTERPOL has 196 member countries."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-249:E1",
+            "start_char": 0,
+            "end_char": 85,
+            "quoted_text": "INTERPOL has 196 member countries, making us the world’s largest police organization."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-07-31",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-250",
+      "source_candidate_id": "INTERPOL-EFFECTIVE",
+      "split": "calibration",
+      "origin_family_id": "official:interpol",
+      "claim_text": "INTERPOL is the world’s most effective police organization.",
+      "evidence": [
+        {
+          "evidence_id": "V3-250:E1",
+          "title": "INTERPOL member countries",
+          "url": "https://www.interpol.int/en/Who-we-are/Member-countries",
+          "source_class": "official_html",
+          "passage": "INTERPOL has 196 member countries, making us the world’s largest police organization."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "count",
+        "comparator_or_relation": "qualitative_superlative",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 59,
+          "quoted_text": "INTERPOL is the world’s most effective police organization."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-250:E1",
+            "start_char": 0,
+            "end_char": 85,
+            "quoted_text": "INTERPOL has 196 member countries, making us the world’s largest police organization."
+          }
+        ],
+        "suggested_gold_label": "not_applicable",
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "AI-prepared review suggestion; requires human acceptance.",
+          "Accessible public HTML; no PDF or restricted document.",
+          "“Most effective” is a qualitative judgment, not an explicit numerical or temporal assertion."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-31",
+        "dimension_bucket": "count",
+        "comparator_or_relation": "qualitative_superlative",
+        "gold_label": "not_applicable",
+        "claim_span": null,
+        "evidence_spans": [],
+        "expected_verification_state": null,
+        "ambiguity_notes": [
+          "“Most effective” is a qualitative judgment, not an explicit numerical or temporal assertion."
+        ]
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-07-31",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-251",
+      "source_candidate_id": "IMO-ESTABLISHED",
+      "split": "calibration",
+      "origin_family_id": "official:imo",
+      "claim_text": "The International Maritime Organization was established on 6 March 1948.",
+      "evidence": [
+        {
+          "evidence_id": "V3-251:E1",
+          "title": "Frequently Asked Questions",
+          "url": "https://www.imo.org/en/about/pages/faqs.aspx",
+          "source_class": "official_html",
+          "passage": "It was established by means of a Convention adopted under the auspices of the United Nations in Geneva on 6 March 1948 and met for the first time in January 1959."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "established_on",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 72,
+          "quoted_text": "The International Maritime Organization was established on 6 March 1948."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-251:E1",
+            "start_char": 0,
+            "end_char": 162,
+            "quoted_text": "It was established by means of a Convention adopted under the auspices of the United Nations in Geneva on 6 March 1948 and met for the first time in January 1959."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "AI-prepared review suggestion; requires human acceptance.",
+          "Accessible public HTML; no PDF or restricted document."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-31",
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "established_on",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 72,
+          "quoted_text": "The International Maritime Organization was established on 6 March 1948."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-251:E1",
+            "start_char": 0,
+            "end_char": 162,
+            "quoted_text": "It was established by means of a Convention adopted under the auspices of the United Nations in Geneva on 6 March 1948 and met for the first time in January 1959."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-07-31",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-252",
+      "source_candidate_id": "IMO-MEMBERS",
+      "split": "calibration",
+      "origin_family_id": "official:imo",
+      "claim_text": "The International Maritime Organization has 176 Member States.",
+      "evidence": [
+        {
+          "evidence_id": "V3-252:E1",
+          "title": "Frequently Asked Questions",
+          "url": "https://www.imo.org/en/about/pages/faqs.aspx",
+          "source_class": "official_html",
+          "passage": "IMO currently has 176 Member States."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "count",
+        "comparator_or_relation": "equal",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 62,
+          "quoted_text": "The International Maritime Organization has 176 Member States."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-252:E1",
+            "start_char": 0,
+            "end_char": 36,
+            "quoted_text": "IMO currently has 176 Member States."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "AI-prepared review suggestion; requires human acceptance.",
+          "Accessible public HTML; no PDF or restricted document."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-31",
+        "dimension_bucket": "count",
+        "comparator_or_relation": "equal",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 62,
+          "quoted_text": "The International Maritime Organization has 176 Member States."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-252:E1",
+            "start_char": 0,
+            "end_char": 36,
+            "quoted_text": "IMO currently has 176 Member States."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-07-31",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-253",
+      "source_candidate_id": "ITU-ESTABLISHED",
+      "split": "calibration",
+      "origin_family_id": "official:itu",
+      "claim_text": "The International Telecommunication Union was established in 1865.",
+      "evidence": [
+        {
+          "evidence_id": "V3-253:E1",
+          "title": "About ITU",
+          "url": "https://www.itu.int/en/about/Pages/default.aspx",
+          "source_class": "official_html",
+          "passage": "Established in 1865 to manage the first international telegraph networks, ITU has worked ceaselessly since then to connect the world."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "established_in",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 66,
+          "quoted_text": "The International Telecommunication Union was established in 1865."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-253:E1",
+            "start_char": 0,
+            "end_char": 133,
+            "quoted_text": "Established in 1865 to manage the first international telegraph networks, ITU has worked ceaselessly since then to connect the world."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "AI-prepared review suggestion; requires human acceptance.",
+          "Accessible public HTML; no PDF or restricted document."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-31",
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "established_in",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 66,
+          "quoted_text": "The International Telecommunication Union was established in 1865."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-253:E1",
+            "start_char": 0,
+            "end_char": 133,
+            "quoted_text": "Established in 1865 to manage the first international telegraph networks, ITU has worked ceaselessly since then to connect the world."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-07-31",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-254",
+      "source_candidate_id": "ITU-MEMBERS",
+      "split": "calibration",
+      "origin_family_id": "official:itu",
+      "claim_text": "The International Telecommunication Union has 194 Member States.",
+      "evidence": [
+        {
+          "evidence_id": "V3-254:E1",
+          "title": "About ITU",
+          "url": "https://www.itu.int/en/about/Pages/default.aspx",
+          "source_class": "official_html",
+          "passage": "The Organization is made up of a membership of 194 Member States and more than 1000 companies, universities and international and regional organizations."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "count",
+        "comparator_or_relation": "equal",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 64,
+          "quoted_text": "The International Telecommunication Union has 194 Member States."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-254:E1",
+            "start_char": 0,
+            "end_char": 153,
+            "quoted_text": "The Organization is made up of a membership of 194 Member States and more than 1000 companies, universities and international and regional organizations."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "AI-prepared review suggestion; requires human acceptance.",
+          "Accessible public HTML; no PDF or restricted document."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-31",
+        "dimension_bucket": "count",
+        "comparator_or_relation": "equal",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 64,
+          "quoted_text": "The International Telecommunication Union has 194 Member States."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-254:E1",
+            "start_char": 0,
+            "end_char": 153,
+            "quoted_text": "The Organization is made up of a membership of 194 Member States and more than 1000 companies, universities and international and regional organizations."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-07-31",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-255",
+      "source_candidate_id": "UPU-ESTABLISHED",
+      "split": "calibration",
+      "origin_family_id": "official:upu",
+      "claim_text": "The Universal Postal Union was established in 1874.",
+      "evidence": [
+        {
+          "evidence_id": "V3-255:E1",
+          "title": "Factsheet: About the UPU",
+          "url": "https://www.upu.int/en/news/2018/10/factsheet-about-the-upu",
+          "source_class": "official_html",
+          "passage": "Established in 1874, with its headquarters in Berne, Switzerland, the Universal Postal Union is the world’s second oldest international organization."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "established_in",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 51,
+          "quoted_text": "The Universal Postal Union was established in 1874."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-255:E1",
+            "start_char": 0,
+            "end_char": 149,
+            "quoted_text": "Established in 1874, with its headquarters in Berne, Switzerland, the Universal Postal Union is the world’s second oldest international organization."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "AI-prepared review suggestion; requires human acceptance.",
+          "Accessible public HTML; no PDF or restricted document."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-31",
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "established_in",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 51,
+          "quoted_text": "The Universal Postal Union was established in 1874."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-255:E1",
+            "start_char": 0,
+            "end_char": 149,
+            "quoted_text": "Established in 1874, with its headquarters in Berne, Switzerland, the Universal Postal Union is the world’s second oldest international organization."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-07-31",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-256",
+      "source_candidate_id": "UPU-MEMBERS",
+      "split": "calibration",
+      "origin_family_id": "official:upu",
+      "claim_text": "The Universal Postal Union has 192 member countries.",
+      "evidence": [
+        {
+          "evidence_id": "V3-256:E1",
+          "title": "Factsheet: About the UPU",
+          "url": "https://www.upu.int/en/news/2018/10/factsheet-about-the-upu",
+          "source_class": "official_html",
+          "passage": "With 192 member countries, the UPU is the primary forum for postal cooperation between governments, Posts, regulators and many other postal sector stakeholders."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "count",
+        "comparator_or_relation": "equal",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 52,
+          "quoted_text": "The Universal Postal Union has 192 member countries."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-256:E1",
+            "start_char": 0,
+            "end_char": 160,
+            "quoted_text": "With 192 member countries, the UPU is the primary forum for postal cooperation between governments, Posts, regulators and many other postal sector stakeholders."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "AI-prepared review suggestion; requires human acceptance.",
+          "Accessible public HTML; no PDF or restricted document."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-31",
+        "dimension_bucket": "count",
+        "comparator_or_relation": "equal",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 52,
+          "quoted_text": "The Universal Postal Union has 192 member countries."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-256:E1",
+            "start_char": 0,
+            "end_char": 160,
+            "quoted_text": "With 192 member countries, the UPU is the primary forum for postal cooperation between governments, Posts, regulators and many other postal sector stakeholders."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-07-31",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-257",
+      "source_candidate_id": "FAO-MEMBERS",
+      "split": "calibration",
+      "origin_family_id": "official:fao",
+      "claim_text": "The Food and Agriculture Organization has 194 members.",
+      "evidence": [
+        {
+          "evidence_id": "V3-257:E1",
+          "title": "About FAO",
+          "url": "https://www.fao.org/about/about-fao/en/",
+          "source_class": "official_html",
+          "passage": "With 194 members - 193 countries and the European Union, FAO works in over 130 countries worldwide."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "count",
+        "comparator_or_relation": "equal",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 54,
+          "quoted_text": "The Food and Agriculture Organization has 194 members."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-257:E1",
+            "start_char": 0,
+            "end_char": 99,
+            "quoted_text": "With 194 members - 193 countries and the European Union, FAO works in over 130 countries worldwide."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "AI-prepared review suggestion; requires human acceptance.",
+          "Accessible public HTML; no PDF or restricted document."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-31",
+        "dimension_bucket": "count",
+        "comparator_or_relation": "equal",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 54,
+          "quoted_text": "The Food and Agriculture Organization has 194 members."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-257:E1",
+            "start_char": 0,
+            "end_char": 99,
+            "quoted_text": "With 194 members - 193 countries and the European Union, FAO works in over 130 countries worldwide."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-07-31",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-258",
+      "source_candidate_id": "FAO-SUCCESSFUL",
+      "split": "calibration",
+      "origin_family_id": "official:fao",
+      "claim_text": "FAO is the world’s most successful food-security organization.",
+      "evidence": [
+        {
+          "evidence_id": "V3-258:E1",
+          "title": "About FAO",
+          "url": "https://www.fao.org/about/about-fao/en/",
+          "source_class": "official_html",
+          "passage": "The Food and Agriculture Organization (FAO) is a specialized agency of the United Nations that leads international efforts to defeat hunger."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "count",
+        "comparator_or_relation": "qualitative_superlative",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 62,
+          "quoted_text": "FAO is the world’s most successful food-security organization."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-258:E1",
+            "start_char": 0,
+            "end_char": 140,
+            "quoted_text": "The Food and Agriculture Organization (FAO) is a specialized agency of the United Nations that leads international efforts to defeat hunger."
+          }
+        ],
+        "suggested_gold_label": "not_applicable",
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "AI-prepared review suggestion; requires human acceptance.",
+          "Accessible public HTML; no PDF or restricted document.",
+          "“Most successful” is an undefined qualitative judgment and has no typed numerical or temporal operands."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-31",
+        "dimension_bucket": "count",
+        "comparator_or_relation": "qualitative_superlative",
+        "gold_label": "not_applicable",
+        "claim_span": null,
+        "evidence_spans": [],
+        "expected_verification_state": null,
+        "ambiguity_notes": [
+          "“Most successful” is an undefined qualitative judgment and has no typed numerical or temporal operands."
+        ]
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-07-31",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-259",
+      "source_candidate_id": "IAEA-BRAZIL",
+      "split": "calibration",
+      "origin_family_id": "official:iaea",
+      "claim_text": "Brazil became an IAEA member on 29 July 1957.",
+      "evidence": [
+        {
+          "evidence_id": "V3-259:E1",
+          "title": "Brazil, Federative Republic of",
+          "url": "https://ola.iaea.org/Applications/FactSheets/Country/Detail?code=BR",
+          "source_class": "official_html",
+          "passage": "IAEA Membership 29 July 1957."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "membership_started_on",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 45,
+          "quoted_text": "Brazil became an IAEA member on 29 July 1957."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-259:E1",
+            "start_char": 0,
+            "end_char": 29,
+            "quoted_text": "IAEA Membership 29 July 1957."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "AI-prepared review suggestion; requires human acceptance.",
+          "Accessible public HTML; no PDF or restricted document."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-31",
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "membership_started_on",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 45,
+          "quoted_text": "Brazil became an IAEA member on 29 July 1957."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-259:E1",
+            "start_char": 0,
+            "end_char": 29,
+            "quoted_text": "IAEA Membership 29 July 1957."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-07-31",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    },
+    {
+      "case_id": "V3-260",
+      "source_candidate_id": "IAEA-EGYPT",
+      "split": "calibration",
+      "origin_family_id": "official:iaea",
+      "claim_text": "Egypt became an IAEA member on 4 September 1957.",
+      "evidence": [
+        {
+          "evidence_id": "V3-260:E1",
+          "title": "Egypt, Arab Republic of",
+          "url": "https://ola.iaea.org/Applications/FactSheets/Country/Detail?code=EG",
+          "source_class": "official_html",
+          "passage": "IAEA Membership 4 September 1957."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "membership_started_on",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 48,
+          "quoted_text": "Egypt became an IAEA member on 4 September 1957."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-260:E1",
+            "start_char": 0,
+            "end_char": 33,
+            "quoted_text": "IAEA Membership 4 September 1957."
+          }
+        ],
+        "suggested_gold_label": "deterministic_constructible",
+        "suggested_verification_state": "verified",
+        "machine_notes": [
+          "AI-prepared review suggestion; requires human acceptance.",
+          "Accessible public HTML; no PDF or restricted document."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "Md Moshiur Rahman",
+        "annotated_on": "2026-07-31",
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "membership_started_on",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 48,
+          "quoted_text": "Egypt became an IAEA member on 4 September 1957."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-260:E1",
+            "start_char": 0,
+            "end_char": 33,
+            "quoted_text": "IAEA Membership 4 September 1957."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": []
+      },
+      "approval": {
+        "approver_identity": "Md Rashedul Islam",
+        "approved_on": "2026-07-31",
+        "decision": "approve",
+        "checked_dimension": true,
+        "checked_relation": true,
+        "checked_claim_span": true,
+        "checked_evidence_spans": true,
+        "checked_gold_label": true,
+        "checked_expected_state": true,
+        "notes": []
+      }
+    }
+  ]
+}

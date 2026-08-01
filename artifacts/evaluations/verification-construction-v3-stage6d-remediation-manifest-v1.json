@@ -1,0 +1,66 @@
+{
+  "manifest_id": "verification-construction-v3-stage6d-remediation-v1",
+  "created_at": "2026-07-31T01:46:19.666774+00:00",
+  "status": "remediation_frozen_awaiting_fresh_calibration",
+  "prompt_version": "verification-construction-v3-remediation-v6",
+  "v36c_disposition": "preserved_failed_calibration_diagnostic",
+  "v36c_artifacts": [
+    {
+      "path": "artifacts/evaluations/verification-construction-v3-stage6c-fresh-calibration-freeze-v1.json",
+      "sha256": "0be34414c8c00065886a8a87dd713ef990ab36746edf85f66a9f4be3ebaff2a0"
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v3-stage6c-fresh-calibration-v1.json",
+      "sha256": "77eeff549b6648d669b1ae6c10383b03b9a11d9858e632fc6daec4026abf3125"
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v3-stage6c-fresh-calibration-audit-v1.json",
+      "sha256": "2511c4cf1f69c5789d75464fe529ec431dc5ed3f30692b686e4d66a4e858943e"
+    }
+  ],
+  "remediation_scope": [
+    "bounded common-count and hyphenated-unit eligibility",
+    "explicit temporal creation and historical-range routing",
+    "pre-1900 explicit date support",
+    "month-first provider date normalization"
+  ],
+  "implementation_artifacts": [
+    {
+      "path": "src/claim_polygraph_ng/analysis/assisted_verification_construction.py",
+      "sha256": "9d9b121b3a2e2f0084e30c5cc4b20b645cabd20c4bad9916786e84fd3be35b3c"
+    },
+    {
+      "path": "src/claim_polygraph_ng/providers/ollama.py",
+      "sha256": "2ec9f3c4ce373ae25d5b33f824955d277d2c34a898acf331149eb652408b7c45"
+    },
+    {
+      "path": "tests/unit/test_v3_assisted_boundary.py",
+      "sha256": "77d1b6e6040df529c433e3d3e945a99113f675b194d41e2877941e2db1ea8b0b"
+    },
+    {
+      "path": "scripts/audit_v3_stage6d_remediation.py",
+      "sha256": "1311e0336f62f398cef33c9ce2732a1f61b7b3a645e8c7dc690beb3a9c6e2213"
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v3-stage6d-remediation-audit-v1.json",
+      "sha256": "c1cc045fdd96e2d75471d6fcd497b1ab78fbddab3884d42b4a15238ff4f63c52"
+    }
+  ],
+  "controls": {
+    "development_synthetic_and_exposed_v36c_only": true,
+    "model_calls": 0,
+    "estimated_cost_usd": 0.0,
+    "original_held_out_cases_loaded": 0,
+    "original_held_out_cases_exposed_to_model": 0
+  },
+  "next_calibration": {
+    "fresh_cases_required": 20,
+    "minimum_origin_families": 10,
+    "ai_prefill_allowed": true,
+    "required_annotator": "Md Moshiur Rahman",
+    "required_distinct_approver": "Md Rashedul Islam",
+    "human_review_required": true,
+    "execution_limit_after_freeze": 1,
+    "original_held_out_may_open_only_if_every_frozen_gate_passes": true
+  }
+}

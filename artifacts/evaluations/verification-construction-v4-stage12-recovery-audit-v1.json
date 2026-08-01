@@ -1,0 +1,26 @@
+{
+  "audit_id": "verification-construction-v4-stage12-recovery-audit-v1",
+  "status": "passed",
+  "persisted_receipts": 18,
+  "receipt_attempts": 18,
+  "completed_receipts": 18,
+  "measured_cost_receipts": 18,
+  "cached_resume_decisions": 18,
+  "verified_durable_results": 18,
+  "duplicate_paid_operations": 0,
+  "provider_calls": 0,
+  "network_calls": 0,
+  "held_out_replays": 0,
+  "gates": {
+    "receipt_count_matches_result": true,
+    "attempt_count_matches_result": true,
+    "all_receipts_completed": true,
+    "all_costs_measured": true,
+    "restart_returns_cached_receipts": true,
+    "durable_result_hashes_match": true,
+    "duplicate_paid_operations_zero": true,
+    "held_out_execution_remains_one": true,
+    "configuration_unchanged": true,
+    "thresholds_unchanged": true
+  }
+}

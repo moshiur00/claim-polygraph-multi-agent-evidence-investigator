@@ -1,0 +1,142 @@
+{
+  "manifest_id": "verification-construction-v4-stage11-held-out-evaluation-freeze-v1",
+  "status": "frozen",
+  "execution_limit": 1,
+  "dataset_split": "fresh_held_out",
+  "workbook_sha256": "5d58d587f3e848b56cbf5d02538b3ba5a5513b72ff5285ba7ee898cd2788c549",
+  "case_count": 20,
+  "case_ids": [
+    "V3-361",
+    "V3-362",
+    "V3-363",
+    "V3-364",
+    "V3-365",
+    "V3-366",
+    "V3-367",
+    "V3-368",
+    "V3-369",
+    "V3-370",
+    "V3-371",
+    "V3-372",
+    "V3-373",
+    "V3-374",
+    "V3-375",
+    "V3-376",
+    "V3-377",
+    "V3-378",
+    "V3-379",
+    "V3-380"
+  ],
+  "origin_family_count": 10,
+  "prompt_version": "verification-construction-v4.9d-v8",
+  "prompt_sha256": "8309d73806f12be38b8fa42a4e94ad19a9afbfdc16f1062a30c3277399df751b",
+  "schema_hashes": {
+    "comparison": "38bfc64a41d5377002ba8d1443f10ba47387ac1a3b9030b864bba22d68b7f11e",
+    "scalar": "768032cf112356ea7c9815f2a662a6f93de641f53331f562090ba20f6077f5b9",
+    "temporal": "da2bf4b022b95d6124bf1f36f27fbd6e767f72519c128b1635e77625f9607449"
+  },
+  "provider": {
+    "name": "openai",
+    "model": "gpt-4o-mini",
+    "reasoning_effort": null,
+    "store": false,
+    "timeout_seconds": 60
+  },
+  "budget": {
+    "maximum_held_out_calls": 20,
+    "maximum_input_tokens_per_call": 6000,
+    "maximum_output_tokens_per_call": 900,
+    "maximum_held_out_cost_usd": 0.5,
+    "automatic_retries_after_valid_receipt": 0,
+    "search_calls": 0
+  },
+  "promotion_thresholds": {
+    "minimum_schema_validity": 1.0,
+    "minimum_exact_span_validity": 1.0,
+    "maximum_unsafe_accepted_constructions": 0,
+    "minimum_construction_precision": 0.98,
+    "minimum_overall_construction_recall": 0.75,
+    "minimum_incremental_recall_gain_when_baseline_below_target": 0.15,
+    "minimum_human_review_routing_recall": 1.0,
+    "maximum_publication_safety_regressions": 0,
+    "maximum_duplicate_paid_operations": 0,
+    "maximum_cost_per_recovered_assertion_usd": 0.05
+  },
+  "decision_rules": {
+    "assisted_value_gate": "baseline_at_recall_target_or_incremental_gain_at_threshold",
+    "zero_spend_cost_gate": "pass_when_no_paid_call_and_no_recovered_assertion",
+    "failed_or_invalid_provider_output": "human_review"
+  },
+  "held_out_executions_before_freeze": 0,
+  "held_out_cases_exposed_to_model_before_freeze": 0,
+  "artifacts": [
+    {
+      "path": "benchmarks/verification_construction_v4_stage10_fresh_held_out_workbook_v1_APPROVED.json",
+      "sha256": "5d58d587f3e848b56cbf5d02538b3ba5a5513b72ff5285ba7ee898cd2788c549"
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage10-review-gate-v1.json",
+      "sha256": "12aa92b71e0b1474ac20324d06c5697187c4c243e540c0e6f24681bc259a9e68"
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage0-manifest-v1.json",
+      "sha256": "f354e12c11e23131607825bc15d9ccc2ac75ec0a540a6e39d38e4e48550d6b76"
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage7b-remediation-audit-v1.json",
+      "sha256": "80d943ebdc413a4dd13f72f8e2ec33973e59a3b14e590d584a66f260ba301a7e"
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage9a-remediation-audit-v1.json",
+      "sha256": "47dbf915f2800ecd58f2e21a2d8bfefc83570d0e0b344ab7051392df560dc773"
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage9d-temporal-remediation-audit-v1.json",
+      "sha256": "099b0b23cf9467a4a83098cd1598896d92369a46cb0b11fb1bc2e6878cd3b61f"
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage9f-replacement-calibration-freeze-v1.json",
+      "sha256": "fe0eb06d7e4c9a840e8584ed33aa59dab7a40170f0371dc7aa069c880865569a"
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage9f-replacement-calibration-v1.json",
+      "sha256": "87a9d91958fd1c2e52a359e72dfc36c7e7b84fbb466ddaba65a32e3ef6c2f7c8"
+    },
+    {
+      "path": "src/claim_polygraph_ng/analysis/candidate_extraction.py",
+      "sha256": "3db52dc953911e0c59ef0d05df83c9fc248c455e8a9a9dd3965e88e8345172fb"
+    },
+    {
+      "path": "src/claim_polygraph_ng/analysis/compound_construction.py",
+      "sha256": "38a0c751c607aadc7cac5d8602aa2511f1b5ff648afa43613e5c9227cbc392ca"
+    },
+    {
+      "path": "src/claim_polygraph_ng/analysis/construction_eligibility.py",
+      "sha256": "1928cd76af2e18dcda0894119e2ac3103129e0de9af7b1b402dc7d5125eac261"
+    },
+    {
+      "path": "src/claim_polygraph_ng/analysis/assisted_verification_construction.py",
+      "sha256": "2933bccafe02afa970d954a574618f8be112ce0dc5cfabd8b8516a1b7802362d"
+    },
+    {
+      "path": "src/claim_polygraph_ng/analysis/bounded_assisted_construction.py",
+      "sha256": "b03a339cf15c45bd6dc16038e75c7fcbf1d566128bb5136e292e00d7563cc35c"
+    },
+    {
+      "path": "src/claim_polygraph_ng/domain/verification.py",
+      "sha256": "386cf035bc6872cfa646c802cbc99be4528bb9dfdb9cb03cbe5d6f053bd643c0"
+    },
+    {
+      "path": "src/claim_polygraph_ng/providers/idempotent.py",
+      "sha256": "996252153187b0b13dd7816a6e902eb24e7883001c95791abdd4939569e2da4d"
+    },
+    {
+      "path": "src/claim_polygraph_ng/providers/openai.py",
+      "sha256": "6afe6d55bf9fe874dc5cb0d7dc8d0d77723271e0dd68b908dbaa067d0bddf227"
+    },
+    {
+      "path": "src/claim_polygraph_ng/persistence/paid_operations.py",
+      "sha256": "b50e1bfb8e0d860586a8393030b4152c2cc23214420eef1f60f20bdc63dcfaa4"
+    }
+  ]
+}

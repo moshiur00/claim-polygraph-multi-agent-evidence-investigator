@@ -17,6 +17,7 @@ from claim_polygraph_ng.domain.paid_operations import (
     PaidReceiptClaim,
     PaidReceiptDecision,
     PaidReceiptStatus,
+    PaidUsageDisposition,
 )
 from claim_polygraph_ng.persistence.sqlite_runtime import connect_sqlite, enable_wal
 
@@ -211,15 +212,29 @@ class SQLitePaidOperationLedger:
         worker_id: str,
         result_payload: str,
         usage: ModelCallUsage | None = None,
+        unknown_cost_upper_bound_usd: float = 0.05,
         duration_seconds: float = 0,
         now: datetime | None = None,
     ) -> PaidOperationReceipt:
         instant = now or datetime.now(UTC)
+        if unknown_cost_upper_bound_usd < 0:
+            raise ValueError("unknown cost upper bound cannot be negative")
         result_sha256 = hashlib.sha256(result_payload.encode()).hexdigest()
         with self._connect(immediate=True) as connection:
             receipt = self._owned(connection, operation_key, worker_id)
             if receipt.status is not PaidReceiptStatus.IN_PROGRESS:
                 raise PaidOperationReceiptError("only in-progress receipt may complete")
+            usage_measured = (
+                usage is not None and usage.estimated_cost_usd is not None
+            )
+            search_not_metered = (
+                receipt.spec.kind is PaidOperationKind.SEARCH and usage is None
+            )
+            current_unknown = not usage_measured and not search_not_metered
+            prior_unknown = (
+                receipt.usage_disposition
+                is PaidUsageDisposition.UNKNOWN_WITH_UPPER_BOUND
+            )
             completed = receipt.model_copy(
                 update={
                     "status": PaidReceiptStatus.COMPLETED,
@@ -227,12 +242,42 @@ class SQLitePaidOperationLedger:
                     "lease_expires_at": None,
                     "result_reference": f"paid-result:{receipt.receipt_id}",
                     "result_sha256": result_sha256,
-                    "input_tokens": usage.input_tokens or 0 if usage else 0,
-                    "cached_input_tokens": usage.cached_input_tokens or 0 if usage else 0,
-                    "output_tokens": usage.output_tokens or 0 if usage else 0,
-                    "estimated_cost_usd": usage.estimated_cost_usd or 0 if usage else 0,
+                    "input_tokens": receipt.input_tokens
+                    + (usage.input_tokens or 0 if usage else 0),
+                    "cached_input_tokens": receipt.cached_input_tokens
+                    + (usage.cached_input_tokens or 0 if usage else 0),
+                    "output_tokens": receipt.output_tokens
+                    + (usage.output_tokens or 0 if usage else 0),
+                    "estimated_cost_usd": receipt.estimated_cost_usd
+                    + (usage.estimated_cost_usd or 0 if usage else 0),
+                    "usage_disposition": (
+                        PaidUsageDisposition.UNKNOWN_WITH_UPPER_BOUND
+                        if prior_unknown or current_unknown
+                        else PaidUsageDisposition.NOT_APPLICABLE
+                        if search_not_metered
+                        else PaidUsageDisposition.MEASURED
+                    ),
+                    "estimated_cost_upper_bound_usd": (
+                        (receipt.estimated_cost_upper_bound_usd or 0)
+                        + (
+                            unknown_cost_upper_bound_usd
+                            if current_unknown
+                            else 0
+                        )
+                        if prior_unknown or current_unknown
+                        else None
+                    ),
+                    "usage_note": (
+                        "One or more attempts have unknown priced usage; the "
+                        "conservative upper bound is retained."
+                        if prior_unknown or current_unknown
+                        else "Search billing is not metered by this receipt."
+                        if search_not_metered
+                        else "Provider usage and price were measured."
+                    ),
                     "duration_seconds": (
-                        usage.duration_seconds if usage else duration_seconds
+                        receipt.duration_seconds
+                        + (usage.duration_seconds if usage else duration_seconds)
                     ),
                     "updated_at": instant,
                     "completed_at": instant,
@@ -252,12 +297,25 @@ class SQLitePaidOperationLedger:
         worker_id: str,
         retryable: bool,
         error: Exception,
+        usage: ModelCallUsage | None = None,
+        unknown_cost_upper_bound_usd: float = 0.05,
+        duration_seconds: float = 0,
     ) -> PaidOperationReceipt:
+        if unknown_cost_upper_bound_usd < 0:
+            raise ValueError("unknown cost upper bound cannot be negative")
         with self._connect(immediate=True) as connection:
             receipt = self._owned(connection, operation_key, worker_id)
             if receipt.status is not PaidReceiptStatus.IN_PROGRESS:
                 raise PaidOperationReceiptError("only in-progress receipt may fail")
             now = datetime.now(UTC)
+            usage_measured = (
+                usage is not None and usage.estimated_cost_usd is not None
+            )
+            prior_unknown = (
+                receipt.usage_disposition
+                is PaidUsageDisposition.UNKNOWN_WITH_UPPER_BOUND
+            )
+            current_unknown = not usage_measured
             failed = receipt.model_copy(
                 update={
                     "status": (
@@ -269,6 +327,39 @@ class SQLitePaidOperationLedger:
                     "lease_expires_at": None,
                     "error_class": type(error).__name__,
                     "safe_error": str(error)[:1_000],
+                    "input_tokens": receipt.input_tokens
+                    + (usage.input_tokens or 0 if usage else 0),
+                    "cached_input_tokens": receipt.cached_input_tokens
+                    + (usage.cached_input_tokens or 0 if usage else 0),
+                    "output_tokens": receipt.output_tokens
+                    + (usage.output_tokens or 0 if usage else 0),
+                    "estimated_cost_usd": receipt.estimated_cost_usd
+                    + (usage.estimated_cost_usd or 0 if usage else 0),
+                    "usage_disposition": (
+                        PaidUsageDisposition.UNKNOWN_WITH_UPPER_BOUND
+                        if prior_unknown or current_unknown
+                        else PaidUsageDisposition.MEASURED
+                    ),
+                    "estimated_cost_upper_bound_usd": (
+                        (receipt.estimated_cost_upper_bound_usd or 0)
+                        + (
+                            unknown_cost_upper_bound_usd
+                            if current_unknown
+                            else 0
+                        )
+                        if prior_unknown or current_unknown
+                        else None
+                    ),
+                    "usage_note": (
+                        "One or more failed attempts have unknown priced usage; "
+                        "the conservative upper bound is retained."
+                        if prior_unknown or current_unknown
+                        else "Provider response failed validation; measured usage is retained."
+                    ),
+                    "duration_seconds": (
+                        receipt.duration_seconds
+                        + (usage.duration_seconds if usage else duration_seconds)
+                    ),
                     "updated_at": now,
                 }
             )
@@ -327,25 +418,60 @@ class SQLitePaidOperationLedger:
             rows = connection.execute(
                 """
                 SELECT payload FROM paid_operation_receipts
-                WHERE investigation_id = ? AND status = ?
+                WHERE investigation_id = ?
                 """,
-                (str(investigation_id), PaidReceiptStatus.COMPLETED.value),
+                (str(investigation_id),),
             ).fetchall()
         receipts = tuple(
-            PaidOperationReceipt.model_validate_json(row["payload"]) for row in rows
+            receipt
+            for row in rows
+            if (
+                receipt := PaidOperationReceipt.model_validate_json(row["payload"])
+            ).attempt_number
+        )
+        completed = tuple(
+            item for item in receipts if item.status is PaidReceiptStatus.COMPLETED
+        )
+        failed_attempts = sum(
+            max(
+                0,
+                item.attempt_number
+                - (1 if item.status is PaidReceiptStatus.COMPLETED else 0),
+            )
+            for item in receipts
+        )
+        unpriced = tuple(
+            item
+            for item in receipts
+            if item.usage_disposition
+            in {
+                PaidUsageDisposition.UNKNOWN_WITH_UPPER_BOUND,
+                PaidUsageDisposition.LEGACY_UNCLASSIFIED,
+            }
+        )
+        measured_cost = sum(item.estimated_cost_usd for item in receipts)
+        upper_bound = measured_cost + sum(
+            item.estimated_cost_upper_bound_usd or 0 for item in unpriced
         )
         return PaidCostLedger(
-            completed_operation_count=len(receipts),
+            completed_operation_count=len(completed),
+            attempted_operation_count=sum(
+                item.attempt_number for item in receipts
+            ),
+            failed_operation_count=failed_attempts,
             model_operation_count=sum(
-                item.spec.kind is PaidOperationKind.MODEL for item in receipts
+                item.spec.kind is PaidOperationKind.MODEL for item in completed
             ),
             search_operation_count=sum(
-                item.spec.kind is PaidOperationKind.SEARCH for item in receipts
+                item.spec.kind is PaidOperationKind.SEARCH for item in completed
             ),
             input_tokens=sum(item.input_tokens for item in receipts),
             cached_input_tokens=sum(item.cached_input_tokens for item in receipts),
             output_tokens=sum(item.output_tokens for item in receipts),
-            estimated_cost_usd=sum(item.estimated_cost_usd for item in receipts),
+            estimated_cost_usd=measured_cost,
+            estimated_cost_upper_bound_usd=upper_bound,
+            unpriced_operation_count=len(unpriced),
+            cost_is_lower_bound=bool(unpriced),
             duration_seconds=sum(item.duration_seconds for item in receipts),
         )
 

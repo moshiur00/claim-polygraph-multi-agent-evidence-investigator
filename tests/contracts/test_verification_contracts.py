@@ -8,7 +8,11 @@ import pytest
 from pydantic import ValidationError
 
 from claim_polygraph_ng.domain import (
+    AssertionConstructionState,
     AssertionVerificationState,
+    ComparativeAssertionConstruction,
+    ContextValueObservation,
+    ContextValueOrigin,
     ContextVerification,
     DatePrecision,
     NormalizedNumericValue,
@@ -23,7 +27,10 @@ from claim_polygraph_ng.domain import (
     TemporalInstant,
     TemporalInterval,
     TemporalRelation,
+    VerificationIssueFinding,
+    VerificationIssueSeverity,
     VerificationPacketV2,
+    VerificationReadinessImpact,
     VerificationStatus,
 )
 
@@ -280,3 +287,96 @@ def test_legacy_context_verification_payload_remains_unchanged() -> None:
         required=False,
         status=VerificationStatus.NOT_REQUIRED,
     )
+
+
+def test_typed_findings_and_value_provenance_round_trip_without_breaking_v2() -> None:
+    claim_id, source_id, evidence_id = uuid4(), uuid4(), uuid4()
+    finding = VerificationIssueFinding(
+        code="typed_operand_missing",
+        severity=VerificationIssueSeverity.BLOCKING,
+        message="The value is not bound to an approved typed operand.",
+        recommended_action="Bind the value and unit to the exact evidence passage.",
+        readiness_impact=VerificationReadinessImpact.HUMAN_REVIEW,
+        evidence_ids=(evidence_id,),
+    )
+    context = ContextVerification(
+        claim_id=claim_id,
+        numerical=NumericalContextCheck(
+            required=True,
+            status=VerificationStatus.INSUFFICIENT,
+            evidence_observations=(
+                ContextValueObservation(
+                    raw_text="41.8",
+                    normalized_text="41.8",
+                    origin=ContextValueOrigin.EVIDENCE,
+                    evidence_id=evidence_id,
+                    source_id=source_id,
+                    start_char=10,
+                    end_char=14,
+                    unit_hint="percent",
+                ),
+            ),
+            findings=(finding,),
+        ),
+        temporal=TemporalContextCheck(
+            required=False,
+            status=VerificationStatus.NOT_REQUIRED,
+        ),
+    )
+    packet = VerificationPacketV2(
+        claim_id=claim_id,
+        approved_evidence_ids=(evidence_id,),
+        findings=(finding,),
+    )
+
+    assert ContextVerification.model_validate_json(context.model_dump_json()) == context
+    assert VerificationPacketV2.model_validate_json(packet.model_dump_json()) == packet
+
+
+def test_packet_rejects_finding_evidence_outside_approved_set() -> None:
+    with pytest.raises(ValidationError, match="approved evidence"):
+        VerificationPacketV2(
+            claim_id=uuid4(),
+            approved_evidence_ids=(),
+            findings=(
+                VerificationIssueFinding(
+                    code="outside_packet",
+                    severity=VerificationIssueSeverity.CAUTION,
+                    message="The finding points to an unavailable record.",
+                    recommended_action="Use evidence from the approved packet.",
+                    evidence_ids=(uuid4(),),
+                ),
+            ),
+        )
+
+
+def test_comparative_construction_round_trips_and_is_evidence_bounded() -> None:
+    claim_id, evidence_id, assertion_id = uuid4(), uuid4(), uuid4()
+    construction = ComparativeAssertionConstruction(
+        claim_id=claim_id,
+        claim_text_span="A is hotter than B.",
+        left_subject="A",
+        right_subject="B",
+        compared_property="temperature",
+        comparator=NumericComparator.GREATER_THAN,
+        dimension=NumericDimension.TEMPERATURE,
+        state=AssertionConstructionState.CONSTRUCTED,
+        assertion_id=assertion_id,
+        evidence_ids=(evidence_id,),
+        explanation="Both operands were bound in one approved passage.",
+    )
+    packet = VerificationPacketV2(
+        claim_id=claim_id,
+        approved_evidence_ids=(evidence_id,),
+        comparative_constructions=(construction,),
+    )
+
+    restored = VerificationPacketV2.model_validate_json(packet.model_dump_json())
+    assert restored.comparative_constructions == (construction,)
+
+    with pytest.raises(ValidationError, match="approved evidence"):
+        VerificationPacketV2(
+            claim_id=claim_id,
+            approved_evidence_ids=(),
+            comparative_constructions=(construction,),
+        )

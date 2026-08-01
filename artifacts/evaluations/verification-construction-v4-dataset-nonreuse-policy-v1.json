@@ -1,0 +1,107 @@
+{
+  "policy_id": "verification-construction-v4-dataset-nonreuse-policy-v1",
+  "status": "frozen",
+  "v3_held_out": {
+    "development_use": "prohibited",
+    "tuning_use": "prohibited",
+    "calibration_use": "prohibited",
+    "held_out_use": "prohibited",
+    "exact_claim_text_in_synthetic_fixtures": "prohibited",
+    "category_level_failure_lessons": "permitted"
+  },
+  "v3_development_and_exposed_calibration": {
+    "non_promotional_diagnostics": "permitted_with_label",
+    "promotion_metrics": "prohibited",
+    "fresh_v4_calibration_or_held_out": "prohibited"
+  },
+  "fresh_v4_evaluation": {
+    "exclude_all_v3_exact_claims": true,
+    "exclude_all_v3_origin_families": true,
+    "calibration_and_held_out_origin_families_disjoint": true,
+    "split_frozen_before_model_execution": true,
+    "human_annotation_required": true,
+    "distinct_approval_required": true
+  },
+  "retired_v3_benchmark_artifacts": [
+    {
+      "path": "benchmarks/verification_construction_v3_ai_annotation_draft_v1.json",
+      "sha256": "ee31bb7dfaff5ad58be0aceda81a39f8aa316287a5a20be951e8f23004d3bfd8",
+      "bytes": 191676
+    },
+    {
+      "path": "benchmarks/verification_construction_v3_annotation_workbook_v1.json",
+      "sha256": "caa358a1f913cc5cd3226d689232c39dc6b858170ebd3da623aa83282a2b82d0",
+      "bytes": 129199
+    },
+    {
+      "path": "benchmarks/verification_construction_v3_approved_frozen_v2.json",
+      "sha256": "6f45fd6c568135654a6af681c6c26fdea3f94505efc013064a0384b62f10e17a",
+      "bytes": 202949
+    },
+    {
+      "path": "benchmarks/verification_construction_v3_human_reviewed_v1.json",
+      "sha256": "5184ff3ee24008d8251a6b47584aee50c0c1bd0a7b6cf7eb7ebff37c87258c1f",
+      "bytes": 206016
+    },
+    {
+      "path": "benchmarks/verification_construction_v3_public_html_collection_v1.json",
+      "sha256": "48426fc0789fbf04d519ae0a4764df156617137707e90e35e03276d10570b995",
+      "bytes": 16826
+    },
+    {
+      "path": "benchmarks/verification_construction_v3_quota_remediation_candidates_v1.json",
+      "sha256": "89b7d1c64586a2fbcbed2bbd9fb2b0d238ca21287e876c72eaa0a94494a68a24",
+      "bytes": 3377
+    },
+    {
+      "path": "benchmarks/verification_construction_v3_remediation_workbook_v2.json",
+      "sha256": "4903f003ad15cb4b981e637502f6bbe43a9ad40b2a142afd884ace62123c1022",
+      "bytes": 197217
+    },
+    {
+      "path": "benchmarks/verification_construction_v3_schema.json",
+      "sha256": "af5be8d1ab3470515db0c915069a94e938bb90ff7dbf804ee5554c3f8126ebd2",
+      "bytes": 1101
+    },
+    {
+      "path": "benchmarks/verification_construction_v3_stage6a_replacement_calibration_workbook_v1.json",
+      "sha256": "4da09807069f59a5768749afebbdff3bfbdda0a983db40c4259284c97e963f54",
+      "bytes": 31841
+    },
+    {
+      "path": "benchmarks/verification_construction_v3_stage6a_replacement_calibration_workbook_v1_APPROVED.json",
+      "sha256": "b2b3cf0691fc787e81a05ac7ba50c1616c7554c7a4bce1117f5dad0ae9db2448",
+      "bytes": 55529
+    },
+    {
+      "path": "benchmarks/verification_construction_v3_stage6b_synthetic_fixtures_v1.json",
+      "sha256": "2bf5f2f058d37b98dc84b4a827bf50ea372ace41c81b615251c1be3477892f2f",
+      "bytes": 2508
+    },
+    {
+      "path": "benchmarks/verification_construction_v3_stage6c_fresh_calibration_workbook_v1.json",
+      "sha256": "a23643e04f82d1c7c7a7e1ca3ba9e365363f1c1003f4dfd4a87f87ecdf13f5ec",
+      "bytes": 31547
+    },
+    {
+      "path": "benchmarks/verification_construction_v3_stage6c_fresh_calibration_workbook_v1_APPROVED.json",
+      "sha256": "a3265a50c27caca659fb42b05a159ea1c66ca7954bdd9da4c05a3f8a9c61d433",
+      "bytes": 57225
+    },
+    {
+      "path": "benchmarks/verification_construction_v3_stage6e_fresh_calibration_workbook_v1.json",
+      "sha256": "1e041a0f7db903d60a1938e187976cb2d5777c9d72a532a5f64b64e6c9352afa",
+      "bytes": 33360
+    },
+    {
+      "path": "benchmarks/verification_construction_v3_stage6e_fresh_calibration_workbook_v1_APPROVED.json",
+      "sha256": "84ae983fe0f03748bad255fd5eab847fc67f709385a4d8ef8012b0244fe884c4",
+      "bytes": 55237
+    },
+    {
+      "path": "benchmarks/verification_construction_v3_stage8_adjudication_workbook_v1.json",
+      "sha256": "50a29756b5965f9ff2a73b55934b57c2ebbea9109684bdc21967f4ec32b428a6",
+      "bytes": 27710
+    }
+  ]
+}

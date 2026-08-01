@@ -235,6 +235,24 @@ The Phase 10 social-evidence release audit subsequently recorded:
 | Dashboard build, UI/accessibility, and lint gates | Passed |
 | Paid provider calls used for the release audit | 0 |
 
+The Verification Construction V4 held-out evaluation additionally recorded:
+
+| Gate | Result |
+|---|---:|
+| Held-out cases / independent origin families | 20 / 10 |
+| Construction precision | 100% |
+| Construction recall | 83.33% |
+| Human-review routing recall | 100% |
+| Unsafe accepted constructions | 0 |
+| Duplicate paid operations | 0 |
+| Model cost | $0.00509280 |
+| Full Python regression at V4 closure | 728 passed |
+
+This configuration remains a bounded fallback: deterministic code validates
+and constructs the authoritative assertion, while invalid or unresolved model
+proposals route to human review. The small, temporally concentrated held-out
+set does not establish population-level accuracy.
+
 These results validate architecture, control flow, recovery, and safety on the
 declared test sets. They do **not** establish population-level factual
 accuracy. All 20 Phase 9 benchmark cases requested review, so the routing result
@@ -248,6 +266,9 @@ See the [Phase 9 final audit](docs/PHASE_9_STAGE_9.13_FINAL_AUDIT.md), the
 and the accepted [LangGraph](docs/adr/0021-promote-unified-authoritative-langgraph.md)
 and [social-evidence](docs/adr/0023-promote-social-evidence-governance.md)
 ADRs.
+
+The proposed V4 promotion boundary is documented in
+[ADR 0024](docs/adr/0024-promote-bounded-assisted-verification-construction-v4.md).
 
 ## Run the local product
 

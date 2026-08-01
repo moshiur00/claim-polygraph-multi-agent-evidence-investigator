@@ -645,10 +645,73 @@ def render_markdown(
                 "",
                 f"- **Numerical assertions:** {len(packet.numerical_assertions)}",
                 f"- **Temporal assertions:** {len(packet.temporal_assertions)}",
+                f"- **Comparative construction attempts:** "
+                f"{len(packet.comparative_constructions)}",
+                f"- **Temporal construction attempts:** "
+                f"{len(packet.temporal_constructions)}",
                 f"- **Version:** {packet.verification_version}",
                 "",
             ]
         )
+        for construction in packet.comparative_constructions:
+            lines.extend(
+                [
+                    f"### Comparative construction `{construction.construction_id}`",
+                    "",
+                    f"- **State:** {construction.state.value}",
+                    f"- **Claim span:** {construction.claim_text_span}",
+                    f"- **Typed comparison:** {construction.left_subject} "
+                    f"{construction.comparator.value} {construction.right_subject}",
+                    f"- **Property and dimension:** {construction.compared_property}; "
+                    f"{construction.dimension.value}",
+                    f"- **Evidence bindings:** "
+                    f"{_joined(tuple(str(value) for value in construction.evidence_ids))}",
+                    f"- **Failure code:** {construction.failure_code or 'none'}",
+                    f"- **Explanation:** {construction.explanation}",
+                    f"- **Constructor version:** {construction.construction_version}",
+                    "",
+                ]
+            )
+        for construction in packet.temporal_constructions:
+            lines.extend(
+                [
+                    f"### Temporal construction `{construction.construction_id}`",
+                    "",
+                    f"- **State:** {construction.state.value}",
+                    f"- **Claim span:** {construction.claim_text_span}",
+                    f"- **Typed relation:** {construction.left_subject} "
+                    f"{construction.relation.value} {construction.right_subject}",
+                    f"- **Evidence bindings:** "
+                    f"{_joined(tuple(str(value) for value in construction.evidence_ids))}",
+                    f"- **Failure code:** {construction.failure_code or 'none'}",
+                    f"- **Explanation:** {construction.explanation}",
+                    f"- **Constructor version:** {construction.construction_version}",
+                    "",
+                ]
+            )
+        for assertion in packet.numerical_assertions:
+            expected = ", ".join(
+                f"{value.value} {value.unit or ''}".strip()
+                for value in assertion.expected_values
+            )
+            result = (
+                f"{assertion.normalized_result.value} "
+                f"{assertion.normalized_result.unit or ''}".strip()
+                if assertion.normalized_result is not None
+                else "not established"
+            )
+            lines.extend(
+                [
+                    f"### Numerical assertion `{assertion.assertion_id}`",
+                    "",
+                    f"- **State:** {assertion.state.value}",
+                    f"- **Comparator:** {assertion.comparator.value}",
+                    f"- **Expected/reference value:** {expected}",
+                    f"- **Evidence-grounded result:** {result}",
+                    f"- **Expression:** {assertion.expression or 'direct comparison'}",
+                    "",
+                ]
+            )
 
     if report.argument_ledger is not None:
         ledger = report.argument_ledger

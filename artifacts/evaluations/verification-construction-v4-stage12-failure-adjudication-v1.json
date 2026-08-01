@@ -1,0 +1,50 @@
+{
+  "audit_id": "verification-construction-v4-stage12-failure-adjudication-v1",
+  "status": "passed",
+  "records": [
+    {
+      "case_id": "V3-366",
+      "category": "claim_date_precision_or_binding",
+      "claim_text": "Banco Central do Brasil received statutory autonomy in February 2021.",
+      "approved_evidence": "Its autonomy is enforced by the Complementary Law 179, of February 2021.",
+      "persisted_error": "temporal claim date is not explicit in the claim span",
+      "safety_effect": "failed_closed_to_human_review",
+      "unsafe_construction_accepted": false,
+      "adjudication": "Valid constructible case missed by conservative binding or exact-span validation; not evidence against the claim.",
+      "future_use": "Observation only. This held-out record may not be used for prompt, schema, validator, or eligibility tuning."
+    },
+    {
+      "case_id": "V3-368",
+      "category": "provider_claim_span_mismatch",
+      "claim_text": "The Central Bank of Ceylon was renamed the Central Bank of Sri Lanka in 1985.",
+      "approved_evidence": "It was renamed the Central Bank of Sri Lanka in 1985.",
+      "persisted_error": "proposal claim span is not present in the claim",
+      "safety_effect": "failed_closed_to_human_review",
+      "unsafe_construction_accepted": false,
+      "adjudication": "Valid constructible case missed by conservative binding or exact-span validation; not evidence against the claim.",
+      "future_use": "Observation only. This held-out record may not be used for prompt, schema, validator, or eligibility tuning."
+    },
+    {
+      "case_id": "V3-373",
+      "category": "evidence_date_surface_normalization",
+      "claim_text": "Bank Indonesia was officially established on July 1, 1953.",
+      "approved_evidence": "On 1st July 1953, Bank Indonesia was officially established as the Central Bank of the Republic of Indonesia.",
+      "persisted_error": "effective date is not explicit in bound evidence",
+      "safety_effect": "failed_closed_to_human_review",
+      "unsafe_construction_accepted": false,
+      "adjudication": "Valid constructible case missed by conservative binding or exact-span validation; not evidence against the claim.",
+      "future_use": "Observation only. This held-out record may not be used for prompt, schema, validator, or eligibility tuning."
+    }
+  ],
+  "gates": {
+    "exactly_three_positive_safe_failures": true,
+    "all_failures_classified": true,
+    "all_failures_routed_to_review": true,
+    "unsafe_acceptances_zero": true,
+    "held_out_not_rerun": true,
+    "tuning_authorized": false
+  },
+  "model_calls": 0,
+  "network_calls": 0,
+  "held_out_replays": 0
+}

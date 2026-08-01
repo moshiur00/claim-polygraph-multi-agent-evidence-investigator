@@ -1,0 +1,37 @@
+{
+  "audit_id": "verification-construction-v4-stage6a-offline-remediation-v1",
+  "status": "passed",
+  "canonicalization_version": "assisted-canonicalization-v4.6a",
+  "targeted_tests_passed": 46,
+  "targeted_tests_failed": 0,
+  "model_calls": 0,
+  "network_calls": 0,
+  "paid_operations": 0,
+  "preserved_v4_6_artifacts": [
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage6-canary-manifest-v1.json",
+      "sha256": "efac17962697f759a008694bf768179bec8f0948ea2d3877ec0d36ec94d696dd"
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage6-canary-result-v1.json",
+      "sha256": "fc6ca12f797a400296c36d6c587e6bf721c3e6ed59ae27370491cb338e3c7d8c"
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage6-canary-audit-v1.json",
+      "sha256": "30726fc1faadc2cf4001936b3fdbcd60a11c029112d89daab7e79f9bf64c7b76"
+    },
+    {
+      "path": "data/v4-stage6-paid-operations.db",
+      "sha256": "8b05747a054d8404caa22ad4c6d08f0a1d3598d9791e51e77105ced3041ecc50"
+    }
+  ],
+  "gates": {
+    "unmatched_quote_not_expanded": true,
+    "unique_same_sentence_status_expands": true,
+    "cross_sentence_expansion_rejected": true,
+    "duplicate_status_expansion_rejected": true,
+    "exact_status_in_quote_required": true,
+    "consumed_result_preserved": true
+  },
+  "exit_criterion_met": true
+}

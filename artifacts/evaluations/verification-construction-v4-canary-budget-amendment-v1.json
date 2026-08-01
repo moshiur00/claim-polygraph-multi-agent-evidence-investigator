@@ -1,0 +1,26 @@
+{
+  "amendment_id": "verification-construction-v4-canary-budget-amendment-v1",
+  "status": "frozen",
+  "predecessor_manifest_path": "artifacts/evaluations/verification-construction-v4-stage0-manifest-v1.json",
+  "predecessor_manifest_sha256": "f354e12c11e23131607825bc15d9ccc2ac75ec0a540a6e39d38e4e48550d6b76",
+  "effective_budget": {
+    "maximum_synthetic_canary_calls": 4,
+    "maximum_development_calls": 18,
+    "maximum_calibration_calls": 20,
+    "maximum_held_out_calls": 20,
+    "maximum_total_calls": 62,
+    "maximum_input_tokens_per_call": 6000,
+    "maximum_output_tokens_per_call": 900,
+    "maximum_total_cost_usd": 1.25,
+    "retries_after_valid_paid_receipt": 0
+  },
+  "synthetic_calls_consumed": 3,
+  "synthetic_calls_remaining": 1,
+  "consumed_cost_usd": 0.00086085,
+  "final_canary_authorized": true,
+  "final_canary_maximum_calls": 1,
+  "authorization_scope": "One fresh temporal canary after V4.6b only; no retry, benchmark reuse, calibration access, or expansion of total calls or cost.",
+  "model_calls_during_amendment": 0,
+  "network_calls_during_amendment": 0,
+  "paid_operations_during_amendment": 0
+}

@@ -183,6 +183,19 @@ class SQLiteReviewLedger:
                     and saved.reviewer_identity == decision.reviewer_identity
                     and saved.rationale == decision.rationale
                     and saved.proposed_verdict is decision.proposed_verdict
+                    and saved.verification_construction_id
+                    == decision.verification_construction_id
+                    and saved.verification_disposition
+                    is decision.verification_disposition
+                    and saved.corrected_left_subject == decision.corrected_left_subject
+                    and saved.corrected_right_subject == decision.corrected_right_subject
+                    and saved.corrected_comparator == decision.corrected_comparator
+                    and saved.corrected_claim_text_span
+                    == decision.corrected_claim_text_span
+                    and saved.corrected_value == decision.corrected_value
+                    and saved.corrected_unit == decision.corrected_unit
+                    and saved.corrected_evidence_ids
+                    == decision.corrected_evidence_ids
                 ):
                     return saved
                 raise ReviewPolicyError("decision ID already represents different content")

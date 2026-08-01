@@ -1,0 +1,75 @@
+{
+  "collection_id": "verification-construction-v3-quota-remediation-candidates-v1",
+  "collected_at": "2026-07-30",
+  "collection_method": "Controlled public-web collection from accessible official HTML; no model calls and no PDF downloads.",
+  "cases": [
+    {
+      "replacement_case_id": "V3-009",
+      "source_candidate_id": "V3-REMEDIATION-001",
+      "split": "development",
+      "claim_text": "One standard atmosphere equals exactly 101,325 pascals.",
+      "dimension": "pressure",
+      "origin_family_id": "public_html:nist",
+      "source_class": "official_or_legal",
+      "source_title": "NIST Guide to the SI, Appendix B: Conversion Factors",
+      "source_url": "https://www.nist.gov/pml/special-publication-811/nist-guide-si-appendix-b-conversion-factors",
+      "source_excerpt": "1 atm = 101 325 Pa (exactly)"
+    },
+    {
+      "replacement_case_id": "V3-022",
+      "source_candidate_id": "V3-REMEDIATION-002",
+      "split": "calibration",
+      "claim_text": "At 5,000 feet above sea level, atmospheric pressure is about 12.3 pounds per square inch.",
+      "dimension": "pressure",
+      "origin_family_id": "public_html:usda_fsis",
+      "source_class": "official_or_legal",
+      "source_title": "High Altitude Cooking",
+      "source_url": "https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/high-altitude-cooking",
+      "source_excerpt": "At sea level, the air presses on a square inch of surface with 14.7 pounds pressure; at 5,000 feet with 12.3 pounds pressure."
+    },
+    {
+      "replacement_case_id": "V3-031",
+      "source_candidate_id": "V3-REMEDIATION-003",
+      "split": "held_out",
+      "claim_text": "Standard sea-level atmospheric pressure is 1,013 hectopascals.",
+      "dimension": "pressure",
+      "origin_family_id": "public_html:met_office",
+      "source_class": "official_or_legal",
+      "source_title": "High and low pressure",
+      "source_url": "https://weather.metoffice.gov.uk/learn-about/weather/how-weather-works/high-and-low-pressure",
+      "source_excerpt": "Standard sea-level pressure is 1013 hPa."
+    },
+    {
+      "replacement_case_id": "V3-045",
+      "source_candidate_id": "V3-REMEDIATION-004",
+      "split": "development",
+      "claim_text": "The fixed conversion rate for one euro is 1.95583 Deutsche Mark.",
+      "dimension": "currency",
+      "origin_family_id": "public_html:ecb",
+      "source_class": "official_or_legal",
+      "source_title": "Our money",
+      "source_url": "https://www.ecb.europa.eu/euro/intro/html/index.en.html",
+      "source_excerpt": "1 | DEM 1.95583 (Deutsche Mark)"
+    },
+    {
+      "replacement_case_id": "V3-053",
+      "source_candidate_id": "V3-REMEDIATION-005",
+      "split": "calibration",
+      "claim_text": "The fixed conversion rate for one euro is 7.53450 Croatian kuna.",
+      "dimension": "currency",
+      "origin_family_id": "public_html:ecb",
+      "source_class": "official_or_legal",
+      "source_title": "Croatia (since 1 January 2023)",
+      "source_url": "https://www.ecb.europa.eu/euro/changeover/croatia/html/index.en.html",
+      "source_excerpt": "HRK 7.53450 per EUR 1"
+    }
+  ],
+  "controls": {
+    "public_html_candidates_selected": 5,
+    "origin_families": 4,
+    "restricted_documents_downloaded": 0,
+    "pdf_downloads": 0,
+    "model_calls": 0,
+    "estimated_cost_usd": 0.0
+  }
+}

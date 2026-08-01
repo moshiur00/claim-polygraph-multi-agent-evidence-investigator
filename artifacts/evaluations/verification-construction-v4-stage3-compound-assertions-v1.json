@@ -1,0 +1,704 @@
+{
+  "audit_id": "verification-construction-v4-stage3-compound-assertions-v1",
+  "status": "passed",
+  "version": "linked-assertion-construction-v1",
+  "offline": true,
+  "model_calls": 0,
+  "network_calls": 0,
+  "search_calls": 0,
+  "paid_operations": 0,
+  "fixture_count": 5,
+  "v3_held_out_texts_loaded": 0,
+  "group_kind_coverage": [
+    "comparison",
+    "compound_condition",
+    "projection",
+    "range",
+    "ranking"
+  ],
+  "gates": {
+    "all_group_kinds_constructed": true,
+    "all_material_operands_covered": true,
+    "exact_component_offsets": true,
+    "explicit_consequence_preserved": true,
+    "incomplete_group_fails_closed": true,
+    "construction_contract_has_no_decision_authority": true,
+    "v3_held_out_fixture_count_zero": true
+  },
+  "results": [
+    {
+      "fixture_id": "comparison",
+      "text_sha256": "6ad9f4f5179bf8123c6c42b1dc825bbf987555fe79894c146acdd80e8c27e2ec",
+      "constructed_count": 1,
+      "unconstructed_count": 0,
+      "material_coverage": 1.0,
+      "requires_human_review": false,
+      "constructions": [
+        {
+          "construction_id": "0206ac87-68f0-5588-b827-6c41559382a1",
+          "group_id": "group-001",
+          "group_kind": "comparison",
+          "claim_text_sha256": "6ad9f4f5179bf8123c6c42b1dc825bbf987555fe79894c146acdd80e8c27e2ec",
+          "state": "constructed",
+          "required_candidate_ids": [
+            "candidate-001",
+            "candidate-004",
+            "candidate-003",
+            "candidate-002",
+            "candidate-005"
+          ],
+          "components": [
+            {
+              "component_id": "component-001",
+              "kind": "value_condition",
+              "start_char": 19,
+              "end_char": 27,
+              "quoted_text": "18 hours",
+              "candidate_ids": [
+                "candidate-001",
+                "candidate-002"
+              ],
+              "decimal_value": "18",
+              "decimal_scale": "1",
+              "unit": "hour",
+              "comparator": null,
+              "date_value": null,
+              "date_precision": null,
+              "ordinal_rank": null,
+              "status": null
+            },
+            {
+              "component_id": "component-002",
+              "kind": "value_condition",
+              "start_char": 29,
+              "end_char": 52,
+              "quoted_text": "longer than the 12-hour",
+              "candidate_ids": [
+                "candidate-003",
+                "candidate-004",
+                "candidate-005"
+              ],
+              "decimal_value": "12",
+              "decimal_scale": "1",
+              "unit": "hour",
+              "comparator": "greater_than",
+              "date_value": null,
+              "date_precision": null,
+              "ordinal_rank": null,
+              "status": null
+            }
+          ],
+          "edges": [
+            {
+              "source_component_id": "component-001",
+              "target_component_id": "component-002",
+              "relation": "compares_to"
+            }
+          ],
+          "failure_code": null,
+          "explanation": "Every material candidate is represented in linked typed components.",
+          "construction_version": "linked-assertion-construction-v1"
+        }
+      ]
+    },
+    {
+      "fixture_id": "range",
+      "text_sha256": "cc8095b759e144b7249b727ce42e1e63f623626e0410d9859b586177677846c8",
+      "constructed_count": 1,
+      "unconstructed_count": 0,
+      "material_coverage": 1.0,
+      "requires_human_review": false,
+      "constructions": [
+        {
+          "construction_id": "40d9c10a-e776-5efc-8ea4-4a26bc52cb8d",
+          "group_id": "group-001",
+          "group_kind": "range",
+          "claim_text_sha256": "cc8095b759e144b7249b727ce42e1e63f623626e0410d9859b586177677846c8",
+          "state": "constructed",
+          "required_candidate_ids": [
+            "candidate-003",
+            "candidate-005",
+            "candidate-001",
+            "candidate-002",
+            "candidate-004",
+            "candidate-006"
+          ],
+          "components": [
+            {
+              "component_id": "component-001",
+              "kind": "value_condition",
+              "start_char": 15,
+              "end_char": 34,
+              "quoted_text": "is between 18 hours",
+              "candidate_ids": [
+                "candidate-001",
+                "candidate-002",
+                "candidate-003",
+                "candidate-004"
+              ],
+              "decimal_value": "18",
+              "decimal_scale": "1",
+              "unit": "hour",
+              "comparator": "equal",
+              "date_value": null,
+              "date_precision": null,
+              "ordinal_rank": null,
+              "status": null
+            },
+            {
+              "component_id": "component-002",
+              "kind": "value_condition",
+              "start_char": 39,
+              "end_char": 47,
+              "quoted_text": "27 hours",
+              "candidate_ids": [
+                "candidate-005",
+                "candidate-006"
+              ],
+              "decimal_value": "27",
+              "decimal_scale": "1",
+              "unit": "hour",
+              "comparator": null,
+              "date_value": null,
+              "date_precision": null,
+              "ordinal_rank": null,
+              "status": null
+            }
+          ],
+          "edges": [
+            {
+              "source_component_id": "component-001",
+              "target_component_id": "component-002",
+              "relation": "range_bounds"
+            }
+          ],
+          "failure_code": null,
+          "explanation": "Every material candidate is represented in linked typed components.",
+          "construction_version": "linked-assertion-construction-v1"
+        }
+      ]
+    },
+    {
+      "fixture_id": "ranking",
+      "text_sha256": "6e4da1ff13907bf9b4d25f1c4a23ebba60dbcf1f49b1a360e20249be2a292aa7",
+      "constructed_count": 1,
+      "unconstructed_count": 0,
+      "material_coverage": 1.0,
+      "requires_human_review": false,
+      "constructions": [
+        {
+          "construction_id": "67c9c539-32d0-529d-b713-2188c9451e05",
+          "group_id": "group-001",
+          "group_kind": "ranking",
+          "claim_text_sha256": "6e4da1ff13907bf9b4d25f1c4a23ebba60dbcf1f49b1a360e20249be2a292aa7",
+          "state": "constructed",
+          "required_candidate_ids": [
+            "candidate-001",
+            "candidate-003",
+            "candidate-004"
+          ],
+          "components": [
+            {
+              "component_id": "component-001",
+              "kind": "rank_context",
+              "start_char": 16,
+              "end_char": 30,
+              "quoted_text": "fourth-largest",
+              "candidate_ids": [
+                "candidate-001"
+              ],
+              "decimal_value": null,
+              "decimal_scale": null,
+              "unit": null,
+              "comparator": null,
+              "date_value": null,
+              "date_precision": null,
+              "ordinal_rank": 4,
+              "status": null
+            },
+            {
+              "component_id": "component-002",
+              "kind": "date_context",
+              "start_char": 53,
+              "end_char": 57,
+              "quoted_text": "2024",
+              "candidate_ids": [
+                "candidate-003",
+                "candidate-004"
+              ],
+              "decimal_value": null,
+              "decimal_scale": null,
+              "unit": null,
+              "comparator": null,
+              "date_value": "2024-01-01",
+              "date_precision": "year",
+              "ordinal_rank": null,
+              "status": null
+            }
+          ],
+          "edges": [
+            {
+              "source_component_id": "component-001",
+              "target_component_id": "component-002",
+              "relation": "qualifies"
+            }
+          ],
+          "failure_code": null,
+          "explanation": "Every material candidate is represented in linked typed components.",
+          "construction_version": "linked-assertion-construction-v1"
+        }
+      ]
+    },
+    {
+      "fixture_id": "projection",
+      "text_sha256": "28633dd36df834febba69c265a56c9a564b40801571c90dc6c0f43f879c31b3b",
+      "constructed_count": 2,
+      "unconstructed_count": 0,
+      "material_coverage": 1.0,
+      "requires_human_review": false,
+      "constructions": [
+        {
+          "construction_id": "fccde004-498e-5598-b953-08541626d724",
+          "group_id": "group-001",
+          "group_kind": "projection",
+          "claim_text_sha256": "28633dd36df834febba69c265a56c9a564b40801571c90dc6c0f43f879c31b3b",
+          "state": "constructed",
+          "required_candidate_ids": [
+            "candidate-002",
+            "candidate-004",
+            "candidate-007",
+            "candidate-008",
+            "candidate-011",
+            "candidate-006",
+            "candidate-010"
+          ],
+          "components": [
+            {
+              "component_id": "component-001",
+              "kind": "value_condition",
+              "start_char": 13,
+              "end_char": 39,
+              "quoted_text": "projected to rise from 18%",
+              "candidate_ids": [
+                "candidate-002",
+                "candidate-004"
+              ],
+              "decimal_value": "18",
+              "decimal_scale": "1",
+              "unit": null,
+              "comparator": null,
+              "date_value": null,
+              "date_precision": null,
+              "ordinal_rank": null,
+              "status": null
+            },
+            {
+              "component_id": "component-002",
+              "kind": "value_condition",
+              "start_char": 43,
+              "end_char": 47,
+              "quoted_text": "2022",
+              "candidate_ids": [
+                "candidate-007",
+                "candidate-006"
+              ],
+              "decimal_value": "2022",
+              "decimal_scale": "1",
+              "unit": null,
+              "comparator": null,
+              "date_value": "2022-01-01",
+              "date_precision": "year",
+              "ordinal_rank": null,
+              "status": null
+            },
+            {
+              "component_id": "component-003",
+              "kind": "value_condition",
+              "start_char": 51,
+              "end_char": 54,
+              "quoted_text": "27%",
+              "candidate_ids": [
+                "candidate-008"
+              ],
+              "decimal_value": "27",
+              "decimal_scale": "1",
+              "unit": null,
+              "comparator": null,
+              "date_value": null,
+              "date_precision": null,
+              "ordinal_rank": null,
+              "status": null
+            },
+            {
+              "component_id": "component-004",
+              "kind": "value_condition",
+              "start_char": 58,
+              "end_char": 62,
+              "quoted_text": "2040",
+              "candidate_ids": [
+                "candidate-011",
+                "candidate-010"
+              ],
+              "decimal_value": "2040",
+              "decimal_scale": "1",
+              "unit": null,
+              "comparator": null,
+              "date_value": "2040-01-01",
+              "date_precision": "year",
+              "ordinal_rank": null,
+              "status": null
+            }
+          ],
+          "edges": [
+            {
+              "source_component_id": "component-001",
+              "target_component_id": "component-002",
+              "relation": "projects_to"
+            },
+            {
+              "source_component_id": "component-002",
+              "target_component_id": "component-003",
+              "relation": "projects_to"
+            },
+            {
+              "source_component_id": "component-003",
+              "target_component_id": "component-004",
+              "relation": "projects_to"
+            }
+          ],
+          "failure_code": null,
+          "explanation": "Every material candidate is represented in linked typed components.",
+          "construction_version": "linked-assertion-construction-v1"
+        },
+        {
+          "construction_id": "1524d72e-8172-56f3-a836-561fafdf1a32",
+          "group_id": "group-002",
+          "group_kind": "range",
+          "claim_text_sha256": "28633dd36df834febba69c265a56c9a564b40801571c90dc6c0f43f879c31b3b",
+          "state": "constructed",
+          "required_candidate_ids": [
+            "candidate-004",
+            "candidate-007",
+            "candidate-008",
+            "candidate-011",
+            "candidate-001",
+            "candidate-003",
+            "candidate-005",
+            "candidate-009"
+          ],
+          "components": [
+            {
+              "component_id": "component-001",
+              "kind": "value_condition",
+              "start_char": 10,
+              "end_char": 39,
+              "quoted_text": "is projected to rise from 18%",
+              "candidate_ids": [
+                "candidate-001",
+                "candidate-003",
+                "candidate-004",
+                "candidate-005"
+              ],
+              "decimal_value": "18",
+              "decimal_scale": "1",
+              "unit": "percent",
+              "comparator": "equal",
+              "date_value": null,
+              "date_precision": null,
+              "ordinal_rank": null,
+              "status": null
+            },
+            {
+              "component_id": "component-002",
+              "kind": "value_condition",
+              "start_char": 43,
+              "end_char": 47,
+              "quoted_text": "2022",
+              "candidate_ids": [
+                "candidate-007"
+              ],
+              "decimal_value": "2022",
+              "decimal_scale": "1",
+              "unit": null,
+              "comparator": null,
+              "date_value": null,
+              "date_precision": null,
+              "ordinal_rank": null,
+              "status": null
+            },
+            {
+              "component_id": "component-003",
+              "kind": "value_condition",
+              "start_char": 51,
+              "end_char": 54,
+              "quoted_text": "27%",
+              "candidate_ids": [
+                "candidate-008",
+                "candidate-009"
+              ],
+              "decimal_value": "27",
+              "decimal_scale": "1",
+              "unit": "percent",
+              "comparator": null,
+              "date_value": null,
+              "date_precision": null,
+              "ordinal_rank": null,
+              "status": null
+            },
+            {
+              "component_id": "component-004",
+              "kind": "value_condition",
+              "start_char": 58,
+              "end_char": 62,
+              "quoted_text": "2040",
+              "candidate_ids": [
+                "candidate-011"
+              ],
+              "decimal_value": "2040",
+              "decimal_scale": "1",
+              "unit": null,
+              "comparator": null,
+              "date_value": null,
+              "date_precision": null,
+              "ordinal_rank": null,
+              "status": null
+            }
+          ],
+          "edges": [
+            {
+              "source_component_id": "component-001",
+              "target_component_id": "component-002",
+              "relation": "range_bounds"
+            },
+            {
+              "source_component_id": "component-002",
+              "target_component_id": "component-003",
+              "relation": "range_bounds"
+            },
+            {
+              "source_component_id": "component-003",
+              "target_component_id": "component-004",
+              "relation": "range_bounds"
+            }
+          ],
+          "failure_code": null,
+          "explanation": "Every material candidate is represented in linked typed components.",
+          "construction_version": "linked-assertion-construction-v1"
+        }
+      ]
+    },
+    {
+      "fixture_id": "compound_condition",
+      "text_sha256": "d583191db2a901d8681602ebdddad8d22900dc7647c2c616b1197263fce0cd51",
+      "constructed_count": 2,
+      "unconstructed_count": 0,
+      "material_coverage": 1.0,
+      "requires_human_review": false,
+      "constructions": [
+        {
+          "construction_id": "8d1ec8a5-67f9-593a-9493-33282387dfdf",
+          "group_id": "group-001",
+          "group_kind": "comparison",
+          "claim_text_sha256": "d583191db2a901d8681602ebdddad8d22900dc7647c2c616b1197263fce0cd51",
+          "state": "constructed",
+          "required_candidate_ids": [
+            "candidate-003",
+            "candidate-007",
+            "candidate-002",
+            "candidate-006",
+            "candidate-004",
+            "candidate-008"
+          ],
+          "components": [
+            {
+              "component_id": "component-001",
+              "kind": "value_condition",
+              "start_char": 36,
+              "end_char": 54,
+              "quoted_text": "above 45 kilograms",
+              "candidate_ids": [
+                "candidate-002",
+                "candidate-003",
+                "candidate-004"
+              ],
+              "decimal_value": "45",
+              "decimal_scale": "1",
+              "unit": "kilogram",
+              "comparator": "greater_than",
+              "date_value": null,
+              "date_precision": null,
+              "ordinal_rank": null,
+              "status": null
+            },
+            {
+              "component_id": "component-002",
+              "kind": "value_condition",
+              "start_char": 59,
+              "end_char": 75,
+              "quoted_text": "at least 3 hours",
+              "candidate_ids": [
+                "candidate-006",
+                "candidate-007",
+                "candidate-008"
+              ],
+              "decimal_value": "3",
+              "decimal_scale": "1",
+              "unit": "hour",
+              "comparator": "greater_than_or_equal",
+              "date_value": null,
+              "date_precision": null,
+              "ordinal_rank": null,
+              "status": null
+            }
+          ],
+          "edges": [
+            {
+              "source_component_id": "component-001",
+              "target_component_id": "component-002",
+              "relation": "compares_to"
+            }
+          ],
+          "failure_code": null,
+          "explanation": "Every material candidate is represented in linked typed components.",
+          "construction_version": "linked-assertion-construction-v1"
+        },
+        {
+          "construction_id": "a440d119-05cf-5ae6-9300-8f5efd6ac3de",
+          "group_id": "group-002",
+          "group_kind": "compound_condition",
+          "claim_text_sha256": "d583191db2a901d8681602ebdddad8d22900dc7647c2c616b1197263fce0cd51",
+          "state": "constructed",
+          "required_candidate_ids": [
+            "candidate-003",
+            "candidate-007",
+            "candidate-002",
+            "candidate-006",
+            "candidate-004",
+            "candidate-008",
+            "candidate-001",
+            "candidate-005"
+          ],
+          "components": [
+            {
+              "component_id": "component-001",
+              "kind": "value_condition",
+              "start_char": 19,
+              "end_char": 54,
+              "quoted_text": "after it remains above 45 kilograms",
+              "candidate_ids": [
+                "candidate-001",
+                "candidate-002",
+                "candidate-003",
+                "candidate-004"
+              ],
+              "decimal_value": "45",
+              "decimal_scale": "1",
+              "unit": "kilogram",
+              "comparator": "greater_than",
+              "date_value": null,
+              "date_precision": null,
+              "ordinal_rank": null,
+              "status": null
+            },
+            {
+              "component_id": "component-002",
+              "kind": "value_condition",
+              "start_char": 55,
+              "end_char": 75,
+              "quoted_text": "for at least 3 hours",
+              "candidate_ids": [
+                "candidate-005",
+                "candidate-006",
+                "candidate-007",
+                "candidate-008"
+              ],
+              "decimal_value": "3",
+              "decimal_scale": "1",
+              "unit": "hour",
+              "comparator": "greater_than_or_equal",
+              "date_value": null,
+              "date_precision": null,
+              "ordinal_rank": null,
+              "status": null
+            },
+            {
+              "component_id": "component-003",
+              "kind": "consequence",
+              "start_char": 0,
+              "end_char": 18,
+              "quoted_text": "Discard the sample",
+              "candidate_ids": [],
+              "decimal_value": null,
+              "decimal_scale": null,
+              "unit": null,
+              "comparator": null,
+              "date_value": null,
+              "date_precision": null,
+              "ordinal_rank": null,
+              "status": null
+            }
+          ],
+          "edges": [
+            {
+              "source_component_id": "component-001",
+              "target_component_id": "component-002",
+              "relation": "and"
+            },
+            {
+              "source_component_id": "component-001",
+              "target_component_id": "component-003",
+              "relation": "implies"
+            },
+            {
+              "source_component_id": "component-002",
+              "target_component_id": "component-003",
+              "relation": "implies"
+            }
+          ],
+          "failure_code": null,
+          "explanation": "Every material candidate is represented in linked typed components.",
+          "construction_version": "linked-assertion-construction-v1"
+        }
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "src/claim_polygraph_ng/domain/compound_assertions.py",
+      "sha256": "6f4ded675b8cc66c96fc5d048535fc5e84689cf6b6315840c66a7931f2526573",
+      "bytes": 7420
+    },
+    {
+      "path": "src/claim_polygraph_ng/analysis/compound_construction.py",
+      "sha256": "8f06261770cc7f3d7861b20f8e267987beb0bd8646bdb0fa01d1df2c756195fc",
+      "bytes": 12984
+    },
+    {
+      "path": "src/claim_polygraph_ng/domain/__init__.py",
+      "sha256": "59a5ef0ea07f2ed744c2a3b7a80331f7b53e9bc0231175aa719715dbc3acbaa9",
+      "bytes": 14499
+    },
+    {
+      "path": "src/claim_polygraph_ng/analysis/__init__.py",
+      "sha256": "057a4b7a99c6d6f5819be2dfb0788f3fcba85215423042c233b873da065a2d15",
+      "bytes": 6483
+    },
+    {
+      "path": "tests/unit/test_v4_compound_assertions.py",
+      "sha256": "b25c9bd70dba0d152cacd3d1308e81ae2bfce57cf801f78a27c7190d7dd63194",
+      "bytes": 6344
+    },
+    {
+      "path": "scripts/audit_v4_stage3_compound_assertions.py",
+      "sha256": "af2c05bd9630e7e6fc7ab8402f33baf24d30481991abc6cef5f6b5f072ebf6d2",
+      "bytes": 6140
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage2-candidate-extraction-v1.json",
+      "sha256": "1bcf4444d5960618c85a0aa97ce9afff805e7585310f49b1654971bc634b9469",
+      "bytes": 35679
+    }
+  ],
+  "exit_criterion_met": true,
+  "next_stage": "V4.4 deterministic eligibility remediation"
+}

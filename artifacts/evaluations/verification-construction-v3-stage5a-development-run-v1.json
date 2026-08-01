@@ -1,0 +1,77 @@
+{
+  "artifact_id": "verification-construction-v3-stage5a-development-run-v1",
+  "status": "completed",
+  "prompt_version": "verification-construction-v3-dev-v2",
+  "model": "gpt-5.6-luna",
+  "split": "development",
+  "development_cases": 20,
+  "fallback_eligible_cases": 9,
+  "provider_attempts": 1,
+  "completed_paid_operations": 0,
+  "estimated_cost_usd": 0.0,
+  "calibration_cases_exposed_to_model": 0,
+  "held_out_cases_exposed_to_model": 0,
+  "telemetry": {
+    "spans": 1,
+    "traces": 1,
+    "metric_series": 0
+  },
+  "results": [
+    {
+      "case_id": "V3-004",
+      "eligibility": "missing_reference_date",
+      "disposition": "human_review_ineligible",
+      "provider_attempt": false
+    },
+    {
+      "case_id": "V3-008",
+      "eligibility": "temporal",
+      "disposition": "human_review_validation_or_provider_failure",
+      "provider_attempt": true,
+      "error_type": "ModelOutputError",
+      "error": "OpenAI output failed schema validation: 1 validation error for AssistedConstructionProposal\n  Value error, temporal construction cannot contain numerical fields [type=value_error, input_value={'kind': 'temporal_status...retrospective': False}]}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/value_error"
+    },
+    {
+      "case_id": "V3-014",
+      "eligibility": "excluded_qualitative",
+      "disposition": "human_review_ineligible",
+      "provider_attempt": false
+    },
+    {
+      "case_id": "V3-016",
+      "eligibility": "excluded_qualitative",
+      "disposition": "human_review_ineligible",
+      "provider_attempt": false
+    },
+    {
+      "case_id": "V3-017",
+      "eligibility": "excluded_qualitative",
+      "disposition": "human_review_ineligible",
+      "provider_attempt": false
+    },
+    {
+      "case_id": "V3-029",
+      "eligibility": "excluded_qualitative",
+      "disposition": "human_review_ineligible",
+      "provider_attempt": false
+    },
+    {
+      "case_id": "V3-046",
+      "eligibility": "numerical",
+      "disposition": "locked_previous_attempt",
+      "provider_attempt": false
+    },
+    {
+      "case_id": "V3-047",
+      "eligibility": "excluded_qualitative",
+      "disposition": "human_review_ineligible",
+      "provider_attempt": false
+    },
+    {
+      "case_id": "V3-055",
+      "eligibility": "excluded_qualitative",
+      "disposition": "human_review_ineligible",
+      "provider_attempt": false
+    }
+  ]
+}

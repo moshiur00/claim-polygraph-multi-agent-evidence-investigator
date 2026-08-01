@@ -29,7 +29,7 @@
     {
       "artifact_id": "stage9_1_contracts",
       "path": "artifacts/evaluations/phase9-stage9.1-operation-contracts-v1.json",
-      "sha256": "b5087ae1bc22bb0bb87d4dedbbe66966722411cda6639b3b8e7c87087a90c5c4"
+      "sha256": "fce1124df439e5ce14aa648715d3c4b7739ab4a1f3de8ea1cc824b09f9efa1bc"
     },
     {
       "artifact_id": "stage9_2_report",

@@ -1,0 +1,83 @@
+{
+  "audit_id": "verification-construction-v4-stage1-cost-observability-v1",
+  "status": "passed",
+  "contract_version": "paid-cost-observability-v2",
+  "offline": true,
+  "model_calls": 0,
+  "network_calls": 0,
+  "search_calls": 0,
+  "paid_operations": 0,
+  "targeted_tests_passed": 77,
+  "targeted_tests_failed": 0,
+  "failed_response_cost_observability": 1.0,
+  "gates": {
+    "measured_malformed_usage_retained": true,
+    "measured_malformed_cost_retained": true,
+    "unknown_usage_explicit": true,
+    "unknown_cost_upper_bound_required": true,
+    "successful_unpriced_call_not_silently_free": true,
+    "retry_costs_accumulate_without_overwrite": true,
+    "retry_unknown_bounds_accumulate_without_overwrite": true,
+    "legacy_receipts_remain_readable": true,
+    "failed_receipts_included_in_cost_ledger": true,
+    "openai_schema_failure_crosses_receipt_boundary": true,
+    "duplicate_charge_prevention_preserved": true,
+    "recovery_compatibility_preserved": true
+  },
+  "backward_compatibility": {
+    "existing_receipt_json_loads": true,
+    "legacy_usage_disposition": "legacy_unclassified",
+    "existing_numeric_estimated_cost_field_retained": true,
+    "sqlite_schema_changed": false
+  },
+  "cost_semantics": {
+    "measured": "Token usage and estimated cost are persisted, including when structured output is rejected.",
+    "unknown_with_upper_bound": "Exact priced usage is unknown; estimated_cost_usd remains the measured lower bound and estimated_cost_upper_bound_usd adds a conservative bound for unknown attempts.",
+    "not_applicable": "The receipt does not meter billing, such as plan-billed search.",
+    "legacy_unclassified": "A pre-V4.1 receipt remains readable but is not represented as newly measured."
+  },
+  "artifacts": [
+    {
+      "path": "src/claim_polygraph_ng/domain/paid_operations.py",
+      "sha256": "819a411e6dbadd475d0620228281b28ec85ea696cf1422981be675a9971b05b9",
+      "bytes": 5925
+    },
+    {
+      "path": "src/claim_polygraph_ng/persistence/paid_operations.py",
+      "sha256": "b50e1bfb8e0d860586a8393030b4152c2cc23214420eef1f60f20bdc63dcfaa4",
+      "bytes": 22234
+    },
+    {
+      "path": "src/claim_polygraph_ng/providers/idempotent.py",
+      "sha256": "996252153187b0b13dd7816a6e902eb24e7883001c95791abdd4939569e2da4d",
+      "bytes": 11095
+    },
+    {
+      "path": "src/claim_polygraph_ng/providers/openai.py",
+      "sha256": "6afe6d55bf9fe874dc5cb0d7dc8d0d77723271e0dd68b908dbaa067d0bddf227",
+      "bytes": 16676
+    },
+    {
+      "path": "tests/unit/test_v4_failed_cost_observability.py",
+      "sha256": "790193079f9868166bb3245037fe43a57550b5bc5f2cc85bca60176f0bb27897",
+      "bytes": 9761
+    },
+    {
+      "path": "scripts/audit_v4_stage1_cost_observability.py",
+      "sha256": "daf895ae44590b097a23b6ba2696363a646222d31d2a23a1327d2e3d99b062c8",
+      "bytes": 4131
+    },
+    {
+      "path": "docs/private/verification-construction-v4-stage1-cost-observability.md",
+      "sha256": "c7bf6fc0aae95cf0e824689f1af25c1ec90b78cf253626079165720b3063c499",
+      "bytes": 2176
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage0-audit-v1.json",
+      "sha256": "2da7b381b2c92d267f3a5a12e9f9eb7265bae54297dcaa3c20811d76c53eca2e",
+      "bytes": 628
+    }
+  ],
+  "exit_criterion_met": true,
+  "next_stage": "V4.2 typed deterministic candidate extraction"
+}

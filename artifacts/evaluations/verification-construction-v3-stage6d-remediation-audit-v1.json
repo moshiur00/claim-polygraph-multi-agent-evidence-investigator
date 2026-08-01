@@ -1,0 +1,53 @@
+{
+  "audit_id": "verification-construction-v3-stage6d-remediation-audit-v1",
+  "status": "passed",
+  "allowed_inputs": [
+    "development fixtures",
+    "synthetic fixtures",
+    "now-exposed V3.6c workbook and diagnostics"
+  ],
+  "v36c_cases": 20,
+  "v36c_positive_cases": 19,
+  "v36c_positive_cases_callable": 19,
+  "v36c_negative_cases": 1,
+  "v36c_negative_cases_excluded": 1,
+  "eligibility_counts": {
+    "excluded_qualitative": 1,
+    "numerical_scalar": 10,
+    "temporal": 9
+  },
+  "synthetic_checks": {
+    "V3B-SYN-001": true,
+    "V3B-SYN-002": true,
+    "V3B-SYN-003": true,
+    "V3B-SYN-004": true,
+    "V3B-SYN-005": true,
+    "V3B-SYN-006": true,
+    "V3B-SYN-007": true,
+    "V3B-SYN-008": true,
+    "V3B-SYN-009": true,
+    "V3B-SYN-010": true,
+    "V3B-SYN-011": true,
+    "V3B-SYN-012": true
+  },
+  "temporal_checks": {
+    "month_first_2024": true,
+    "month_first_1913": true,
+    "historical_day_first": true
+  },
+  "gates": {
+    "all_exposed_positive_cases_callable": true,
+    "all_exposed_negative_cases_excluded": true,
+    "synthetic_eligibility_regressions": true,
+    "temporal_precision_normalization": true,
+    "no_model_calls": true,
+    "original_held_out_remained_sealed": true
+  },
+  "controls": {
+    "model_calls": 0,
+    "estimated_cost_usd": 0.0,
+    "original_held_out_cases_loaded": 0,
+    "original_held_out_cases_exposed_to_model": 0,
+    "v36c_results_used_for_tuning": true
+  }
+}

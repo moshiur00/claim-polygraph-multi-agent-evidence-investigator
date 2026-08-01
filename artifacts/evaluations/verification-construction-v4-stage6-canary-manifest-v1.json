@@ -1,0 +1,51 @@
+{
+  "manifest_id": "verification-construction-v4-stage6-canary-manifest-v1",
+  "status": "frozen",
+  "synthetic_fixture_count": 2,
+  "provider": "openai",
+  "model": "gpt-4o-mini",
+  "prompt_version": "verification-construction-v3-remediation-v6",
+  "maximum_provider_attempts": 2,
+  "maximum_calls_per_fixture": 1,
+  "maximum_input_tokens_per_call": 6000,
+  "maximum_output_tokens_per_call": 900,
+  "automatic_retries": 0,
+  "maximum_total_cost_usd": 0.75,
+  "fixtures": [
+    {
+      "canary_id": "v4.6-synthetic-scalar-canary-v1",
+      "kind": "numerical_scalar",
+      "claim_text": "The sealed Vessel Q contains exactly 37 litres.",
+      "evidence_text": "The signed laboratory register states that the sealed Vessel Q contains exactly 37 litres.",
+      "fixture_sha256": "70927bfe1381258b6917759cfb94f30691971da777913f642371b8a78627867e"
+    },
+    {
+      "canary_id": "v4.6-synthetic-temporal-canary-v1",
+      "kind": "temporal_status",
+      "claim_text": "Permit Z became effective on 17 February 2022.",
+      "evidence_text": "The fictional permit register states that Permit Z became effective on 17 February 2022.",
+      "fixture_sha256": "8972fd41851cc3a41c794f9c328c2703da18de0ff938a09a299acc2a1882e846"
+    }
+  ],
+  "required_checks": [
+    "branch_specific_structured_schema",
+    "exact_claim_and_evidence_spans",
+    "durable_usage_or_unknown_upper_bound",
+    "cached_replay_without_provider_attempt",
+    "cancellation_before_reservation",
+    "duplicate_paid_operations_zero"
+  ],
+  "dataset_exposure": {
+    "benchmark": 0,
+    "development": 0,
+    "calibration": 0,
+    "held_out": 0
+  },
+  "predecessor": {
+    "path": "artifacts/evaluations/verification-construction-v4-stage5-offline-gate-v1.json",
+    "sha256": "39a64b23dc96eaeef83464556066f52529e75f835cd3d11b49b57da51c3c954d"
+  },
+  "model_calls_before_execution": 0,
+  "network_calls_before_execution": 0,
+  "paid_operations_before_execution": 0
+}

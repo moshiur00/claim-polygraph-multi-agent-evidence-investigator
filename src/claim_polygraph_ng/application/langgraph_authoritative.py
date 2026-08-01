@@ -601,11 +601,31 @@ def _build_graph(workflow: AuthoritativeFixtureLangGraphWorkflow, checkpointer):
             _ref(state, ArtifactType.CONTEXT_VERIFICATION, claim.claim_id),
             _ref(state, ArtifactType.VERIFICATION_PACKET, claim.claim_id),
         )
+        verification_packet = _one(
+            workflow._investigations,
+            state.investigation_id,
+            ArtifactType.VERIFICATION_PACKET,
+            VerificationPacketV2,
+        )
         return workflow.checkpoint(
             graph,
             phase=AuthoritativeGraphPhase.VERIFICATION,
             operation=AuthoritativeOperation.VERIFY_CONTEXT,
             artifacts=_merge_refs(state.artifacts, refs),
+            verification_construction_ids=tuple(
+                item.construction_id
+                for item in (
+                    *verification_packet.comparative_constructions,
+                    *verification_packet.temporal_constructions,
+                )
+            ),
+            verification_construction_states={
+                item.construction_id: item.state
+                for item in (
+                    *verification_packet.comparative_constructions,
+                    *verification_packet.temporal_constructions,
+                )
+            },
         )
 
     async def ledger(graph: _GraphState):
@@ -1023,6 +1043,20 @@ def _build_graph(workflow: AuthoritativeFixtureLangGraphWorkflow, checkpointer):
         raw = interrupt(payload.model_dump(mode="json"))
         envelope = dict(raw)
         decision = ReviewDecision.model_validate(envelope["decision"])
+        if (
+            decision.verification_construction_id is not None
+            and decision.verification_construction_id
+            not in state.verification_construction_ids
+        ):
+            raise ValueError(
+                "review decision references an unknown verification construction"
+            )
+        if not set(decision.corrected_evidence_ids).issubset(
+            state.approved_evidence_ids
+        ):
+            raise ValueError(
+                "verification corrections may reference only approved evidence"
+            )
         approver_identity = envelope.get("approver_identity")
         trail = workflow._review_ledger.find_by_thread(state.thread_id)
         if trail is None:
@@ -1036,6 +1070,15 @@ def _build_graph(workflow: AuthoritativeFixtureLangGraphWorkflow, checkpointer):
                 reviewer_identity=decision.reviewer_identity,
                 rationale=decision.rationale,
                 proposed_verdict=decision.revised_verdict,
+                verification_construction_id=decision.verification_construction_id,
+                verification_disposition=decision.verification_disposition,
+                corrected_left_subject=decision.corrected_left_subject,
+                corrected_right_subject=decision.corrected_right_subject,
+                corrected_comparator=decision.corrected_comparator,
+                corrected_claim_text_span=decision.corrected_claim_text_span,
+                corrected_value=decision.corrected_value,
+                corrected_unit=decision.corrected_unit,
+                corrected_evidence_ids=decision.corrected_evidence_ids,
             ),
             expected_sequence=len(trail.events),
         )

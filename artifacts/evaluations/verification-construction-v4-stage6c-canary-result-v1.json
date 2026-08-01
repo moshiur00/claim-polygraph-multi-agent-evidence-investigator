@@ -1,0 +1,80 @@
+{
+  "artifact_id": "verification-construction-v4-stage6c-canary-result-v1",
+  "status": "passed",
+  "manifest_sha256": "d6fd389fe6cc7192e9472c52b456a51c4ee1316cf0d001e4900bb66d87f4cd32",
+  "model": "gpt-4o-mini",
+  "provider_attempts": 1,
+  "completed_paid_operations": 1,
+  "failed_paid_operations": 0,
+  "input_tokens": 1138,
+  "output_tokens": 186,
+  "estimated_cost_usd": 0.0002823,
+  "estimated_cost_upper_bound_usd": 0.0002823,
+  "receipt_statuses": [
+    "completed"
+  ],
+  "usage_dispositions": [
+    "measured"
+  ],
+  "telemetry": {
+    "spans": 2,
+    "traces": 2,
+    "metric_series": 2
+  },
+  "dataset_exposure": {
+    "benchmark": 0,
+    "development": 0,
+    "calibration": 0,
+    "held_out": 0
+  },
+  "result": {
+    "disposition": "validated_proposal",
+    "proposal": {
+      "kind": "temporal_status",
+      "failed_construction_id": "278a1bde-080e-52ec-a827-230b4ba23839",
+      "claim_text_span": "License S took effect on 6 April 2020.",
+      "left_subject": null,
+      "right_subject": null,
+      "comparator": null,
+      "dimension": null,
+      "left_value": null,
+      "right_value": null,
+      "scalar_form": null,
+      "scalar_subject": null,
+      "numeric_operation": null,
+      "expected_values": [],
+      "evidence_bindings": [],
+      "temporal_relation": "on",
+      "reference_date": {
+        "value": "2020-04-06",
+        "precision": "day"
+      },
+      "claimed_interval": null,
+      "requires_reference_date": false,
+      "claimed_status": null,
+      "temporal_bindings": [
+        {
+          "evidence_id": "52a78afe-70be-5a5a-9f22-f4141d4cf6fd",
+          "start_char": 70,
+          "end_char": 82,
+          "quoted_text": "6 April 2020",
+          "effective_interval": {
+            "start": {
+              "value": "2020-04-06",
+              "precision": "day"
+            },
+            "end": {
+              "value": "2020-04-06",
+              "precision": "day"
+            },
+            "start_inclusive": true,
+            "end_inclusive": true
+          },
+          "observed_status": null,
+          "retrospective": false
+        }
+      ]
+    },
+    "cached_replay_equal": true
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "audit_id": "verification-construction-v3-stage3-baseline-audit-v1",
+  "status": "passed",
+  "baseline_path": "artifacts/evaluations/verification-construction-v3-stage3-deterministic-baseline-v1.json",
+  "baseline_sha256": "0552632fb361ee74d2767e24070321c05333c25154de7f377134323b0b560a08",
+  "dataset_path": "benchmarks/verification_construction_v3_approved_frozen_v2.json",
+  "dataset_sha256": "6f45fd6c568135654a6af681c6c26fdea3f94505efc013064a0384b62f10e17a",
+  "controls": {
+    "model_calls": 0,
+    "network_calls": 0,
+    "search_calls": 0,
+    "paid_operations": 0,
+    "benchmark_labels_used_as_constructor_inputs": 0
+  },
+  "baseline_is_promotion_candidate": false,
+  "reason": "V3.3 establishes the pre-assisted reference point. Promotion is decided only after development, calibration, held-out evaluation and adjudication."
+}

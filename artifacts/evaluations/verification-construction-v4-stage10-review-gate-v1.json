@@ -1,0 +1,32 @@
+{
+  "audit_id": "verification-construction-v4-stage10-review-gate-v1",
+  "status": "approved_awaiting_v4_11_freeze",
+  "review_gate_passed": true,
+  "held_out_execution_authorized": false,
+  "approved_workbook": "benchmarks/verification_construction_v4_stage10_fresh_held_out_workbook_v1_APPROVED.json",
+  "approved_workbook_sha256": "5d58d587f3e848b56cbf5d02538b3ba5a5513b72ff5285ba7ee898cd2788c549",
+  "case_count": 20,
+  "annotated_cases": 20,
+  "distinctly_approved_cases": 20,
+  "exact_span_failures": 0,
+  "immutable_collection_changes": 0,
+  "annotator": "Md Moshiur Rahman",
+  "distinct_approver": "Md Rashedul Islam",
+  "annotation_dates": [
+    "2026-08-01"
+  ],
+  "approval_dates": [
+    "2026-08-01"
+  ],
+  "label_counts": {
+    "deterministic_constructible": 18,
+    "not_applicable": 2
+  },
+  "dimension_counts": {
+    "temporal_instant": 20
+  },
+  "model_calls": 0,
+  "paid_operations": 0,
+  "held_out_cases_exposed_to_model": 0,
+  "next_action": "Freeze the V4.11 held-out evaluation boundary before its one allowed execution"
+}

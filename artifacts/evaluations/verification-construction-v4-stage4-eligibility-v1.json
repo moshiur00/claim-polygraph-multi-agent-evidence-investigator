@@ -1,0 +1,358 @@
+{
+  "audit_id": "verification-construction-v4-stage4-eligibility-v1",
+  "status": "passed",
+  "version": "construction-eligibility-v1",
+  "offline": true,
+  "model_calls": 0,
+  "network_calls": 0,
+  "search_calls": 0,
+  "paid_operations": 0,
+  "v3_held_out_texts_loaded": 0,
+  "positive_fixture_count": 6,
+  "negative_fixture_count": 3,
+  "constructible_eligibility_recall": 1.0,
+  "negative_exclusion_precision": 1.0,
+  "gates": {
+    "constructible_eligibility_recall_100_percent": true,
+    "negative_exclusion_precision_100_percent": true,
+    "incomplete_untyped_group_routes_to_review": true,
+    "typed_qualifier_orphans_remain_visible": true,
+    "eligibility_contract_has_no_decision_authority": true,
+    "v3_held_out_fixture_count_zero": true
+  },
+  "positive_results": [
+    {
+      "fixture_id": "exact_count",
+      "text_sha256": "7e0971c257ce9d93fe2506940ce5e6c2744b79e0fe2e15dcdf9b33a7beb8fe39",
+      "recovered": true,
+      "decisions": [
+        {
+          "target_id": "eligibility-ungrouped",
+          "group_id": null,
+          "route": "assisted",
+          "reasons": [
+            "ordinary_numerical_language"
+          ],
+          "candidate_ids": [
+            "candidate-001",
+            "candidate-002",
+            "candidate-003",
+            "candidate-004",
+            "candidate-005",
+            "candidate-006"
+          ],
+          "linked_construction_id": null,
+          "requires_human_review": false,
+          "explanation": "Ordinary typed language is eligible for bounded assisted construction because no complete linked group exists."
+        }
+      ]
+    },
+    {
+      "fixture_id": "ordinal_ranking",
+      "text_sha256": "6e4da1ff13907bf9b4d25f1c4a23ebba60dbcf1f49b1a360e20249be2a292aa7",
+      "recovered": true,
+      "decisions": [
+        {
+          "target_id": "eligibility-group-001",
+          "group_id": "group-001",
+          "route": "deterministic",
+          "reasons": [
+            "complete_linked_group"
+          ],
+          "candidate_ids": [
+            "candidate-001",
+            "candidate-003",
+            "candidate-004"
+          ],
+          "linked_construction_id": "67c9c539-32d0-529d-b713-2188c9451e05",
+          "requires_human_review": false,
+          "explanation": "The linked construction preserves every material operand."
+        },
+        {
+          "target_id": "eligibility-ungrouped",
+          "group_id": null,
+          "route": "assisted",
+          "reasons": [
+            "bounded_construction_ambiguity"
+          ],
+          "candidate_ids": [
+            "candidate-002"
+          ],
+          "linked_construction_id": null,
+          "requires_human_review": false,
+          "explanation": "Ordinary typed language is eligible for bounded assisted construction because no complete linked group exists."
+        }
+      ]
+    },
+    {
+      "fixture_id": "absence_status",
+      "text_sha256": "d464f1ef62168633f4ef01afc023115f3f7d277e3bd45fcf52056b9f7d2ae55a",
+      "recovered": true,
+      "decisions": [
+        {
+          "target_id": "eligibility-ungrouped",
+          "group_id": null,
+          "route": "assisted",
+          "reasons": [
+            "status_or_absence"
+          ],
+          "candidate_ids": [
+            "candidate-001",
+            "candidate-002",
+            "candidate-003",
+            "candidate-004",
+            "candidate-005",
+            "candidate-006",
+            "candidate-007"
+          ],
+          "linked_construction_id": null,
+          "requires_human_review": false,
+          "explanation": "Ordinary typed language is eligible for bounded assisted construction because no complete linked group exists."
+        }
+      ]
+    },
+    {
+      "fixture_id": "relative_measurement",
+      "text_sha256": "6ad9f4f5179bf8123c6c42b1dc825bbf987555fe79894c146acdd80e8c27e2ec",
+      "recovered": true,
+      "decisions": [
+        {
+          "target_id": "eligibility-group-001",
+          "group_id": "group-001",
+          "route": "deterministic",
+          "reasons": [
+            "complete_linked_group"
+          ],
+          "candidate_ids": [
+            "candidate-001",
+            "candidate-004",
+            "candidate-003",
+            "candidate-002",
+            "candidate-005"
+          ],
+          "linked_construction_id": "0206ac87-68f0-5588-b827-6c41559382a1",
+          "requires_human_review": false,
+          "explanation": "The linked construction preserves every material operand."
+        }
+      ]
+    },
+    {
+      "fixture_id": "dated_scalar",
+      "text_sha256": "532219f3d371f9fc4a38fb40f91889bfac503012bd80b00ee636073b17312598",
+      "recovered": true,
+      "decisions": [
+        {
+          "target_id": "eligibility-ungrouped",
+          "group_id": null,
+          "route": "assisted",
+          "reasons": [
+            "ordinary_temporal_language"
+          ],
+          "candidate_ids": [
+            "candidate-001",
+            "candidate-002",
+            "candidate-003",
+            "candidate-004"
+          ],
+          "linked_construction_id": null,
+          "requires_human_review": false,
+          "explanation": "Ordinary typed language is eligible for bounded assisted construction because no complete linked group exists."
+        }
+      ]
+    },
+    {
+      "fixture_id": "projection",
+      "text_sha256": "28633dd36df834febba69c265a56c9a564b40801571c90dc6c0f43f879c31b3b",
+      "recovered": true,
+      "decisions": [
+        {
+          "target_id": "eligibility-group-001",
+          "group_id": "group-001",
+          "route": "deterministic",
+          "reasons": [
+            "complete_linked_group"
+          ],
+          "candidate_ids": [
+            "candidate-002",
+            "candidate-004",
+            "candidate-007",
+            "candidate-008",
+            "candidate-011",
+            "candidate-006",
+            "candidate-010"
+          ],
+          "linked_construction_id": "fccde004-498e-5598-b953-08541626d724",
+          "requires_human_review": false,
+          "explanation": "The linked construction preserves every material operand."
+        },
+        {
+          "target_id": "eligibility-group-002",
+          "group_id": "group-002",
+          "route": "deterministic",
+          "reasons": [
+            "complete_linked_group"
+          ],
+          "candidate_ids": [
+            "candidate-004",
+            "candidate-007",
+            "candidate-008",
+            "candidate-011",
+            "candidate-001",
+            "candidate-003",
+            "candidate-005",
+            "candidate-009"
+          ],
+          "linked_construction_id": "1524d72e-8172-56f3-a836-561fafdf1a32",
+          "requires_human_review": false,
+          "explanation": "The linked construction preserves every material operand."
+        }
+      ]
+    }
+  ],
+  "negative_results": [
+    {
+      "fixture_id": "causal",
+      "text_sha256": "ba6adbe5ab0d6f242b8ba66f6660929dcb0fe0ab924634a3258865b90a601f6a",
+      "excluded": true,
+      "decisions": [
+        {
+          "target_id": "eligibility-ungrouped",
+          "group_id": null,
+          "route": "not_applicable",
+          "reasons": [
+            "causal_claim"
+          ],
+          "candidate_ids": [],
+          "linked_construction_id": null,
+          "requires_human_review": false,
+          "explanation": "This numerical/temporal verifier cannot safely represent the claim's open qualitative scope."
+        }
+      ]
+    },
+    {
+      "fixture_id": "open_world",
+      "text_sha256": "d6f5f82d7ea286e32a68c71ce106aa769feddcdf23f4592fc096c70c504a78ef",
+      "excluded": true,
+      "decisions": [
+        {
+          "target_id": "eligibility-ungrouped",
+          "group_id": null,
+          "route": "not_applicable",
+          "reasons": [
+            "open_world_superlative"
+          ],
+          "candidate_ids": [
+            "candidate-001"
+          ],
+          "linked_construction_id": null,
+          "requires_human_review": false,
+          "explanation": "This numerical/temporal verifier cannot safely represent the claim's open qualitative scope."
+        }
+      ]
+    },
+    {
+      "fixture_id": "qualitative_universal",
+      "text_sha256": "b61c54c9826124d9bed00a9fb3b21e431f77985866e3cd6069136e0ffb67ffa1",
+      "excluded": true,
+      "decisions": [
+        {
+          "target_id": "eligibility-ungrouped",
+          "group_id": null,
+          "route": "not_applicable",
+          "reasons": [
+            "qualitative_generalization"
+          ],
+          "candidate_ids": [
+            "candidate-001"
+          ],
+          "linked_construction_id": null,
+          "requires_human_review": false,
+          "explanation": "This numerical/temporal verifier cannot safely represent the claim's open qualitative scope."
+        }
+      ]
+    }
+  ],
+  "review_result": {
+    "claim_text_sha256": "6ad9f4f5179bf8123c6c42b1dc825bbf987555fe79894c146acdd80e8c27e2ec",
+    "candidate_extraction_version": "verification-candidate-extraction-v1",
+    "linked_construction_version": "linked-assertion-construction-v1",
+    "decisions": [
+      {
+        "target_id": "eligibility-group-001",
+        "group_id": "group-001",
+        "route": "human_review",
+        "reasons": [
+          "incomplete_material_operands"
+        ],
+        "candidate_ids": [
+          "candidate-002",
+          "candidate-003",
+          "candidate-005"
+        ],
+        "linked_construction_id": null,
+        "requires_human_review": true,
+        "explanation": "No safe complete construction can be recovered from the candidates."
+      },
+      {
+        "target_id": "eligibility-ungrouped",
+        "group_id": null,
+        "route": "assisted",
+        "reasons": [
+          "ordinary_numerical_language"
+        ],
+        "candidate_ids": [
+          "candidate-001",
+          "candidate-004"
+        ],
+        "linked_construction_id": null,
+        "requires_human_review": false,
+        "explanation": "Ordinary typed language is eligible for bounded assisted construction because no complete linked group exists."
+      }
+    ],
+    "deterministic_count": 0,
+    "assisted_count": 1,
+    "human_review_count": 1,
+    "not_applicable_count": 0,
+    "requires_human_review": true,
+    "version": "construction-eligibility-v1"
+  },
+  "artifacts": [
+    {
+      "path": "src/claim_polygraph_ng/domain/construction_eligibility.py",
+      "sha256": "1aa5e89364477ef36d5f474f7638c29e1161d4ad192affaded3a69e57dccf748",
+      "bytes": 4014
+    },
+    {
+      "path": "src/claim_polygraph_ng/analysis/construction_eligibility.py",
+      "sha256": "1928cd76af2e18dcda0894119e2ac3103129e0de9af7b1b402dc7d5125eac261",
+      "bytes": 9269
+    },
+    {
+      "path": "src/claim_polygraph_ng/domain/__init__.py",
+      "sha256": "b85e5d2053e9d6fbcac4d1ea3ee88d734b1fade34f972341cb69cb4a17c9c555",
+      "bytes": 14866
+    },
+    {
+      "path": "src/claim_polygraph_ng/analysis/__init__.py",
+      "sha256": "965e783cbba5499213f67f64215310fb632ff699103d05ee564cc28420a7fe2d",
+      "bytes": 6710
+    },
+    {
+      "path": "tests/unit/test_v4_construction_eligibility.py",
+      "sha256": "6d1f3436d5a061cf6e10845b41b3e79fa11066c56e47bdca4f465e44ab04d68a",
+      "bytes": 5396
+    },
+    {
+      "path": "scripts/audit_v4_stage4_construction_eligibility.py",
+      "sha256": "b4661567b423ca8eca81050b671b30656e3fbd700401ddef65af1f5b55680388",
+      "bytes": 6527
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage3-compound-assertions-v1.json",
+      "sha256": "f354fc30c0c977735ea3f915aa0edf5dca0f45e93b428fea588aa3bb493749fa",
+      "bytes": 24163
+    }
+  ],
+  "exit_criterion_met": true,
+  "next_stage": "V4.5 offline development gate"
+}

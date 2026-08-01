@@ -1,0 +1,50 @@
+{
+  "audit_id": "verification-construction-v3-stage5c-canary-audit-v1",
+  "status": "passed",
+  "provider_attempts": 1,
+  "completed_paid_operations": 1,
+  "estimated_cost_usd": 0.004836,
+  "cached_replay_verified": true,
+  "duplicate_provider_attempts": 0,
+  "normalized_temporal_value": "2019-06-14",
+  "benchmark_exposure": {
+    "development": 0,
+    "calibration": 0,
+    "held_out": 0
+  },
+  "gates": {
+    "fresh_receipt_identity": true,
+    "temporal_only_provider_schema": true,
+    "written_date_wire_conversion": true,
+    "exact_claim_span_validation": true,
+    "exact_evidence_span_validation": true,
+    "durable_completed_receipt": true,
+    "idempotent_cached_replay": true
+  },
+  "artifacts": [
+    {
+      "path": "src/claim_polygraph_ng/analysis/assisted_verification_construction.py",
+      "sha256": "314e1fc13086840502a622bcf43aff6fe3fa48ddfa9770bd621884cd74caa242"
+    },
+    {
+      "path": "src/claim_polygraph_ng/analysis/bounded_assisted_construction.py",
+      "sha256": "54b5b98419e3609b33a8ed58efcbf9c5241b6914059a604ac23728905a90ed4a"
+    },
+    {
+      "path": "src/claim_polygraph_ng/providers/idempotent.py",
+      "sha256": "d06d24f88dbec2d4140b8f05874967fee575dea9d4240b71ba15275fd6a3ec54"
+    },
+    {
+      "path": "src/claim_polygraph_ng/providers/openai.py",
+      "sha256": "8a4d617e7035046394eab69bd6202f264c3a33d4635e8801c42d01172b3b747a"
+    },
+    {
+      "path": "scripts/run_v3_stage5c_synthetic_canary.py",
+      "sha256": "286660e92685e7c61d06ae84209dc13f7a15a736f4974a3dbd37f0cb04f0023f"
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v3-stage5c-synthetic-canary-v1.json",
+      "sha256": "1877d8d23a034b65c84850719befe4f1003737b20f3b2ee4360a04e94ac1f642"
+    }
+  ]
+}

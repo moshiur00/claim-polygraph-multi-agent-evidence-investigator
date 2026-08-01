@@ -1,0 +1,985 @@
+{
+  "evaluation_id": "verification-construction-v3-stage6e-fresh-calibration-v1",
+  "status": "completed_eligible_for_held_out",
+  "freeze_manifest_sha256": "36679ab13d922c0ec95591f324be2b629701d52e80c612431538a5742eef3db6",
+  "configuration_changed_after_freeze": false,
+  "calibration_executions": 1,
+  "case_count": 20,
+  "positive_gold_cases": 18,
+  "baseline_correct_constructions": 0,
+  "baseline_construction_recall": 0.0,
+  "constructions_succeeded": 17,
+  "correct_constructions": 17,
+  "newly_recovered_assertions": 17,
+  "unsafe_accepted_constructions": 0,
+  "construction_precision": 1.0,
+  "exact_evidence_span_validity": 1.0,
+  "overall_construction_recall": 0.9444444444444444,
+  "incremental_recall_gain": 0.9444444444444444,
+  "human_review_routing_recall": 1.0,
+  "provider_attempts": 18,
+  "completed_paid_operations": 18,
+  "duplicate_paid_operations": 0,
+  "estimated_cost_usd": 0.07746600000000001,
+  "cost_per_recovered_assertion_usd": 0.004556823529411765,
+  "eligibility_counts": {
+    "numerical": 0,
+    "numerical_scalar": 10,
+    "numerical_range": 0,
+    "numerical_conversion": 0,
+    "temporal": 8,
+    "missing_reference_date": 0,
+    "excluded_qualitative": 2
+  },
+  "fresh_calibration_cases_exposed_to_model": 18,
+  "original_held_out_cases_loaded": 0,
+  "original_held_out_cases_exposed_to_model": 0,
+  "promotion_gates": {
+    "exact_evidence_span_validity": true,
+    "unsafe_accepted_constructions": true,
+    "construction_precision": true,
+    "incremental_recall_gain": true,
+    "overall_construction_recall": true,
+    "human_review_routing_recall": true,
+    "duplicate_paid_operations": true,
+    "publication_safety_regressions": true,
+    "cost_per_recovered_assertion": true
+  },
+  "eligible_for_held_out": true,
+  "thresholds_changed_after_results": false,
+  "results": [
+    {
+      "case_id": "V3-241",
+      "eligibility": "temporal",
+      "disposition": "validated_assisted_proposal",
+      "baseline_success": false,
+      "construction_succeeded": true,
+      "human_review_required": false,
+      "provider_attempt": true,
+      "proposal": {
+        "kind": "temporal_status",
+        "failed_construction_id": "ab55255e-0dc9-555a-b138-9177fbb724e2",
+        "claim_text_span": "UNICEF was established in 1946.",
+        "left_subject": null,
+        "right_subject": null,
+        "comparator": null,
+        "dimension": null,
+        "left_value": null,
+        "right_value": null,
+        "scalar_form": null,
+        "scalar_subject": null,
+        "numeric_operation": null,
+        "expected_values": [],
+        "evidence_bindings": [],
+        "temporal_relation": "started",
+        "reference_date": {
+          "value": "1946-01-01",
+          "precision": "year"
+        },
+        "claimed_interval": {
+          "start": {
+            "value": "1946-01-01",
+            "precision": "year"
+          },
+          "end": null,
+          "start_inclusive": true,
+          "end_inclusive": false
+        },
+        "requires_reference_date": false,
+        "claimed_status": "established",
+        "temporal_bindings": [
+          {
+            "evidence_id": "3e0905bd-f29f-5ba1-a344-bb41e5f40eab",
+            "start_char": 0,
+            "end_char": 126,
+            "quoted_text": "The United Nations International Children\u2019s Emergency Fund (UNICEF) was established in 1946, in the aftermath of World War II.",
+            "effective_interval": {
+              "start": {
+                "value": "1946-01-01",
+                "precision": "year"
+              },
+              "end": null,
+              "start_inclusive": true,
+              "end_inclusive": false
+            },
+            "observed_status": "established",
+            "retrospective": true
+          }
+        ]
+      },
+      "gold_positive": true,
+      "correct_construction": true,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-242",
+      "eligibility": "numerical_scalar",
+      "disposition": "validated_assisted_proposal",
+      "baseline_success": false,
+      "construction_succeeded": true,
+      "human_review_required": false,
+      "provider_attempt": true,
+      "proposal": {
+        "kind": "numerical_scalar",
+        "failed_construction_id": "7f517259-5519-5c63-9f49-4d30f75978c3",
+        "claim_text_span": "UNICEF works in more than 190 countries and territories",
+        "left_subject": null,
+        "right_subject": null,
+        "comparator": "greater_than",
+        "dimension": "count",
+        "left_value": null,
+        "right_value": null,
+        "scalar_form": "single_value",
+        "scalar_subject": "UNICEF works in more than",
+        "numeric_operation": "direct",
+        "expected_values": [
+          {
+            "value": "190",
+            "unit": "countries and territories",
+            "dimension": "count",
+            "scale": "1",
+            "tolerance": null
+          }
+        ],
+        "evidence_bindings": [
+          {
+            "evidence_id": "aac7dbbb-e107-5e14-91c6-31bb6fb3bd88",
+            "start_char": 0,
+            "end_char": 55,
+            "quoted_text": "UNICEF works in more than 190 countries and territories"
+          }
+        ],
+        "temporal_relation": null,
+        "reference_date": null,
+        "claimed_interval": null,
+        "requires_reference_date": false,
+        "claimed_status": null,
+        "temporal_bindings": []
+      },
+      "gold_positive": true,
+      "correct_construction": true,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-243",
+      "eligibility": "temporal",
+      "disposition": "validated_assisted_proposal",
+      "baseline_success": false,
+      "construction_succeeded": true,
+      "human_review_required": false,
+      "provider_attempt": true,
+      "proposal": {
+        "kind": "temporal_status",
+        "failed_construction_id": "363a0d1d-2116-51ed-b4a0-52fe46f1d114",
+        "claim_text_span": "The World Trade Organization was founded on 1 January 1995.",
+        "left_subject": null,
+        "right_subject": null,
+        "comparator": null,
+        "dimension": null,
+        "left_value": null,
+        "right_value": null,
+        "scalar_form": null,
+        "scalar_subject": null,
+        "numeric_operation": null,
+        "expected_values": [],
+        "evidence_bindings": [],
+        "temporal_relation": "started",
+        "reference_date": null,
+        "claimed_interval": null,
+        "requires_reference_date": false,
+        "claimed_status": null,
+        "temporal_bindings": [
+          {
+            "evidence_id": "bb70f529-5fa3-5d8b-bb03-6db19831206e",
+            "start_char": 17,
+            "end_char": 46,
+            "quoted_text": "was founded on 1 January 1995",
+            "effective_interval": {
+              "start": {
+                "value": "1995-01-01",
+                "precision": "day"
+              },
+              "end": null,
+              "start_inclusive": true,
+              "end_inclusive": true
+            },
+            "observed_status": null,
+            "retrospective": true
+          }
+        ]
+      },
+      "gold_positive": true,
+      "correct_construction": true,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-244",
+      "eligibility": "numerical_scalar",
+      "disposition": "validated_assisted_proposal",
+      "baseline_success": false,
+      "construction_succeeded": true,
+      "human_review_required": false,
+      "provider_attempt": true,
+      "proposal": {
+        "kind": "numerical_scalar",
+        "failed_construction_id": "9b70bd22-398f-5a83-af77-e62f9c34a84a",
+        "claim_text_span": "Twenty-five years after its founding, the WTO accounted for 164 Members.",
+        "left_subject": null,
+        "right_subject": null,
+        "comparator": "equal",
+        "dimension": "count",
+        "left_value": null,
+        "right_value": null,
+        "scalar_form": "single_value",
+        "scalar_subject": "the WTO",
+        "numeric_operation": "direct",
+        "expected_values": [
+          {
+            "value": "164",
+            "unit": "Members",
+            "dimension": "count",
+            "scale": "1",
+            "tolerance": null
+          }
+        ],
+        "evidence_bindings": [
+          {
+            "evidence_id": "b2a68b90-9803-580e-b734-fcd7cf149fb7",
+            "start_char": 176,
+            "end_char": 187,
+            "quoted_text": "164 Members"
+          }
+        ],
+        "temporal_relation": null,
+        "reference_date": null,
+        "claimed_interval": null,
+        "requires_reference_date": false,
+        "claimed_status": null,
+        "temporal_bindings": []
+      },
+      "gold_positive": true,
+      "correct_construction": true,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-245",
+      "eligibility": "numerical_scalar",
+      "disposition": "validated_assisted_proposal",
+      "baseline_success": false,
+      "construction_succeeded": true,
+      "human_review_required": false,
+      "provider_attempt": true,
+      "proposal": {
+        "kind": "numerical_scalar",
+        "failed_construction_id": "2e7a9064-dc33-5cd7-9c64-78299de30253",
+        "claim_text_span": "The World Meteorological Organization has 193 Members.",
+        "left_subject": null,
+        "right_subject": null,
+        "comparator": "equal",
+        "dimension": "count",
+        "left_value": null,
+        "right_value": null,
+        "scalar_form": "single_value",
+        "scalar_subject": "The World Meteorological Organization",
+        "numeric_operation": "direct",
+        "expected_values": [
+          {
+            "value": "193",
+            "unit": "Members",
+            "dimension": "count",
+            "scale": "1",
+            "tolerance": null
+          }
+        ],
+        "evidence_bindings": [
+          {
+            "evidence_id": "7617d46c-51cd-5a04-a876-c4ab936af1c8",
+            "start_char": 0,
+            "end_char": 19,
+            "quoted_text": "WMO has 193 Members"
+          }
+        ],
+        "temporal_relation": null,
+        "reference_date": null,
+        "claimed_interval": null,
+        "requires_reference_date": false,
+        "claimed_status": null,
+        "temporal_bindings": []
+      },
+      "gold_positive": true,
+      "correct_construction": true,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-246",
+      "eligibility": "numerical_scalar",
+      "disposition": "validated_assisted_proposal",
+      "baseline_success": false,
+      "construction_succeeded": true,
+      "human_review_required": false,
+      "provider_attempt": true,
+      "proposal": {
+        "kind": "numerical_scalar",
+        "failed_construction_id": "956083f7-4c39-5c4c-904b-45db0247bfb8",
+        "claim_text_span": "6 Territories",
+        "left_subject": null,
+        "right_subject": null,
+        "comparator": "equal",
+        "dimension": "count",
+        "left_value": null,
+        "right_value": null,
+        "scalar_form": "single_value",
+        "scalar_subject": "6 Territories",
+        "numeric_operation": "direct",
+        "expected_values": [
+          {
+            "value": "6",
+            "unit": "Territories",
+            "dimension": "count",
+            "scale": "1",
+            "tolerance": null
+          }
+        ],
+        "evidence_bindings": [
+          {
+            "evidence_id": "b0ff1f39-5115-5daa-87be-fe3a578f864b",
+            "start_char": 53,
+            "end_char": 66,
+            "quoted_text": "6 Territories"
+          }
+        ],
+        "temporal_relation": null,
+        "reference_date": null,
+        "claimed_interval": null,
+        "requires_reference_date": false,
+        "claimed_status": null,
+        "temporal_bindings": []
+      },
+      "gold_positive": true,
+      "correct_construction": true,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-247",
+      "eligibility": "temporal",
+      "disposition": "validated_assisted_proposal",
+      "baseline_success": false,
+      "construction_succeeded": true,
+      "human_review_required": false,
+      "provider_attempt": true,
+      "proposal": {
+        "kind": "temporal_status",
+        "failed_construction_id": "334ca9e4-f562-5191-9b99-ad703e41eb79",
+        "claim_text_span": "The International Civil Aviation Organization was established in 1944.",
+        "left_subject": null,
+        "right_subject": null,
+        "comparator": null,
+        "dimension": null,
+        "left_value": null,
+        "right_value": null,
+        "scalar_form": null,
+        "scalar_subject": null,
+        "numeric_operation": null,
+        "expected_values": [],
+        "evidence_bindings": [],
+        "temporal_relation": "on",
+        "reference_date": {
+          "value": "1944-01-01",
+          "precision": "year"
+        },
+        "claimed_interval": null,
+        "requires_reference_date": false,
+        "claimed_status": null,
+        "temporal_bindings": [
+          {
+            "evidence_id": "7c228dbd-7730-5e56-bdff-1ca1ca86c251",
+            "start_char": 6,
+            "end_char": 32,
+            "quoted_text": "it was established in 1944",
+            "effective_interval": {
+              "start": {
+                "value": "1944-01-01",
+                "precision": "year"
+              },
+              "end": {
+                "value": "1944-01-01",
+                "precision": "year"
+              },
+              "start_inclusive": true,
+              "end_inclusive": true
+            },
+            "observed_status": null,
+            "retrospective": true
+          }
+        ]
+      },
+      "gold_positive": true,
+      "correct_construction": true,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-248",
+      "eligibility": "numerical_scalar",
+      "disposition": "validated_assisted_proposal",
+      "baseline_success": false,
+      "construction_succeeded": true,
+      "human_review_required": false,
+      "provider_attempt": true,
+      "proposal": {
+        "kind": "numerical_scalar",
+        "failed_construction_id": "9d6c309d-6778-5b98-ab3b-18aadcd54dcf",
+        "claim_text_span": "193 countries",
+        "left_subject": null,
+        "right_subject": null,
+        "comparator": "equal",
+        "dimension": "count",
+        "left_value": null,
+        "right_value": null,
+        "scalar_form": "single_value",
+        "scalar_subject": "countries",
+        "numeric_operation": "direct",
+        "expected_values": [
+          {
+            "value": "193",
+            "unit": "countries",
+            "dimension": "count",
+            "scale": "1",
+            "tolerance": null
+          }
+        ],
+        "evidence_bindings": [
+          {
+            "evidence_id": "bfad7d68-2660-527c-809b-3a933dd1d17b",
+            "start_char": 92,
+            "end_char": 105,
+            "quoted_text": "193 countries"
+          }
+        ],
+        "temporal_relation": null,
+        "reference_date": null,
+        "claimed_interval": null,
+        "requires_reference_date": false,
+        "claimed_status": null,
+        "temporal_bindings": []
+      },
+      "gold_positive": true,
+      "correct_construction": true,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-249",
+      "eligibility": "numerical_scalar",
+      "disposition": "validated_assisted_proposal",
+      "baseline_success": false,
+      "construction_succeeded": true,
+      "human_review_required": false,
+      "provider_attempt": true,
+      "proposal": {
+        "kind": "numerical_scalar",
+        "failed_construction_id": "52626990-9e6e-5d4f-85ac-5756429f8705",
+        "claim_text_span": "INTERPOL has 196 member countries.",
+        "left_subject": null,
+        "right_subject": null,
+        "comparator": "equal",
+        "dimension": "count",
+        "left_value": null,
+        "right_value": null,
+        "scalar_form": "single_value",
+        "scalar_subject": "INTERPOL",
+        "numeric_operation": "direct",
+        "expected_values": [
+          {
+            "value": "196",
+            "unit": "member countries",
+            "dimension": "count",
+            "scale": "1",
+            "tolerance": null
+          }
+        ],
+        "evidence_bindings": [
+          {
+            "evidence_id": "76816369-45b0-5f46-a8e8-ed965d6f8252",
+            "start_char": 0,
+            "end_char": 85,
+            "quoted_text": "INTERPOL has 196 member countries, making us the world\u2019s largest police organization."
+          }
+        ],
+        "temporal_relation": null,
+        "reference_date": null,
+        "claimed_interval": null,
+        "requires_reference_date": false,
+        "claimed_status": null,
+        "temporal_bindings": []
+      },
+      "gold_positive": true,
+      "correct_construction": true,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-250",
+      "eligibility": "excluded_qualitative",
+      "disposition": "human_review_ineligible",
+      "baseline_success": false,
+      "construction_succeeded": false,
+      "human_review_required": true,
+      "provider_attempt": false,
+      "gold_positive": false,
+      "correct_construction": false,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-251",
+      "eligibility": "temporal",
+      "disposition": "validated_assisted_proposal",
+      "baseline_success": false,
+      "construction_succeeded": true,
+      "human_review_required": false,
+      "provider_attempt": true,
+      "proposal": {
+        "kind": "temporal_status",
+        "failed_construction_id": "fee2d362-e383-53bb-8f42-089ef3af8c0b",
+        "claim_text_span": "The International Maritime Organization was established on 6 March 1948.",
+        "left_subject": null,
+        "right_subject": null,
+        "comparator": null,
+        "dimension": null,
+        "left_value": null,
+        "right_value": null,
+        "scalar_form": null,
+        "scalar_subject": null,
+        "numeric_operation": null,
+        "expected_values": [],
+        "evidence_bindings": [],
+        "temporal_relation": "on",
+        "reference_date": {
+          "value": "1948-03-06",
+          "precision": "day"
+        },
+        "claimed_interval": null,
+        "requires_reference_date": false,
+        "claimed_status": null,
+        "temporal_bindings": [
+          {
+            "evidence_id": "2ef857e9-ad4c-524e-a897-4004de76985c",
+            "start_char": 103,
+            "end_char": 118,
+            "quoted_text": "on 6 March 1948",
+            "effective_interval": {
+              "start": {
+                "value": "1948-03-06",
+                "precision": "day"
+              },
+              "end": {
+                "value": "1948-03-06",
+                "precision": "day"
+              },
+              "start_inclusive": true,
+              "end_inclusive": true
+            },
+            "observed_status": null,
+            "retrospective": true
+          }
+        ]
+      },
+      "gold_positive": true,
+      "correct_construction": true,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-252",
+      "eligibility": "numerical_scalar",
+      "disposition": "validated_assisted_proposal",
+      "baseline_success": false,
+      "construction_succeeded": true,
+      "human_review_required": false,
+      "provider_attempt": true,
+      "proposal": {
+        "kind": "numerical_scalar",
+        "failed_construction_id": "d03cb0df-54e8-5ba1-a0f3-7d1ba55737ab",
+        "claim_text_span": "The International Maritime Organization has 176 Member States.",
+        "left_subject": null,
+        "right_subject": null,
+        "comparator": "equal",
+        "dimension": "count",
+        "left_value": null,
+        "right_value": null,
+        "scalar_form": "single_value",
+        "scalar_subject": "The International Maritime Organization",
+        "numeric_operation": "direct",
+        "expected_values": [
+          {
+            "value": "176",
+            "unit": null,
+            "dimension": "count",
+            "scale": "1",
+            "tolerance": null
+          }
+        ],
+        "evidence_bindings": [
+          {
+            "evidence_id": "0c0b3169-1591-5120-ad64-aea38b9003bf",
+            "start_char": 0,
+            "end_char": 36,
+            "quoted_text": "IMO currently has 176 Member States."
+          }
+        ],
+        "temporal_relation": null,
+        "reference_date": null,
+        "claimed_interval": null,
+        "requires_reference_date": false,
+        "claimed_status": null,
+        "temporal_bindings": []
+      },
+      "gold_positive": true,
+      "correct_construction": true,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-253",
+      "eligibility": "temporal",
+      "disposition": "validated_assisted_proposal",
+      "baseline_success": false,
+      "construction_succeeded": true,
+      "human_review_required": false,
+      "provider_attempt": true,
+      "proposal": {
+        "kind": "temporal_status",
+        "failed_construction_id": "13b17d57-fe89-51c4-a2ad-b12bf17bb47c",
+        "claim_text_span": "The International Telecommunication Union was established in 1865.",
+        "left_subject": null,
+        "right_subject": null,
+        "comparator": null,
+        "dimension": null,
+        "left_value": null,
+        "right_value": null,
+        "scalar_form": null,
+        "scalar_subject": null,
+        "numeric_operation": null,
+        "expected_values": [],
+        "evidence_bindings": [],
+        "temporal_relation": "started",
+        "reference_date": {
+          "value": "1865-01-01",
+          "precision": "year"
+        },
+        "claimed_interval": null,
+        "requires_reference_date": false,
+        "claimed_status": null,
+        "temporal_bindings": [
+          {
+            "evidence_id": "cd2c0f86-5c5b-5005-adc9-87906415348c",
+            "start_char": 0,
+            "end_char": 19,
+            "quoted_text": "Established in 1865",
+            "effective_interval": {
+              "start": {
+                "value": "1865-01-01",
+                "precision": "year"
+              },
+              "end": {
+                "value": "1865-01-01",
+                "precision": "year"
+              },
+              "start_inclusive": true,
+              "end_inclusive": true
+            },
+            "observed_status": null,
+            "retrospective": true
+          }
+        ]
+      },
+      "gold_positive": true,
+      "correct_construction": true,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-254",
+      "eligibility": "numerical_scalar",
+      "disposition": "validated_assisted_proposal",
+      "baseline_success": false,
+      "construction_succeeded": true,
+      "human_review_required": false,
+      "provider_attempt": true,
+      "proposal": {
+        "kind": "numerical_scalar",
+        "failed_construction_id": "89dc1ee5-79e4-5f5b-a499-02e3b2b72f8b",
+        "claim_text_span": "The International Telecommunication Union has 194 Member States.",
+        "left_subject": null,
+        "right_subject": null,
+        "comparator": "equal",
+        "dimension": "count",
+        "left_value": null,
+        "right_value": null,
+        "scalar_form": "single_value",
+        "scalar_subject": "The International Telecommunication Union",
+        "numeric_operation": "direct",
+        "expected_values": [
+          {
+            "value": "194",
+            "unit": "Member States",
+            "dimension": "count",
+            "scale": "1",
+            "tolerance": null
+          }
+        ],
+        "evidence_bindings": [
+          {
+            "evidence_id": "b807618e-ac5b-5106-94b4-0260351f5f26",
+            "start_char": 47,
+            "end_char": 64,
+            "quoted_text": "194 Member States"
+          }
+        ],
+        "temporal_relation": null,
+        "reference_date": null,
+        "claimed_interval": null,
+        "requires_reference_date": false,
+        "claimed_status": null,
+        "temporal_bindings": []
+      },
+      "gold_positive": true,
+      "correct_construction": true,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-255",
+      "eligibility": "temporal",
+      "disposition": "validated_assisted_proposal",
+      "baseline_success": false,
+      "construction_succeeded": true,
+      "human_review_required": false,
+      "provider_attempt": true,
+      "proposal": {
+        "kind": "temporal_status",
+        "failed_construction_id": "e8377c0a-2e53-526a-be59-7e134d7175b9",
+        "claim_text_span": "The Universal Postal Union was established in 1874.",
+        "left_subject": null,
+        "right_subject": null,
+        "comparator": null,
+        "dimension": null,
+        "left_value": null,
+        "right_value": null,
+        "scalar_form": null,
+        "scalar_subject": null,
+        "numeric_operation": null,
+        "expected_values": [],
+        "evidence_bindings": [],
+        "temporal_relation": "started",
+        "reference_date": {
+          "value": "1874-01-01",
+          "precision": "year"
+        },
+        "claimed_interval": null,
+        "requires_reference_date": false,
+        "claimed_status": null,
+        "temporal_bindings": [
+          {
+            "evidence_id": "289d2aef-5bd0-519a-8cce-589769fd3148",
+            "start_char": 0,
+            "end_char": 19,
+            "quoted_text": "Established in 1874",
+            "effective_interval": {
+              "start": {
+                "value": "1874-01-01",
+                "precision": "year"
+              },
+              "end": {
+                "value": "1874-01-01",
+                "precision": "year"
+              },
+              "start_inclusive": true,
+              "end_inclusive": true
+            },
+            "observed_status": null,
+            "retrospective": true
+          }
+        ]
+      },
+      "gold_positive": true,
+      "correct_construction": true,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-256",
+      "eligibility": "numerical_scalar",
+      "disposition": "validated_assisted_proposal",
+      "baseline_success": false,
+      "construction_succeeded": true,
+      "human_review_required": false,
+      "provider_attempt": true,
+      "proposal": {
+        "kind": "numerical_scalar",
+        "failed_construction_id": "89ae10b7-0022-5380-a888-a43c207b4da8",
+        "claim_text_span": "The Universal Postal Union has 192 member countries.",
+        "left_subject": null,
+        "right_subject": null,
+        "comparator": "equal",
+        "dimension": "count",
+        "left_value": null,
+        "right_value": null,
+        "scalar_form": "single_value",
+        "scalar_subject": "The Universal Postal Union",
+        "numeric_operation": "direct",
+        "expected_values": [
+          {
+            "value": "192",
+            "unit": "member countries",
+            "dimension": "count",
+            "scale": "1",
+            "tolerance": null
+          }
+        ],
+        "evidence_bindings": [
+          {
+            "evidence_id": "438e11b6-4a76-5f50-8ca9-75a9daa392a2",
+            "start_char": 5,
+            "end_char": 25,
+            "quoted_text": "192 member countries"
+          }
+        ],
+        "temporal_relation": null,
+        "reference_date": null,
+        "claimed_interval": null,
+        "requires_reference_date": false,
+        "claimed_status": null,
+        "temporal_bindings": []
+      },
+      "gold_positive": true,
+      "correct_construction": true,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-257",
+      "eligibility": "numerical_scalar",
+      "disposition": "validated_assisted_proposal",
+      "baseline_success": false,
+      "construction_succeeded": true,
+      "human_review_required": false,
+      "provider_attempt": true,
+      "proposal": {
+        "kind": "numerical_scalar",
+        "failed_construction_id": "cea78bb0-8dae-5e94-a763-97bebae7a9ec",
+        "claim_text_span": "The Food and Agriculture Organization has 194 members.",
+        "left_subject": null,
+        "right_subject": null,
+        "comparator": "equal",
+        "dimension": "count",
+        "left_value": null,
+        "right_value": null,
+        "scalar_form": "single_value",
+        "scalar_subject": "The Food and Agriculture Organization",
+        "numeric_operation": "direct",
+        "expected_values": [
+          {
+            "value": "194",
+            "unit": "members",
+            "dimension": "count",
+            "scale": "1",
+            "tolerance": null
+          }
+        ],
+        "evidence_bindings": [
+          {
+            "evidence_id": "a530b7c9-b3aa-56fe-9ad8-55d697a6c736",
+            "start_char": 5,
+            "end_char": 16,
+            "quoted_text": "194 members"
+          }
+        ],
+        "temporal_relation": null,
+        "reference_date": null,
+        "claimed_interval": null,
+        "requires_reference_date": false,
+        "claimed_status": null,
+        "temporal_bindings": []
+      },
+      "gold_positive": true,
+      "correct_construction": true,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-258",
+      "eligibility": "excluded_qualitative",
+      "disposition": "human_review_ineligible",
+      "baseline_success": false,
+      "construction_succeeded": false,
+      "human_review_required": true,
+      "provider_attempt": false,
+      "gold_positive": false,
+      "correct_construction": false,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-259",
+      "eligibility": "temporal",
+      "disposition": "validated_assisted_proposal",
+      "baseline_success": false,
+      "construction_succeeded": true,
+      "human_review_required": false,
+      "provider_attempt": true,
+      "proposal": {
+        "kind": "temporal_status",
+        "failed_construction_id": "58567f4f-06c1-5763-b2b7-c20cde5c58b6",
+        "claim_text_span": "Brazil became an IAEA member on 29 July 1957.",
+        "left_subject": null,
+        "right_subject": null,
+        "comparator": null,
+        "dimension": null,
+        "left_value": null,
+        "right_value": null,
+        "scalar_form": null,
+        "scalar_subject": null,
+        "numeric_operation": null,
+        "expected_values": [],
+        "evidence_bindings": [],
+        "temporal_relation": "on",
+        "reference_date": {
+          "value": "1957-07-29",
+          "precision": "day"
+        },
+        "claimed_interval": null,
+        "requires_reference_date": false,
+        "claimed_status": "IAEA member",
+        "temporal_bindings": [
+          {
+            "evidence_id": "7580be1b-deb4-5547-8de5-465e739b3b8e",
+            "start_char": 0,
+            "end_char": 29,
+            "quoted_text": "IAEA Membership 29 July 1957.",
+            "effective_interval": {
+              "start": {
+                "value": "1957-07-29",
+                "precision": "day"
+              },
+              "end": {
+                "value": "1957-07-29",
+                "precision": "day"
+              },
+              "start_inclusive": true,
+              "end_inclusive": true
+            },
+            "observed_status": "Membership",
+            "retrospective": false
+          }
+        ]
+      },
+      "gold_positive": true,
+      "correct_construction": true,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-260",
+      "eligibility": "temporal",
+      "disposition": "human_review_safe_failure",
+      "baseline_success": false,
+      "construction_succeeded": false,
+      "human_review_required": true,
+      "provider_attempt": true,
+      "error_type": "ValueError",
+      "error": "observed status is not explicit in bound evidence",
+      "gold_positive": true,
+      "correct_construction": false,
+      "unsafe_accepted": false
+    }
+  ]
+}

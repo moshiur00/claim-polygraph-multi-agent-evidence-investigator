@@ -1,11 +1,12 @@
 """Deterministic temporal and numerical verification contracts."""
 
+import re
 from datetime import date
 from decimal import Decimal
 from enum import StrEnum
 from uuid import UUID, uuid4
 
-from pydantic import Field, model_validator
+from pydantic import Field, field_validator, model_validator
 
 from claim_polygraph_ng.domain.base import DomainModel
 
@@ -19,6 +20,75 @@ class VerificationStatus(StrEnum):
     INSUFFICIENT = "insufficient"
 
 
+class VerificationIssueSeverity(StrEnum):
+    """Editorial severity of one verification finding."""
+
+    INFORMATIONAL = "informational"
+    CAUTION = "caution"
+    BLOCKING = "blocking"
+
+
+class VerificationReadinessImpact(StrEnum):
+    """How a verification finding affects downstream routing."""
+
+    NONE = "none"
+    READINESS_SIGNAL = "readiness_signal"
+    HUMAN_REVIEW = "human_review"
+    PUBLICATION_BLOCK = "publication_block"
+
+
+class VerificationIssueFinding(DomainModel):
+    """Typed, actionable explanation for an unresolved verification condition."""
+
+    code: str = Field(min_length=3, max_length=120, pattern=r"^[a-z0-9_]+$")
+    severity: VerificationIssueSeverity
+    message: str = Field(min_length=3, max_length=2_000)
+    recommended_action: str = Field(min_length=3, max_length=2_000)
+    readiness_impact: VerificationReadinessImpact = VerificationReadinessImpact.NONE
+    evidence_ids: tuple[UUID, ...] = ()
+
+    @model_validator(mode="after")
+    def validate_evidence_references(self) -> "VerificationIssueFinding":
+        if len(set(self.evidence_ids)) != len(self.evidence_ids):
+            raise ValueError("verification finding evidence IDs must be unique")
+        return self
+
+
+class ContextValueOrigin(StrEnum):
+    CLAIM = "claim"
+    EVIDENCE = "evidence"
+
+
+class ContextValueObservation(DomainModel):
+    """One exact numerical token with provenance and optional character offsets."""
+
+    raw_text: str = Field(min_length=1, max_length=200)
+    normalized_text: str = Field(min_length=1, max_length=200)
+    origin: ContextValueOrigin
+    evidence_id: UUID | None = None
+    source_id: UUID | None = None
+    start_char: int | None = Field(default=None, ge=0)
+    end_char: int | None = Field(default=None, ge=1)
+    unit_hint: str | None = Field(default=None, min_length=1, max_length=100)
+
+    @model_validator(mode="after")
+    def validate_origin_and_offsets(self) -> "ContextValueObservation":
+        if (self.start_char is None) != (self.end_char is None):
+            raise ValueError("context value offsets must be supplied together")
+        if self.start_char is not None:
+            if self.end_char <= self.start_char:
+                raise ValueError("context value end offset must follow start offset")
+            if self.end_char - self.start_char != len(self.raw_text):
+                raise ValueError("context value offsets must match raw text length")
+        if self.origin is ContextValueOrigin.CLAIM and (
+            self.evidence_id is not None or self.source_id is not None
+        ):
+            raise ValueError("claim observations cannot reference evidence or sources")
+        if self.origin is ContextValueOrigin.EVIDENCE and self.evidence_id is None:
+            raise ValueError("evidence observations require an evidence ID")
+        return self
+
+
 class NumericalContextCheck(DomainModel):
     required: bool
     status: VerificationStatus
@@ -28,6 +98,9 @@ class NumericalContextCheck(DomainModel):
     evidence_units: tuple[str, ...] = ()
     exactness_terms: tuple[str, ...] = ()
     issues: tuple[str, ...] = ()
+    claim_observations: tuple[ContextValueObservation, ...] = ()
+    evidence_observations: tuple[ContextValueObservation, ...] = ()
+    findings: tuple[VerificationIssueFinding, ...] = ()
 
 
 class TemporalContextCheck(DomainModel):
@@ -36,6 +109,7 @@ class TemporalContextCheck(DomainModel):
     reference_date: date | None = None
     source_publication_dates: tuple[date, ...] = ()
     issues: tuple[str, ...] = ()
+    findings: tuple[VerificationIssueFinding, ...] = ()
 
 
 class ContextVerification(DomainModel):
@@ -90,11 +164,107 @@ class NumericDimension(StrEnum):
     CURRENCY = "currency"
     DISTANCE = "distance"
     DURATION = "duration"
+    ENERGY = "energy"
+    FREQUENCY = "frequency"
     MASS = "mass"
     PERCENTAGE = "percentage"
     PRESSURE = "pressure"
+    SPEED = "speed"
     TEMPERATURE = "temperature"
+    VOLUME = "volume"
     UNKNOWN = "unknown"
+
+
+class AssertionConstructionState(StrEnum):
+    """Outcome of converting claim language into a safe typed assertion."""
+
+    CONSTRUCTED = "constructed"
+    FAILED = "failed"
+    NOT_APPLICABLE = "not_applicable"
+
+
+class ComparativeAssertionConstruction(DomainModel):
+    """Persisted trace for one qualitative numerical comparison."""
+
+    construction_id: UUID = Field(default_factory=uuid4)
+    claim_id: UUID
+    claim_text_span: str = Field(min_length=1, max_length=2_000)
+    left_subject: str = Field(min_length=1, max_length=500)
+    right_subject: str = Field(min_length=1, max_length=500)
+    compared_property: str = Field(min_length=1, max_length=200)
+    comparator: NumericComparator
+    dimension: NumericDimension
+    state: AssertionConstructionState
+    assertion_id: UUID | None = None
+    evidence_ids: tuple[UUID, ...] = ()
+    failure_code: str | None = Field(
+        default=None,
+        min_length=3,
+        max_length=120,
+        pattern=r"^[a-z0-9_]+$",
+    )
+    explanation: str = Field(min_length=3, max_length=2_000)
+    construction_version: str = Field(
+        default="comparative-constructor-v1",
+        min_length=3,
+        max_length=100,
+    )
+
+    @model_validator(mode="after")
+    def validate_construction_outcome(self) -> "ComparativeAssertionConstruction":
+        if len(set(self.evidence_ids)) != len(self.evidence_ids):
+            raise ValueError("construction evidence IDs must be unique")
+        if self.state is AssertionConstructionState.CONSTRUCTED:
+            if self.assertion_id is None or not self.evidence_ids:
+                raise ValueError(
+                    "constructed comparisons require an assertion and approved evidence"
+                )
+            if self.failure_code is not None:
+                raise ValueError("constructed comparisons cannot retain a failure code")
+        elif self.failure_code is None:
+            raise ValueError("unconstructed comparisons require a failure code")
+        return self
+
+
+class TemporalAssertionConstruction(DomainModel):
+    """Persisted trace for one bounded relation between dated subjects."""
+
+    construction_id: UUID = Field(default_factory=uuid4)
+    claim_id: UUID
+    claim_text_span: str = Field(min_length=1, max_length=2_000)
+    left_subject: str = Field(min_length=1, max_length=500)
+    right_subject: str = Field(min_length=1, max_length=500)
+    relation: "TemporalRelation"
+    state: AssertionConstructionState
+    assertion_id: UUID | None = None
+    evidence_ids: tuple[UUID, ...] = ()
+    failure_code: str | None = Field(
+        default=None,
+        min_length=3,
+        max_length=120,
+        pattern=r"^[a-z0-9_]+$",
+    )
+    explanation: str = Field(min_length=3, max_length=2_000)
+    construction_version: str = Field(
+        default="temporal-comparison-constructor-v1",
+        min_length=3,
+        max_length=100,
+    )
+
+    @model_validator(mode="after")
+    def validate_construction_outcome(self) -> "TemporalAssertionConstruction":
+        if len(set(self.evidence_ids)) != len(self.evidence_ids):
+            raise ValueError("temporal construction evidence IDs must be unique")
+        if self.state is AssertionConstructionState.CONSTRUCTED:
+            if self.assertion_id is None or not self.evidence_ids:
+                raise ValueError(
+                    "constructed temporal comparisons require an assertion and evidence"
+                )
+            if self.failure_code is not None:
+                raise ValueError("constructed temporal comparisons cannot retain a failure code")
+        elif self.failure_code is None:
+            raise ValueError("unconstructed temporal comparisons require a failure code")
+        return self
 
 
 class NormalizedNumericValue(DomainModel):
@@ -105,6 +275,30 @@ class NormalizedNumericValue(DomainModel):
     dimension: NumericDimension = NumericDimension.DIMENSIONLESS
     scale: Decimal = Field(default=Decimal("1"), gt=0)
     tolerance: Decimal | None = Field(default=None, ge=0)
+
+    @field_validator("value", "scale", "tolerance", mode="before")
+    @classmethod
+    def normalize_explicit_decimal(cls, value):
+        """Accept common source notation, then persist an exact Decimal."""
+        if not isinstance(value, str):
+            return value
+        if value.strip().casefold() == "null":
+            return None
+        normalized = (
+            value.strip()
+            .replace(",", "")
+            .replace("\u00d7", "x")
+            .replace("\u2212", "-")
+            .replace("\u2013", "-")
+        )
+        scientific = re.fullmatch(
+            r"([-+]?\d+(?:\.\d+)?)\s*x\s*10\s*(?:\^|\*\*)?\s*\{?([-+]?\d+)\}?",
+            normalized,
+            re.IGNORECASE,
+        )
+        if scientific:
+            return Decimal(scientific.group(1)) * (Decimal(10) ** int(scientific.group(2)))
+        return normalized
 
     @model_validator(mode="after")
     def validate_unit_and_dimension(self) -> "NormalizedNumericValue":
@@ -135,6 +329,7 @@ class NumericalAssertionVerification(DomainModel):
     rounding_rule: str | None = Field(default=None, max_length=1_000)
     issues: tuple[str, ...] = ()
     limitations: tuple[str, ...] = ()
+    findings: tuple[VerificationIssueFinding, ...] = ()
 
     @model_validator(mode="after")
     def validate_numerical_resolution(self) -> "NumericalAssertionVerification":
@@ -161,11 +356,12 @@ class NumericalAssertionVerification(DomainModel):
         if self.state in {
             AssertionVerificationState.INSUFFICIENT,
             AssertionVerificationState.ERROR,
-        } and not self.issues:
+        } and not (self.issues or self.findings):
             raise ValueError("insufficient or error states require an issue")
-        if any(
-            item.dimension is NumericDimension.UNKNOWN for item in self.expected_values
-        ) and self.state in resolved:
+        if (
+            any(item.dimension is NumericDimension.UNKNOWN for item in self.expected_values)
+            and self.state in resolved
+        ):
             raise ValueError("unknown numerical dimensions cannot be marked resolved")
         return self
 
@@ -249,6 +445,7 @@ class TemporalAssertionVerification(DomainModel):
     state: AssertionVerificationState
     issues: tuple[str, ...] = ()
     limitations: tuple[str, ...] = ()
+    findings: tuple[VerificationIssueFinding, ...] = ()
 
     @model_validator(mode="after")
     def validate_temporal_resolution(self) -> "TemporalAssertionVerification":
@@ -275,7 +472,7 @@ class TemporalAssertionVerification(DomainModel):
         if self.state in {
             AssertionVerificationState.INSUFFICIENT,
             AssertionVerificationState.ERROR,
-        } and not self.issues:
+        } and not (self.issues or self.findings):
             raise ValueError("insufficient or error states require an issue")
         return self
 
@@ -291,7 +488,10 @@ class VerificationPacketV2(DomainModel):
     approved_evidence_ids: tuple[UUID, ...] = ()
     numerical_assertions: tuple[NumericalAssertionVerification, ...] = ()
     temporal_assertions: tuple[TemporalAssertionVerification, ...] = ()
+    comparative_constructions: tuple[ComparativeAssertionConstruction, ...] = ()
+    temporal_constructions: tuple[TemporalAssertionConstruction, ...] = ()
     limitations: tuple[str, ...] = ()
+    findings: tuple[VerificationIssueFinding, ...] = ()
 
     @model_validator(mode="after")
     def validate_packet_references(self) -> "VerificationPacketV2":
@@ -302,15 +502,38 @@ class VerificationPacketV2(DomainModel):
             raise ValueError("assertion IDs must be unique within a verification packet")
         if any(item.claim_id != self.claim_id for item in assertions):
             raise ValueError("all assertions must reference the packet claim")
+        if any(item.claim_id != self.claim_id for item in self.comparative_constructions):
+            raise ValueError("all constructions must reference the packet claim")
+        if any(item.claim_id != self.claim_id for item in self.temporal_constructions):
+            raise ValueError("all temporal constructions must reference the packet claim")
+        constructions = (
+            *self.comparative_constructions,
+            *self.temporal_constructions,
+        )
+        construction_ids = [item.construction_id for item in constructions]
+        if len(set(construction_ids)) != len(construction_ids):
+            raise ValueError("construction IDs must be unique within a verification packet")
         referenced = {
-            evidence_id
-            for item in self.numerical_assertions
-            for evidence_id in item.evidence_ids
+            evidence_id for item in self.numerical_assertions for evidence_id in item.evidence_ids
         }
         referenced.update(
             observation.evidence_id
             for item in self.temporal_assertions
             for observation in item.observations
+        )
+        referenced.update(
+            evidence_id for finding in self.findings for evidence_id in finding.evidence_ids
+        )
+        referenced.update(
+            evidence_id
+            for construction in constructions
+            for evidence_id in construction.evidence_ids
+        )
+        referenced.update(
+            evidence_id
+            for item in assertions
+            for finding in item.findings
+            for evidence_id in finding.evidence_ids
         )
         if not referenced.issubset(self.approved_evidence_ids):
             raise ValueError("assertions may reference only approved evidence IDs")

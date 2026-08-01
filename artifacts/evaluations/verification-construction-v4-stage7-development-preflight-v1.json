@@ -1,0 +1,47 @@
+{
+  "audit_id": "verification-construction-v4-stage7-development-preflight-v1",
+  "status": "blocked_safe",
+  "exit_criterion_met": false,
+  "paid_execution_authorized": false,
+  "development_cases_loaded": 20,
+  "unsafe_case_count": 3,
+  "unsafe_operand_count": 6,
+  "model_calls": 0,
+  "network_calls": 0,
+  "search_calls": 0,
+  "paid_operations": 0,
+  "calibration_cases_loaded": 0,
+  "held_out_cases_loaded": 0,
+  "gates": {
+    "development_budget_is_18": true,
+    "development_split_only_loaded": true,
+    "calibration_cases_loaded_zero": true,
+    "held_out_cases_loaded_zero": true,
+    "unsafe_accepted_constructions_zero": false,
+    "model_calls_zero_before_preflight_pass": true,
+    "network_calls_zero_before_preflight_pass": true,
+    "paid_operations_zero_before_preflight_pass": true
+  },
+  "affected_cases": [
+    {
+      "case_id": "V3-042",
+      "claim_text_sha256": "3447b1c81fcc752fe5cc87df44b2f95751121349823cd3856f88c5edc1189c44",
+      "unsafe_operand_count": 2
+    },
+    {
+      "case_id": "V3-046",
+      "claim_text_sha256": "fb3c05b71feef015b316e8de500c0bba9cedd9522b7630926cf8693124408a5d",
+      "unsafe_operand_count": 2
+    },
+    {
+      "case_id": "V3-055",
+      "claim_text_sha256": "ce9547c5c641db8913933e9273e63215f5e581354fa9561d94eb13a118c306c1",
+      "unsafe_operand_count": 2
+    }
+  ],
+  "blocking_finding": {
+    "code": "date_tokens_promoted_to_numeric_operands",
+    "required_remediation": "V4.7a date/value overlap remediation"
+  },
+  "development_calls_remaining": 18
+}

@@ -1,0 +1,44 @@
+{
+  "protocol_id": "verification-construction-v3-stage6b-fresh-calibration-protocol-v1",
+  "status": "collection_not_started",
+  "purpose": "Collect a second fresh calibration set after V3.6b remediation.",
+  "required_case_count": 20,
+  "minimum_independent_origin_families": 10,
+  "maximum_cases_per_origin_family": 2,
+  "allowed_sources": [
+    "accessible public HTML",
+    "public structured data with a stable source URL"
+  ],
+  "prohibited_sources": [
+    "original V3 calibration cases",
+    "V3.6a replacement calibration cases",
+    "original V3 held-out cases",
+    "restricted or unauthorized documents"
+  ],
+  "required_coverage": [
+    "single-value assertions",
+    "equality and inequality",
+    "ranges",
+    "conversions",
+    "counts",
+    "grouped numbers",
+    "scientific notation",
+    "additional units",
+    "explicit temporal instants",
+    "effective dates and status relations"
+  ],
+  "review_requirements": {
+    "exact_claim_span": true,
+    "exact_evidence_spans": true,
+    "construction_label": true,
+    "expected_verification_state": true,
+    "named_human_annotator": true,
+    "distinct_named_approver": true,
+    "all_approval_checkpoints": true
+  },
+  "execution_controls": {
+    "model_calls_during_collection": 0,
+    "calibration_execution_limit_after_approval": 1,
+    "original_held_out_remains_sealed": true
+  }
+}

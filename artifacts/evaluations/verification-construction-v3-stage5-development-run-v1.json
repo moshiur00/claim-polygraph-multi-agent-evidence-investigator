@@ -1,0 +1,78 @@
+{
+  "artifact_id": "verification-construction-v3-stage5-development-run-v1",
+  "status": "completed",
+  "prompt_version": "verification-construction-v3-dev-v1",
+  "model": "gpt-5.6-luna",
+  "split": "development",
+  "development_cases": 20,
+  "fallback_eligible_cases": 9,
+  "paid_calls": 0,
+  "provider_attempts": 1,
+  "failed_provider_attempts": 1,
+  "receipt_failures": [
+    {
+      "node_id": "verification-construction:V3-046",
+      "status": "failed_permanent",
+      "attempt_number": 1,
+      "error_class": "ModelProviderError",
+      "safe_error": "OpenAI returned HTTP 400: Invalid JSON schema: regex lookaround is not supported. Found at $['$defs'].NormalizedNumericValue.properties.value.anyOf[1].pattern."
+    }
+  ],
+  "estimated_cost_usd": 0.0,
+  "calibration_cases_exposed_to_model": 0,
+  "held_out_cases_exposed_to_model": 0,
+  "telemetry": {
+    "spans": 1,
+    "traces": 1,
+    "metric_series": 0
+  },
+  "results": [
+    {
+      "case_id": "V3-004",
+      "disposition": "human_review_schema_ineligible",
+      "paid_call": false
+    },
+    {
+      "case_id": "V3-008",
+      "disposition": "human_review_schema_ineligible",
+      "paid_call": false
+    },
+    {
+      "case_id": "V3-014",
+      "disposition": "human_review_schema_ineligible",
+      "paid_call": false
+    },
+    {
+      "case_id": "V3-016",
+      "disposition": "human_review_schema_ineligible",
+      "paid_call": false
+    },
+    {
+      "case_id": "V3-017",
+      "disposition": "human_review_schema_ineligible",
+      "paid_call": false
+    },
+    {
+      "case_id": "V3-029",
+      "disposition": "human_review_schema_ineligible",
+      "paid_call": false
+    },
+    {
+      "case_id": "V3-046",
+      "disposition": "human_review_validation_or_provider_failure",
+      "paid_call": true,
+      "error_type": "AssistedConstructionBudgetExceeded",
+      "error": "automatic retry is disabled after an assisted provider attempt"
+    },
+    {
+      "case_id": "V3-047",
+      "disposition": "human_review_schema_ineligible",
+      "paid_call": false
+    },
+    {
+      "case_id": "V3-055",
+      "disposition": "human_review_schema_ineligible",
+      "paid_call": false
+    }
+  ]
+}

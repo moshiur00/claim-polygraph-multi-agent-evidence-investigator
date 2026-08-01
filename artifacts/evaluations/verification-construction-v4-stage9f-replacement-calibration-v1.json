@@ -1,0 +1,1112 @@
+{
+  "evaluation_id": "verification-construction-v4-stage9f-replacement-calibration-v1",
+  "status": "completed_eligible_for_fresh_held_out_collection",
+  "freeze_manifest_sha256": "fe0eb06d7e4c9a840e8584ed33aa59dab7a40170f0371dc7aa069c880865569a",
+  "configuration_changed_after_freeze": false,
+  "calibration_executions": 1,
+  "model": "gpt-4o-mini",
+  "case_count": 20,
+  "positive_gold_cases": 18,
+  "baseline_correct_constructions": 0,
+  "baseline_construction_recall": 0.0,
+  "constructions_succeeded": 17,
+  "correct_constructions": 17,
+  "newly_recovered_assertions": 17,
+  "unsafe_accepted_constructions": 0,
+  "construction_precision": 1.0,
+  "construction_recall": 0.9444444444444444,
+  "incremental_recall_gain": 0.9444444444444444,
+  "human_review_routing_recall": 1.0,
+  "provider_attempts": 18,
+  "completed_paid_operations": 18,
+  "failed_paid_operations": 0,
+  "duplicate_paid_operations": 0,
+  "input_tokens": 18210,
+  "output_tokens": 3739,
+  "estimated_cost_usd": 0.0049749,
+  "estimated_cost_upper_bound_usd": 0.0049749,
+  "cost_per_recovered_assertion_usd": 0.00029264117647058826,
+  "calibration_call_limit": 20,
+  "calibration_calls_remaining": 2,
+  "calibration_cases_loaded": 20,
+  "held_out_cases_loaded": 0,
+  "dataset_sha256": "476a606579235a45907d48d2e0a0156d1abc7b45088d76e5f4ecf6ae4a484815",
+  "promotion_gates": {
+    "schema_validity": true,
+    "exact_span_validity": true,
+    "unsafe_accepted_constructions": true,
+    "construction_precision": true,
+    "overall_construction_recall": true,
+    "assisted_value": true,
+    "human_review_routing_recall": true,
+    "publication_safety_regressions": true,
+    "duplicate_paid_operations": true,
+    "cost_per_recovered_assertion": true
+  },
+  "eligible_for_fresh_held_out_collection": true,
+  "thresholds_changed_after_results": false,
+  "results": [
+    {
+      "case_id": "V3-341",
+      "disposition": "validated_assisted_proposal",
+      "eligibility": "temporal",
+      "construction_succeeded": true,
+      "human_review_required": false,
+      "provider_attempt": true,
+      "routes": [
+        "assisted"
+      ],
+      "proposal": {
+        "kind": "temporal_status",
+        "failed_construction_id": "edb95c90-8f30-55de-bfda-36e8456ed786",
+        "claim_text_span": "The Swiss National Bank commenced operations in 1907.",
+        "left_subject": null,
+        "right_subject": null,
+        "comparator": null,
+        "dimension": null,
+        "left_value": null,
+        "right_value": null,
+        "scalar_form": null,
+        "scalar_subject": null,
+        "numeric_operation": null,
+        "expected_values": [],
+        "evidence_bindings": [],
+        "temporal_relation": "on",
+        "reference_date": {
+          "value": "1907-01-01",
+          "precision": "year"
+        },
+        "claimed_interval": null,
+        "requires_reference_date": false,
+        "claimed_status": "commenced operations",
+        "temporal_bindings": [
+          {
+            "evidence_id": "d6251b3d-2fc5-5fa2-bed2-737bc47b9162",
+            "start_char": 0,
+            "end_char": 121,
+            "quoted_text": "Since the Swiss National Bank commenced operations in 1907, it has had a strong impact on economic policy in Switzerland.",
+            "effective_interval": {
+              "start": {
+                "value": "1907-01-01",
+                "precision": "year"
+              },
+              "end": {
+                "value": "1907-01-01",
+                "precision": "year"
+              },
+              "start_inclusive": true,
+              "end_inclusive": true
+            },
+            "observed_status": null,
+            "retrospective": false
+          }
+        ]
+      },
+      "gold_positive": true,
+      "correct_construction": true,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-342",
+      "disposition": "validated_assisted_proposal",
+      "eligibility": "temporal",
+      "construction_succeeded": true,
+      "human_review_required": false,
+      "provider_attempt": true,
+      "routes": [
+        "assisted"
+      ],
+      "proposal": {
+        "kind": "temporal_status",
+        "failed_construction_id": "f0023944-c884-5332-b8b5-d77acc8d37a3",
+        "claim_text_span": "The SNB head office in Berne was inaugurated on January 20, 1912.",
+        "left_subject": null,
+        "right_subject": null,
+        "comparator": null,
+        "dimension": null,
+        "left_value": null,
+        "right_value": null,
+        "scalar_form": null,
+        "scalar_subject": null,
+        "numeric_operation": null,
+        "expected_values": [],
+        "evidence_bindings": [],
+        "temporal_relation": "on",
+        "reference_date": {
+          "value": "1912-01-20",
+          "precision": "day"
+        },
+        "claimed_interval": null,
+        "requires_reference_date": false,
+        "claimed_status": null,
+        "temporal_bindings": [
+          {
+            "evidence_id": "578dd78e-6a2f-5baf-a9d8-a617992784cf",
+            "start_char": 0,
+            "end_char": 30,
+            "quoted_text": "Inaugurated on 20 January 1912",
+            "effective_interval": {
+              "start": {
+                "value": "1912-01-20",
+                "precision": "day"
+              },
+              "end": {
+                "value": "1912-01-20",
+                "precision": "day"
+              },
+              "start_inclusive": true,
+              "end_inclusive": true
+            },
+            "observed_status": null,
+            "retrospective": false
+          }
+        ]
+      },
+      "gold_positive": true,
+      "correct_construction": true,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-343",
+      "disposition": "validated_assisted_proposal",
+      "eligibility": "temporal",
+      "construction_succeeded": true,
+      "human_review_required": false,
+      "provider_attempt": true,
+      "routes": [
+        "assisted"
+      ],
+      "proposal": {
+        "kind": "temporal_status",
+        "failed_construction_id": "575265b9-b84d-5ae9-8899-c6dbdf92a81c",
+        "claim_text_span": "Norges Bank was established on June 14, 1816.",
+        "left_subject": null,
+        "right_subject": null,
+        "comparator": null,
+        "dimension": null,
+        "left_value": null,
+        "right_value": null,
+        "scalar_form": null,
+        "scalar_subject": null,
+        "numeric_operation": null,
+        "expected_values": [],
+        "evidence_bindings": [],
+        "temporal_relation": "on",
+        "reference_date": {
+          "value": "1816-06-14",
+          "precision": "day"
+        },
+        "claimed_interval": null,
+        "requires_reference_date": false,
+        "claimed_status": null,
+        "temporal_bindings": [
+          {
+            "evidence_id": "212c3d9c-3cef-59ff-97ea-64fb4b7362a4",
+            "start_char": 16,
+            "end_char": 93,
+            "quoted_text": "established by Act of the Storting (the Norwegian parliament) of 14 June 1816",
+            "effective_interval": {
+              "start": {
+                "value": "1816-06-14",
+                "precision": "day"
+              },
+              "end": {
+                "value": "1816-06-14",
+                "precision": "day"
+              },
+              "start_inclusive": true,
+              "end_inclusive": true
+            },
+            "observed_status": null,
+            "retrospective": false
+          }
+        ]
+      },
+      "gold_positive": true,
+      "correct_construction": true,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-344",
+      "disposition": "validated_assisted_proposal",
+      "eligibility": "temporal",
+      "construction_succeeded": true,
+      "human_review_required": false,
+      "provider_attempt": true,
+      "routes": [
+        "assisted"
+      ],
+      "proposal": {
+        "kind": "temporal_status",
+        "failed_construction_id": "740275af-12ae-5dd0-ab23-750a1fe5c823",
+        "claim_text_span": "Norges Bank started operations in January 1817.",
+        "left_subject": null,
+        "right_subject": null,
+        "comparator": null,
+        "dimension": null,
+        "left_value": null,
+        "right_value": null,
+        "scalar_form": null,
+        "scalar_subject": null,
+        "numeric_operation": null,
+        "expected_values": [],
+        "evidence_bindings": [],
+        "temporal_relation": "started",
+        "reference_date": {
+          "value": "1817-01-01",
+          "precision": "month"
+        },
+        "claimed_interval": null,
+        "requires_reference_date": false,
+        "claimed_status": null,
+        "temporal_bindings": [
+          {
+            "evidence_id": "fc44d154-e845-55b6-92d4-d528794100ce",
+            "start_char": 0,
+            "end_char": 130,
+            "quoted_text": "The operation started up in small, leased premises in the Stiftsgaarden, Trondheim's old gubernatorial residence, in January 1817.",
+            "effective_interval": {
+              "start": {
+                "value": "1817-01-01",
+                "precision": "month"
+              },
+              "end": {
+                "value": "1817-01-01",
+                "precision": "month"
+              },
+              "start_inclusive": true,
+              "end_inclusive": true
+            },
+            "observed_status": null,
+            "retrospective": false
+          }
+        ]
+      },
+      "gold_positive": true,
+      "correct_construction": true,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-345",
+      "disposition": "validated_assisted_proposal",
+      "eligibility": "temporal",
+      "construction_succeeded": true,
+      "human_review_required": false,
+      "provider_attempt": true,
+      "routes": [
+        "assisted"
+      ],
+      "proposal": {
+        "kind": "temporal_status",
+        "failed_construction_id": "9511a73f-ca07-55ea-b424-f45c5dd49397",
+        "claim_text_span": "De Nederlandsche Bank was founded in 1814.",
+        "left_subject": null,
+        "right_subject": null,
+        "comparator": null,
+        "dimension": null,
+        "left_value": null,
+        "right_value": null,
+        "scalar_form": null,
+        "scalar_subject": null,
+        "numeric_operation": null,
+        "expected_values": [],
+        "evidence_bindings": [],
+        "temporal_relation": "on",
+        "reference_date": {
+          "value": "1814-01-01",
+          "precision": "year"
+        },
+        "claimed_interval": null,
+        "requires_reference_date": false,
+        "claimed_status": null,
+        "temporal_bindings": [
+          {
+            "evidence_id": "1f5167a6-626b-5608-b8c0-66788ae75895",
+            "start_char": 0,
+            "end_char": 24,
+            "quoted_text": "DNB was founded in 1814.",
+            "effective_interval": {
+              "start": {
+                "value": "1814-01-01",
+                "precision": "year"
+              },
+              "end": {
+                "value": "1814-01-01",
+                "precision": "year"
+              },
+              "start_inclusive": true,
+              "end_inclusive": true
+            },
+            "observed_status": null,
+            "retrospective": true
+          }
+        ]
+      },
+      "gold_positive": true,
+      "correct_construction": true,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-346",
+      "disposition": "human_review_ineligible",
+      "construction_succeeded": false,
+      "human_review_required": true,
+      "provider_attempt": false,
+      "routes": [
+        "not_applicable"
+      ],
+      "gold_positive": false,
+      "correct_construction": false,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-347",
+      "disposition": "validated_assisted_proposal",
+      "eligibility": "temporal",
+      "construction_succeeded": true,
+      "human_review_required": false,
+      "provider_attempt": true,
+      "routes": [
+        "assisted"
+      ],
+      "proposal": {
+        "kind": "temporal_status",
+        "failed_construction_id": "3c391f27-171a-5ddb-b157-697f6672bbdc",
+        "claim_text_span": "The Banque de France was founded on January 18, 1800.",
+        "left_subject": null,
+        "right_subject": null,
+        "comparator": null,
+        "dimension": null,
+        "left_value": null,
+        "right_value": null,
+        "scalar_form": null,
+        "scalar_subject": null,
+        "numeric_operation": null,
+        "expected_values": [],
+        "evidence_bindings": [],
+        "temporal_relation": "on",
+        "reference_date": {
+          "value": "1800-01-18",
+          "precision": "day"
+        },
+        "claimed_interval": null,
+        "requires_reference_date": false,
+        "claimed_status": null,
+        "temporal_bindings": [
+          {
+            "evidence_id": "00caf18c-dd3b-5621-9493-7f419f48d8dc",
+            "start_char": 24,
+            "end_char": 50,
+            "quoted_text": "founded on 18 January 1800",
+            "effective_interval": {
+              "start": {
+                "value": "1800-01-18",
+                "precision": "day"
+              },
+              "end": {
+                "value": "1800-01-18",
+                "precision": "day"
+              },
+              "start_inclusive": true,
+              "end_inclusive": true
+            },
+            "observed_status": null,
+            "retrospective": false
+          }
+        ]
+      },
+      "gold_positive": true,
+      "correct_construction": true,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-348",
+      "disposition": "validated_assisted_proposal",
+      "eligibility": "temporal",
+      "construction_succeeded": true,
+      "human_review_required": false,
+      "provider_attempt": true,
+      "routes": [
+        "assisted"
+      ],
+      "proposal": {
+        "kind": "temporal_status",
+        "failed_construction_id": "24e6ccf8-7afc-5b45-8e5c-0e4691772453",
+        "claim_text_span": "The Banque de France was nationalised on December 2, 1945.",
+        "left_subject": null,
+        "right_subject": null,
+        "comparator": null,
+        "dimension": null,
+        "left_value": null,
+        "right_value": null,
+        "scalar_form": null,
+        "scalar_subject": null,
+        "numeric_operation": null,
+        "expected_values": [],
+        "evidence_bindings": [],
+        "temporal_relation": "on",
+        "reference_date": {
+          "value": "1945-12-02",
+          "precision": "day"
+        },
+        "claimed_interval": null,
+        "requires_reference_date": false,
+        "claimed_status": null,
+        "temporal_bindings": [
+          {
+            "evidence_id": "3d0f070e-30dd-5ed5-b5bf-a1e31b7452cc",
+            "start_char": 0,
+            "end_char": 89,
+            "quoted_text": "After the Liberation, the Banque de France is nationalised by the act of 2 December 1945.",
+            "effective_interval": {
+              "start": {
+                "value": "1945-12-02",
+                "precision": "day"
+              },
+              "end": {
+                "value": "1945-12-02",
+                "precision": "day"
+              },
+              "start_inclusive": true,
+              "end_inclusive": true
+            },
+            "observed_status": null,
+            "retrospective": false
+          }
+        ]
+      },
+      "gold_positive": true,
+      "correct_construction": true,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-349",
+      "disposition": "human_review_safe_failure",
+      "eligibility": "temporal",
+      "construction_succeeded": false,
+      "human_review_required": true,
+      "provider_attempt": true,
+      "routes": [
+        "assisted"
+      ],
+      "error_type": "ValueError",
+      "error": "explicit temporal fact is not one unambiguous date",
+      "gold_positive": true,
+      "correct_construction": false,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-350",
+      "disposition": "validated_assisted_proposal",
+      "eligibility": "temporal",
+      "construction_succeeded": true,
+      "human_review_required": false,
+      "provider_attempt": true,
+      "routes": [
+        "assisted"
+      ],
+      "proposal": {
+        "kind": "temporal_status",
+        "failed_construction_id": "56a08890-42be-5f4a-a37e-e924b0ba5980",
+        "claim_text_span": "Banco Espa\u00f1ol de San Fernando was renamed Banco de Espa\u00f1a on January 28, 1856.",
+        "left_subject": null,
+        "right_subject": null,
+        "comparator": null,
+        "dimension": null,
+        "left_value": null,
+        "right_value": null,
+        "scalar_form": null,
+        "scalar_subject": null,
+        "numeric_operation": null,
+        "expected_values": [],
+        "evidence_bindings": [],
+        "temporal_relation": "on",
+        "reference_date": {
+          "value": "1856-01-28",
+          "precision": "day"
+        },
+        "claimed_interval": null,
+        "requires_reference_date": false,
+        "claimed_status": null,
+        "temporal_bindings": [
+          {
+            "evidence_id": "746d6d99-7f63-58fa-9d01-1cbea09d7d02",
+            "start_char": 0,
+            "end_char": 96,
+            "quoted_text": "The Law of 28 January 1856 renamed the new Banco Espa\u00f1ol de San Fernando as the Banco de Espa\u00f1a.",
+            "effective_interval": {
+              "start": {
+                "value": "1856-01-28",
+                "precision": "day"
+              },
+              "end": {
+                "value": "1856-01-28",
+                "precision": "day"
+              },
+              "start_inclusive": true,
+              "end_inclusive": true
+            },
+            "observed_status": null,
+            "retrospective": false
+          }
+        ]
+      },
+      "gold_positive": true,
+      "correct_construction": true,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-351",
+      "disposition": "validated_assisted_proposal",
+      "eligibility": "temporal",
+      "construction_succeeded": true,
+      "human_review_required": false,
+      "provider_attempt": true,
+      "routes": [
+        "assisted"
+      ],
+      "proposal": {
+        "kind": "temporal_status",
+        "failed_construction_id": "fb2522bf-fd43-5ad5-9c4e-5a154a51885e",
+        "claim_text_span": "was signed on May 5, 1850.",
+        "left_subject": null,
+        "right_subject": null,
+        "comparator": null,
+        "dimension": null,
+        "left_value": null,
+        "right_value": null,
+        "scalar_form": null,
+        "scalar_subject": null,
+        "numeric_operation": null,
+        "expected_values": [],
+        "evidence_bindings": [],
+        "temporal_relation": "on",
+        "reference_date": {
+          "value": "1850-05-05",
+          "precision": "day"
+        },
+        "claimed_interval": null,
+        "requires_reference_date": false,
+        "claimed_status": null,
+        "temporal_bindings": [
+          {
+            "evidence_id": "e4310967-cfe6-513d-8e0c-1fd9f74e3e15",
+            "start_char": 0,
+            "end_char": 82,
+            "quoted_text": "It was on 5 May 1850 that Leopold I signed the law establishing the National Bank.",
+            "effective_interval": {
+              "start": {
+                "value": "1850-05-05",
+                "precision": "day"
+              },
+              "end": {
+                "value": "1850-05-05",
+                "precision": "day"
+              },
+              "start_inclusive": true,
+              "end_inclusive": true
+            },
+            "observed_status": null,
+            "retrospective": false
+          }
+        ]
+      },
+      "gold_positive": true,
+      "correct_construction": true,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-352",
+      "disposition": "validated_assisted_proposal",
+      "eligibility": "temporal",
+      "construction_succeeded": true,
+      "human_review_required": false,
+      "provider_attempt": true,
+      "routes": [
+        "assisted"
+      ],
+      "proposal": {
+        "kind": "temporal_status",
+        "failed_construction_id": "d9a3ef7a-6049-5777-a0ba-0345388d8b64",
+        "claim_text_span": "The National Bank of Belgium issued its first banknotes in 1851.",
+        "left_subject": null,
+        "right_subject": null,
+        "comparator": null,
+        "dimension": null,
+        "left_value": null,
+        "right_value": null,
+        "scalar_form": null,
+        "scalar_subject": null,
+        "numeric_operation": null,
+        "expected_values": [],
+        "evidence_bindings": [],
+        "temporal_relation": "on",
+        "reference_date": {
+          "value": "1851-01-01",
+          "precision": "year"
+        },
+        "claimed_interval": null,
+        "requires_reference_date": false,
+        "claimed_status": null,
+        "temporal_bindings": [
+          {
+            "evidence_id": "81c632c6-6d9a-50cb-9396-e48d06bc2889",
+            "start_char": 0,
+            "end_char": 54,
+            "quoted_text": "In 1851, the National Bank issued its first banknotes.",
+            "effective_interval": {
+              "start": {
+                "value": "1851-01-01",
+                "precision": "year"
+              },
+              "end": {
+                "value": "1851-01-01",
+                "precision": "year"
+              },
+              "start_inclusive": true,
+              "end_inclusive": true
+            },
+            "observed_status": null,
+            "retrospective": true
+          }
+        ]
+      },
+      "gold_positive": true,
+      "correct_construction": true,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-353",
+      "disposition": "validated_assisted_proposal",
+      "eligibility": "temporal",
+      "construction_succeeded": true,
+      "human_review_required": false,
+      "provider_attempt": true,
+      "routes": [
+        "assisted"
+      ],
+      "proposal": {
+        "kind": "temporal_status",
+        "failed_construction_id": "56ff1f4a-3711-5a65-abad-3ba77b67d021",
+        "claim_text_span": "Austria's central bank started operating on June 1, 1816.",
+        "left_subject": null,
+        "right_subject": null,
+        "comparator": null,
+        "dimension": null,
+        "left_value": null,
+        "right_value": null,
+        "scalar_form": null,
+        "scalar_subject": null,
+        "numeric_operation": null,
+        "expected_values": [],
+        "evidence_bindings": [],
+        "temporal_relation": "on",
+        "reference_date": {
+          "value": "1816-06-01",
+          "precision": "day"
+        },
+        "claimed_interval": null,
+        "requires_reference_date": false,
+        "claimed_status": null,
+        "temporal_bindings": [
+          {
+            "evidence_id": "398889bd-17c0-5a9e-a13f-f93b8e715498",
+            "start_char": 38,
+            "end_char": 72,
+            "quoted_text": "started operation on June 1, 1816.",
+            "effective_interval": {
+              "start": {
+                "value": "1816-06-01",
+                "precision": "day"
+              },
+              "end": {
+                "value": "1816-06-01",
+                "precision": "day"
+              },
+              "start_inclusive": true,
+              "end_inclusive": true
+            },
+            "observed_status": null,
+            "retrospective": false
+          }
+        ]
+      },
+      "gold_positive": true,
+      "correct_construction": true,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-354",
+      "disposition": "validated_assisted_proposal",
+      "eligibility": "temporal",
+      "construction_succeeded": true,
+      "human_review_required": false,
+      "provider_attempt": true,
+      "routes": [
+        "assisted"
+      ],
+      "proposal": {
+        "kind": "temporal_status",
+        "failed_construction_id": "2d416404-5074-5b0a-be5b-82757b94cd2e",
+        "claim_text_span": "The Austrian central bank's permanent management was established on January 19, 1818.",
+        "left_subject": null,
+        "right_subject": null,
+        "comparator": null,
+        "dimension": null,
+        "left_value": null,
+        "right_value": null,
+        "scalar_form": null,
+        "scalar_subject": null,
+        "numeric_operation": null,
+        "expected_values": [],
+        "evidence_bindings": [],
+        "temporal_relation": "on",
+        "reference_date": {
+          "value": "1818-01-19",
+          "precision": "day"
+        },
+        "claimed_interval": null,
+        "requires_reference_date": false,
+        "claimed_status": null,
+        "temporal_bindings": [
+          {
+            "evidence_id": "3a724b9b-282c-5f33-b040-a9bc0b23cb6d",
+            "start_char": 0,
+            "end_char": 62,
+            "quoted_text": "On January 19, 1818, the permanent bank management was set up.",
+            "effective_interval": {
+              "start": {
+                "value": "1818-01-19",
+                "precision": "day"
+              },
+              "end": {
+                "value": "1818-01-19",
+                "precision": "day"
+              },
+              "start_inclusive": true,
+              "end_inclusive": true
+            },
+            "observed_status": null,
+            "retrospective": false
+          }
+        ]
+      },
+      "gold_positive": true,
+      "correct_construction": true,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-355",
+      "disposition": "validated_assisted_proposal",
+      "eligibility": "temporal",
+      "construction_succeeded": true,
+      "human_review_required": false,
+      "provider_attempt": true,
+      "routes": [
+        "assisted"
+      ],
+      "proposal": {
+        "kind": "temporal_status",
+        "failed_construction_id": "aa7d6bfe-f1f9-54a2-b744-da34c49565e8",
+        "claim_text_span": "The Czech National Bank became the Czech Republic's central bank in 1993.",
+        "left_subject": null,
+        "right_subject": null,
+        "comparator": null,
+        "dimension": null,
+        "left_value": null,
+        "right_value": null,
+        "scalar_form": null,
+        "scalar_subject": null,
+        "numeric_operation": null,
+        "expected_values": [],
+        "evidence_bindings": [],
+        "temporal_relation": "on",
+        "reference_date": {
+          "value": "1993-01-01",
+          "precision": "year"
+        },
+        "claimed_interval": null,
+        "requires_reference_date": false,
+        "claimed_status": null,
+        "temporal_bindings": [
+          {
+            "evidence_id": "7526e2cf-858e-5cd4-90b5-20025bed1e15",
+            "start_char": 24,
+            "end_char": 115,
+            "quoted_text": "the Czech National Bank became the central bank of the newly formed Czech Republic in 1993.",
+            "effective_interval": {
+              "start": {
+                "value": "1993-01-01",
+                "precision": "year"
+              },
+              "end": {
+                "value": "1993-01-01",
+                "precision": "year"
+              },
+              "start_inclusive": true,
+              "end_inclusive": true
+            },
+            "observed_status": null,
+            "retrospective": false
+          }
+        ]
+      },
+      "gold_positive": true,
+      "correct_construction": true,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-356",
+      "disposition": "human_review_ineligible",
+      "construction_succeeded": false,
+      "human_review_required": true,
+      "provider_attempt": false,
+      "routes": [
+        "not_applicable"
+      ],
+      "gold_positive": false,
+      "correct_construction": false,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-357",
+      "disposition": "validated_assisted_proposal",
+      "eligibility": "temporal",
+      "construction_succeeded": true,
+      "human_review_required": false,
+      "provider_attempt": true,
+      "routes": [
+        "assisted"
+      ],
+      "proposal": {
+        "kind": "temporal_status",
+        "failed_construction_id": "f6277fd5-3259-5a5f-a79e-4421244da5f2",
+        "claim_text_span": "Danmarks Nationalbank was established in 1818.",
+        "left_subject": null,
+        "right_subject": null,
+        "comparator": null,
+        "dimension": null,
+        "left_value": null,
+        "right_value": null,
+        "scalar_form": null,
+        "scalar_subject": null,
+        "numeric_operation": null,
+        "expected_values": [],
+        "evidence_bindings": [],
+        "temporal_relation": "on",
+        "reference_date": {
+          "value": "1818-01-01",
+          "precision": "year"
+        },
+        "claimed_interval": null,
+        "requires_reference_date": false,
+        "claimed_status": null,
+        "temporal_bindings": [
+          {
+            "evidence_id": "fe866626-a7bc-5f90-bfbc-dbc33da0714a",
+            "start_char": 0,
+            "end_char": 131,
+            "quoted_text": "Since its establishment in 1818, Danmarks Nationalbank has been the only institution in Denmark that is allowed to issue banknotes.",
+            "effective_interval": {
+              "start": {
+                "value": "1818-01-01",
+                "precision": "year"
+              },
+              "end": {
+                "value": "1818-01-01",
+                "precision": "year"
+              },
+              "start_inclusive": true,
+              "end_inclusive": true
+            },
+            "observed_status": null,
+            "retrospective": false
+          }
+        ]
+      },
+      "gold_positive": true,
+      "correct_construction": true,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-358",
+      "disposition": "validated_assisted_proposal",
+      "eligibility": "temporal",
+      "construction_succeeded": true,
+      "human_review_required": false,
+      "provider_attempt": true,
+      "routes": [
+        "assisted"
+      ],
+      "proposal": {
+        "kind": "temporal_status",
+        "failed_construction_id": "1ab45858-55d1-59fb-b327-752ed0c0fd06",
+        "claim_text_span": "Danmarks Nationalbank issued its first banknotes in 1819.",
+        "left_subject": null,
+        "right_subject": null,
+        "comparator": null,
+        "dimension": null,
+        "left_value": null,
+        "right_value": null,
+        "scalar_form": null,
+        "scalar_subject": null,
+        "numeric_operation": null,
+        "expected_values": [],
+        "evidence_bindings": [],
+        "temporal_relation": "on",
+        "reference_date": {
+          "value": "1819-01-01",
+          "precision": "year"
+        },
+        "claimed_interval": null,
+        "requires_reference_date": false,
+        "claimed_status": null,
+        "temporal_bindings": [
+          {
+            "evidence_id": "88ebf914-46a9-56e0-bfb3-faa0fa79f769",
+            "start_char": 0,
+            "end_char": 57,
+            "quoted_text": "Danmarks Nationalbank issued its first banknotes in 1819.",
+            "effective_interval": {
+              "start": {
+                "value": "1819-01-01",
+                "precision": "year"
+              },
+              "end": {
+                "value": "1819-01-01",
+                "precision": "year"
+              },
+              "start_inclusive": true,
+              "end_inclusive": true
+            },
+            "observed_status": null,
+            "retrospective": false
+          }
+        ]
+      },
+      "gold_positive": true,
+      "correct_construction": true,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-359",
+      "disposition": "validated_assisted_proposal",
+      "eligibility": "temporal",
+      "construction_succeeded": true,
+      "human_review_required": false,
+      "provider_attempt": true,
+      "routes": [
+        "assisted"
+      ],
+      "proposal": {
+        "kind": "temporal_status",
+        "failed_construction_id": "60665bce-8bbf-5acd-861c-200b6886e9d0",
+        "claim_text_span": "The Bank of Finland traces its origin to 1811.",
+        "left_subject": null,
+        "right_subject": null,
+        "comparator": null,
+        "dimension": null,
+        "left_value": null,
+        "right_value": null,
+        "scalar_form": null,
+        "scalar_subject": null,
+        "numeric_operation": null,
+        "expected_values": [],
+        "evidence_bindings": [],
+        "temporal_relation": "on",
+        "reference_date": {
+          "value": "1811-01-01",
+          "precision": "year"
+        },
+        "claimed_interval": null,
+        "requires_reference_date": false,
+        "claimed_status": null,
+        "temporal_bindings": [
+          {
+            "evidence_id": "37f07a2f-a900-5de9-b5e0-f32ea3aa3dbf",
+            "start_char": 29,
+            "end_char": 33,
+            "quoted_text": "1811",
+            "effective_interval": {
+              "start": {
+                "value": "1811-01-01",
+                "precision": "year"
+              },
+              "end": {
+                "value": "1811-01-01",
+                "precision": "year"
+              },
+              "start_inclusive": true,
+              "end_inclusive": true
+            },
+            "observed_status": null,
+            "retrospective": false
+          }
+        ]
+      },
+      "gold_positive": true,
+      "correct_construction": true,
+      "unsafe_accepted": false
+    },
+    {
+      "case_id": "V3-360",
+      "disposition": "validated_assisted_proposal",
+      "eligibility": "temporal",
+      "construction_succeeded": true,
+      "human_review_required": false,
+      "provider_attempt": true,
+      "routes": [
+        "assisted"
+      ],
+      "proposal": {
+        "kind": "temporal_status",
+        "failed_construction_id": "80f9ead2-6841-5ae7-bf9d-da81cc9d1704",
+        "claim_text_span": "The Bank of Finland moved to Helsinki in 1819.",
+        "left_subject": null,
+        "right_subject": null,
+        "comparator": null,
+        "dimension": null,
+        "left_value": null,
+        "right_value": null,
+        "scalar_form": null,
+        "scalar_subject": null,
+        "numeric_operation": null,
+        "expected_values": [],
+        "evidence_bindings": [],
+        "temporal_relation": "on",
+        "reference_date": {
+          "value": "1819-01-01",
+          "precision": "year"
+        },
+        "claimed_interval": null,
+        "requires_reference_date": false,
+        "claimed_status": null,
+        "temporal_bindings": [
+          {
+            "evidence_id": "baf0712f-d27a-5bf3-81a2-4ce9d3d52bb2",
+            "start_char": 55,
+            "end_char": 133,
+            "quoted_text": "which was moved, with the relocation of the capital city, to Helsinki in 1819.",
+            "effective_interval": {
+              "start": {
+                "value": "1819-01-01",
+                "precision": "year"
+              },
+              "end": {
+                "value": "1819-01-01",
+                "precision": "year"
+              },
+              "start_inclusive": true,
+              "end_inclusive": true
+            },
+            "observed_status": null,
+            "retrospective": false
+          }
+        ]
+      },
+      "gold_positive": true,
+      "correct_construction": true,
+      "unsafe_accepted": false
+    }
+  ]
+}

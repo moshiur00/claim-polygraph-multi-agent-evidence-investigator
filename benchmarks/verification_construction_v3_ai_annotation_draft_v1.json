@@ -1,0 +1,4533 @@
+{
+  "workbook_id": "verification-construction-v3-annotation-workbook-v1",
+  "schema_version": 1,
+  "frozen": false,
+  "cases": [
+    {
+      "case_id": "V3-001",
+      "source_candidate_id": "V3-CAND-001",
+      "split": "held_out",
+      "origin_family_id": "initial_claims:CPNG-001",
+      "claim_text": "A calendar year is exactly 365.25 days long.",
+      "evidence": [
+        {
+          "evidence_id": "CPNG-001:E1",
+          "title": "Doing the Math on Why We Have Leap Day",
+          "url": "https://www.jpl.nasa.gov/edu/news/doing-the-math-on-why-we-have-leap-day/",
+          "source_class": "official",
+          "passage": "Earth takes about 365.2422 days to make one revolution around the Sun."
+        },
+        {
+          "evidence_id": "CPNG-001:E2",
+          "title": "Astronomical Almanac Glossary",
+          "url": "https://aa.usno.navy.mil/faq/asa_glossary",
+          "source_class": "official",
+          "passage": "year, calendar: ... either 365 or 366 days. year, Julian: a period of 365.25 days."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "duration",
+        "comparator_or_relation": "equal",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 44,
+          "quoted_text": "A calendar year is exactly 365.25 days long."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "CPNG-001:E1",
+            "start_char": 0,
+            "end_char": 70,
+            "quoted_text": "Earth takes about 365.2422 days to make one revolution around the Sun."
+          },
+          {
+            "evidence_id": "CPNG-001:E2",
+            "start_char": 0,
+            "end_char": 82,
+            "quoted_text": "year, calendar: ... either 365 or 366 days. year, Julian: a period of 365.25 days."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Full-span candidates are navigation aids, not human gold.",
+          "Annotator must narrow spans to the material operands and relation.",
+          "No construction label or verification state was machine-assigned."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "AI-assisted draft - not human reviewed",
+        "annotated_on": "2026-07-30",
+        "dimension_bucket": "duration",
+        "comparator_or_relation": "equal",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 44,
+          "quoted_text": "A calendar year is exactly 365.25 days long."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "CPNG-001:E1",
+            "start_char": 0,
+            "end_char": 70,
+            "quoted_text": "Earth takes about 365.2422 days to make one revolution around the Sun."
+          },
+          {
+            "evidence_id": "CPNG-001:E2",
+            "start_char": 0,
+            "end_char": 82,
+            "quoted_text": "year, calendar: ... either 365 or 366 days. year, Julian: a period of 365.25 days."
+          }
+        ],
+        "expected_verification_state": "qualified",
+        "ambiguity_notes": [
+          "AI-prepared proposal only; a human annotator must verify every field and replace the draft identity.",
+          "An ordinary civil-calendar year contains 365 or 366 days.",
+          "Exactly 365.25 days applies to the Julian-year convention, not every meaning of calendar year."
+        ]
+      },
+      "approval": null
+    },
+    {
+      "case_id": "V3-002",
+      "source_candidate_id": "V3-CAND-002",
+      "split": "calibration",
+      "origin_family_id": "initial_claims:CPNG-002",
+      "claim_text": "Pure water always boils at 100 degrees Celsius.",
+      "evidence": [
+        {
+          "evidence_id": "CPNG-002:E1",
+          "title": "Thermometry",
+          "url": "https://nvlpubs.nist.gov/nistpubs/Legacy/IR/nbsir85-3133.pdf",
+          "source_class": "official",
+          "passage": "The boiling point of water increases by about 30 mK if the pressure is increased by 10^-3 atm."
+        },
+        {
+          "evidence_id": "CPNG-002:E2",
+          "title": "FAQs About Water and Steam: Water and the Temperature Scale",
+          "url": "https://iapws.org/faq1",
+          "source_class": "organization",
+          "passage": "On ITS-90, the atmospheric boiling temperature of water turns out to be approximately 373.124 K (99.974 degrees Celsius)."
+        },
+        {
+          "evidence_id": "CPNG-002:E3",
+          "title": "Glossary of Meteorology: Boiling Point",
+          "url": "https://glossary.ametsoc.org/wiki/boiling-point/",
+          "source_class": "organization",
+          "passage": "Because of the normal decrease of barometric pressure with height, the nominal boiling point of water decreases."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temperature",
+        "comparator_or_relation": null,
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 47,
+          "quoted_text": "Pure water always boils at 100 degrees Celsius."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "CPNG-002:E1",
+            "start_char": 0,
+            "end_char": 94,
+            "quoted_text": "The boiling point of water increases by about 30 mK if the pressure is increased by 10^-3 atm."
+          },
+          {
+            "evidence_id": "CPNG-002:E2",
+            "start_char": 0,
+            "end_char": 121,
+            "quoted_text": "On ITS-90, the atmospheric boiling temperature of water turns out to be approximately 373.124 K (99.974 degrees Celsius)."
+          },
+          {
+            "evidence_id": "CPNG-002:E3",
+            "start_char": 0,
+            "end_char": 112,
+            "quoted_text": "Because of the normal decrease of barometric pressure with height, the nominal boiling point of water decreases."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Full-span candidates are navigation aids, not human gold.",
+          "Annotator must narrow spans to the material operands and relation.",
+          "No construction label or verification state was machine-assigned."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "AI-assisted draft - not human reviewed",
+        "annotated_on": "2026-07-30",
+        "dimension_bucket": "temperature",
+        "comparator_or_relation": "equal",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 47,
+          "quoted_text": "Pure water always boils at 100 degrees Celsius."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "CPNG-002:E1",
+            "start_char": 0,
+            "end_char": 94,
+            "quoted_text": "The boiling point of water increases by about 30 mK if the pressure is increased by 10^-3 atm."
+          },
+          {
+            "evidence_id": "CPNG-002:E2",
+            "start_char": 0,
+            "end_char": 121,
+            "quoted_text": "On ITS-90, the atmospheric boiling temperature of water turns out to be approximately 373.124 K (99.974 degrees Celsius)."
+          },
+          {
+            "evidence_id": "CPNG-002:E3",
+            "start_char": 0,
+            "end_char": 112,
+            "quoted_text": "Because of the normal decrease of barometric pressure with height, the nominal boiling point of water decreases."
+          }
+        ],
+        "expected_verification_state": "contradicted",
+        "ambiguity_notes": [
+          "AI-prepared proposal only; a human annotator must verify every field and replace the draft identity.",
+          "The word “always” is contradicted because boiling temperature depends on pressure.",
+          "Even at atmospheric pressure, the cited ITS-90 value is approximately 99.974°C rather than exactly 100°C."
+        ]
+      },
+      "approval": null
+    },
+    {
+      "case_id": "V3-003",
+      "source_candidate_id": "V3-CAND-003",
+      "split": "held_out",
+      "origin_family_id": "initial_claims:CPNG-003",
+      "claim_text": "Every adult human has exactly 206 bones.",
+      "evidence": [
+        {
+          "evidence_id": "CPNG-003:E1",
+          "title": "Anatomy, Bones",
+          "url": "https://www.ncbi.nlm.nih.gov/sites/books/NBK537199/",
+          "source_class": "academic",
+          "passage": "Human infants typically have 270 bones, fusing into around 206 in the human adult. Variability in number arises from some bones' anatomic variations."
+        },
+        {
+          "evidence_id": "CPNG-003:E2",
+          "title": "Small but troublesome: accessory ossicles with clinical significance",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6124588/",
+          "source_class": "academic",
+          "passage": "Accessory ossicles are inconstant, independent, and considered well formed bones, not arising from fractures or other diseases."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "count",
+        "comparator_or_relation": "equal",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 40,
+          "quoted_text": "Every adult human has exactly 206 bones."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "CPNG-003:E1",
+            "start_char": 0,
+            "end_char": 149,
+            "quoted_text": "Human infants typically have 270 bones, fusing into around 206 in the human adult. Variability in number arises from some bones' anatomic variations."
+          },
+          {
+            "evidence_id": "CPNG-003:E2",
+            "start_char": 0,
+            "end_char": 127,
+            "quoted_text": "Accessory ossicles are inconstant, independent, and considered well formed bones, not arising from fractures or other diseases."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Full-span candidates are navigation aids, not human gold.",
+          "Annotator must narrow spans to the material operands and relation.",
+          "No construction label or verification state was machine-assigned."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "AI-assisted draft - not human reviewed",
+        "annotated_on": "2026-07-30",
+        "dimension_bucket": "count",
+        "comparator_or_relation": "equal",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 40,
+          "quoted_text": "Every adult human has exactly 206 bones."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "CPNG-003:E1",
+            "start_char": 0,
+            "end_char": 149,
+            "quoted_text": "Human infants typically have 270 bones, fusing into around 206 in the human adult. Variability in number arises from some bones' anatomic variations."
+          },
+          {
+            "evidence_id": "CPNG-003:E2",
+            "start_char": 0,
+            "end_char": 80,
+            "quoted_text": "Accessory ossicles are inconstant, independent, and considered well formed bones"
+          }
+        ],
+        "expected_verification_state": "qualified",
+        "ambiguity_notes": [
+          "AI-prepared proposal only; a human annotator must verify every field and replace the draft identity.",
+          "Around 206 is a typical adult count, not a universal exact count.",
+          "Anatomic variation and accessory ossicles defeat the quantifier “every.”"
+        ]
+      },
+      "approval": null
+    },
+    {
+      "case_id": "V3-004",
+      "source_candidate_id": "V3-CAND-004",
+      "split": "development",
+      "origin_family_id": "initial_claims:CPNG-004",
+      "claim_text": "The World Health Organization still classifies COVID-19 as a public health emergency of international concern.",
+      "evidence": [
+        {
+          "evidence_id": "CPNG-004:E1",
+          "title": "Statement on the fifteenth IHR Emergency Committee meeting regarding COVID-19",
+          "url": "https://www.who.int/malta/news/item/05-05-2023-statement-on-the-fifteenth-meeting-of-the-international-health-regulations-%282005%29-emergency-committee-regarding-the-coronavirus-disease-%28covid-19%29-pandemic",
+          "source_class": "official",
+          "passage": "COVID-19 is now an established and ongoing health issue which no longer constitutes a public health emergency of international concern."
+        },
+        {
+          "evidence_id": "CPNG-004:E2",
+          "title": "WHO declares end to COVID-19's emergency phase",
+          "url": "https://www.nature.com/articles/d41586-023-01559-z",
+          "source_class": "news",
+          "passage": "The World Health Organization announced that COVID-19 is no longer a public health emergency of international concern."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": null,
+        "comparator_or_relation": null,
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 110,
+          "quoted_text": "The World Health Organization still classifies COVID-19 as a public health emergency of international concern."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "CPNG-004:E1",
+            "start_char": 0,
+            "end_char": 135,
+            "quoted_text": "COVID-19 is now an established and ongoing health issue which no longer constitutes a public health emergency of international concern."
+          },
+          {
+            "evidence_id": "CPNG-004:E2",
+            "start_char": 0,
+            "end_char": 118,
+            "quoted_text": "The World Health Organization announced that COVID-19 is no longer a public health emergency of international concern."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Full-span candidates are navigation aids, not human gold.",
+          "Annotator must narrow spans to the material operands and relation.",
+          "No construction label or verification state was machine-assigned."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "AI-assisted draft - not human reviewed",
+        "annotated_on": "2026-07-30",
+        "dimension_bucket": "temporal_interval_or_status",
+        "comparator_or_relation": "active",
+        "gold_label": "fallback_eligible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 110,
+          "quoted_text": "The World Health Organization still classifies COVID-19 as a public health emergency of international concern."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "CPNG-004:E1",
+            "start_char": 0,
+            "end_char": 135,
+            "quoted_text": "COVID-19 is now an established and ongoing health issue which no longer constitutes a public health emergency of international concern."
+          },
+          {
+            "evidence_id": "CPNG-004:E2",
+            "start_char": 0,
+            "end_char": 118,
+            "quoted_text": "The World Health Organization announced that COVID-19 is no longer a public health emergency of international concern."
+          }
+        ],
+        "expected_verification_state": "contradicted",
+        "ambiguity_notes": [
+          "AI-prepared proposal only; a human annotator must verify every field and replace the draft identity.",
+          "“Still classifies” is treated as an active-status assertion.",
+          "Both retained passages state that the emergency status ended."
+        ]
+      },
+      "approval": null
+    },
+    {
+      "case_id": "V3-005",
+      "source_candidate_id": "V3-CAND-005",
+      "split": "calibration",
+      "origin_family_id": "initial_claims:CPNG-005",
+      "claim_text": "The Great Wall of China is visible from the Moon with the unaided human eye.",
+      "evidence": [
+        {
+          "evidence_id": "CPNG-005:E1",
+          "title": "Earth Science and Remote Sensing Unit FAQ",
+          "url": "https://eol.jsc.nasa.gov/FAQ/",
+          "source_class": "official",
+          "passage": "The Great Wall is not visible to the naked eye from orbit. It is not visible from the Moon."
+        },
+        {
+          "evidence_id": "CPNG-005:E2",
+          "title": "Is it Really Possible to See the Great Wall of China from Space with a Naked Eye?",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3972694/",
+          "source_class": "academic",
+          "passage": "Obviously, it would be even less likely to see the Great Wall from the moon."
+        },
+        {
+          "evidence_id": "CPNG-005:E3",
+          "title": "Great Wall of China from space",
+          "url": "https://www.esa.int/ESA_Multimedia/Images/2021/05/Great_Wall_of_China_from_space",
+          "source_class": "official",
+          "passage": "It is impossible to see it in the tiny viewfinder of the camera."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": null,
+        "comparator_or_relation": "equal_or_status",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 76,
+          "quoted_text": "The Great Wall of China is visible from the Moon with the unaided human eye."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "CPNG-005:E1",
+            "start_char": 0,
+            "end_char": 91,
+            "quoted_text": "The Great Wall is not visible to the naked eye from orbit. It is not visible from the Moon."
+          },
+          {
+            "evidence_id": "CPNG-005:E2",
+            "start_char": 0,
+            "end_char": 76,
+            "quoted_text": "Obviously, it would be even less likely to see the Great Wall from the moon."
+          },
+          {
+            "evidence_id": "CPNG-005:E3",
+            "start_char": 0,
+            "end_char": 64,
+            "quoted_text": "It is impossible to see it in the tiny viewfinder of the camera."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Full-span candidates are navigation aids, not human gold.",
+          "Annotator must narrow spans to the material operands and relation.",
+          "No construction label or verification state was machine-assigned."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "AI-assisted draft - not human reviewed",
+        "annotated_on": "2026-07-30",
+        "dimension_bucket": "distance_or_mass",
+        "comparator_or_relation": "active",
+        "gold_label": "fallback_eligible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 76,
+          "quoted_text": "The Great Wall of China is visible from the Moon with the unaided human eye."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "CPNG-005:E1",
+            "start_char": 0,
+            "end_char": 91,
+            "quoted_text": "The Great Wall is not visible to the naked eye from orbit. It is not visible from the Moon."
+          }
+        ],
+        "expected_verification_state": "contradicted",
+        "ambiguity_notes": [
+          "AI-prepared proposal only; a human annotator must verify every field and replace the draft identity.",
+          "Visibility with the unaided eye is treated as a boolean status under the stated viewing condition.",
+          "The NASA passage directly negates visibility from the Moon."
+        ]
+      },
+      "approval": null
+    },
+    {
+      "case_id": "V3-006",
+      "source_candidate_id": "V3-CAND-006",
+      "split": "held_out",
+      "origin_family_id": "initial_claims:CPNG-006",
+      "claim_text": "Germany was the world's third-largest economy by nominal GDP in 2023.",
+      "evidence": [
+        {
+          "evidence_id": "CPNG-006:E1",
+          "title": "World Development Indicators API: GDP (current US$), 2023",
+          "url": "https://api.worldbank.org/v2/country/DE;JP;US;CN/indicator/NY.GDP.MKTP.CD?date=2023&format=json&per_page=100",
+          "source_class": "dataset",
+          "passage": "For 2023 current-US-dollar GDP, the United States and China exceed Germany, and Germany exceeds Japan."
+        },
+        {
+          "evidence_id": "CPNG-006:E2",
+          "title": "Japan slips into a recession and loses its spot as the world's third-largest economy",
+          "url": "https://apnews.com/article/japan-economy-2023-gdp-893d53deba654c4924e4924f0b321cc5",
+          "source_class": "news",
+          "passage": "Japan's economy is now the world's fourth-largest after it fell behind Germany."
+        },
+        {
+          "evidence_id": "CPNG-006:E3",
+          "title": "World Economic Outlook, April 2026",
+          "url": "https://www.imf.org/external/datamapper/datasets/WEO",
+          "source_class": "dataset",
+          "passage": "World Economic Outlook (April 2026)."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "count",
+        "comparator_or_relation": null,
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 69,
+          "quoted_text": "Germany was the world's third-largest economy by nominal GDP in 2023."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "CPNG-006:E1",
+            "start_char": 0,
+            "end_char": 102,
+            "quoted_text": "For 2023 current-US-dollar GDP, the United States and China exceed Germany, and Germany exceeds Japan."
+          },
+          {
+            "evidence_id": "CPNG-006:E2",
+            "start_char": 0,
+            "end_char": 79,
+            "quoted_text": "Japan's economy is now the world's fourth-largest after it fell behind Germany."
+          },
+          {
+            "evidence_id": "CPNG-006:E3",
+            "start_char": 0,
+            "end_char": 36,
+            "quoted_text": "World Economic Outlook (April 2026)."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Full-span candidates are navigation aids, not human gold.",
+          "Annotator must narrow spans to the material operands and relation.",
+          "No construction label or verification state was machine-assigned."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "AI-assisted draft - not human reviewed",
+        "annotated_on": "2026-07-30",
+        "dimension_bucket": "count",
+        "comparator_or_relation": "equal",
+        "gold_label": "fallback_eligible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 69,
+          "quoted_text": "Germany was the world's third-largest economy by nominal GDP in 2023."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "CPNG-006:E1",
+            "start_char": 0,
+            "end_char": 102,
+            "quoted_text": "For 2023 current-US-dollar GDP, the United States and China exceed Germany, and Germany exceeds Japan."
+          },
+          {
+            "evidence_id": "CPNG-006:E2",
+            "start_char": 0,
+            "end_char": 79,
+            "quoted_text": "Japan's economy is now the world's fourth-largest after it fell behind Germany."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": [
+          "AI-prepared proposal only; a human annotator must verify every field and replace the draft identity.",
+          "“Third-largest” is represented as an ordinal rank in a count-like dimension.",
+          "The claim is limited to nominal GDP and calendar year 2023."
+        ]
+      },
+      "approval": null
+    },
+    {
+      "case_id": "V3-007",
+      "source_candidate_id": "V3-CAND-007",
+      "split": "calibration",
+      "origin_family_id": "initial_claims:CPNG-007",
+      "claim_text": "Amazon was founded in 1994.",
+      "evidence": [
+        {
+          "evidence_id": "CPNG-007:E1",
+          "title": "Amazon.com, Inc. 2016 Form 10-K",
+          "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872417000011/amzn-20161231x10k.htm",
+          "source_class": "primary_document",
+          "passage": "Amazon.com, Inc. was incorporated in 1994 in Washington; it opened its virtual doors in July 1995."
+        },
+        {
+          "evidence_id": "CPNG-007:E2",
+          "title": "Amazon: The Early Years (1995-1999)",
+          "url": "https://www.historylink.org/File/23230",
+          "source_class": "organization",
+          "passage": "Jeff Bezos left a Wall Street investment firm in 1994 to start online bookseller Amazon.com in Seattle."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_interval_or_status",
+        "comparator_or_relation": null,
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 27,
+          "quoted_text": "Amazon was founded in 1994."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "CPNG-007:E1",
+            "start_char": 0,
+            "end_char": 98,
+            "quoted_text": "Amazon.com, Inc. was incorporated in 1994 in Washington; it opened its virtual doors in July 1995."
+          },
+          {
+            "evidence_id": "CPNG-007:E2",
+            "start_char": 0,
+            "end_char": 103,
+            "quoted_text": "Jeff Bezos left a Wall Street investment firm in 1994 to start online bookseller Amazon.com in Seattle."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Full-span candidates are navigation aids, not human gold.",
+          "Annotator must narrow spans to the material operands and relation.",
+          "No construction label or verification state was machine-assigned."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "AI-assisted draft - not human reviewed",
+        "annotated_on": "2026-07-30",
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "on",
+        "gold_label": "fallback_eligible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 27,
+          "quoted_text": "Amazon was founded in 1994."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "CPNG-007:E1",
+            "start_char": 0,
+            "end_char": 55,
+            "quoted_text": "Amazon.com, Inc. was incorporated in 1994 in Washington"
+          },
+          {
+            "evidence_id": "CPNG-007:E2",
+            "start_char": 0,
+            "end_char": 103,
+            "quoted_text": "Jeff Bezos left a Wall Street investment firm in 1994 to start online bookseller Amazon.com in Seattle."
+          }
+        ],
+        "expected_verification_state": "qualified",
+        "ambiguity_notes": [
+          "AI-prepared proposal only; a human annotator must verify every field and replace the draft identity.",
+          "“Founded” can refer to incorporation or the start of the business activity.",
+          "Both retained passages support 1994, while the virtual storefront opened in 1995."
+        ]
+      },
+      "approval": null
+    },
+    {
+      "case_id": "V3-008",
+      "source_candidate_id": "V3-CAND-008",
+      "split": "development",
+      "origin_family_id": "initial_claims:CPNG-008",
+      "claim_text": "The European Union's General Data Protection Regulation began applying on 25 May 2018.",
+      "evidence": [
+        {
+          "evidence_id": "CPNG-008:E1",
+          "title": "Regulation (EU) 2016/679, Article 99",
+          "url": "https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng",
+          "source_class": "law_or_regulation",
+          "passage": "It shall apply from 25 May 2018."
+        },
+        {
+          "evidence_id": "CPNG-008:E2",
+          "title": "Legal Framework",
+          "url": "https://www.edpb.europa.eu/about-edpb/legal-framework_en",
+          "source_class": "official",
+          "passage": "The GDPR entered into force on 24 May 2016 and is applicable from 25 May 2018."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": null,
+        "comparator_or_relation": "on",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 86,
+          "quoted_text": "The European Union's General Data Protection Regulation began applying on 25 May 2018."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "CPNG-008:E1",
+            "start_char": 0,
+            "end_char": 32,
+            "quoted_text": "It shall apply from 25 May 2018."
+          },
+          {
+            "evidence_id": "CPNG-008:E2",
+            "start_char": 0,
+            "end_char": 78,
+            "quoted_text": "The GDPR entered into force on 24 May 2016 and is applicable from 25 May 2018."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Full-span candidates are navigation aids, not human gold.",
+          "Annotator must narrow spans to the material operands and relation.",
+          "No construction label or verification state was machine-assigned."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "AI-assisted draft - not human reviewed",
+        "annotated_on": "2026-07-30",
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "on",
+        "gold_label": "fallback_eligible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 86,
+          "quoted_text": "The European Union's General Data Protection Regulation began applying on 25 May 2018."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "CPNG-008:E1",
+            "start_char": 0,
+            "end_char": 32,
+            "quoted_text": "It shall apply from 25 May 2018."
+          },
+          {
+            "evidence_id": "CPNG-008:E2",
+            "start_char": 0,
+            "end_char": 78,
+            "quoted_text": "The GDPR entered into force on 24 May 2016 and is applicable from 25 May 2018."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": [
+          "AI-prepared proposal only; a human annotator must verify every field and replace the draft identity.",
+          "Application date is distinguished from the earlier entry-into-force date."
+        ]
+      },
+      "approval": null
+    },
+    {
+      "case_id": "V3-009",
+      "source_candidate_id": "V3-CAND-009",
+      "split": "development",
+      "origin_family_id": "initial_claims:CPNG-009",
+      "claim_text": "Cigarette smoking causes lung cancer.",
+      "evidence": [
+        {
+          "evidence_id": "CPNG-009:E1",
+          "title": "Harms of Cigarette Smoking and Health Benefits of Quitting",
+          "url": "https://www.cancer.gov/about-cancer/causes-prevention/risk/tobacco/cessation-fact-sheet",
+          "source_class": "official",
+          "passage": "Smoking causes cancers of the lung, esophagus, larynx, mouth, throat, kidney, bladder, liver, pancreas, stomach, cervix, colon, and rectum."
+        },
+        {
+          "evidence_id": "CPNG-009:E2",
+          "title": "Lung cancer",
+          "url": "https://www.who.int/news-room/fact-sheets/detail/lung-cancer",
+          "source_class": "official",
+          "passage": "Smoking tobacco, including cigarettes, cigars, and pipes, is the primary risk factor for lung cancer."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": null,
+        "comparator_or_relation": null,
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 37,
+          "quoted_text": "Cigarette smoking causes lung cancer."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "CPNG-009:E1",
+            "start_char": 0,
+            "end_char": 139,
+            "quoted_text": "Smoking causes cancers of the lung, esophagus, larynx, mouth, throat, kidney, bladder, liver, pancreas, stomach, cervix, colon, and rectum."
+          },
+          {
+            "evidence_id": "CPNG-009:E2",
+            "start_char": 0,
+            "end_char": 101,
+            "quoted_text": "Smoking tobacco, including cigarettes, cigars, and pipes, is the primary risk factor for lung cancer."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Full-span candidates are navigation aids, not human gold.",
+          "Annotator must narrow spans to the material operands and relation.",
+          "No construction label or verification state was machine-assigned."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "AI-assisted draft - not human reviewed",
+        "annotated_on": "2026-07-30",
+        "dimension_bucket": "percentage_or_rate",
+        "comparator_or_relation": "causes",
+        "gold_label": "not_applicable",
+        "claim_span": null,
+        "evidence_spans": [],
+        "expected_verification_state": null,
+        "ambiguity_notes": [
+          "AI-prepared proposal only; a human annotator must verify every field and replace the draft identity.",
+          "The claim is causal and contains no material numerical, temporal, or bounded-status operand for this constructor."
+        ]
+      },
+      "approval": null
+    },
+    {
+      "case_id": "V3-010",
+      "source_candidate_id": "V3-CAND-010",
+      "split": "held_out",
+      "origin_family_id": "initial_claims:CPNG-010",
+      "claim_text": "Taking vitamin C prevents the common cold.",
+      "evidence": [
+        {
+          "evidence_id": "CPNG-010:E1",
+          "title": "Vitamin C for preventing and treating the common cold",
+          "url": "https://www.cochrane.org/evidence/CD000980_vitamin-c-preventing-and-treating-common-cold",
+          "source_class": "academic",
+          "passage": "Regular ingestion of vitamin C had no effect on common cold incidence in the ordinary population."
+        },
+        {
+          "evidence_id": "CPNG-010:E2",
+          "title": "Vitamin C: Health Professional Fact Sheet",
+          "url": "https://ods.od.nih.gov/factsheets/VitaminC-HealthProfessional/",
+          "source_class": "official",
+          "passage": "In the general population, taking vitamin C prophylactically does not appear to reduce the risk of the common cold."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": null,
+        "comparator_or_relation": null,
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 42,
+          "quoted_text": "Taking vitamin C prevents the common cold."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "CPNG-010:E1",
+            "start_char": 0,
+            "end_char": 97,
+            "quoted_text": "Regular ingestion of vitamin C had no effect on common cold incidence in the ordinary population."
+          },
+          {
+            "evidence_id": "CPNG-010:E2",
+            "start_char": 0,
+            "end_char": 115,
+            "quoted_text": "In the general population, taking vitamin C prophylactically does not appear to reduce the risk of the common cold."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Full-span candidates are navigation aids, not human gold.",
+          "Annotator must narrow spans to the material operands and relation.",
+          "No construction label or verification state was machine-assigned."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "AI-assisted draft - not human reviewed",
+        "annotated_on": "2026-07-30",
+        "dimension_bucket": "temporal_interval_or_status",
+        "comparator_or_relation": "prevents",
+        "gold_label": "not_applicable",
+        "claim_span": null,
+        "evidence_spans": [],
+        "expected_verification_state": null,
+        "ambiguity_notes": [
+          "AI-prepared proposal only; a human annotator must verify every field and replace the draft identity.",
+          "The claim is causal/preventive and contains no material numerical or temporal assertion for this constructor."
+        ]
+      },
+      "approval": null
+    },
+    {
+      "case_id": "V3-011",
+      "source_candidate_id": "V3-CAND-011",
+      "split": "held_out",
+      "origin_family_id": "initial_claims:CPNG-011",
+      "claim_text": "Iceland gets 100 percent of its electricity from renewable sources.",
+      "evidence": [
+        {
+          "evidence_id": "CPNG-011:E1",
+          "title": "Government of Iceland: Energy",
+          "url": "https://mfa.is/topics/business-and-industry/energy/",
+          "source_class": "official",
+          "passage": "Renewables provide almost 100% of electricity and about 85% of primary energy; fossil fuels, mainly transport oil, supply the remainder."
+        },
+        {
+          "evidence_id": "CPNG-011:E2",
+          "title": "Orkustofnun numerical data: Electricity",
+          "url": "https://orkustofnun.is/en/information/numerical_data/electricity",
+          "source_class": "dataset",
+          "passage": "The authority publishes electricity generation tables by energy source, year, and month."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "percentage_or_rate",
+        "comparator_or_relation": null,
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 67,
+          "quoted_text": "Iceland gets 100 percent of its electricity from renewable sources."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "CPNG-011:E1",
+            "start_char": 0,
+            "end_char": 136,
+            "quoted_text": "Renewables provide almost 100% of electricity and about 85% of primary energy; fossil fuels, mainly transport oil, supply the remainder."
+          },
+          {
+            "evidence_id": "CPNG-011:E2",
+            "start_char": 0,
+            "end_char": 88,
+            "quoted_text": "The authority publishes electricity generation tables by energy source, year, and month."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Full-span candidates are navigation aids, not human gold.",
+          "Annotator must narrow spans to the material operands and relation.",
+          "No construction label or verification state was machine-assigned."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "AI-assisted draft - not human reviewed",
+        "annotated_on": "2026-07-30",
+        "dimension_bucket": "percentage_or_rate",
+        "comparator_or_relation": "equal",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 67,
+          "quoted_text": "Iceland gets 100 percent of its electricity from renewable sources."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "CPNG-011:E1",
+            "start_char": 0,
+            "end_char": 45,
+            "quoted_text": "Renewables provide almost 100% of electricity"
+          }
+        ],
+        "expected_verification_state": "qualified",
+        "ambiguity_notes": [
+          "AI-prepared proposal only; a human annotator must verify every field and replace the draft identity.",
+          "“Almost 100%” supports a near-total share but not an exact 100% equality.",
+          "No reference year is stated in the claim."
+        ]
+      },
+      "approval": null
+    },
+    {
+      "case_id": "V3-012",
+      "source_candidate_id": "V3-CAND-012",
+      "split": "held_out",
+      "origin_family_id": "initial_claims:CPNG-011",
+      "claim_text": "Iceland gets 100 percent of its total energy from renewable sources.",
+      "evidence": [
+        {
+          "evidence_id": "CPNG-011:E1",
+          "title": "Government of Iceland: Energy",
+          "url": "https://mfa.is/topics/business-and-industry/energy/",
+          "source_class": "official",
+          "passage": "Renewables provide almost 100% of electricity and about 85% of primary energy; fossil fuels, mainly transport oil, supply the remainder."
+        },
+        {
+          "evidence_id": "CPNG-011:E2",
+          "title": "Orkustofnun numerical data: Electricity",
+          "url": "https://orkustofnun.is/en/information/numerical_data/electricity",
+          "source_class": "dataset",
+          "passage": "The authority publishes electricity generation tables by energy source, year, and month."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "percentage_or_rate",
+        "comparator_or_relation": null,
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 68,
+          "quoted_text": "Iceland gets 100 percent of its total energy from renewable sources."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "CPNG-011:E1",
+            "start_char": 0,
+            "end_char": 136,
+            "quoted_text": "Renewables provide almost 100% of electricity and about 85% of primary energy; fossil fuels, mainly transport oil, supply the remainder."
+          },
+          {
+            "evidence_id": "CPNG-011:E2",
+            "start_char": 0,
+            "end_char": 88,
+            "quoted_text": "The authority publishes electricity generation tables by energy source, year, and month."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Full-span candidates are navigation aids, not human gold.",
+          "Annotator must narrow spans to the material operands and relation.",
+          "No construction label or verification state was machine-assigned."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "AI-assisted draft - not human reviewed",
+        "annotated_on": "2026-07-30",
+        "dimension_bucket": "percentage_or_rate",
+        "comparator_or_relation": "equal",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 68,
+          "quoted_text": "Iceland gets 100 percent of its total energy from renewable sources."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "CPNG-011:E1",
+            "start_char": 50,
+            "end_char": 135,
+            "quoted_text": "about 85% of primary energy; fossil fuels, mainly transport oil, supply the remainder"
+          }
+        ],
+        "expected_verification_state": "contradicted",
+        "ambiguity_notes": [
+          "AI-prepared proposal only; a human annotator must verify every field and replace the draft identity.",
+          "“Total energy” is interpreted as primary energy because that is the retained evidence terminology.",
+          "The cited share is about 85%, not 100%."
+        ]
+      },
+      "approval": null
+    },
+    {
+      "case_id": "V3-013",
+      "source_candidate_id": "V3-CAND-013",
+      "split": "held_out",
+      "origin_family_id": "initial_claims:CPNG-011",
+      "claim_text": "Iceland no longer uses fossil fuels.",
+      "evidence": [
+        {
+          "evidence_id": "CPNG-011:E1",
+          "title": "Government of Iceland: Energy",
+          "url": "https://mfa.is/topics/business-and-industry/energy/",
+          "source_class": "official",
+          "passage": "Renewables provide almost 100% of electricity and about 85% of primary energy; fossil fuels, mainly transport oil, supply the remainder."
+        },
+        {
+          "evidence_id": "CPNG-011:E2",
+          "title": "Orkustofnun numerical data: Electricity",
+          "url": "https://orkustofnun.is/en/information/numerical_data/electricity",
+          "source_class": "dataset",
+          "passage": "The authority publishes electricity generation tables by energy source, year, and month."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "distance_or_mass",
+        "comparator_or_relation": null,
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 36,
+          "quoted_text": "Iceland no longer uses fossil fuels."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "CPNG-011:E1",
+            "start_char": 0,
+            "end_char": 136,
+            "quoted_text": "Renewables provide almost 100% of electricity and about 85% of primary energy; fossil fuels, mainly transport oil, supply the remainder."
+          },
+          {
+            "evidence_id": "CPNG-011:E2",
+            "start_char": 0,
+            "end_char": 88,
+            "quoted_text": "The authority publishes electricity generation tables by energy source, year, and month."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Full-span candidates are navigation aids, not human gold.",
+          "Annotator must narrow spans to the material operands and relation.",
+          "No construction label or verification state was machine-assigned."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "AI-assisted draft - not human reviewed",
+        "annotated_on": "2026-07-30",
+        "dimension_bucket": "temporal_interval_or_status",
+        "comparator_or_relation": "inactive",
+        "gold_label": "fallback_eligible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 36,
+          "quoted_text": "Iceland no longer uses fossil fuels."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "CPNG-011:E1",
+            "start_char": 79,
+            "end_char": 135,
+            "quoted_text": "fossil fuels, mainly transport oil, supply the remainder"
+          }
+        ],
+        "expected_verification_state": "contradicted",
+        "ambiguity_notes": [
+          "AI-prepared proposal only; a human annotator must verify every field and replace the draft identity.",
+          "“No longer uses” is treated as an inactive-use status.",
+          "The evidence explicitly identifies continuing fossil-fuel use."
+        ]
+      },
+      "approval": null
+    },
+    {
+      "case_id": "V3-014",
+      "source_candidate_id": "V3-CAND-014",
+      "split": "development",
+      "origin_family_id": "initial_claims:CPNG-012",
+      "claim_text": "Lightning never strikes the same place twice.",
+      "evidence": [
+        {
+          "evidence_id": "CPNG-012:E1",
+          "title": "Severe Weather 101: Lightning FAQ",
+          "url": "https://www.nssl.noaa.gov/education/svrwx101/lightning/faq/",
+          "source_class": "official",
+          "passage": "Lightning can strike the same or nearly the same place more than once, and taller objects are more likely to be struck."
+        },
+        {
+          "evidence_id": "CPNG-012:E2",
+          "title": "Lightning Myths and Facts",
+          "url": "https://www.weather.gov/safety/lightning-myths?ipid=promo-link-block1",
+          "source_class": "official",
+          "passage": "Lightning often strikes the same place repeatedly, especially a tall, pointy, isolated object."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": null,
+        "comparator_or_relation": null,
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 45,
+          "quoted_text": "Lightning never strikes the same place twice."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "CPNG-012:E1",
+            "start_char": 0,
+            "end_char": 119,
+            "quoted_text": "Lightning can strike the same or nearly the same place more than once, and taller objects are more likely to be struck."
+          },
+          {
+            "evidence_id": "CPNG-012:E2",
+            "start_char": 0,
+            "end_char": 94,
+            "quoted_text": "Lightning often strikes the same place repeatedly, especially a tall, pointy, isolated object."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Full-span candidates are navigation aids, not human gold.",
+          "Annotator must narrow spans to the material operands and relation.",
+          "No construction label or verification state was machine-assigned."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "AI-assisted draft - not human reviewed",
+        "annotated_on": "2026-07-30",
+        "dimension_bucket": "count",
+        "comparator_or_relation": "less_than_or_equal",
+        "gold_label": "fallback_eligible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 45,
+          "quoted_text": "Lightning never strikes the same place twice."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "CPNG-012:E1",
+            "start_char": 0,
+            "end_char": 69,
+            "quoted_text": "Lightning can strike the same or nearly the same place more than once"
+          },
+          {
+            "evidence_id": "CPNG-012:E2",
+            "start_char": 0,
+            "end_char": 49,
+            "quoted_text": "Lightning often strikes the same place repeatedly"
+          }
+        ],
+        "expected_verification_state": "contradicted",
+        "ambiguity_notes": [
+          "AI-prepared proposal only; a human annotator must verify every field and replace the draft identity.",
+          "“Never … twice” is normalized as no more than one strike at the same place.",
+          "Both passages state that repeat strikes occur."
+        ]
+      },
+      "approval": null
+    },
+    {
+      "case_id": "V3-015",
+      "source_candidate_id": "V3-CAND-015",
+      "split": "development",
+      "origin_family_id": "initial_claims:CPNG-012",
+      "claim_text": "Tall structures do not need protection against repeated lightning strikes.",
+      "evidence": [
+        {
+          "evidence_id": "CPNG-012:E1",
+          "title": "Severe Weather 101: Lightning FAQ",
+          "url": "https://www.nssl.noaa.gov/education/svrwx101/lightning/faq/",
+          "source_class": "official",
+          "passage": "Lightning can strike the same or nearly the same place more than once, and taller objects are more likely to be struck."
+        },
+        {
+          "evidence_id": "CPNG-012:E2",
+          "title": "Lightning Myths and Facts",
+          "url": "https://www.weather.gov/safety/lightning-myths?ipid=promo-link-block1",
+          "source_class": "official",
+          "passage": "Lightning often strikes the same place repeatedly, especially a tall, pointy, isolated object."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": null,
+        "comparator_or_relation": null,
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 74,
+          "quoted_text": "Tall structures do not need protection against repeated lightning strikes."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "CPNG-012:E1",
+            "start_char": 0,
+            "end_char": 119,
+            "quoted_text": "Lightning can strike the same or nearly the same place more than once, and taller objects are more likely to be struck."
+          },
+          {
+            "evidence_id": "CPNG-012:E2",
+            "start_char": 0,
+            "end_char": 94,
+            "quoted_text": "Lightning often strikes the same place repeatedly, especially a tall, pointy, isolated object."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Full-span candidates are navigation aids, not human gold.",
+          "Annotator must narrow spans to the material operands and relation.",
+          "No construction label or verification state was machine-assigned."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "AI-assisted draft - not human reviewed",
+        "annotated_on": "2026-07-30",
+        "dimension_bucket": "temporal_interval_or_status",
+        "comparator_or_relation": "not_required",
+        "gold_label": "not_applicable",
+        "claim_span": null,
+        "evidence_spans": [],
+        "expected_verification_state": null,
+        "ambiguity_notes": [
+          "AI-prepared proposal only; a human annotator must verify every field and replace the draft identity.",
+          "The central assertion is a normative safety recommendation, not a numerical or temporal assertion.",
+          "The retained evidence discusses repeated-strike likelihood but does not itself define a protection requirement."
+        ]
+      },
+      "approval": null
+    },
+    {
+      "case_id": "V3-016",
+      "source_candidate_id": "V3-CAND-016",
+      "split": "development",
+      "origin_family_id": "initial_claims:CPNG-013",
+      "claim_text": "Mount Everest is the tallest mountain from base to summit.",
+      "evidence": [
+        {
+          "evidence_id": "CPNG-013:E1",
+          "title": "What is the highest point on Earth?",
+          "url": "https://oceanservice.noaa.gov/facts/highestpoint.html",
+          "source_class": "official",
+          "passage": "Everest is highest above mean sea level, Mauna Kea is tallest from base to peak, and Chimborazo is farthest from Earth's center."
+        },
+        {
+          "evidence_id": "CPNG-013:E2",
+          "title": "How big are Hawaiian volcanoes?",
+          "url": "https://www.usgs.gov/faqs/how-big-are-hawaiian-volcanoes?page=1",
+          "source_class": "official",
+          "passage": "Measured from its base on the ocean floor, Mauna Kea is nearly 33,500 feet tall."
+        },
+        {
+          "evidence_id": "CPNG-013:E3",
+          "title": "Chimborazo and Tungurahua, Ecuador",
+          "url": "https://science.nasa.gov/earth/earth-observatory/chimborazo-and-tungurahua-ecuador-6099/",
+          "source_class": "official",
+          "passage": "Because Earth bulges at the equator, Chimborazo's summit is farther from Earth's center than Everest's summit."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": null,
+        "comparator_or_relation": "equal_or_status",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 58,
+          "quoted_text": "Mount Everest is the tallest mountain from base to summit."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "CPNG-013:E1",
+            "start_char": 0,
+            "end_char": 128,
+            "quoted_text": "Everest is highest above mean sea level, Mauna Kea is tallest from base to peak, and Chimborazo is farthest from Earth's center."
+          },
+          {
+            "evidence_id": "CPNG-013:E2",
+            "start_char": 0,
+            "end_char": 80,
+            "quoted_text": "Measured from its base on the ocean floor, Mauna Kea is nearly 33,500 feet tall."
+          },
+          {
+            "evidence_id": "CPNG-013:E3",
+            "start_char": 0,
+            "end_char": 110,
+            "quoted_text": "Because Earth bulges at the equator, Chimborazo's summit is farther from Earth's center than Everest's summit."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Full-span candidates are navigation aids, not human gold.",
+          "Annotator must narrow spans to the material operands and relation.",
+          "No construction label or verification state was machine-assigned."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "AI-assisted draft - not human reviewed",
+        "annotated_on": "2026-07-30",
+        "dimension_bucket": "distance_or_mass",
+        "comparator_or_relation": "greater_than",
+        "gold_label": "fallback_eligible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 58,
+          "quoted_text": "Mount Everest is the tallest mountain from base to summit."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "CPNG-013:E1",
+            "start_char": 41,
+            "end_char": 79,
+            "quoted_text": "Mauna Kea is tallest from base to peak"
+          },
+          {
+            "evidence_id": "CPNG-013:E2",
+            "start_char": 0,
+            "end_char": 80,
+            "quoted_text": "Measured from its base on the ocean floor, Mauna Kea is nearly 33,500 feet tall."
+          }
+        ],
+        "expected_verification_state": "contradicted",
+        "ambiguity_notes": [
+          "AI-prepared proposal only; a human annotator must verify every field and replace the draft identity.",
+          "“Base to summit” permits a submerged base.",
+          "Under that definition, the retained evidence identifies Mauna Kea rather than Everest."
+        ]
+      },
+      "approval": null
+    },
+    {
+      "case_id": "V3-017",
+      "source_candidate_id": "V3-CAND-017",
+      "split": "development",
+      "origin_family_id": "initial_claims:CPNG-013",
+      "claim_text": "Mount Everest is the point on Earth farthest from the planet's center.",
+      "evidence": [
+        {
+          "evidence_id": "CPNG-013:E1",
+          "title": "What is the highest point on Earth?",
+          "url": "https://oceanservice.noaa.gov/facts/highestpoint.html",
+          "source_class": "official",
+          "passage": "Everest is highest above mean sea level, Mauna Kea is tallest from base to peak, and Chimborazo is farthest from Earth's center."
+        },
+        {
+          "evidence_id": "CPNG-013:E2",
+          "title": "How big are Hawaiian volcanoes?",
+          "url": "https://www.usgs.gov/faqs/how-big-are-hawaiian-volcanoes?page=1",
+          "source_class": "official",
+          "passage": "Measured from its base on the ocean floor, Mauna Kea is nearly 33,500 feet tall."
+        },
+        {
+          "evidence_id": "CPNG-013:E3",
+          "title": "Chimborazo and Tungurahua, Ecuador",
+          "url": "https://science.nasa.gov/earth/earth-observatory/chimborazo-and-tungurahua-ecuador-6099/",
+          "source_class": "official",
+          "passage": "Because Earth bulges at the equator, Chimborazo's summit is farther from Earth's center than Everest's summit."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": null,
+        "comparator_or_relation": "on",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 70,
+          "quoted_text": "Mount Everest is the point on Earth farthest from the planet's center."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "CPNG-013:E1",
+            "start_char": 0,
+            "end_char": 128,
+            "quoted_text": "Everest is highest above mean sea level, Mauna Kea is tallest from base to peak, and Chimborazo is farthest from Earth's center."
+          },
+          {
+            "evidence_id": "CPNG-013:E2",
+            "start_char": 0,
+            "end_char": 80,
+            "quoted_text": "Measured from its base on the ocean floor, Mauna Kea is nearly 33,500 feet tall."
+          },
+          {
+            "evidence_id": "CPNG-013:E3",
+            "start_char": 0,
+            "end_char": 110,
+            "quoted_text": "Because Earth bulges at the equator, Chimborazo's summit is farther from Earth's center than Everest's summit."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Full-span candidates are navigation aids, not human gold.",
+          "Annotator must narrow spans to the material operands and relation.",
+          "No construction label or verification state was machine-assigned."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "AI-assisted draft - not human reviewed",
+        "annotated_on": "2026-07-30",
+        "dimension_bucket": "distance_or_mass",
+        "comparator_or_relation": "greater_than",
+        "gold_label": "fallback_eligible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 70,
+          "quoted_text": "Mount Everest is the point on Earth farthest from the planet's center."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "CPNG-013:E1",
+            "start_char": 85,
+            "end_char": 127,
+            "quoted_text": "Chimborazo is farthest from Earth's center"
+          },
+          {
+            "evidence_id": "CPNG-013:E3",
+            "start_char": 0,
+            "end_char": 110,
+            "quoted_text": "Because Earth bulges at the equator, Chimborazo's summit is farther from Earth's center than Everest's summit."
+          }
+        ],
+        "expected_verification_state": "contradicted",
+        "ambiguity_notes": [
+          "AI-prepared proposal only; a human annotator must verify every field and replace the draft identity.",
+          "Distance from Earth’s center is distinct from elevation above mean sea level."
+        ]
+      },
+      "approval": null
+    },
+    {
+      "case_id": "V3-018",
+      "source_candidate_id": "V3-CAND-018",
+      "split": "calibration",
+      "origin_family_id": "initial_claims:CPNG-014",
+      "claim_text": "The Nile is conclusively the world's longest river.",
+      "evidence": [
+        {
+          "evidence_id": "CPNG-014:E1",
+          "title": "Rivers of the World: World's Longest Rivers",
+          "url": "https://www.usgs.gov/water-science-school/science/rivers-world-worlds-longest-rivers",
+          "source_class": "official",
+          "passage": "USGS states its river-length definition and, under that convention, lists the Nile at 4,132 miles and the Amazon at 4,000 miles."
+        },
+        {
+          "evidence_id": "CPNG-014:E2",
+          "title": "The Amazon, measuring a mighty river",
+          "url": "https://www.usgs.gov/publications/amazon-measuring-a-mighty-river",
+          "source_class": "academic",
+          "passage": "The Amazon is identified as the world's largest river and its discharge is described as extraordinarily large."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": null,
+        "comparator_or_relation": "equal_or_status",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 51,
+          "quoted_text": "The Nile is conclusively the world's longest river."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "CPNG-014:E1",
+            "start_char": 0,
+            "end_char": 128,
+            "quoted_text": "USGS states its river-length definition and, under that convention, lists the Nile at 4,132 miles and the Amazon at 4,000 miles."
+          },
+          {
+            "evidence_id": "CPNG-014:E2",
+            "start_char": 0,
+            "end_char": 110,
+            "quoted_text": "The Amazon is identified as the world's largest river and its discharge is described as extraordinarily large."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Full-span candidates are navigation aids, not human gold.",
+          "Annotator must narrow spans to the material operands and relation.",
+          "No construction label or verification state was machine-assigned."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "AI-assisted draft - not human reviewed",
+        "annotated_on": "2026-07-30",
+        "dimension_bucket": "distance_or_mass",
+        "comparator_or_relation": "greater_than",
+        "gold_label": "unconstructible",
+        "claim_span": null,
+        "evidence_spans": [],
+        "expected_verification_state": null,
+        "ambiguity_notes": [
+          "AI-prepared proposal only; a human annotator must verify every field and replace the draft identity.",
+          "“Conclusively” requires a convention-independent river-length ranking, but the retained evidence explicitly conditions the ranking on a definition.",
+          "The wording cannot safely supply a single unqualified comparison assertion."
+        ]
+      },
+      "approval": null
+    },
+    {
+      "case_id": "V3-019",
+      "source_candidate_id": "V3-CAND-019",
+      "split": "calibration",
+      "origin_family_id": "initial_claims:CPNG-014",
+      "claim_text": "The Nile carries more water than the Amazon.",
+      "evidence": [
+        {
+          "evidence_id": "CPNG-014:E1",
+          "title": "Rivers of the World: World's Longest Rivers",
+          "url": "https://www.usgs.gov/water-science-school/science/rivers-world-worlds-longest-rivers",
+          "source_class": "official",
+          "passage": "USGS states its river-length definition and, under that convention, lists the Nile at 4,132 miles and the Amazon at 4,000 miles."
+        },
+        {
+          "evidence_id": "CPNG-014:E2",
+          "title": "The Amazon, measuring a mighty river",
+          "url": "https://www.usgs.gov/publications/amazon-measuring-a-mighty-river",
+          "source_class": "academic",
+          "passage": "The Amazon is identified as the world's largest river and its discharge is described as extraordinarily large."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": null,
+        "comparator_or_relation": null,
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 44,
+          "quoted_text": "The Nile carries more water than the Amazon."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "CPNG-014:E1",
+            "start_char": 0,
+            "end_char": 128,
+            "quoted_text": "USGS states its river-length definition and, under that convention, lists the Nile at 4,132 miles and the Amazon at 4,000 miles."
+          },
+          {
+            "evidence_id": "CPNG-014:E2",
+            "start_char": 0,
+            "end_char": 110,
+            "quoted_text": "The Amazon is identified as the world's largest river and its discharge is described as extraordinarily large."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Full-span candidates are navigation aids, not human gold.",
+          "Annotator must narrow spans to the material operands and relation.",
+          "No construction label or verification state was machine-assigned."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "AI-assisted draft - not human reviewed",
+        "annotated_on": "2026-07-30",
+        "dimension_bucket": "speed",
+        "comparator_or_relation": "greater_than",
+        "gold_label": "unconstructible",
+        "claim_span": null,
+        "evidence_spans": [],
+        "expected_verification_state": null,
+        "ambiguity_notes": [
+          "AI-prepared proposal only; a human annotator must verify every field and replace the draft identity.",
+          "“Carries more water” is interpreted as discharge rate, but the retained evidence gives no explicit Nile-versus-Amazon discharge comparison or comparable values."
+        ]
+      },
+      "approval": null
+    },
+    {
+      "case_id": "V3-020",
+      "source_candidate_id": "V3-CAND-020",
+      "split": "held_out",
+      "origin_family_id": "initial_claims:CPNG-015",
+      "claim_text": "Napoleon Bonaparte was unusually short for a French man of his time.",
+      "evidence": [
+        {
+          "evidence_id": "CPNG-015:E1",
+          "title": "Was Napoleon Short?",
+          "url": "https://www.history.com/articles/napoleon-complex-short",
+          "source_class": "expert",
+          "passage": "The apparent discrepancy comes partly from French and English units; Napoleon was about 1.67 metres, around or slightly above the average of his era."
+        },
+        {
+          "evidence_id": "CPNG-015:E2",
+          "title": "The king of Brobdingnag and Gulliver",
+          "url": "https://www.britishmuseum.org/collection/object/P_1861-1012-46",
+          "source_class": "primary_document",
+          "passage": "The British Museum catalogs Gillray's satirical caricature showing George III holding an intentionally tiny Napoleon, not an accurate physical proportion."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": null,
+        "comparator_or_relation": null,
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 68,
+          "quoted_text": "Napoleon Bonaparte was unusually short for a French man of his time."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "CPNG-015:E1",
+            "start_char": 0,
+            "end_char": 149,
+            "quoted_text": "The apparent discrepancy comes partly from French and English units; Napoleon was about 1.67 metres, around or slightly above the average of his era."
+          },
+          {
+            "evidence_id": "CPNG-015:E2",
+            "start_char": 0,
+            "end_char": 154,
+            "quoted_text": "The British Museum catalogs Gillray's satirical caricature showing George III holding an intentionally tiny Napoleon, not an accurate physical proportion."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Full-span candidates are navigation aids, not human gold.",
+          "Annotator must narrow spans to the material operands and relation.",
+          "No construction label or verification state was machine-assigned."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "AI-assisted draft - not human reviewed",
+        "annotated_on": "2026-07-30",
+        "dimension_bucket": "distance_or_mass",
+        "comparator_or_relation": "less_than",
+        "gold_label": "fallback_eligible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 68,
+          "quoted_text": "Napoleon Bonaparte was unusually short for a French man of his time."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "CPNG-015:E1",
+            "start_char": 69,
+            "end_char": 149,
+            "quoted_text": "Napoleon was about 1.67 metres, around or slightly above the average of his era."
+          }
+        ],
+        "expected_verification_state": "contradicted",
+        "ambiguity_notes": [
+          "AI-prepared proposal only; a human annotator must verify every field and replace the draft identity.",
+          "“Unusually short” is interpreted relative to French men of the same era.",
+          "The retained passage places Napoleon around or slightly above the average."
+        ]
+      },
+      "approval": null
+    },
+    {
+      "case_id": "V3-021",
+      "source_candidate_id": "V3-CAND-021",
+      "split": "held_out",
+      "origin_family_id": "initial_claims:CPNG-015",
+      "claim_text": "British caricatures accurately represented Napoleon's stature.",
+      "evidence": [
+        {
+          "evidence_id": "CPNG-015:E1",
+          "title": "Was Napoleon Short?",
+          "url": "https://www.history.com/articles/napoleon-complex-short",
+          "source_class": "expert",
+          "passage": "The apparent discrepancy comes partly from French and English units; Napoleon was about 1.67 metres, around or slightly above the average of his era."
+        },
+        {
+          "evidence_id": "CPNG-015:E2",
+          "title": "The king of Brobdingnag and Gulliver",
+          "url": "https://www.britishmuseum.org/collection/object/P_1861-1012-46",
+          "source_class": "primary_document",
+          "passage": "The British Museum catalogs Gillray's satirical caricature showing George III holding an intentionally tiny Napoleon, not an accurate physical proportion."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "percentage_or_rate",
+        "comparator_or_relation": null,
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 62,
+          "quoted_text": "British caricatures accurately represented Napoleon's stature."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "CPNG-015:E1",
+            "start_char": 0,
+            "end_char": 149,
+            "quoted_text": "The apparent discrepancy comes partly from French and English units; Napoleon was about 1.67 metres, around or slightly above the average of his era."
+          },
+          {
+            "evidence_id": "CPNG-015:E2",
+            "start_char": 0,
+            "end_char": 154,
+            "quoted_text": "The British Museum catalogs Gillray's satirical caricature showing George III holding an intentionally tiny Napoleon, not an accurate physical proportion."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Full-span candidates are navigation aids, not human gold.",
+          "Annotator must narrow spans to the material operands and relation.",
+          "No construction label or verification state was machine-assigned."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "AI-assisted draft - not human reviewed",
+        "annotated_on": "2026-07-30",
+        "dimension_bucket": "temporal_interval_or_status",
+        "comparator_or_relation": "accurate",
+        "gold_label": "fallback_eligible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 62,
+          "quoted_text": "British caricatures accurately represented Napoleon's stature."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "CPNG-015:E1",
+            "start_char": 69,
+            "end_char": 149,
+            "quoted_text": "Napoleon was about 1.67 metres, around or slightly above the average of his era."
+          },
+          {
+            "evidence_id": "CPNG-015:E2",
+            "start_char": 86,
+            "end_char": 153,
+            "quoted_text": "an intentionally tiny Napoleon, not an accurate physical proportion"
+          }
+        ],
+        "expected_verification_state": "contradicted",
+        "ambiguity_notes": [
+          "AI-prepared proposal only; a human annotator must verify every field and replace the draft identity.",
+          "Accuracy is treated as a boolean representational status.",
+          "The museum description characterizes the depiction as intentionally diminutive rather than physically accurate."
+        ]
+      },
+      "approval": null
+    },
+    {
+      "case_id": "V3-022",
+      "source_candidate_id": "V3-CAND-022",
+      "split": "calibration",
+      "origin_family_id": "initial_claims:CPNG-016",
+      "claim_text": "Exposure to 5G mobile networks causes COVID-19.",
+      "evidence": [
+        {
+          "evidence_id": "CPNG-016:E1",
+          "title": "5G and coronavirus (COVID-19)",
+          "url": "https://www.gov.uk/guidance/5g-and-coronavirus-covid-19",
+          "source_class": "official",
+          "passage": "There is no evidence of a link between 5G and COVID-19; viruses cannot travel on radio waves, and COVID-19 has spread in countries without 5G."
+        },
+        {
+          "evidence_id": "CPNG-016:E2",
+          "title": "Coronavirus disease (COVID-19)",
+          "url": "https://www.who.int/news-room/fact-sheets/detail/coronavirus-disease-%28covid-19%29",
+          "source_class": "official",
+          "passage": "COVID-19 is an infectious disease caused by the SARS-CoV-2 virus."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": null,
+        "comparator_or_relation": null,
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 47,
+          "quoted_text": "Exposure to 5G mobile networks causes COVID-19."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "CPNG-016:E1",
+            "start_char": 0,
+            "end_char": 142,
+            "quoted_text": "There is no evidence of a link between 5G and COVID-19; viruses cannot travel on radio waves, and COVID-19 has spread in countries without 5G."
+          },
+          {
+            "evidence_id": "CPNG-016:E2",
+            "start_char": 0,
+            "end_char": 65,
+            "quoted_text": "COVID-19 is an infectious disease caused by the SARS-CoV-2 virus."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Full-span candidates are navigation aids, not human gold.",
+          "Annotator must narrow spans to the material operands and relation.",
+          "No construction label or verification state was machine-assigned."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "AI-assisted draft - not human reviewed",
+        "annotated_on": "2026-07-30",
+        "dimension_bucket": "temporal_interval_or_status",
+        "comparator_or_relation": "causes",
+        "gold_label": "not_applicable",
+        "claim_span": null,
+        "evidence_spans": [],
+        "expected_verification_state": null,
+        "ambiguity_notes": [
+          "AI-prepared proposal only; a human annotator must verify every field and replace the draft identity.",
+          "The claim is a biological causal assertion without a material numerical or temporal operand for this constructor."
+        ]
+      },
+      "approval": null
+    },
+    {
+      "case_id": "V3-023",
+      "source_candidate_id": "V3-CAND-023",
+      "split": "calibration",
+      "origin_family_id": "initial_claims:CPNG-016",
+      "claim_text": "Communities without 5G do not experience COVID-19 outbreaks.",
+      "evidence": [
+        {
+          "evidence_id": "CPNG-016:E1",
+          "title": "5G and coronavirus (COVID-19)",
+          "url": "https://www.gov.uk/guidance/5g-and-coronavirus-covid-19",
+          "source_class": "official",
+          "passage": "There is no evidence of a link between 5G and COVID-19; viruses cannot travel on radio waves, and COVID-19 has spread in countries without 5G."
+        },
+        {
+          "evidence_id": "CPNG-016:E2",
+          "title": "Coronavirus disease (COVID-19)",
+          "url": "https://www.who.int/news-room/fact-sheets/detail/coronavirus-disease-%28covid-19%29",
+          "source_class": "official",
+          "passage": "COVID-19 is an infectious disease caused by the SARS-CoV-2 virus."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": null,
+        "comparator_or_relation": null,
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 60,
+          "quoted_text": "Communities without 5G do not experience COVID-19 outbreaks."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "CPNG-016:E1",
+            "start_char": 0,
+            "end_char": 142,
+            "quoted_text": "There is no evidence of a link between 5G and COVID-19; viruses cannot travel on radio waves, and COVID-19 has spread in countries without 5G."
+          },
+          {
+            "evidence_id": "CPNG-016:E2",
+            "start_char": 0,
+            "end_char": 65,
+            "quoted_text": "COVID-19 is an infectious disease caused by the SARS-CoV-2 virus."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Full-span candidates are navigation aids, not human gold.",
+          "Annotator must narrow spans to the material operands and relation.",
+          "No construction label or verification state was machine-assigned."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "AI-assisted draft - not human reviewed",
+        "annotated_on": "2026-07-30",
+        "dimension_bucket": "temporal_interval_or_status",
+        "comparator_or_relation": "inactive",
+        "gold_label": "fallback_eligible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 60,
+          "quoted_text": "Communities without 5G do not experience COVID-19 outbreaks."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "CPNG-016:E1",
+            "start_char": 98,
+            "end_char": 141,
+            "quoted_text": "COVID-19 has spread in countries without 5G"
+          }
+        ],
+        "expected_verification_state": "contradicted",
+        "ambiguity_notes": [
+          "AI-prepared proposal only; a human annotator must verify every field and replace the draft identity.",
+          "The claim is treated as an absence-of-outbreak status for places without 5G.",
+          "The retained passage supplies a direct counterexample class."
+        ]
+      },
+      "approval": null
+    },
+    {
+      "case_id": "V3-024",
+      "source_candidate_id": "V3-CAND-024",
+      "split": "held_out",
+      "origin_family_id": "initial_claims:CPNG-017",
+      "claim_text": "Tesla delivered more than 1.8 million vehicles during 2023.",
+      "evidence": [
+        {
+          "evidence_id": "CPNG-017:E1",
+          "title": "Tesla Vehicle Production and Deliveries for 2023",
+          "url": "https://ir.tesla.com/press-release/tesla-vehicle-production-deliveries-and-date-financial-results-webcast-fourth-quarter-2023?quot=",
+          "source_class": "primary_document",
+          "passage": "Tesla reported 1,808,581 total vehicle deliveries for calendar year 2023."
+        },
+        {
+          "evidence_id": "CPNG-017:E2",
+          "title": "Sales, Production, and Export Results for 2023",
+          "url": "https://global.toyota/en/company/profile/production-sales-figures/202312.html",
+          "source_class": "primary_document",
+          "passage": "Toyota reported 11,233,039 worldwide 2023 sales across Toyota, Daihatsu, and Hino, far exceeding Tesla's 1,808,581 deliveries."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "distance_or_mass",
+        "comparator_or_relation": "greater_than",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 59,
+          "quoted_text": "Tesla delivered more than 1.8 million vehicles during 2023."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "CPNG-017:E1",
+            "start_char": 0,
+            "end_char": 73,
+            "quoted_text": "Tesla reported 1,808,581 total vehicle deliveries for calendar year 2023."
+          },
+          {
+            "evidence_id": "CPNG-017:E2",
+            "start_char": 0,
+            "end_char": 126,
+            "quoted_text": "Toyota reported 11,233,039 worldwide 2023 sales across Toyota, Daihatsu, and Hino, far exceeding Tesla's 1,808,581 deliveries."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Full-span candidates are navigation aids, not human gold.",
+          "Annotator must narrow spans to the material operands and relation.",
+          "No construction label or verification state was machine-assigned."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "AI-assisted draft - not human reviewed",
+        "annotated_on": "2026-07-30",
+        "dimension_bucket": "count",
+        "comparator_or_relation": "greater_than",
+        "gold_label": "fallback_eligible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 59,
+          "quoted_text": "Tesla delivered more than 1.8 million vehicles during 2023."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "CPNG-017:E1",
+            "start_char": 0,
+            "end_char": 73,
+            "quoted_text": "Tesla reported 1,808,581 total vehicle deliveries for calendar year 2023."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": [
+          "AI-prepared proposal only; a human annotator must verify every field and replace the draft identity.",
+          "1,808,581 is greater than 1.8 million.",
+          "The machine proposal misclassified the dimension as distance or mass; vehicle deliveries are a count."
+        ]
+      },
+      "approval": null
+    },
+    {
+      "case_id": "V3-025",
+      "source_candidate_id": "V3-CAND-025",
+      "split": "held_out",
+      "origin_family_id": "initial_claims:CPNG-017",
+      "claim_text": "Tesla delivered more vehicles than any other automaker worldwide during 2023.",
+      "evidence": [
+        {
+          "evidence_id": "CPNG-017:E1",
+          "title": "Tesla Vehicle Production and Deliveries for 2023",
+          "url": "https://ir.tesla.com/press-release/tesla-vehicle-production-deliveries-and-date-financial-results-webcast-fourth-quarter-2023?quot=",
+          "source_class": "primary_document",
+          "passage": "Tesla reported 1,808,581 total vehicle deliveries for calendar year 2023."
+        },
+        {
+          "evidence_id": "CPNG-017:E2",
+          "title": "Sales, Production, and Export Results for 2023",
+          "url": "https://global.toyota/en/company/profile/production-sales-figures/202312.html",
+          "source_class": "primary_document",
+          "passage": "Toyota reported 11,233,039 worldwide 2023 sales across Toyota, Daihatsu, and Hino, far exceeding Tesla's 1,808,581 deliveries."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "distance_or_mass",
+        "comparator_or_relation": null,
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 77,
+          "quoted_text": "Tesla delivered more vehicles than any other automaker worldwide during 2023."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "CPNG-017:E1",
+            "start_char": 0,
+            "end_char": 73,
+            "quoted_text": "Tesla reported 1,808,581 total vehicle deliveries for calendar year 2023."
+          },
+          {
+            "evidence_id": "CPNG-017:E2",
+            "start_char": 0,
+            "end_char": 126,
+            "quoted_text": "Toyota reported 11,233,039 worldwide 2023 sales across Toyota, Daihatsu, and Hino, far exceeding Tesla's 1,808,581 deliveries."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Full-span candidates are navigation aids, not human gold.",
+          "Annotator must narrow spans to the material operands and relation.",
+          "No construction label or verification state was machine-assigned."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "AI-assisted draft - not human reviewed",
+        "annotated_on": "2026-07-30",
+        "dimension_bucket": "count",
+        "comparator_or_relation": "greater_than",
+        "gold_label": "unconstructible",
+        "claim_span": null,
+        "evidence_spans": [],
+        "expected_verification_state": null,
+        "ambiguity_notes": [
+          "AI-prepared proposal only; a human annotator must verify every field and replace the draft identity.",
+          "The universal “any other automaker” comparison requires a complete and consistently defined comparison set.",
+          "The retained passages mix Tesla deliveries with Toyota group sales, so the operands are not safely comparable."
+        ]
+      },
+      "approval": null
+    },
+    {
+      "case_id": "V3-026",
+      "source_candidate_id": "V3-CAND-026",
+      "split": "calibration",
+      "origin_family_id": "initial_claims:CPNG-018",
+      "claim_text": "The United States annual unemployment rate was lower in 2023 than in 2020.",
+      "evidence": [
+        {
+          "evidence_id": "CPNG-018:E1",
+          "title": "Annual average unemployment rates in 2023",
+          "url": "https://www.bls.gov/opub/ted/2024/annual-average-unemployment-rates-decreased-in-6-states-in-2023.htm",
+          "source_class": "dataset",
+          "passage": "The U.S. annual average unemployment rate was 3.6 percent in 2023."
+        },
+        {
+          "evidence_id": "CPNG-018:E2",
+          "title": "State Annual Average Unemployment, 2020",
+          "url": "https://www.bls.gov/news.release/archives/srgune_03032021.htm",
+          "source_class": "dataset",
+          "passage": "The U.S. annual average unemployment rate rose to 8.1 percent in 2020."
+        },
+        {
+          "evidence_id": "CPNG-018:E3",
+          "title": "Unemployment rate at 3.7 percent in December 2023",
+          "url": "https://www.bls.gov/opub/ted/2024/unemployment-rate-at-3-7-percent-in-december-2023.htm",
+          "source_class": "dataset",
+          "passage": "The seasonally adjusted U.S. unemployment rate was 3.7 percent in December 2023."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "percentage_or_rate",
+        "comparator_or_relation": null,
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 74,
+          "quoted_text": "The United States annual unemployment rate was lower in 2023 than in 2020."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "CPNG-018:E1",
+            "start_char": 0,
+            "end_char": 66,
+            "quoted_text": "The U.S. annual average unemployment rate was 3.6 percent in 2023."
+          },
+          {
+            "evidence_id": "CPNG-018:E2",
+            "start_char": 0,
+            "end_char": 70,
+            "quoted_text": "The U.S. annual average unemployment rate rose to 8.1 percent in 2020."
+          },
+          {
+            "evidence_id": "CPNG-018:E3",
+            "start_char": 0,
+            "end_char": 80,
+            "quoted_text": "The seasonally adjusted U.S. unemployment rate was 3.7 percent in December 2023."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Full-span candidates are navigation aids, not human gold.",
+          "Annotator must narrow spans to the material operands and relation.",
+          "No construction label or verification state was machine-assigned."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "AI-assisted draft - not human reviewed",
+        "annotated_on": "2026-07-30",
+        "dimension_bucket": "percentage_or_rate",
+        "comparator_or_relation": "less_than",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 74,
+          "quoted_text": "The United States annual unemployment rate was lower in 2023 than in 2020."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "CPNG-018:E1",
+            "start_char": 0,
+            "end_char": 66,
+            "quoted_text": "The U.S. annual average unemployment rate was 3.6 percent in 2023."
+          },
+          {
+            "evidence_id": "CPNG-018:E2",
+            "start_char": 0,
+            "end_char": 70,
+            "quoted_text": "The U.S. annual average unemployment rate rose to 8.1 percent in 2020."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": [
+          "AI-prepared proposal only; a human annotator must verify every field and replace the draft identity.",
+          "Both operands are annual average U.S. unemployment rates."
+        ]
+      },
+      "approval": null
+    },
+    {
+      "case_id": "V3-027",
+      "source_candidate_id": "V3-CAND-027",
+      "split": "calibration",
+      "origin_family_id": "initial_claims:CPNG-018",
+      "claim_text": "Every month of 2023 had a lower United States unemployment rate than every month of 2020.",
+      "evidence": [
+        {
+          "evidence_id": "CPNG-018:E1",
+          "title": "Annual average unemployment rates in 2023",
+          "url": "https://www.bls.gov/opub/ted/2024/annual-average-unemployment-rates-decreased-in-6-states-in-2023.htm",
+          "source_class": "dataset",
+          "passage": "The U.S. annual average unemployment rate was 3.6 percent in 2023."
+        },
+        {
+          "evidence_id": "CPNG-018:E2",
+          "title": "State Annual Average Unemployment, 2020",
+          "url": "https://www.bls.gov/news.release/archives/srgune_03032021.htm",
+          "source_class": "dataset",
+          "passage": "The U.S. annual average unemployment rate rose to 8.1 percent in 2020."
+        },
+        {
+          "evidence_id": "CPNG-018:E3",
+          "title": "Unemployment rate at 3.7 percent in December 2023",
+          "url": "https://www.bls.gov/opub/ted/2024/unemployment-rate-at-3-7-percent-in-december-2023.htm",
+          "source_class": "dataset",
+          "passage": "The seasonally adjusted U.S. unemployment rate was 3.7 percent in December 2023."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "percentage_or_rate",
+        "comparator_or_relation": null,
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 89,
+          "quoted_text": "Every month of 2023 had a lower United States unemployment rate than every month of 2020."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "CPNG-018:E1",
+            "start_char": 0,
+            "end_char": 66,
+            "quoted_text": "The U.S. annual average unemployment rate was 3.6 percent in 2023."
+          },
+          {
+            "evidence_id": "CPNG-018:E2",
+            "start_char": 0,
+            "end_char": 70,
+            "quoted_text": "The U.S. annual average unemployment rate rose to 8.1 percent in 2020."
+          },
+          {
+            "evidence_id": "CPNG-018:E3",
+            "start_char": 0,
+            "end_char": 80,
+            "quoted_text": "The seasonally adjusted U.S. unemployment rate was 3.7 percent in December 2023."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Full-span candidates are navigation aids, not human gold.",
+          "Annotator must narrow spans to the material operands and relation.",
+          "No construction label or verification state was machine-assigned."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "AI-assisted draft - not human reviewed",
+        "annotated_on": "2026-07-30",
+        "dimension_bucket": "percentage_or_rate",
+        "comparator_or_relation": "less_than",
+        "gold_label": "unconstructible",
+        "claim_span": null,
+        "evidence_spans": [],
+        "expected_verification_state": null,
+        "ambiguity_notes": [
+          "AI-prepared proposal only; a human annotator must verify every field and replace the draft identity.",
+          "The claim universally quantifies over every month in two years.",
+          "The retained evidence contains annual averages and only one monthly 2023 observation, so the required month-by-month operands are missing."
+        ]
+      },
+      "approval": null
+    },
+    {
+      "case_id": "V3-028",
+      "source_candidate_id": "V3-CAND-028",
+      "split": "development",
+      "origin_family_id": "initial_claims:CPNG-019",
+      "claim_text": "Drinking coffee causes dehydration in habitual coffee drinkers.",
+      "evidence": [
+        {
+          "evidence_id": "CPNG-019:E1",
+          "title": "No Evidence of Dehydration with Moderate Daily Coffee Intake",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3886980/",
+          "source_class": "academic",
+          "passage": "In 50 habitual male coffee drinkers, moderate coffee consumption produced no significant hydration differences compared with equal volumes of water."
+        },
+        {
+          "evidence_id": "CPNG-019:E2",
+          "title": "Caffeine and fluid balance at low and high doses",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5563313/",
+          "source_class": "academic",
+          "passage": "An acute diuretic effect appeared at 6 mg/kg caffeine but not at 3 mg/kg."
+        },
+        {
+          "evidence_id": "CPNG-019:E3",
+          "title": "Kidney stones: Prevention",
+          "url": "https://www.nhs.uk/conditions/kidney-stones/prevention/",
+          "source_class": "official",
+          "passage": "Water is the healthiest fluid, but drinks such as tea and coffee also count toward fluid intake."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": null,
+        "comparator_or_relation": null,
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 63,
+          "quoted_text": "Drinking coffee causes dehydration in habitual coffee drinkers."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "CPNG-019:E1",
+            "start_char": 0,
+            "end_char": 148,
+            "quoted_text": "In 50 habitual male coffee drinkers, moderate coffee consumption produced no significant hydration differences compared with equal volumes of water."
+          },
+          {
+            "evidence_id": "CPNG-019:E2",
+            "start_char": 0,
+            "end_char": 73,
+            "quoted_text": "An acute diuretic effect appeared at 6 mg/kg caffeine but not at 3 mg/kg."
+          },
+          {
+            "evidence_id": "CPNG-019:E3",
+            "start_char": 0,
+            "end_char": 96,
+            "quoted_text": "Water is the healthiest fluid, but drinks such as tea and coffee also count toward fluid intake."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Full-span candidates are navigation aids, not human gold.",
+          "Annotator must narrow spans to the material operands and relation.",
+          "No construction label or verification state was machine-assigned."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "AI-assisted draft - not human reviewed",
+        "annotated_on": "2026-07-30",
+        "dimension_bucket": "temporal_interval_or_status",
+        "comparator_or_relation": "causes",
+        "gold_label": "not_applicable",
+        "claim_span": null,
+        "evidence_spans": [],
+        "expected_verification_state": null,
+        "ambiguity_notes": [
+          "AI-prepared proposal only; a human annotator must verify every field and replace the draft identity.",
+          "The claim is causal and has no material numerical or temporal assertion for this constructor."
+        ]
+      },
+      "approval": null
+    },
+    {
+      "case_id": "V3-029",
+      "source_candidate_id": "V3-CAND-029",
+      "split": "development",
+      "origin_family_id": "initial_claims:CPNG-019",
+      "claim_text": "Coffee should never count toward habitual coffee drinkers' daily fluid intake.",
+      "evidence": [
+        {
+          "evidence_id": "CPNG-019:E1",
+          "title": "No Evidence of Dehydration with Moderate Daily Coffee Intake",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3886980/",
+          "source_class": "academic",
+          "passage": "In 50 habitual male coffee drinkers, moderate coffee consumption produced no significant hydration differences compared with equal volumes of water."
+        },
+        {
+          "evidence_id": "CPNG-019:E2",
+          "title": "Caffeine and fluid balance at low and high doses",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5563313/",
+          "source_class": "academic",
+          "passage": "An acute diuretic effect appeared at 6 mg/kg caffeine but not at 3 mg/kg."
+        },
+        {
+          "evidence_id": "CPNG-019:E3",
+          "title": "Kidney stones: Prevention",
+          "url": "https://www.nhs.uk/conditions/kidney-stones/prevention/",
+          "source_class": "official",
+          "passage": "Water is the healthiest fluid, but drinks such as tea and coffee also count toward fluid intake."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "count",
+        "comparator_or_relation": null,
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 78,
+          "quoted_text": "Coffee should never count toward habitual coffee drinkers' daily fluid intake."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "CPNG-019:E1",
+            "start_char": 0,
+            "end_char": 148,
+            "quoted_text": "In 50 habitual male coffee drinkers, moderate coffee consumption produced no significant hydration differences compared with equal volumes of water."
+          },
+          {
+            "evidence_id": "CPNG-019:E2",
+            "start_char": 0,
+            "end_char": 73,
+            "quoted_text": "An acute diuretic effect appeared at 6 mg/kg caffeine but not at 3 mg/kg."
+          },
+          {
+            "evidence_id": "CPNG-019:E3",
+            "start_char": 0,
+            "end_char": 96,
+            "quoted_text": "Water is the healthiest fluid, but drinks such as tea and coffee also count toward fluid intake."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Full-span candidates are navigation aids, not human gold.",
+          "Annotator must narrow spans to the material operands and relation.",
+          "No construction label or verification state was machine-assigned."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "AI-assisted draft - not human reviewed",
+        "annotated_on": "2026-07-30",
+        "dimension_bucket": "temporal_interval_or_status",
+        "comparator_or_relation": "counts_toward",
+        "gold_label": "fallback_eligible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 78,
+          "quoted_text": "Coffee should never count toward habitual coffee drinkers' daily fluid intake."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "CPNG-019:E1",
+            "start_char": 0,
+            "end_char": 148,
+            "quoted_text": "In 50 habitual male coffee drinkers, moderate coffee consumption produced no significant hydration differences compared with equal volumes of water."
+          },
+          {
+            "evidence_id": "CPNG-019:E3",
+            "start_char": 0,
+            "end_char": 96,
+            "quoted_text": "Water is the healthiest fluid, but drinks such as tea and coffee also count toward fluid intake."
+          }
+        ],
+        "expected_verification_state": "contradicted",
+        "ambiguity_notes": [
+          "AI-prepared proposal only; a human annotator must verify every field and replace the draft identity.",
+          "“Daily” supplies the use context, while the material assertion is whether coffee counts toward fluid intake.",
+          "The retained guidance explicitly says coffee counts toward fluid intake."
+        ]
+      },
+      "approval": null
+    },
+    {
+      "case_id": "V3-030",
+      "source_candidate_id": "V3-CAND-030",
+      "split": "held_out",
+      "origin_family_id": "initial_claims:CPNG-020",
+      "claim_text": "A university study proves that remote work makes all employees more productive.",
+      "evidence": [
+        {
+          "evidence_id": "CPNG-020:E1",
+          "title": "Does Working from Home Work? Evidence from a Chinese Experiment",
+          "url": "https://www.gsb.stanford.edu/faculty-research/publications/does-working-home-work-evidence-chinese-experiment",
+          "source_class": "academic",
+          "passage": "The randomized experiment studied eligible employees at Ctrip, a Chinese travel company, rather than all workers or occupations."
+        },
+        {
+          "evidence_id": "CPNG-020:E2",
+          "title": "Remote Work, Employee Mix, and Performance",
+          "url": "https://siepr.stanford.edu/publications/working-paper/remote-work-employee-mix-and-performance",
+          "source_class": "academic",
+          "passage": "A large Turkish call-center study found a productivity increase associated with shorter calls in that particular operational setting."
+        },
+        {
+          "evidence_id": "CPNG-020:E3",
+          "title": "Is Hybrid Work the Best of Both Worlds? Evidence from a Field Experiment",
+          "url": "https://digitaleconomy.stanford.edu/publication/is-hybrid-work-the-best-of-both-worlds-evidence-from-a-field-experiment/",
+          "source_class": "academic",
+          "passage": "A separate hybrid-work field experiment reported no difference in performance ratings between treatment and control groups."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": null,
+        "comparator_or_relation": null,
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 79,
+          "quoted_text": "A university study proves that remote work makes all employees more productive."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "CPNG-020:E1",
+            "start_char": 0,
+            "end_char": 128,
+            "quoted_text": "The randomized experiment studied eligible employees at Ctrip, a Chinese travel company, rather than all workers or occupations."
+          },
+          {
+            "evidence_id": "CPNG-020:E2",
+            "start_char": 0,
+            "end_char": 133,
+            "quoted_text": "A large Turkish call-center study found a productivity increase associated with shorter calls in that particular operational setting."
+          },
+          {
+            "evidence_id": "CPNG-020:E3",
+            "start_char": 0,
+            "end_char": 123,
+            "quoted_text": "A separate hybrid-work field experiment reported no difference in performance ratings between treatment and control groups."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Full-span candidates are navigation aids, not human gold.",
+          "Annotator must narrow spans to the material operands and relation.",
+          "No construction label or verification state was machine-assigned."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "AI-assisted draft - not human reviewed",
+        "annotated_on": "2026-07-30",
+        "dimension_bucket": "percentage_or_rate",
+        "comparator_or_relation": "causes",
+        "gold_label": "not_applicable",
+        "claim_span": null,
+        "evidence_spans": [],
+        "expected_verification_state": null,
+        "ambiguity_notes": [
+          "AI-prepared proposal only; a human annotator must verify every field and replace the draft identity.",
+          "The claim is a universal causal/productivity generalization without an explicit numerical or temporal operand."
+        ]
+      },
+      "approval": null
+    },
+    {
+      "case_id": "V3-031",
+      "source_candidate_id": "V3-CAND-031",
+      "split": "held_out",
+      "origin_family_id": "initial_claims:CPNG-020",
+      "claim_text": "The reported remote-work productivity effect applies across occupations.",
+      "evidence": [
+        {
+          "evidence_id": "CPNG-020:E1",
+          "title": "Does Working from Home Work? Evidence from a Chinese Experiment",
+          "url": "https://www.gsb.stanford.edu/faculty-research/publications/does-working-home-work-evidence-chinese-experiment",
+          "source_class": "academic",
+          "passage": "The randomized experiment studied eligible employees at Ctrip, a Chinese travel company, rather than all workers or occupations."
+        },
+        {
+          "evidence_id": "CPNG-020:E2",
+          "title": "Remote Work, Employee Mix, and Performance",
+          "url": "https://siepr.stanford.edu/publications/working-paper/remote-work-employee-mix-and-performance",
+          "source_class": "academic",
+          "passage": "A large Turkish call-center study found a productivity increase associated with shorter calls in that particular operational setting."
+        },
+        {
+          "evidence_id": "CPNG-020:E3",
+          "title": "Is Hybrid Work the Best of Both Worlds? Evidence from a Field Experiment",
+          "url": "https://digitaleconomy.stanford.edu/publication/is-hybrid-work-the-best-of-both-worlds-evidence-from-a-field-experiment/",
+          "source_class": "academic",
+          "passage": "A separate hybrid-work field experiment reported no difference in performance ratings between treatment and control groups."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": null,
+        "comparator_or_relation": null,
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 72,
+          "quoted_text": "The reported remote-work productivity effect applies across occupations."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "CPNG-020:E1",
+            "start_char": 0,
+            "end_char": 128,
+            "quoted_text": "The randomized experiment studied eligible employees at Ctrip, a Chinese travel company, rather than all workers or occupations."
+          },
+          {
+            "evidence_id": "CPNG-020:E2",
+            "start_char": 0,
+            "end_char": 133,
+            "quoted_text": "A large Turkish call-center study found a productivity increase associated with shorter calls in that particular operational setting."
+          },
+          {
+            "evidence_id": "CPNG-020:E3",
+            "start_char": 0,
+            "end_char": 123,
+            "quoted_text": "A separate hybrid-work field experiment reported no difference in performance ratings between treatment and control groups."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Full-span candidates are navigation aids, not human gold.",
+          "Annotator must narrow spans to the material operands and relation.",
+          "No construction label or verification state was machine-assigned."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "AI-assisted draft - not human reviewed",
+        "annotated_on": "2026-07-30",
+        "dimension_bucket": "temporal_interval_or_status",
+        "comparator_or_relation": "active",
+        "gold_label": "unconstructible",
+        "claim_span": null,
+        "evidence_spans": [],
+        "expected_verification_state": null,
+        "ambiguity_notes": [
+          "AI-prepared proposal only; a human annotator must verify every field and replace the draft identity.",
+          "“Across occupations” is an unbounded universal domain.",
+          "The retained studies cover selected companies and occupations and cannot safely supply a complete cross-occupation operand set."
+        ]
+      },
+      "approval": null
+    },
+    {
+      "case_id": "V3-032",
+      "source_candidate_id": "V3-WEB-001",
+      "split": "held_out",
+      "origin_family_id": "public_html:nasa",
+      "claim_text": "A day on Venus lasts longer than a year on Venus.",
+      "evidence": [
+        {
+          "evidence_id": "V3-WEB-001:E1",
+          "title": "Venus Facts",
+          "url": "https://science.nasa.gov/venus/venus-facts/",
+          "source_class": "official_or_legal",
+          "passage": "Venus day is 243 Earth days; its year is 225 Earth days."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "duration",
+        "comparator_or_relation": "greater_than",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 49,
+          "quoted_text": "A day on Venus lasts longer than a year on Venus."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-WEB-001:E1",
+            "start_char": 0,
+            "end_char": 56,
+            "quoted_text": "Venus day is 243 Earth days; its year is 225 Earth days."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Full-span candidates are navigation aids, not human gold.",
+          "Annotator must narrow spans to the material operands and relation.",
+          "No construction label or verification state was machine-assigned."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "AI-assisted draft - not human reviewed",
+        "annotated_on": "2026-07-30",
+        "dimension_bucket": "duration",
+        "comparator_or_relation": "greater_than",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 49,
+          "quoted_text": "A day on Venus lasts longer than a year on Venus."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-WEB-001:E1",
+            "start_char": 0,
+            "end_char": 56,
+            "quoted_text": "Venus day is 243 Earth days; its year is 225 Earth days."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": [
+          "AI-prepared proposal only; a human annotator must verify every field and replace the draft identity.",
+          "The comparison uses the same Earth-day unit for both durations."
+        ]
+      },
+      "approval": null
+    },
+    {
+      "case_id": "V3-033",
+      "source_candidate_id": "V3-WEB-002",
+      "split": "held_out",
+      "origin_family_id": "public_html:nasa",
+      "claim_text": "The Sun's corona can be hundreds of times hotter than its visible surface.",
+      "evidence": [
+        {
+          "evidence_id": "V3-WEB-002:E1",
+          "title": "Sun Facts",
+          "url": "https://science.nasa.gov/sun/facts/",
+          "source_class": "official_or_legal",
+          "passage": "The surface is about 5,500°C; the corona reaches up to 2 million°C."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temperature",
+        "comparator_or_relation": "greater_than",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 74,
+          "quoted_text": "The Sun's corona can be hundreds of times hotter than its visible surface."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-WEB-002:E1",
+            "start_char": 0,
+            "end_char": 67,
+            "quoted_text": "The surface is about 5,500°C; the corona reaches up to 2 million°C."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Full-span candidates are navigation aids, not human gold.",
+          "Annotator must narrow spans to the material operands and relation.",
+          "No construction label or verification state was machine-assigned."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "AI-assisted draft - not human reviewed",
+        "annotated_on": "2026-07-30",
+        "dimension_bucket": "temperature",
+        "comparator_or_relation": "greater_than",
+        "gold_label": "fallback_eligible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 74,
+          "quoted_text": "The Sun's corona can be hundreds of times hotter than its visible surface."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-WEB-002:E1",
+            "start_char": 0,
+            "end_char": 67,
+            "quoted_text": "The surface is about 5,500°C; the corona reaches up to 2 million°C."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": [
+          "AI-prepared proposal only; a human annotator must verify every field and replace the draft identity.",
+          "“Hundreds of times hotter” is treated as an order-of-magnitude comparison rather than an exact Celsius ratio.",
+          "The cited values support a difference of several hundredfold in ordinary-language magnitude."
+        ]
+      },
+      "approval": null
+    },
+    {
+      "case_id": "V3-034",
+      "source_candidate_id": "V3-WEB-003",
+      "split": "calibration",
+      "origin_family_id": "public_html:noaa",
+      "claim_text": "NOAA's daily climate database contains observations from more than 100,000 stations.",
+      "evidence": [
+        {
+          "evidence_id": "V3-WEB-003:E1",
+          "title": "Global Historical Climatology Network daily",
+          "url": "https://www.ncei.noaa.gov/products/land-based-station/global-historical-climatology-network-daily",
+          "source_class": "official_or_legal",
+          "passage": "The database includes more than 100,000 stations."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "count",
+        "comparator_or_relation": "greater_than",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 84,
+          "quoted_text": "NOAA's daily climate database contains observations from more than 100,000 stations."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-WEB-003:E1",
+            "start_char": 0,
+            "end_char": 49,
+            "quoted_text": "The database includes more than 100,000 stations."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Full-span candidates are navigation aids, not human gold.",
+          "Annotator must narrow spans to the material operands and relation.",
+          "No construction label or verification state was machine-assigned."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "AI-assisted draft - not human reviewed",
+        "annotated_on": "2026-07-30",
+        "dimension_bucket": "count",
+        "comparator_or_relation": "greater_than",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 84,
+          "quoted_text": "NOAA's daily climate database contains observations from more than 100,000 stations."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-WEB-003:E1",
+            "start_char": 0,
+            "end_char": 49,
+            "quoted_text": "The database includes more than 100,000 stations."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": [
+          "AI-prepared proposal only; a human annotator must verify every field and replace the draft identity.",
+          "The claim and evidence use the same lower-bound station count."
+        ]
+      },
+      "approval": null
+    },
+    {
+      "case_id": "V3-035",
+      "source_candidate_id": "V3-WEB-004",
+      "split": "calibration",
+      "origin_family_id": "public_html:noaa",
+      "claim_text": "NOAA's daily climate station network spans 180 countries and territories.",
+      "evidence": [
+        {
+          "evidence_id": "V3-WEB-004:E1",
+          "title": "Global Historical Climatology Network daily",
+          "url": "https://www.ncei.noaa.gov/products/land-based-station/global-historical-climatology-network-daily",
+          "source_class": "official_or_legal",
+          "passage": "Stations are distributed across 180 countries and territories."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "count",
+        "comparator_or_relation": null,
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 73,
+          "quoted_text": "NOAA's daily climate station network spans 180 countries and territories."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-WEB-004:E1",
+            "start_char": 0,
+            "end_char": 62,
+            "quoted_text": "Stations are distributed across 180 countries and territories."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Full-span candidates are navigation aids, not human gold.",
+          "Annotator must narrow spans to the material operands and relation.",
+          "No construction label or verification state was machine-assigned."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "AI-assisted draft - not human reviewed",
+        "annotated_on": "2026-07-30",
+        "dimension_bucket": "count",
+        "comparator_or_relation": "equal",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 73,
+          "quoted_text": "NOAA's daily climate station network spans 180 countries and territories."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-WEB-004:E1",
+            "start_char": 0,
+            "end_char": 62,
+            "quoted_text": "Stations are distributed across 180 countries and territories."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": [
+          "AI-prepared proposal only; a human annotator must verify every field and replace the draft identity.",
+          "Countries and territories are treated as one combined count category."
+        ]
+      },
+      "approval": null
+    },
+    {
+      "case_id": "V3-036",
+      "source_candidate_id": "V3-WEB-005",
+      "split": "development",
+      "origin_family_id": "public_html:eia",
+      "claim_text": "Natural gas supplied a larger share of U.S. energy production than petroleum in 2024.",
+      "evidence": [
+        {
+          "evidence_id": "V3-WEB-005:E1",
+          "title": "U.S. energy facts explained",
+          "url": "https://www.eia.gov/energyexplained/us-energy-facts/data-and-statistics.php",
+          "source_class": "official_or_legal",
+          "passage": "Natural gas supplied 38% and petroleum 35% of 2024 production."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "percentage_or_rate",
+        "comparator_or_relation": null,
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 85,
+          "quoted_text": "Natural gas supplied a larger share of U.S. energy production than petroleum in 2024."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-WEB-005:E1",
+            "start_char": 0,
+            "end_char": 62,
+            "quoted_text": "Natural gas supplied 38% and petroleum 35% of 2024 production."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Full-span candidates are navigation aids, not human gold.",
+          "Annotator must narrow spans to the material operands and relation.",
+          "No construction label or verification state was machine-assigned."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "AI-assisted draft - not human reviewed",
+        "annotated_on": "2026-07-30",
+        "dimension_bucket": "percentage_or_rate",
+        "comparator_or_relation": "greater_than",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 85,
+          "quoted_text": "Natural gas supplied a larger share of U.S. energy production than petroleum in 2024."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-WEB-005:E1",
+            "start_char": 0,
+            "end_char": 62,
+            "quoted_text": "Natural gas supplied 38% and petroleum 35% of 2024 production."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": [
+          "AI-prepared proposal only; a human annotator must verify every field and replace the draft identity.",
+          "Both shares refer to U.S. energy production in 2024."
+        ]
+      },
+      "approval": null
+    },
+    {
+      "case_id": "V3-037",
+      "source_candidate_id": "V3-WEB-006",
+      "split": "development",
+      "origin_family_id": "public_html:eia",
+      "claim_text": "One petroleum barrel contains 42 U.S. gallons.",
+      "evidence": [
+        {
+          "evidence_id": "V3-WEB-006:E1",
+          "title": "Energy units and calculators explained",
+          "url": "https://www.eia.gov/energyexplained/units-and-calculators/",
+          "source_class": "official_or_legal",
+          "passage": "One barrel equals 42 U.S. gallons."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "distance_or_mass",
+        "comparator_or_relation": null,
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 46,
+          "quoted_text": "One petroleum barrel contains 42 U.S. gallons."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-WEB-006:E1",
+            "start_char": 0,
+            "end_char": 34,
+            "quoted_text": "One barrel equals 42 U.S. gallons."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Full-span candidates are navigation aids, not human gold.",
+          "Annotator must narrow spans to the material operands and relation.",
+          "No construction label or verification state was machine-assigned."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "AI-assisted draft - not human reviewed",
+        "annotated_on": "2026-07-30",
+        "dimension_bucket": "distance_or_mass",
+        "comparator_or_relation": "equal",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 46,
+          "quoted_text": "One petroleum barrel contains 42 U.S. gallons."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-WEB-006:E1",
+            "start_char": 0,
+            "end_char": 34,
+            "quoted_text": "One barrel equals 42 U.S. gallons."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": [
+          "AI-prepared proposal only; a human annotator must verify every field and replace the draft identity.",
+          "The available taxonomy has no volume bucket; distance_or_mass is retained as the closest physical-quantity bucket."
+        ]
+      },
+      "approval": null
+    },
+    {
+      "case_id": "V3-038",
+      "source_candidate_id": "V3-WEB-007",
+      "split": "calibration",
+      "origin_family_id": "public_html:bea",
+      "claim_text": "U.S. real GDP grew faster in the first quarter of 2026 than in the fourth quarter of 2025.",
+      "evidence": [
+        {
+          "evidence_id": "V3-WEB-007:E1",
+          "title": "Gross Domestic Product",
+          "url": "https://www.bea.gov/data/gdp/gross-domestic-product",
+          "source_class": "official_or_legal",
+          "passage": "Real GDP increased 2.1% in 2026 Q1 after 0.5% in 2025 Q4."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "percentage_or_rate",
+        "comparator_or_relation": null,
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 90,
+          "quoted_text": "U.S. real GDP grew faster in the first quarter of 2026 than in the fourth quarter of 2025."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-WEB-007:E1",
+            "start_char": 0,
+            "end_char": 57,
+            "quoted_text": "Real GDP increased 2.1% in 2026 Q1 after 0.5% in 2025 Q4."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Full-span candidates are navigation aids, not human gold.",
+          "Annotator must narrow spans to the material operands and relation.",
+          "No construction label or verification state was machine-assigned."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "AI-assisted draft - not human reviewed",
+        "annotated_on": "2026-07-30",
+        "dimension_bucket": "percentage_or_rate",
+        "comparator_or_relation": "greater_than",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 90,
+          "quoted_text": "U.S. real GDP grew faster in the first quarter of 2026 than in the fourth quarter of 2025."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-WEB-007:E1",
+            "start_char": 0,
+            "end_char": 57,
+            "quoted_text": "Real GDP increased 2.1% in 2026 Q1 after 0.5% in 2025 Q4."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": [
+          "AI-prepared proposal only; a human annotator must verify every field and replace the draft identity.",
+          "The comparison uses consecutive quarterly real-GDP growth rates."
+        ]
+      },
+      "approval": null
+    },
+    {
+      "case_id": "V3-039",
+      "source_candidate_id": "V3-WEB-008",
+      "split": "held_out",
+      "origin_family_id": "public_html:who",
+      "claim_text": "In 2020, an estimated 374 million new infections involved four curable sexually transmitted infections.",
+      "evidence": [
+        {
+          "evidence_id": "V3-WEB-008:E1",
+          "title": "Sexually transmitted infections (STIs)",
+          "url": "https://www.who.int/en/news-room/fact-sheets/detail/sexually-transmitted-infections-%28stis%29",
+          "source_class": "official_or_legal",
+          "passage": "WHO estimated 374 million new infections with four curable STIs."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "count",
+        "comparator_or_relation": null,
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 103,
+          "quoted_text": "In 2020, an estimated 374 million new infections involved four curable sexually transmitted infections."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-WEB-008:E1",
+            "start_char": 0,
+            "end_char": 64,
+            "quoted_text": "WHO estimated 374 million new infections with four curable STIs."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Full-span candidates are navigation aids, not human gold.",
+          "Annotator must narrow spans to the material operands and relation.",
+          "No construction label or verification state was machine-assigned."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "AI-assisted draft - not human reviewed",
+        "annotated_on": "2026-07-30",
+        "dimension_bucket": "count",
+        "comparator_or_relation": "equal",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 103,
+          "quoted_text": "In 2020, an estimated 374 million new infections involved four curable sexually transmitted infections."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-WEB-008:E1",
+            "start_char": 0,
+            "end_char": 64,
+            "quoted_text": "WHO estimated 374 million new infections with four curable STIs."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": [
+          "AI-prepared proposal only; a human annotator must verify every field and replace the draft identity.",
+          "The estimate and the set of four curable infections are both retained."
+        ]
+      },
+      "approval": null
+    },
+    {
+      "case_id": "V3-040",
+      "source_candidate_id": "V3-WEB-009",
+      "split": "held_out",
+      "origin_family_id": "public_html:who",
+      "claim_text": "The global share of people over age 60 is projected to rise from 12% in 2015 to 22% in 2050.",
+      "evidence": [
+        {
+          "evidence_id": "V3-WEB-009:E1",
+          "title": "Ageing and health",
+          "url": "https://www.who.int/en/news-room/fact-sheets/detail/ageing-and-health",
+          "source_class": "official_or_legal",
+          "passage": "The share over 60 is projected to rise from 12% to 22%."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_interval_or_status",
+        "comparator_or_relation": "equal_or_status",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 92,
+          "quoted_text": "The global share of people over age 60 is projected to rise from 12% in 2015 to 22% in 2050."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-WEB-009:E1",
+            "start_char": 0,
+            "end_char": 55,
+            "quoted_text": "The share over 60 is projected to rise from 12% to 22%."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Full-span candidates are navigation aids, not human gold.",
+          "Annotator must narrow spans to the material operands and relation.",
+          "No construction label or verification state was machine-assigned."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "AI-assisted draft - not human reviewed",
+        "annotated_on": "2026-07-30",
+        "dimension_bucket": "percentage_or_rate",
+        "comparator_or_relation": "increase_from_to",
+        "gold_label": "fallback_eligible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 92,
+          "quoted_text": "The global share of people over age 60 is projected to rise from 12% in 2015 to 22% in 2050."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-WEB-009:E1",
+            "start_char": 0,
+            "end_char": 55,
+            "quoted_text": "The share over 60 is projected to rise from 12% to 22%."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": [
+          "AI-prepared proposal only; a human annotator must verify every field and replace the draft identity.",
+          "The claim combines two percentage values with two temporal anchors.",
+          "The retained passage supplies the percentage transition but omits the years; the claim supplies 2015 and 2050."
+        ]
+      },
+      "approval": null
+    },
+    {
+      "case_id": "V3-041",
+      "source_candidate_id": "V3-WEB-010",
+      "split": "calibration",
+      "origin_family_id": "public_html:world_bank",
+      "claim_text": "The World Bank's working-age population indicator covers ages 15 through 64.",
+      "evidence": [
+        {
+          "evidence_id": "V3-WEB-010:E1",
+          "title": "World Development Indicators metadata glossary",
+          "url": "https://databank.worldbank.org/metadataglossary/world-development-indicators/series/SP.POP.1564.TO.ZS",
+          "source_class": "official_or_legal",
+          "passage": "The indicator covers the population between ages 15 and 64."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_interval_or_status",
+        "comparator_or_relation": null,
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 76,
+          "quoted_text": "The World Bank's working-age population indicator covers ages 15 through 64."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-WEB-010:E1",
+            "start_char": 0,
+            "end_char": 59,
+            "quoted_text": "The indicator covers the population between ages 15 and 64."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Full-span candidates are navigation aids, not human gold.",
+          "Annotator must narrow spans to the material operands and relation.",
+          "No construction label or verification state was machine-assigned."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "AI-assisted draft - not human reviewed",
+        "annotated_on": "2026-07-30",
+        "dimension_bucket": "temporal_interval_or_status",
+        "comparator_or_relation": "between_inclusive",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 76,
+          "quoted_text": "The World Bank's working-age population indicator covers ages 15 through 64."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-WEB-010:E1",
+            "start_char": 0,
+            "end_char": 59,
+            "quoted_text": "The indicator covers the population between ages 15 and 64."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": [
+          "AI-prepared proposal only; a human annotator must verify every field and replace the draft identity.",
+          "“Through 64” is interpreted as an inclusive age interval."
+        ]
+      },
+      "approval": null
+    },
+    {
+      "case_id": "V3-042",
+      "source_candidate_id": "V3-WEB-011",
+      "split": "development",
+      "origin_family_id": "public_html:eurostat",
+      "claim_text": "The EU population was estimated at 452.0 million on 1 January 2026.",
+      "evidence": [
+        {
+          "evidence_id": "V3-WEB-011:E1",
+          "title": "EU population continued to grow in 2025",
+          "url": "https://ec.europa.eu/eurostat/web/products-eurostat-news/w/ddn-20260710-3",
+          "source_class": "official_or_legal",
+          "passage": "On 1 January 2026, the EU population was estimated at 452.0 million."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "on",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 67,
+          "quoted_text": "The EU population was estimated at 452.0 million on 1 January 2026."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-WEB-011:E1",
+            "start_char": 0,
+            "end_char": 68,
+            "quoted_text": "On 1 January 2026, the EU population was estimated at 452.0 million."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Full-span candidates are navigation aids, not human gold.",
+          "Annotator must narrow spans to the material operands and relation.",
+          "No construction label or verification state was machine-assigned."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "AI-assisted draft - not human reviewed",
+        "annotated_on": "2026-07-30",
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "on",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 67,
+          "quoted_text": "The EU population was estimated at 452.0 million on 1 January 2026."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-WEB-011:E1",
+            "start_char": 0,
+            "end_char": 68,
+            "quoted_text": "On 1 January 2026, the EU population was estimated at 452.0 million."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": [
+          "AI-prepared proposal only; a human annotator must verify every field and replace the draft identity.",
+          "The date is treated as the temporal anchor for the population estimate."
+        ]
+      },
+      "approval": null
+    },
+    {
+      "case_id": "V3-043",
+      "source_candidate_id": "V3-WEB-012",
+      "split": "development",
+      "origin_family_id": "public_html:eurostat",
+      "claim_text": "Eurostat projects the EU population to peak in 2029.",
+      "evidence": [
+        {
+          "evidence_id": "V3-WEB-012:E1",
+          "title": "EU population projected to drop by 11.7% by 2100",
+          "url": "https://ec.europa.eu/eurostat/web/products-eurostat-news/w/ddn-20260416-1",
+          "source_class": "official_or_legal",
+          "passage": "The population is projected to peak at 453.3 million in 2029."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": null,
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 52,
+          "quoted_text": "Eurostat projects the EU population to peak in 2029."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-WEB-012:E1",
+            "start_char": 0,
+            "end_char": 61,
+            "quoted_text": "The population is projected to peak at 453.3 million in 2029."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Full-span candidates are navigation aids, not human gold.",
+          "Annotator must narrow spans to the material operands and relation.",
+          "No construction label or verification state was machine-assigned."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "AI-assisted draft - not human reviewed",
+        "annotated_on": "2026-07-30",
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "on",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 52,
+          "quoted_text": "Eurostat projects the EU population to peak in 2029."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-WEB-012:E1",
+            "start_char": 0,
+            "end_char": 61,
+            "quoted_text": "The population is projected to peak at 453.3 million in 2029."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": [
+          "AI-prepared proposal only; a human annotator must verify every field and replace the draft identity.",
+          "The typed assertion concerns the projected peak year, with the peak value retained as context."
+        ]
+      },
+      "approval": null
+    },
+    {
+      "case_id": "V3-044",
+      "source_candidate_id": "V3-WEB-013",
+      "split": "development",
+      "origin_family_id": "public_html:iea",
+      "claim_text": "Global electricity demand grew by 4.3% in 2024.",
+      "evidence": [
+        {
+          "evidence_id": "V3-WEB-013:E1",
+          "title": "Electricity 2025 executive summary",
+          "url": "https://www.iea.org/reports/electricity-2025/executive-summary",
+          "source_class": "official_or_legal",
+          "passage": "Global electricity demand rose by 4.3% in 2024."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "percentage_or_rate",
+        "comparator_or_relation": null,
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 47,
+          "quoted_text": "Global electricity demand grew by 4.3% in 2024."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-WEB-013:E1",
+            "start_char": 0,
+            "end_char": 47,
+            "quoted_text": "Global electricity demand rose by 4.3% in 2024."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Full-span candidates are navigation aids, not human gold.",
+          "Annotator must narrow spans to the material operands and relation.",
+          "No construction label or verification state was machine-assigned."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "AI-assisted draft - not human reviewed",
+        "annotated_on": "2026-07-30",
+        "dimension_bucket": "percentage_or_rate",
+        "comparator_or_relation": "equal",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 47,
+          "quoted_text": "Global electricity demand grew by 4.3% in 2024."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-WEB-013:E1",
+            "start_char": 0,
+            "end_char": 47,
+            "quoted_text": "Global electricity demand rose by 4.3% in 2024."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": [
+          "AI-prepared proposal only; a human annotator must verify every field and replace the draft identity.",
+          "“Grew” and “rose” are treated as equivalent positive-change relations."
+        ]
+      },
+      "approval": null
+    },
+    {
+      "case_id": "V3-045",
+      "source_candidate_id": "V3-WEB-014",
+      "split": "development",
+      "origin_family_id": "public_html:iea",
+      "claim_text": "Global electricity demand grew more than twice as fast as overall energy demand in 2025.",
+      "evidence": [
+        {
+          "evidence_id": "V3-WEB-014:E1",
+          "title": "Global Energy Review 2026: Electricity demand",
+          "url": "https://www.iea.org/reports/global-energy-review-2026/electricity-demand",
+          "source_class": "official_or_legal",
+          "passage": "Electricity grew around 3%; overall energy demand grew 1.3%."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "percentage_or_rate",
+        "comparator_or_relation": "greater_than",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 88,
+          "quoted_text": "Global electricity demand grew more than twice as fast as overall energy demand in 2025."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-WEB-014:E1",
+            "start_char": 0,
+            "end_char": 60,
+            "quoted_text": "Electricity grew around 3%; overall energy demand grew 1.3%."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Full-span candidates are navigation aids, not human gold.",
+          "Annotator must narrow spans to the material operands and relation.",
+          "No construction label or verification state was machine-assigned."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "AI-assisted draft - not human reviewed",
+        "annotated_on": "2026-07-30",
+        "dimension_bucket": "percentage_or_rate",
+        "comparator_or_relation": "greater_than",
+        "gold_label": "fallback_eligible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 88,
+          "quoted_text": "Global electricity demand grew more than twice as fast as overall energy demand in 2025."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-WEB-014:E1",
+            "start_char": 0,
+            "end_char": 60,
+            "quoted_text": "Electricity grew around 3%; overall energy demand grew 1.3%."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": [
+          "AI-prepared proposal only; a human annotator must verify every field and replace the draft identity.",
+          "The comparison requires evaluating 3% against twice 1.3% (2.6%).",
+          "“Around 3%” still exceeds twice 1.3% under the retained rounded values."
+        ]
+      },
+      "approval": null
+    },
+    {
+      "case_id": "V3-046",
+      "source_candidate_id": "V3-WEB-015",
+      "split": "development",
+      "origin_family_id": "public_html:imf",
+      "claim_text": "Advanced-economy growth was projected at 1.5% in 2025 and 1.6% in 2026.",
+      "evidence": [
+        {
+          "evidence_id": "V3-WEB-015:E1",
+          "title": "World Economic Outlook Update, July 2025",
+          "url": "https://www.imf.org/-/media/Files/Publications/WEO/2025/update/july/english/text",
+          "source_class": "official_or_legal",
+          "passage": "Growth is projected at 1.5% in 2025 and 1.6% in 2026."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "percentage_or_rate",
+        "comparator_or_relation": null,
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 71,
+          "quoted_text": "Advanced-economy growth was projected at 1.5% in 2025 and 1.6% in 2026."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-WEB-015:E1",
+            "start_char": 0,
+            "end_char": 53,
+            "quoted_text": "Growth is projected at 1.5% in 2025 and 1.6% in 2026."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Full-span candidates are navigation aids, not human gold.",
+          "Annotator must narrow spans to the material operands and relation.",
+          "No construction label or verification state was machine-assigned."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "AI-assisted draft - not human reviewed",
+        "annotated_on": "2026-07-30",
+        "dimension_bucket": "percentage_or_rate",
+        "comparator_or_relation": "equal",
+        "gold_label": "fallback_eligible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 71,
+          "quoted_text": "Advanced-economy growth was projected at 1.5% in 2025 and 1.6% in 2026."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-WEB-015:E1",
+            "start_char": 0,
+            "end_char": 53,
+            "quoted_text": "Growth is projected at 1.5% in 2025 and 1.6% in 2026."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": [
+          "AI-prepared proposal only; a human annotator must verify every field and replace the draft identity.",
+          "The sentence contains two coordinated projection assertions and must preserve both year-value pairs."
+        ]
+      },
+      "approval": null
+    },
+    {
+      "case_id": "V3-047",
+      "source_candidate_id": "V3-WEB-016",
+      "split": "development",
+      "origin_family_id": "public_html:usgs",
+      "claim_text": "Each whole-number increase in earthquake magnitude represents ten times the measured amplitude.",
+      "evidence": [
+        {
+          "evidence_id": "V3-WEB-016:E1",
+          "title": "Earthquake Magnitude, Energy Release, and Shaking Intensity",
+          "url": "https://www.usgs.gov/programs/earthquake-hazards/earthquake-magnitude-energy-release-and-shaking-intensity",
+          "source_class": "official_or_legal",
+          "passage": "Each whole-number increase represents a tenfold increase in measured amplitude."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "distance_or_mass",
+        "comparator_or_relation": null,
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 95,
+          "quoted_text": "Each whole-number increase in earthquake magnitude represents ten times the measured amplitude."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-WEB-016:E1",
+            "start_char": 0,
+            "end_char": 79,
+            "quoted_text": "Each whole-number increase represents a tenfold increase in measured amplitude."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Full-span candidates are navigation aids, not human gold.",
+          "Annotator must narrow spans to the material operands and relation.",
+          "No construction label or verification state was machine-assigned."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "AI-assisted draft - not human reviewed",
+        "annotated_on": "2026-07-30",
+        "dimension_bucket": "distance_or_mass",
+        "comparator_or_relation": "multiplied_by",
+        "gold_label": "fallback_eligible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 95,
+          "quoted_text": "Each whole-number increase in earthquake magnitude represents ten times the measured amplitude."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-WEB-016:E1",
+            "start_char": 0,
+            "end_char": 79,
+            "quoted_text": "Each whole-number increase represents a tenfold increase in measured amplitude."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": [
+          "AI-prepared proposal only; a human annotator must verify every field and replace the draft identity.",
+          "Measured amplitude is treated as a displacement-like physical quantity in the available taxonomy.",
+          "The relation is multiplicative, not an additive ten-unit increase."
+        ]
+      },
+      "approval": null
+    },
+    {
+      "case_id": "V3-048",
+      "source_candidate_id": "V3-WEB-017",
+      "split": "development",
+      "origin_family_id": "public_html:usgs",
+      "claim_text": "The Pacific Plate moves past the North American Plate at about two inches per year.",
+      "evidence": [
+        {
+          "evidence_id": "V3-WEB-017:E1",
+          "title": "Earthquake Facts and Earthquake Fantasy",
+          "url": "https://www.usgs.gov/programs/earthquake-hazards/earthquake-facts-earthquake-fantasy",
+          "source_class": "official_or_legal",
+          "passage": "The Pacific Plate moves northwestward at about two inches per year."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "speed",
+        "comparator_or_relation": null,
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 83,
+          "quoted_text": "The Pacific Plate moves past the North American Plate at about two inches per year."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-WEB-017:E1",
+            "start_char": 0,
+            "end_char": 67,
+            "quoted_text": "The Pacific Plate moves northwestward at about two inches per year."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Full-span candidates are navigation aids, not human gold.",
+          "Annotator must narrow spans to the material operands and relation.",
+          "No construction label or verification state was machine-assigned."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "AI-assisted draft - not human reviewed",
+        "annotated_on": "2026-07-30",
+        "dimension_bucket": "speed",
+        "comparator_or_relation": "equal",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 83,
+          "quoted_text": "The Pacific Plate moves past the North American Plate at about two inches per year."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-WEB-017:E1",
+            "start_char": 0,
+            "end_char": 67,
+            "quoted_text": "The Pacific Plate moves northwestward at about two inches per year."
+          }
+        ],
+        "expected_verification_state": "qualified",
+        "ambiguity_notes": [
+          "AI-prepared proposal only; a human annotator must verify every field and replace the draft identity.",
+          "The retained passage supports the speed and direction but does not explicitly name the North American Plate in the quoted text."
+        ]
+      },
+      "approval": null
+    },
+    {
+      "case_id": "V3-049",
+      "source_candidate_id": "V3-WEB-018",
+      "split": "development",
+      "origin_family_id": "public_html:nist",
+      "claim_text": "The speed of light in vacuum is exactly 299,792,458 metres per second.",
+      "evidence": [
+        {
+          "evidence_id": "V3-WEB-018:E1",
+          "title": "NIST Guide to the SI, Chapter 7",
+          "url": "https://www.nist.gov/pml/special-publication-811/nist-guide-si-chapter-7-rules-and-style-conventions-expressing-values",
+          "source_class": "official_or_legal",
+          "passage": "The speed of light in vacuum is 299 792 458 m/s exactly."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "speed",
+        "comparator_or_relation": "equal",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 70,
+          "quoted_text": "The speed of light in vacuum is exactly 299,792,458 metres per second."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-WEB-018:E1",
+            "start_char": 0,
+            "end_char": 56,
+            "quoted_text": "The speed of light in vacuum is 299 792 458 m/s exactly."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Full-span candidates are navigation aids, not human gold.",
+          "Annotator must narrow spans to the material operands and relation.",
+          "No construction label or verification state was machine-assigned."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "AI-assisted draft - not human reviewed",
+        "annotated_on": "2026-07-30",
+        "dimension_bucket": "speed",
+        "comparator_or_relation": "equal",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 70,
+          "quoted_text": "The speed of light in vacuum is exactly 299,792,458 metres per second."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-WEB-018:E1",
+            "start_char": 0,
+            "end_char": 56,
+            "quoted_text": "The speed of light in vacuum is 299 792 458 m/s exactly."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": [
+          "AI-prepared proposal only; a human annotator must verify every field and replace the draft identity.",
+          "Comma-separated and space-separated digit grouping denote the same exact SI value."
+        ]
+      },
+      "approval": null
+    },
+    {
+      "case_id": "V3-050",
+      "source_candidate_id": "V3-WEB-019",
+      "split": "calibration",
+      "origin_family_id": "public_html:un",
+      "claim_text": "The world population reached eight billion on 15 November 2022.",
+      "evidence": [
+        {
+          "evidence_id": "V3-WEB-019:E1",
+          "title": "Population",
+          "url": "https://www.un.org/en/global-issues/population",
+          "source_class": "official_or_legal",
+          "passage": "On 15 November 2022, the world's population reached 8 billion."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "on",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 63,
+          "quoted_text": "The world population reached eight billion on 15 November 2022."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-WEB-019:E1",
+            "start_char": 0,
+            "end_char": 62,
+            "quoted_text": "On 15 November 2022, the world's population reached 8 billion."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Full-span candidates are navigation aids, not human gold.",
+          "Annotator must narrow spans to the material operands and relation.",
+          "No construction label or verification state was machine-assigned."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "AI-assisted draft - not human reviewed",
+        "annotated_on": "2026-07-30",
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "on",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 63,
+          "quoted_text": "The world population reached eight billion on 15 November 2022."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-WEB-019:E1",
+            "start_char": 0,
+            "end_char": 62,
+            "quoted_text": "On 15 November 2022, the world's population reached 8 billion."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": [
+          "AI-prepared proposal only; a human annotator must verify every field and replace the draft identity.",
+          "“Eight billion” and “8 billion” are equivalent count expressions anchored to the same date."
+        ]
+      },
+      "approval": null
+    },
+    {
+      "case_id": "V3-051",
+      "source_candidate_id": "V3-WEB-020",
+      "split": "calibration",
+      "origin_family_id": "public_html:un",
+      "claim_text": "Global life expectancy at birth reached 73.3 years in 2024.",
+      "evidence": [
+        {
+          "evidence_id": "V3-WEB-020:E1",
+          "title": "Population",
+          "url": "https://www.un.org/en/global-issues/population",
+          "source_class": "official_or_legal",
+          "passage": "Global life expectancy at birth reached 73.3 years in 2024."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "duration",
+        "comparator_or_relation": null,
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 59,
+          "quoted_text": "Global life expectancy at birth reached 73.3 years in 2024."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-WEB-020:E1",
+            "start_char": 0,
+            "end_char": 59,
+            "quoted_text": "Global life expectancy at birth reached 73.3 years in 2024."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Full-span candidates are navigation aids, not human gold.",
+          "Annotator must narrow spans to the material operands and relation.",
+          "No construction label or verification state was machine-assigned."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "AI-assisted draft - not human reviewed",
+        "annotated_on": "2026-07-30",
+        "dimension_bucket": "duration",
+        "comparator_or_relation": "equal",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 59,
+          "quoted_text": "Global life expectancy at birth reached 73.3 years in 2024."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-WEB-020:E1",
+            "start_char": 0,
+            "end_char": 59,
+            "quoted_text": "Global life expectancy at birth reached 73.3 years in 2024."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": [
+          "AI-prepared proposal only; a human annotator must verify every field and replace the draft identity.",
+          "Life expectancy is represented as a duration measured in years."
+        ]
+      },
+      "approval": null
+    },
+    {
+      "case_id": "V3-052",
+      "source_candidate_id": "V3-WEB-021",
+      "split": "held_out",
+      "origin_family_id": "public_html:nih",
+      "claim_text": "NIH's All of Us database had data from more than 747,000 participants by June 2026.",
+      "evidence": [
+        {
+          "evidence_id": "V3-WEB-021:E1",
+          "title": "NIH News Releases",
+          "url": "https://www.nih.gov/news-events/news-releases",
+          "source_class": "academic",
+          "passage": "Data from more than 747,000 participants is available to scientists."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "count",
+        "comparator_or_relation": "greater_than",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 83,
+          "quoted_text": "NIH's All of Us database had data from more than 747,000 participants by June 2026."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-WEB-021:E1",
+            "start_char": 0,
+            "end_char": 68,
+            "quoted_text": "Data from more than 747,000 participants is available to scientists."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Full-span candidates are navigation aids, not human gold.",
+          "Annotator must narrow spans to the material operands and relation.",
+          "No construction label or verification state was machine-assigned."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "AI-assisted draft - not human reviewed",
+        "annotated_on": "2026-07-30",
+        "dimension_bucket": "count",
+        "comparator_or_relation": "greater_than",
+        "gold_label": "unconstructible",
+        "claim_span": null,
+        "evidence_spans": [],
+        "expected_verification_state": null,
+        "ambiguity_notes": [
+          "AI-prepared proposal only; a human annotator must verify every field and replace the draft identity.",
+          "The count threshold is present, but the retained evidence passage does not supply the “by June 2026” temporal provenance required by the claim."
+        ]
+      },
+      "approval": null
+    },
+    {
+      "case_id": "V3-053",
+      "source_candidate_id": "V3-WEB-022",
+      "split": "calibration",
+      "origin_family_id": "public_html:factcheck_org",
+      "claim_text": "U.S. home-sale price measures rose no more than 37% during Joe Biden's presidency.",
+      "evidence": [
+        {
+          "evidence_id": "V3-WEB-022:E1",
+          "title": "Vance's Misleading Claims on Housing Prices and Illegal Immigration",
+          "url": "https://www.factcheck.org/2025/12/vances-misleading-claims-on-housing-prices-and-illegal-immigration/",
+          "source_class": "fact_check",
+          "passage": "Home sales price measures show at most a 37% increase."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "currency",
+        "comparator_or_relation": "greater_than",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 82,
+          "quoted_text": "U.S. home-sale price measures rose no more than 37% during Joe Biden's presidency."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-WEB-022:E1",
+            "start_char": 0,
+            "end_char": 54,
+            "quoted_text": "Home sales price measures show at most a 37% increase."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Full-span candidates are navigation aids, not human gold.",
+          "Annotator must narrow spans to the material operands and relation.",
+          "No construction label or verification state was machine-assigned."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "AI-assisted draft - not human reviewed",
+        "annotated_on": "2026-07-30",
+        "dimension_bucket": "percentage_or_rate",
+        "comparator_or_relation": "less_than_or_equal",
+        "gold_label": "fallback_eligible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 82,
+          "quoted_text": "U.S. home-sale price measures rose no more than 37% during Joe Biden's presidency."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-WEB-022:E1",
+            "start_char": 0,
+            "end_char": 54,
+            "quoted_text": "Home sales price measures show at most a 37% increase."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": [
+          "AI-prepared proposal only; a human annotator must verify every field and replace the draft identity.",
+          "The machine proposal misclassified the dimension as currency and reversed the bounded comparator.",
+          "“No more than” and “at most” are normalized to less-than-or-equal."
+        ]
+      },
+      "approval": null
+    },
+    {
+      "case_id": "V3-054",
+      "source_candidate_id": "V3-WEB-023",
+      "split": "calibration",
+      "origin_family_id": "public_html:factcheck_org",
+      "claim_text": "The U.S. national average gasoline price was $3.11 in April 2025.",
+      "evidence": [
+        {
+          "evidence_id": "V3-WEB-023:E1",
+          "title": "Trump's False Claims about Gas, Egg Prices",
+          "url": "https://www.factcheck.org/2025/04/trumps-false-claims-about-gas-egg-prices/",
+          "source_class": "fact_check",
+          "passage": "The national average gasoline price was $3.11."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "currency",
+        "comparator_or_relation": null,
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 65,
+          "quoted_text": "The U.S. national average gasoline price was $3.11 in April 2025."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-WEB-023:E1",
+            "start_char": 0,
+            "end_char": 46,
+            "quoted_text": "The national average gasoline price was $3.11."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Full-span candidates are navigation aids, not human gold.",
+          "Annotator must narrow spans to the material operands and relation.",
+          "No construction label or verification state was machine-assigned."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "AI-assisted draft - not human reviewed",
+        "annotated_on": "2026-07-30",
+        "dimension_bucket": "currency",
+        "comparator_or_relation": "equal",
+        "gold_label": "unconstructible",
+        "claim_span": null,
+        "evidence_spans": [],
+        "expected_verification_state": null,
+        "ambiguity_notes": [
+          "AI-prepared proposal only; a human annotator must verify every field and replace the draft identity.",
+          "The retained evidence supplies $3.11 but does not contain the April 2025 temporal anchor required by the claim."
+        ]
+      },
+      "approval": null
+    },
+    {
+      "case_id": "V3-055",
+      "source_candidate_id": "V3-WEB-024",
+      "split": "development",
+      "origin_family_id": "public_html:nature_communications",
+      "claim_text": "A 2025 climate study forecast a 0.12°C reduction in 2099 global mean surface temperature from energy-based adaptation.",
+      "evidence": [
+        {
+          "evidence_id": "V3-WEB-024:E1",
+          "title": "Quantifying the global climate feedback from energy-based adaptation",
+          "url": "https://www.nature.com/ncomms/articles?page=437&searchType=journalSearch&sort=PubDate&type=&year=2025",
+          "source_class": "academic",
+          "passage": "The forecast reduction in 2099 global mean surface temperature is 0.12°C."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temperature",
+        "comparator_or_relation": null,
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 118,
+          "quoted_text": "A 2025 climate study forecast a 0.12°C reduction in 2099 global mean surface temperature from energy-based adaptation."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-WEB-024:E1",
+            "start_char": 0,
+            "end_char": 73,
+            "quoted_text": "The forecast reduction in 2099 global mean surface temperature is 0.12°C."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Full-span candidates are navigation aids, not human gold.",
+          "Annotator must narrow spans to the material operands and relation.",
+          "No construction label or verification state was machine-assigned."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "AI-assisted draft - not human reviewed",
+        "annotated_on": "2026-07-30",
+        "dimension_bucket": "temperature",
+        "comparator_or_relation": "equal",
+        "gold_label": "fallback_eligible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 118,
+          "quoted_text": "A 2025 climate study forecast a 0.12°C reduction in 2099 global mean surface temperature from energy-based adaptation."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-WEB-024:E1",
+            "start_char": 0,
+            "end_char": 73,
+            "quoted_text": "The forecast reduction in 2099 global mean surface temperature is 0.12°C."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": [
+          "AI-prepared proposal only; a human annotator must verify every field and replace the draft identity.",
+          "The numeric forecast is clear, while the energy-based-adaptation attribution is additional causal context."
+        ]
+      },
+      "approval": null
+    },
+    {
+      "case_id": "V3-056",
+      "source_candidate_id": "V3-WEB-025",
+      "split": "calibration",
+      "origin_family_id": "public_html:ons",
+      "claim_text": "The 2025 UK mid-year population estimate was 69,487,000.",
+      "evidence": [
+        {
+          "evidence_id": "V3-WEB-025:E1",
+          "title": "Population estimates",
+          "url": "https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates",
+          "source_class": "official_or_legal",
+          "passage": "The United Kingdom mid-year population estimate was 69,487,000 in 2025."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": null,
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 56,
+          "quoted_text": "The 2025 UK mid-year population estimate was 69,487,000."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-WEB-025:E1",
+            "start_char": 0,
+            "end_char": 71,
+            "quoted_text": "The United Kingdom mid-year population estimate was 69,487,000 in 2025."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Full-span candidates are navigation aids, not human gold.",
+          "Annotator must narrow spans to the material operands and relation.",
+          "No construction label or verification state was machine-assigned."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "AI-assisted draft - not human reviewed",
+        "annotated_on": "2026-07-30",
+        "dimension_bucket": "temporal_instant",
+        "comparator_or_relation": "during",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 56,
+          "quoted_text": "The 2025 UK mid-year population estimate was 69,487,000."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-WEB-025:E1",
+            "start_char": 0,
+            "end_char": 71,
+            "quoted_text": "The United Kingdom mid-year population estimate was 69,487,000 in 2025."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": [
+          "AI-prepared proposal only; a human annotator must verify every field and replace the draft identity.",
+          "The mid-year estimate is treated as occurring during 2025."
+        ]
+      },
+      "approval": null
+    },
+    {
+      "case_id": "V3-057",
+      "source_candidate_id": "V3-WEB-026",
+      "split": "calibration",
+      "origin_family_id": "public_html:esa",
+      "claim_text": "Jupiter's average atmospheric temperature at one bar is approximately minus 110 degrees Celsius.",
+      "evidence": [
+        {
+          "evidence_id": "V3-WEB-026:E1",
+          "title": "Facts about Jupiter",
+          "url": "https://www.esa.int/Science_Exploration/Space_Science/Juice/Facts_about_Jupiter",
+          "source_class": "official_or_legal",
+          "passage": "Average temperature is approximately -110°C at one bar pressure."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "pressure",
+        "comparator_or_relation": "equal_or_status",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 96,
+          "quoted_text": "Jupiter's average atmospheric temperature at one bar is approximately minus 110 degrees Celsius."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-WEB-026:E1",
+            "start_char": 0,
+            "end_char": 64,
+            "quoted_text": "Average temperature is approximately -110°C at one bar pressure."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Full-span candidates are navigation aids, not human gold.",
+          "Annotator must narrow spans to the material operands and relation.",
+          "No construction label or verification state was machine-assigned."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "AI-assisted draft - not human reviewed",
+        "annotated_on": "2026-07-30",
+        "dimension_bucket": "temperature",
+        "comparator_or_relation": "equal",
+        "gold_label": "fallback_eligible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 96,
+          "quoted_text": "Jupiter's average atmospheric temperature at one bar is approximately minus 110 degrees Celsius."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-WEB-026:E1",
+            "start_char": 0,
+            "end_char": 64,
+            "quoted_text": "Average temperature is approximately -110°C at one bar pressure."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": [
+          "AI-prepared proposal only; a human annotator must verify every field and replace the draft identity.",
+          "Temperature is the primary measured dimension; one bar is a required pressure condition.",
+          "The machine proposal selected pressure, but the asserted value is a temperature."
+        ]
+      },
+      "approval": null
+    },
+    {
+      "case_id": "V3-058",
+      "source_candidate_id": "V3-WEB-027",
+      "split": "held_out",
+      "origin_family_id": "public_html:bls",
+      "claim_text": "The U.S. unemployment rate was 4.1% in June 2025.",
+      "evidence": [
+        {
+          "evidence_id": "V3-WEB-027:E1",
+          "title": "Unemployment rate little changed at 4.1 percent in June 2025",
+          "url": "https://www.bls.gov/opub/ted/2025/unemployment-rate-little-changed-at-4-1-percent-in-june-2025.htm",
+          "source_class": "official_or_legal",
+          "passage": "The unemployment rate was 4.1 percent in June 2025."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "percentage_or_rate",
+        "comparator_or_relation": null,
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 49,
+          "quoted_text": "The U.S. unemployment rate was 4.1% in June 2025."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-WEB-027:E1",
+            "start_char": 0,
+            "end_char": 51,
+            "quoted_text": "The unemployment rate was 4.1 percent in June 2025."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Full-span candidates are navigation aids, not human gold.",
+          "Annotator must narrow spans to the material operands and relation.",
+          "No construction label or verification state was machine-assigned."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "AI-assisted draft - not human reviewed",
+        "annotated_on": "2026-07-30",
+        "dimension_bucket": "percentage_or_rate",
+        "comparator_or_relation": "equal",
+        "gold_label": "deterministic_constructible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 49,
+          "quoted_text": "The U.S. unemployment rate was 4.1% in June 2025."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-WEB-027:E1",
+            "start_char": 0,
+            "end_char": 51,
+            "quoted_text": "The unemployment rate was 4.1 percent in June 2025."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": [
+          "AI-prepared proposal only; a human annotator must verify every field and replace the draft identity.",
+          "The percent symbol and the word “percent” are equivalent representations."
+        ]
+      },
+      "approval": null
+    },
+    {
+      "case_id": "V3-059",
+      "source_candidate_id": "V3-WEB-028",
+      "split": "calibration",
+      "origin_family_id": "public_html:cdc",
+      "claim_text": "In 2023, 8.58% of U.S. births were low birthweight.",
+      "evidence": [
+        {
+          "evidence_id": "V3-WEB-028:E1",
+          "title": "FastStats: Births and Natality",
+          "url": "https://www.cdc.gov/nchs/fastats/births.htm",
+          "source_class": "official_or_legal",
+          "passage": "The percent born low birthweight was 8.58%."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "distance_or_mass",
+        "comparator_or_relation": null,
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 51,
+          "quoted_text": "In 2023, 8.58% of U.S. births were low birthweight."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-WEB-028:E1",
+            "start_char": 0,
+            "end_char": 43,
+            "quoted_text": "The percent born low birthweight was 8.58%."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Full-span candidates are navigation aids, not human gold.",
+          "Annotator must narrow spans to the material operands and relation.",
+          "No construction label or verification state was machine-assigned."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "AI-assisted draft - not human reviewed",
+        "annotated_on": "2026-07-30",
+        "dimension_bucket": "percentage_or_rate",
+        "comparator_or_relation": "equal",
+        "gold_label": "unconstructible",
+        "claim_span": null,
+        "evidence_spans": [],
+        "expected_verification_state": null,
+        "ambiguity_notes": [
+          "AI-prepared proposal only; a human annotator must verify every field and replace the draft identity.",
+          "The retained passage supplies 8.58% but not the 2023 temporal provenance or explicit U.S.-birth population context required by the claim.",
+          "The machine proposal incorrectly selected distance_or_mass because of the term “birthweight.”"
+        ]
+      },
+      "approval": null
+    },
+    {
+      "case_id": "V3-060",
+      "source_candidate_id": "V3-WEB-029",
+      "split": "held_out",
+      "origin_family_id": "public_html:fda",
+      "claim_text": "Refrigerated food held above 40°F for at least two hours should be discarded after a power outage.",
+      "evidence": [
+        {
+          "evidence_id": "V3-WEB-029:E1",
+          "title": "Hurricane Season: Be Prepared",
+          "url": "https://www.fda.gov/consumers/consumer-updates/hurricane-season-be-prepared",
+          "source_class": "official_or_legal",
+          "passage": "Discard food above 40°F for two hours or more."
+        }
+      ],
+      "proposal": {
+        "dimension_bucket": "temperature",
+        "comparator_or_relation": "greater_than_or_equal",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 98,
+          "quoted_text": "Refrigerated food held above 40°F for at least two hours should be discarded after a power outage."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-WEB-029:E1",
+            "start_char": 0,
+            "end_char": 46,
+            "quoted_text": "Discard food above 40°F for two hours or more."
+          }
+        ],
+        "suggested_gold_label": null,
+        "suggested_verification_state": null,
+        "machine_notes": [
+          "Full-span candidates are navigation aids, not human gold.",
+          "Annotator must narrow spans to the material operands and relation.",
+          "No construction label or verification state was machine-assigned."
+        ],
+        "model_calls": 0
+      },
+      "annotation": {
+        "annotator_identity": "AI-assisted draft - not human reviewed",
+        "annotated_on": "2026-07-30",
+        "dimension_bucket": "temperature",
+        "comparator_or_relation": "greater_than_with_minimum_duration",
+        "gold_label": "fallback_eligible",
+        "claim_span": {
+          "start_char": 0,
+          "end_char": 98,
+          "quoted_text": "Refrigerated food held above 40°F for at least two hours should be discarded after a power outage."
+        },
+        "evidence_spans": [
+          {
+            "evidence_id": "V3-WEB-029:E1",
+            "start_char": 0,
+            "end_char": 46,
+            "quoted_text": "Discard food above 40°F for two hours or more."
+          }
+        ],
+        "expected_verification_state": "verified",
+        "ambiguity_notes": [
+          "AI-prepared proposal only; a human annotator must verify every field and replace the draft identity.",
+          "The rule combines a strict temperature threshold with a minimum duration.",
+          "Both conditions must be preserved; neither alone is sufficient."
+        ]
+      },
+      "approval": null
+    }
+  ]
+}

@@ -1,0 +1,102 @@
+{
+  "manifest_id": "verification-construction-v3-stage6e-fresh-calibration-freeze-v1",
+  "status": "frozen",
+  "execution_limit": 1,
+  "prompt_version": "verification-construction-v3-remediation-v6",
+  "prompt_sha256": "edfc899be6296ce7ca27122774ae36acd7e9fe9572f58fa80352e48c20bec8a3",
+  "schemas": {
+    "comparison_sha256": "38bfc64a41d5377002ba8d1443f10ba47387ac1a3b9030b864bba22d68b7f11e",
+    "scalar_sha256": "768032cf112356ea7c9815f2a662a6f93de641f53331f562090ba20f6077f5b9",
+    "temporal_sha256": "da2bf4b022b95d6124bf1f36f27fbd6e767f72519c128b1635e77625f9607449"
+  },
+  "provider": {
+    "name": "openai",
+    "model": "gpt-5.6-luna",
+    "reasoning_effort": "low",
+    "store": false
+  },
+  "budget": {
+    "maximum_calls_per_case": 1,
+    "maximum_total_calls": 25,
+    "maximum_input_tokens": 6000,
+    "maximum_output_tokens": 1200,
+    "maximum_total_cost_usd": 0.75,
+    "search_calls": 0,
+    "automatic_retries": 0
+  },
+  "promotion_thresholds": {
+    "minimum_evidence_span_validity": 1.0,
+    "maximum_unsafe_accepted_constructions": 0,
+    "minimum_construction_precision": 0.98,
+    "minimum_incremental_recall_gain": 0.15,
+    "minimum_overall_construction_recall": 0.75,
+    "minimum_human_review_routing_recall": 1.0,
+    "maximum_publication_safety_regressions": 0,
+    "maximum_duplicate_paid_operations": 0,
+    "maximum_cost_per_recovered_assertion_usd": 0.05
+  },
+  "fresh_workbook_sha256": "84ae983fe0f03748bad255fd5eab847fc67f709385a4d8ef8012b0244fe884c4",
+  "case_count": 20,
+  "case_ids": [
+    "V3-241",
+    "V3-242",
+    "V3-243",
+    "V3-244",
+    "V3-245",
+    "V3-246",
+    "V3-247",
+    "V3-248",
+    "V3-249",
+    "V3-250",
+    "V3-251",
+    "V3-252",
+    "V3-253",
+    "V3-254",
+    "V3-255",
+    "V3-256",
+    "V3-257",
+    "V3-258",
+    "V3-259",
+    "V3-260"
+  ],
+  "origin_family_count": 10,
+  "annotators": [
+    "Md Moshiur Rahman"
+  ],
+  "distinct_approvers": [
+    "Md Rashedul Islam"
+  ],
+  "original_calibration_known": true,
+  "original_held_out_sealed": true,
+  "held_out_cases_loaded": 0,
+  "artifacts": [
+    {
+      "path": "src/claim_polygraph_ng/domain/verification.py",
+      "sha256": "e9720c09023d8f05025b1fc2880ad24d233a2ff6137606ae05eabedf41d2643d"
+    },
+    {
+      "path": "src/claim_polygraph_ng/analysis/assisted_verification_construction.py",
+      "sha256": "9d9b121b3a2e2f0084e30c5cc4b20b645cabd20c4bad9916786e84fd3be35b3c"
+    },
+    {
+      "path": "src/claim_polygraph_ng/analysis/bounded_assisted_construction.py",
+      "sha256": "9c5d6e1207bf81ae0610a52da395427229c185f4aae7ebbf77302a92731c1720"
+    },
+    {
+      "path": "src/claim_polygraph_ng/providers/idempotent.py",
+      "sha256": "d06d24f88dbec2d4140b8f05874967fee575dea9d4240b71ba15275fd6a3ec54"
+    },
+    {
+      "path": "src/claim_polygraph_ng/providers/openai.py",
+      "sha256": "6afe6d55bf9fe874dc5cb0d7dc8d0d77723271e0dd68b908dbaa067d0bddf227"
+    },
+    {
+      "path": "src/claim_polygraph_ng/providers/ollama.py",
+      "sha256": "2ec9f3c4ce373ae25d5b33f824955d277d2c34a898acf331149eb652408b7c45"
+    },
+    {
+      "path": "benchmarks/verification_construction_v3_stage6e_fresh_calibration_workbook_v1_APPROVED.json",
+      "sha256": "84ae983fe0f03748bad255fd5eab847fc67f709385a4d8ef8012b0244fe884c4"
+    }
+  ]
+}

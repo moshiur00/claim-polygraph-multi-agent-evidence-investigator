@@ -1,0 +1,64 @@
+{
+  "manifest_id": "verification-construction-v3-stage6c-collection-protocol-v1",
+  "created_at": "2026-07-31T00:57:32.337848+00:00",
+  "status": "frozen_awaiting_human_annotation_and_distinct_approval",
+  "case_count": 20,
+  "minimum_origin_families": 10,
+  "maximum_cases_per_family": 2,
+  "accessible_html_only": true,
+  "human_annotation_required": true,
+  "distinct_approval_required": true,
+  "calibration_execution_limit_after_approval": 1,
+  "promotion_thresholds": {
+    "minimum_evidence_span_validity": 1.0,
+    "maximum_unsafe_accepted_constructions": 0,
+    "minimum_construction_precision": 0.98,
+    "minimum_incremental_recall_gain": 0.15,
+    "minimum_overall_construction_recall": 0.75,
+    "minimum_human_review_routing_recall": 1.0,
+    "maximum_publication_safety_regressions": 0,
+    "maximum_duplicate_paid_operations": 0,
+    "maximum_cost_per_recovered_assertion_usd": 0.05
+  },
+  "artifacts": [
+    {
+      "path": "benchmarks/verification_construction_v3_stage6c_fresh_calibration_workbook_v1.json",
+      "sha256": "a23643e04f82d1c7c7a7e1ca3ba9e365363f1c1003f4dfd4a87f87ecdf13f5ec"
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v3-stage6c-collection-audit-v1.json",
+      "sha256": "4689f5afca318a66f7132c937e7187670560cadc0d376e10d310183731db335c"
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v3-stage6b-remediation-manifest-v1.json",
+      "sha256": "f38fc648faf40479133896cf14665bf0ccf6f8eb9451a83f1e656317ebb2c860"
+    },
+    {
+      "path": "src/claim_polygraph_ng/domain/verification.py",
+      "sha256": "e9720c09023d8f05025b1fc2880ad24d233a2ff6137606ae05eabedf41d2643d"
+    },
+    {
+      "path": "src/claim_polygraph_ng/analysis/assisted_verification_construction.py",
+      "sha256": "8080f3c91b75cee18401f2346235c5468a649995126351c6d05887a23a1ae081"
+    },
+    {
+      "path": "src/claim_polygraph_ng/analysis/bounded_assisted_construction.py",
+      "sha256": "9c5d6e1207bf81ae0610a52da395427229c185f4aae7ebbf77302a92731c1720"
+    },
+    {
+      "path": "src/claim_polygraph_ng/providers/openai.py",
+      "sha256": "6afe6d55bf9fe874dc5cb0d7dc8d0d77723271e0dd68b908dbaa067d0bddf227"
+    },
+    {
+      "path": "src/claim_polygraph_ng/providers/ollama.py",
+      "sha256": "77290df099f7bbf41e200f672fe1349ead9d49be8a6749703e7b6896dd44df3f"
+    }
+  ],
+  "controls": {
+    "collection_model_calls": 0,
+    "collection_cost_usd": 0.0,
+    "original_held_out_cases_loaded": 0,
+    "original_held_out_cases_exposed": 0,
+    "held_out_open_condition": "all frozen calibration gates pass"
+  }
+}

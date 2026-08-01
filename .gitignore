@@ -26,6 +26,14 @@ venv/
 .env
 .env.*
 !.env.example
+.envrc
+.dev.vars
+secrets/
+credentials/
+*.pem
+*.key
+*.p12
+*.pfx
 
 # Local artifacts
 # Generated investigation artifacts
@@ -46,6 +54,20 @@ artifacts/evaluations/*
 !artifacts/evaluations/*portability-review-remediation*.json
 !artifacts/evaluations/*final-audit*.json
 !artifacts/evaluations/*contract-audit*.json
+!artifacts/evaluations/verification-construction-v3-sampling-policy-v1.json
+!artifacts/evaluations/verification-construction-v3-stage0-audit-v1.json
+!artifacts/evaluations/verification-construction-v3-stage4-*.json
+!artifacts/evaluations/verification-construction-v3-stage5-*.json
+!artifacts/evaluations/verification-construction-v3-stage5a-*.json
+!artifacts/evaluations/verification-construction-v3-stage5b-*.json
+!artifacts/evaluations/verification-construction-v3-stage5c-*.json
+!artifacts/evaluations/verification-construction-v3-stage6-*.json
+!artifacts/evaluations/verification-construction-v3-stage6a-*.json
+!artifacts/evaluations/verification-construction-v3-stage6b-*.json
+!artifacts/evaluations/verification-construction-v3-stage6c-*.json
+!artifacts/evaluations/verification-construction-v3-stage6d-*.json
+!artifacts/evaluations/verification-construction-v3-stage6e-*.json
+!artifacts/evaluations/verification-construction-v4-*.json
 # Preserve artifacts required by release manifests
 !artifacts/evaluations/*release-audit*.json
 !artifacts/evaluations/phase7-stage7.1-fixture-graph-v1.json
@@ -61,6 +83,10 @@ artifacts/evaluations/*
 
 
 docs/private/
+!docs/private/
+docs/private/*
+!docs/private/verification-construction-v3-execution-plan.md
+!docs/private/verification-construction-v4-stage12-closure.md
 # Local runtime persistence
 data/
 *.db

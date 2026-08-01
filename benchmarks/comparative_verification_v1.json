@@ -1,0 +1,48 @@
+{
+  "dataset_id": "comparative-verification-v1",
+  "frozen": true,
+  "cases": [
+    {
+      "case_id": "CV-001",
+      "claim": "Earth's core is hotter than the surface of the sun.",
+      "passage": "The Earth's core is 6,000C, as hot as the Sun's surface.",
+      "expected_construction": "constructed",
+      "expected_verification": "contradicted"
+    },
+    {
+      "case_id": "CV-002",
+      "claim": "Artifact A is older than Artifact B.",
+      "passage": "Artifact A is 12 years old while Artifact B is 10 years old.",
+      "expected_construction": "constructed",
+      "expected_verification": "verified"
+    },
+    {
+      "case_id": "CV-003",
+      "claim": "Route A is longer than Route B.",
+      "passage": "Route A is 5 kilometres long while Route B is 4000 metres long.",
+      "expected_construction": "constructed",
+      "expected_verification": "verified"
+    },
+    {
+      "case_id": "CV-004",
+      "claim": "Sample A is heavier than Sample B.",
+      "passage": "Sample A weighs 2 kilograms while Sample B weighs 2500 grams.",
+      "expected_construction": "constructed",
+      "expected_verification": "contradicted"
+    },
+    {
+      "case_id": "CV-005",
+      "claim": "Vehicle A is faster than Vehicle B.",
+      "passage": "Vehicle A and Vehicle B were compared in a controlled trial.",
+      "expected_construction": "failed",
+      "expected_verification": null
+    },
+    {
+      "case_id": "CV-006",
+      "claim": "Object A is hotter than Object B.",
+      "passage": "The objects were examined, but no temperatures were reported.",
+      "expected_construction": "failed",
+      "expected_verification": null
+    }
+  ]
+}

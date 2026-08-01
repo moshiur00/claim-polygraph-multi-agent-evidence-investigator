@@ -1,0 +1,41 @@
+{
+  "audit_id": "verification-construction-v4-canary-budget-amendment-audit-v1",
+  "status": "passed",
+  "valid": true,
+  "errors": [],
+  "original_v4_manifest_unchanged": true,
+  "original_total_calls": 62,
+  "amended_total_calls": 62,
+  "original_total_cost_usd": 1.25,
+  "amended_total_cost_usd": 1.25,
+  "synthetic_calls_consumed": 3,
+  "synthetic_calls_remaining": 1,
+  "development_calls_reallocated": 2,
+  "model_calls": 0,
+  "network_calls": 0,
+  "paid_operations": 0,
+  "amendment": {
+    "path": "artifacts/evaluations/verification-construction-v4-canary-budget-amendment-v1.json",
+    "sha256": "2fa0a48b2e58ba615cc66c9c25b0090a730ee52dfbef7327157c173ef033e746"
+  },
+  "evidence": [
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage0-manifest-v1.json",
+      "sha256": "f354e12c11e23131607825bc15d9ccc2ac75ec0a540a6e39d38e4e48550d6b76"
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage6-canary-result-v1.json",
+      "sha256": "fc6ca12f797a400296c36d6c587e6bf721c3e6ed59ae27370491cb338e3c7d8c"
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage6a-canary-result-v1.json",
+      "sha256": "d70fe774b1354416de2eae1e38e1b2ef7be425ff6158ae164a9ccddb10a7a925"
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage6b-temporal-wire-v1.json",
+      "sha256": "26eda0b0c1da9f684bef2be20923a4906574d131305f16745f798d63162d2daf"
+    }
+  ],
+  "exit_criterion_met": true,
+  "next_stage": "V4.6c one-call final temporal canary"
+}
