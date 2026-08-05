@@ -333,6 +333,37 @@ def test_typed_findings_and_value_provenance_round_trip_without_breaking_v2() ->
     assert VerificationPacketV2.model_validate_json(packet.model_dump_json()) == packet
 
 
+def test_legacy_absolute_wording_finding_migrates_to_scope_review() -> None:
+    claim_id = uuid4()
+    payload = {
+        "claim_id": str(claim_id),
+        "numerical": {
+            "required": False,
+            "status": "qualified",
+            "exactness_terms": ["all"],
+            "issues": ["Absolute wording requires explicit verification: all."],
+            "findings": [
+                {
+                    "code": "absolute_wording_requires_verification",
+                    "severity": "caution",
+                    "message": "Absolute wording requires explicit verification: all.",
+                    "recommended_action": "Review or narrow the universal wording.",
+                    "readiness_impact": "readiness_signal",
+                    "evidence_ids": [],
+                }
+            ],
+        },
+        "temporal": {"required": False, "status": "not_required"},
+    }
+
+    restored = ContextVerification.model_validate(payload)
+
+    assert restored.numerical.status is VerificationStatus.NOT_REQUIRED
+    assert restored.numerical.findings == ()
+    assert restored.numerical.issues == ()
+    assert restored.scope_findings[0].code == "absolute_wording_requires_verification"
+
+
 def test_packet_rejects_finding_evidence_outside_approved_set() -> None:
     with pytest.raises(ValidationError, match="approved evidence"):
         VerificationPacketV2(

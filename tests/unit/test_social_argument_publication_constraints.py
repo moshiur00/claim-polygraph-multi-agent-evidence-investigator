@@ -182,6 +182,57 @@ def test_publication_gate_fails_closed_on_blocking_social_policy() -> None:
     assert decision.reason_codes == ("social_evidence_policy_blocked",)
 
 
+def test_publication_gate_blocks_contaminated_decisive_evidence() -> None:
+    claim_id = uuid4()
+    item = Evidence(
+        claim_id=claim_id,
+        source_id=uuid4(),
+        passage=(
+            "Skip to main content User account menu Log in Subscribe Product directory. "
+            "The retained sentence directly supports the material proposition. "
+            "Privacy policy All rights reserved."
+        ),
+        stance=EvidenceStance.SUPPORTS,
+        relevance_score=0.9,
+        evidentiary_use=EvidentiaryUse.DECISIVE,
+    )
+    ledger = _ledger(claim_id, (item,), PropositionResolution.SUPPORTED)
+    verdict = Verdict(
+        claim_id=claim_id,
+        label=VerdictLabel.SUPPORTED,
+        concise_explanation="The retained sentence supports the proposition.",
+        detailed_reasoning="The retained sentence supports the proposition.",
+        decisive_evidence_ids=(item.evidence_id,),
+    )
+    _, trace = enforce_judgment_policy(verdict, ledger)
+    assurance = FullReportCitationAssurance.model_construct(
+        claim_id=claim_id,
+        publication_status=PublicationGateStatus.READY,
+        blocking_reasons=(),
+        revisions=(),
+        final_audit=CitationAssurancePacket.model_construct(full_support_rate=1.0),
+        critical_failure_count=0,
+    )
+    readiness = JudgmentReadiness.model_construct(
+        claim_id=claim_id,
+        state=JudgmentReadinessState.READY,
+    )
+
+    decision = decide_publication(
+        investigation_id=uuid4(),
+        proposed_verdict=verdict,
+        enforced_verdict=verdict,
+        policy=trace,
+        assurance=assurance,
+        readiness=readiness,
+        evidence=(item,),
+        claim_text="The material proposition is supported.",
+    )
+
+    assert decision.status is AuthoritativePublicationStatus.BLOCKED
+    assert decision.reason_codes == ("decisive_evidence_integrity_blocked",)
+
+
 def _ledger(
     claim_id,
     evidence: tuple[Evidence, ...],

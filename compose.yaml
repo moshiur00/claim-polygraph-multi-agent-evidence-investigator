@@ -29,6 +29,8 @@ services:
       - "8000:8000"
     volumes:
       - claim_polygraph_data:/app/data
+      - ./deploy/local-ca:/usr/local/share/ca-certificates/local:ro
+    command: ["sh", "-c", "update-ca-certificates >/dev/null 2>&1 && exec claim-polygraph-api"]
     restart: unless-stopped
   searxng:
     image: searxng/searxng:latest

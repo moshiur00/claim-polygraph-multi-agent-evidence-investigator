@@ -1,12 +1,42 @@
 ﻿"use client";
 /* eslint-disable react-hooks/set-state-in-effect */
 
-import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
+import { FormEvent, ReactNode, useCallback, useEffect, useMemo, useState } from "react";
+import {
+  ApiConfigurationError,
+  FALLBACK_API_ADDRESS,
+  loadApiConfiguration,
+  resetApiConfiguration,
+  saveApiConfiguration,
+} from "./api-configuration.mjs";
+import { useDurableEventStream } from "./use-durable-event-stream";
+import { parseNavigationState, serializeNavigationState, type WorkspaceView } from "./navigation-state.mjs";
 
 type Investigation = { investigation_id: string; input_claim: string; status: string; stage: string };
 type Evidence = {
   evidence_id: string; source_id: string; passage: string; stance: string;
   relevance_score: number; evidence_family_id: string | null; evidentiary_use: string;
+  chunk_id?: string | null; passage_start_char?: number | null; passage_end_char?: number | null;
+  context?: string | null; extraction_status?: string; retrieval_score?: number | null;
+  entailment_score?: number | null; temporal_compatibility?: number | null;
+};
+type EvidenceIntegrity = {
+  evidence_id: string; status: "clean" | "caution" | "contaminated";
+  reason_codes: string[]; matched_fragments: string[]; exact_quote: string;
+  context_before: string | null; context_after: string | null; decisive: boolean;
+  approved_use: string; requires_human_review: boolean; publication_blocking: boolean;
+  excerpt_status?: "source_span_verified" | "bounded_diagnostic";
+  excerpt_start_char?: number | null; excerpt_end_char?: number | null;
+  argument_eligible?: boolean; citation_eligible?: boolean; decisive_use_eligible?: boolean;
+  disposition_id?: string | null; disposition_kind?: string | null;
+  disposition_reason?: string | null;
+  remediation_actions?: string[];
+};
+type EvidenceDisposition = {
+  disposition_id: string; investigation_id: string; evidence_id: string;
+  kind: "exclude" | "approve_use" | "request_replacement" | "request_reextraction";
+  approved_use: string | null; reason: string; reviewer_identity: string;
+  approver_identity: string; created_at: string;
 };
 type SocialEligibility = {
   decision: string; allowed_uses: string[]; decisive_use_allowed: boolean;
@@ -38,6 +68,8 @@ type SocialContext = {
 type Source = {
   source_id: string; title: string; publisher: string | null; source_type: string;
   url: string; canonical_url: string; distribution_medium: string;
+  author?: string | null; publication_date?: string | null; retrieved_at?: string;
+  extraction_status?: string; rights_status?: string; content_retention?: string;
   social_context: SocialContext | null; social_eligibility: SocialEligibility | null;
 };
 type StructuredReportAssertion = {
@@ -123,6 +155,13 @@ type VerificationPacket = {
   }>;
   limitations: string[]; findings: VerificationFinding[];
 };
+type ArgumentLedgerPacket = {
+  approved_evidence_ids?: string[];
+  propositions: Array<{ proposition_id: string; text: string; material: boolean }>;
+  arguments: Array<{ proposition_id: string; resolution: string; supporting_evidence_ids: string[]; contradictory_evidence_ids: string[]; qualifying_evidence_ids: string[]; unresolved_reasons: string[] }>;
+  challenge_findings: Array<{ finding_id: string; kind: string; severity: string; rationale: string; evidence_ids: string[] }>;
+  limitations: string[];
+};
 type Report = {
   investigation: Investigation;
   claim: {
@@ -138,6 +177,8 @@ type Report = {
   };
   sources: Source[];
   evidence: Evidence[];
+  evidence_dispositions?: EvidenceDisposition[];
+  evidence_integrity?: EvidenceIntegrity[];
   verdict: {
     verdict_id: string; label: string; confidence: number | null;
     concise_explanation: string; detailed_reasoning: string;
@@ -184,21 +225,19 @@ type Report = {
       required: boolean; status: string; reference_date: string | null;
       source_publication_dates: string[]; issues: string[]; findings: VerificationFinding[];
     };
+    scope_findings?: VerificationFinding[];
     limitations: string[];
   } | null;
   verification_packet: VerificationPacket | null;
-  argument_ledger: {
-    propositions: Array<{ proposition_id: string; text: string; material: boolean }>;
-    arguments: Array<{ proposition_id: string; resolution: string; supporting_evidence_ids: string[]; contradictory_evidence_ids: string[]; qualifying_evidence_ids: string[]; unresolved_reasons: string[] }>;
-    challenge_findings: Array<{ finding_id: string; kind: string; severity: string; rationale: string; evidence_ids: string[] }>;
-    limitations: string[];
-  } | null;
+  argument_ledger: ArgumentLedgerPacket | null;
+  effective_argument_ledger?: ArgumentLedgerPacket | null;
   judgment_policy: {
     proposed_label: string; enforced_label: string; allowed_labels: string[];
     changed: boolean; applied: boolean; human_review_required: boolean;
     reason_codes: string[]; rationale: string;
   } | null;
   full_report_assurance: FullReportAssurance | null;
+  effective_full_report_assurance?: FullReportAssurance | null;
   social_evidence_policy: {
     policy_version: string;
     findings: Array<{
@@ -221,22 +260,34 @@ type GraphSnapshot = {
 };
 type ReviewRequest = {
   request_id: string; investigation_id: string; graph_thread_id: string;
-  reason: string; created_at: string;
+  claim_id: string; reason: string; created_by: string; created_at: string;
 };
 type ReviewHistory = {
   request: ReviewRequest;
-  findings: Array<{ finding_id: string; summary: string; kind: string }>;
+  findings: Array<{
+    finding_id: string; summary: string; kind: string; evidence_ids: string[];
+    recorded_by: string; created_at: string;
+  }>;
   decisions: Array<{
-    decision_id: string; kind: string; reviewer_identity: string; rationale: string;
+    record_id: string; decision_id: string; kind: string; reviewer_identity: string; rationale: string;
     proposed_verdict: string | null; created_at: string;
     verification_construction_id?: string | null;
     verification_disposition?: string | null;
     corrected_claim_text_span?: string | null; corrected_value?: string | null;
     corrected_unit?: string | null; corrected_evidence_ids?: string[];
   }>;
-  approvals: Array<{ approval_id: string; approver_identity: string; decision: string }>;
-  revisions: Array<{ revision_id: string; revised_verdict: string }>;
-  events: Array<{ sequence: number; action: string; actor_identity: string }>;
+  approvals: Array<{
+    approval_id: string; decision_record_id: string; approver_identity: string; decision: string;
+    rationale: string; created_at: string;
+  }>;
+  revisions: Array<{
+    revision_id: string; original_verdict: string; revised_verdict: string;
+    change_kind: string; rationale: string; created_at: string;
+  }>;
+  events: Array<{
+    sequence: number; action: string; actor_identity: string;
+    entity_id: string; occurred_at: string; event_hash: string;
+  }>;
   chain_valid: boolean;
 };
 type ApiStatus = {
@@ -309,9 +360,15 @@ type AuthoritativeJob = InvestigationJob & {
   publication_status: string;
   verdict: string | null;
   report_available: boolean;
+  usage: {
+    model_calls: number; input_tokens: number; cached_input_tokens: number;
+    output_tokens: number; total_tokens: number; estimated_cost_usd: number;
+    unpriced_model_calls: number;
+  } | null;
 };
 
 const graphOrder = ["created", "claim_analysis", "planning", "research", "verification", "arguments", "judgment", "citation_assurance", "readiness", "review", "finalization", "complete"] as const;
+const reportSections = ["Review brief", "Overview", "Evidence", "Social evidence", "Decision rationale", "Verification", "Citation audit", "Review history", "System architecture"] as const;
 const graphLabels: Record<string, string> = {
   created: "Create", claim_analysis: "Analyze", planning: "Plan",
   research: "Multi-agent research", verification: "Verify",
@@ -319,9 +376,74 @@ const graphLabels: Record<string, string> = {
   citation_assurance: "Citation assurance", readiness: "Readiness",
   review: "Human review", finalization: "Publish", complete: "Complete",
 };
-const defaultApi = "http://127.0.0.1:8000";
+type ConnectionState = "initializing" | "connecting" | "connected" | "unavailable" | "invalid";
 const titleCase = (value: string) => value.replaceAll("_", " ").replace(/\b\w/g, (letter) => letter.toUpperCase());
 const shortId = (value: string) => value.slice(0, 8).toUpperCase();
+const clientRequestId = () => {
+  const generated = globalThis.crypto?.randomUUID?.();
+  if (generated) return generated;
+  return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}-${Math.random().toString(36).slice(2)}`;
+};
+const reviewStateOf = (history: ReviewHistory) => {
+  const latestDecision = history.decisions.at(-1);
+  if (!latestDecision) return "review";
+  const requiresDistinctApproval = ["approve", "revise"].includes(latestDecision.kind);
+  const latestDecisionApproved = history.approvals.some((approval) => approval.decision_record_id === latestDecision.record_id);
+  return requiresDistinctApproval && !latestDecisionApproved ? "approval" : "complete";
+};
+const reviewReasonCode = (reason: string) => reason.match(/(?:required|reason):\s*([a-z0-9_]+)/i)?.[1]?.toLocaleLowerCase() ?? reason.split(/[:.]/).map((part) => part.trim()).filter(Boolean).at(-1)?.toLocaleLowerCase().replaceAll(" ", "_") ?? "human_review";
+const reviewReasonLabel = (reason: string) => {
+  const code = reviewReasonCode(reason);
+  return ({
+    readiness_requires_review: "Safeguards require a human decision",
+    policy_disagreement: "Evidence and policy assessments disagree",
+    citation_audit_incomplete: "Citation support requires review",
+    critical_verification_unresolved: "A critical verification check is unresolved",
+    source_quality_unknown: "Source authority requires confirmation",
+    blocking_challenge: "A material challenge remains unresolved",
+    social_evidence_requires_review: "Social-evidence safeguards require review",
+  } as Record<string, string>)[code] ?? titleCase(code);
+};
+const telemetryMetricView = (metric: TelemetrySnapshot["metrics"][number]) => {
+  const average = metric.count > 0 ? metric.total / metric.count : 0;
+  const views: Record<string, { label: string; value: string; detail: string }> = {
+    "api.latency_ms": { label: "API response time", value: `${average.toLocaleString(undefined, { maximumFractionDigits: 1 })} ms avg`, detail: `${metric.count.toLocaleString()} timed requests` },
+    "provider.latency_ms": { label: "Provider response time", value: `${average.toLocaleString(undefined, { maximumFractionDigits: 1 })} ms avg`, detail: `${metric.count.toLocaleString()} provider operations` },
+    "model.tokens": { label: "Model tokens", value: Math.round(metric.total).toLocaleString(), detail: `${metric.count.toLocaleString()} model observations` },
+    "model.cost_usd": { label: "Estimated model cost", value: `$${metric.total.toFixed(6)}`, detail: `${metric.count.toLocaleString()} cost observations` },
+    "evidence.yield": { label: "Evidence yielded", value: Math.round(metric.total).toLocaleString(), detail: `${metric.count.toLocaleString()} measured research operations` },
+    "langgraph.node_latency_ms": { label: "Workflow-step time", value: `${average.toLocaleString(undefined, { maximumFractionDigits: 1 })} ms avg`, detail: `${metric.count.toLocaleString()} timed workflow steps` },
+  };
+  return views[metric.name] ?? {
+    label: titleCase(metric.name.replaceAll(".", " ")),
+    value: `${metric.total.toLocaleString()}${metric.unit ? ` ${metric.unit}` : ""}`,
+    detail: `${metric.count.toLocaleString()} observation${metric.count === 1 ? "" : "s"}`,
+  };
+};
+const providerLabel = (value: string | undefined) => {
+  if (!value) return "Not reported";
+  const [provider, product] = value.split(":", 2);
+  const providerName = ({ openai: "OpenAI", serpapi: "SerpAPI", langgraph: "Workflow engine" } as Record<string, string>)[provider.toLocaleLowerCase()] ?? titleCase(provider);
+  const productName = product
+    ? ({ google: "Google", "gpt-4o-mini": "GPT-4o mini" } as Record<string, string>)[product.toLocaleLowerCase()] ?? product
+    : null;
+  return productName ? `${providerName} · ${productName}` : providerName;
+};
+
+function MetricHelp({ id, label, children }: { id: string; label: string; children: ReactNode }) {
+  const [open, setOpen] = useState(false);
+  return <span className="metric-help">
+    <button
+      type="button"
+      className="info-dot"
+      aria-label={label}
+      aria-expanded={open}
+      aria-controls={id}
+      onClick={() => setOpen((value) => !value)}
+    >?</button>
+    {open && <span id={id} role="note" className="metric-help-popover">{children}</span>}
+  </span>;
+}
 const canonicalStance = (value: string) => ({
   supports: "supporting", supporting: "supporting",
   contradicts: "contradictory", contradictory: "contradictory",
@@ -333,14 +455,17 @@ const canonicalVerdictLabel = (report: Report, graph: GraphSnapshot | null) =>
   graph?.final_verdict ?? report.judgment_policy?.enforced_label ?? report.verdict.label;
 
 const canonicalCitationSummary = (report: Report) => {
-  if (report.full_report_assurance) {
-    const audit = report.full_report_assurance.final_audit;
+  const assurance = report.effective_full_report_assurance ?? report.full_report_assurance;
+  if (assurance) {
+    const audit = assurance.final_audit;
     return {
       rate: Math.round(audit.full_support_rate * 100),
       supported: audit.supported_count,
       total: audit.findings.length,
-      status: report.full_report_assurance.publication_status,
-      authority: "Full-report citation assurance",
+      status: assurance.publication_status,
+      authority: report.effective_full_report_assurance
+        ? "Effective full-report citation assurance"
+        : "Historical full-report citation assurance",
     };
   }
   const supported = report.audits.filter((audit) => audit.support_level === "full").length;
@@ -410,7 +535,24 @@ function CitationAuditView({
   openEvidence: (evidenceId: string) => void;
 }) {
   const [filter, setFilter] = useState<(typeof auditFilterOptions)[number][0]>("all");
-  const assurance = report.full_report_assurance;
+  const historicalAssurance = report.full_report_assurance;
+  const assurance = report.effective_full_report_assurance ?? historicalAssurance;
+  const usingEffectiveAssurance = Boolean(report.effective_full_report_assurance);
+  const historicalDiffers = Boolean(
+    report.effective_full_report_assurance
+    && historicalAssurance
+    && (
+      report.effective_full_report_assurance.publication_status !== historicalAssurance.publication_status
+      || report.effective_full_report_assurance.final_audit.supported_count !== historicalAssurance.final_audit.supported_count
+      || report.effective_full_report_assurance.final_audit.approved_evidence_ids.join() !== historicalAssurance.final_audit.approved_evidence_ids.join()
+    ),
+  );
+  const integrityByEvidence = new Map(
+    (report.evidence_integrity ?? []).map((item) => [item.evidence_id, item]),
+  );
+  const currentCitationEligibleCount = (report.evidence_integrity ?? []).filter(
+    (item) => item.citation_eligible === true,
+  ).length;
   const fallbackFindings: CitationFinding[] = report.audits.map((audit) => ({
     assertion_id: audit.sentence_id,
     sentence: audit.sentence,
@@ -474,22 +616,31 @@ function CitationAuditView({
   return <div className="citation-audit-dashboard">
     <section className={`citation-gate ${publicationStatus === "ready" ? "ready" : "blocked"}`}>
       <div>
-        <span>FULL-REPORT CITATION ASSURANCE</span>
-        <h2>{publicationStatus === "ready" ? "Citation gate passed" : "Publication blocked by citation assurance"}</h2>
+        <span>{usingEffectiveAssurance ? "EFFECTIVE FULL-REPORT CITATION ASSURANCE" : "HISTORICAL FULL-REPORT CITATION ASSURANCE"}</span>
+        <h2>{publicationStatus === "ready" ? "Current citation gate passed" : "Current publication blocked by citation assurance"}</h2>
         <p>{publicationStatus === "ready"
-          ? "Every critical assertion passed and the material-sentence support rate meets the publication threshold."
+          ? "Every current material clause has an eligible passage reference and meets the lexical support threshold."
           : assurance?.blocking_reasons[0] ?? "One or more material assertions still lack complete support."}</p>
       </div>
       <dl>
-        <div><dt>Full support</dt><dd>{supportRate}%</dd></div>
-        <div><dt>Material coverage</dt><dd>{assurance ? `${assurance.audited_material_sentence_count}/${assurance.material_sentence_count}` : `${findings.length}/${findings.length}`}</dd></div>
+        <div><dt>Clause phrase coverage</dt><dd>{supportRate}%</dd></div>
+        <div><dt>Material clauses audited</dt><dd>{assurance ? `${assurance.audited_material_sentence_count}/${assurance.material_sentence_count}` : `${findings.length}/${findings.length}`}</dd></div>
         <div><dt>Critical failures</dt><dd>{assurance?.critical_failure_count ?? findings.filter((finding) => finding.critical && finding.status !== "supported").length}</dd></div>
-        <div><dt>Revision attempts</dt><dd>{assurance?.revisions.length ?? report.audits.filter((audit) => audit.suggested_revision).length}</dd></div>
+        <div><dt>Currently citation-eligible</dt><dd>{currentCitationEligibleCount}/{evidence.length}</dd></div>
       </dl>
     </section>
 
+    {historicalDiffers && <section className="citation-history-notice">
+      <div><span>HISTORICAL AUDIT PRESERVED</span><h3>The earlier packet passed, but it is not the current publication authority.</h3></div>
+      <dl>
+        <div><dt>Historical status</dt><dd>{titleCase(historicalAssurance?.publication_status ?? "not recorded")}</dd></div>
+        <div><dt>Historical support</dt><dd>{Math.round((historicalAssurance?.final_audit.full_support_rate ?? 0) * 100)}%</dd></div>
+        <div><dt>Current status</dt><dd>{titleCase(publicationStatus)}</dd></div>
+      </dl>
+    </section>}
+
     <section className="citation-metrics" aria-label="Citation audit status summary">
-      <article><span>SUPPORTED</span><strong>{supportedCount}</strong><small>Complete approved-passage match</small></article>
+      <article><span>SUPPORTED CLAUSES</span><strong>{supportedCount}</strong><small>Eligible passage with required lexical match</small></article>
       <article><span>PARTIAL</span><strong>{partialCount}</strong><small>Only part of the assertion is supported</small></article>
       <article><span>OTHER FAILURES</span><strong>{unsupportedCount}</strong><small>Unsupported, contradictory, or outside packet</small></article>
       <article><span>PUBLICATION THRESHOLD</span><strong>95%</strong><small>With zero critical failures</small></article>
@@ -523,7 +674,7 @@ function CitationAuditView({
         return <article className={`citation-finding audit-${finding.status}`} key={finding.assertion_id}>
           <header>
             <div>
-              <b>Sentence {assertionNumber}</b>
+              <b>Material clause {assertionNumber}</b>
               <span>{titleCase(assertion?.section ?? "report assertion")}</span>
               {(assertion?.critical ?? finding.critical) && <em className="critical">Critical</em>}
               {(assertion?.material ?? finding.material) && <em>Material</em>}
@@ -543,8 +694,9 @@ function CitationAuditView({
             </section>
             <dl>
               <div><dt>Expected stance</dt><dd>{titleCase(canonicalStance(assertion?.asserted_stance ?? "not recorded"))}</dd></div>
-              <div><dt>Approved citations</dt><dd>{citationIds.length}</dd></div>
-              <div><dt>Audit phase</dt><dd>{initial ? "Final re-audit" : "Legacy sentence audit"}</dd></div>
+              <div><dt>Attached references</dt><dd>{citationIds.length}</dd></div>
+              <div><dt>Eligible references</dt><dd>{citationIds.filter((id) => integrityByEvidence.get(id)?.citation_eligible === true).length}</dd></div>
+              <div><dt>Audit authority</dt><dd>{usingEffectiveAssurance ? "Effective packet" : "Historical fallback"}</dd></div>
             </dl>
           </div>
 
@@ -557,7 +709,9 @@ function CitationAuditView({
             <section><span>REQUIRED SUPPORT</span>{assertion?.required_phrases.map((phrase) => <mark key={phrase}>{phrase}</mark>)}</section>
             <section><span>STILL MISSING</span>{finding.missing_phrases.length
               ? finding.missing_phrases.map((phrase) => <mark className="missing" key={phrase}>{phrase}</mark>)
-              : <b>None</b>}</section>
+              : finding.status === "out_of_packet"
+                ? <b>Not evaluated — citation eligibility failed first.</b>
+                : <b>None</b>}</section>
           </div>}
 
           <div className="citation-mappings">
@@ -566,11 +720,12 @@ function CitationAuditView({
               const record = evidence.find((item) => item.evidence_id === evidenceId);
               const source = record ? sources.get(record.source_id) : null;
               const link = linkByEvidence.get(evidenceId);
+              const integrity = integrityByEvidence.get(evidenceId);
               return <details key={evidenceId}>
                 <summary>
                   <span>{shortId(evidenceId)}</span>
                   <b>{source?.publisher ?? source?.title ?? "Evidence record unavailable"}</b>
-                  <em>{titleCase(canonicalStance(link?.stance ?? record?.stance ?? "unknown"))}</em>
+                  <em>{integrity?.citation_eligible === true ? "Eligible" : "Ineligible"} · {titleCase(canonicalStance(link?.stance ?? record?.stance ?? "unknown"))}</em>
                 </summary>
                 <div>
                   {link?.matched_phrases.length ? <section className="matched-phrases"><span>MATCHED PHRASES</span>{link.matched_phrases.map((phrase) => <mark key={phrase}>{phrase}</mark>)}</section> : <p className="no-match">No required phrase match was recorded for this citation.</p>}
@@ -579,8 +734,10 @@ function CitationAuditView({
                     <div><dt>Source type</dt><dd>{titleCase(source?.source_type ?? "unknown")}</dd></div>
                     <div><dt>Evidence family</dt><dd>{record?.evidence_family_id ? shortId(record.evidence_family_id) : "Unassigned"}</dd></div>
                     <div><dt>Approved use</dt><dd>{titleCase(record?.evidentiary_use ?? "not recorded")}</dd></div>
-                    <div><dt>Packet status</dt><dd>{assurance?.final_audit.approved_evidence_ids.includes(evidenceId) === false ? "Outside approved packet" : "Approved"}</dd></div>
+                    <div><dt>Current citation eligibility</dt><dd>{integrity?.citation_eligible === true ? "Eligible" : "Ineligible"}</dd></div>
+                    <div><dt>Effective packet status</dt><dd>{assurance?.final_audit.approved_evidence_ids.includes(evidenceId) === false ? "Outside effective packet" : "Included"}</dd></div>
                   </dl>
+                  {integrity?.citation_eligible === false && <p className="citation-integrity-warning">Current blocker: {integrity.reason_codes.map(titleCase).join(" · ") || "Evidence is not citation eligible."}</p>}
                   <div className="citation-actions">
                     {record && <button onClick={() => openEvidence(evidenceId)}>Open full evidence record →</button>}
                     {source?.url && <a href={source.url} target="_blank" rel="noreferrer">Open original source ↗</a>}
@@ -607,11 +764,166 @@ function CitationAuditView({
     <details className="citation-method">
       <summary>How to interpret citation assurance</summary>
       <div>
-        <section><b>What it checks</b><p>Material report assertions must link to approved passages with the required wording and expected evidence stance. Critical failures and support below 95% block publication.</p></section>
-        <section><b>What it does not prove</b><p>A citation match does not establish that a source is correct, authoritative, independent, or contextually complete. Those safeguards are evaluated in Evidence, Verification, Provenance, and Social evidence.</p></section>
+        <section><b>What it checks</b><p>Each material report clause must link to currently citation-eligible evidence with the required wording and expected evidence stance. Critical failures and phrase coverage below 95% block publication.</p></section>
+        <section><b>What it does not prove</b><p>Clause phrase coverage is lexical. It does not establish semantic entailment, correctness, authority, independence, or contextual completeness. Those safeguards are evaluated separately.</p></section>
         <section><b>Revision boundary</b><p>Bounded revision may narrow unsupported wording to an approved passage. It cannot add assertions, introduce unapproved evidence, or change the verdict label.</p></section>
       </div>
     </details>
+  </div>;
+}
+
+function ReviewHistoryView({ review }: { review: ReviewHistory | null }) {
+  if (!review) return <p className="empty-copy">Start a review workflow to create an immutable history.</p>;
+  const status = review.decisions.length ? "Decision recorded" : "Awaiting decision";
+  const eventDetail = (event: ReviewHistory["events"][number]) => {
+    const finding = review.findings.find((item) => item.finding_id === event.entity_id);
+    const decision = review.decisions.find((item) => item.record_id === event.entity_id || item.decision_id === event.entity_id);
+    const approval = review.approvals.find((item) => item.approval_id === event.entity_id);
+    const revision = review.revisions.find((item) => item.revision_id === event.entity_id);
+    if (finding) return finding.summary;
+    if (decision) return `${titleCase(decision.kind)} · ${decision.rationale}`;
+    if (approval) return `${titleCase(approval.decision)} · ${approval.rationale}`;
+    if (revision) return `${titleCase(revision.original_verdict)} → ${titleCase(revision.revised_verdict)} · ${revision.rationale}`;
+    return event.action === "request_created" ? review.request.reason : "Immutable review event recorded.";
+  };
+  return <div className="review-history-workspace">
+    <section className="review-history-summary">
+      <article><span>STATUS</span><strong>{status}</strong><small>{review.decisions.length ? `${review.decisions.length} reviewer decision(s)` : "No reviewer decision recorded"}</small></article>
+      <article><span>FINDINGS</span><strong>{review.findings.length}</strong><small>Persisted review findings</small></article>
+      <article><span>APPROVALS</span><strong>{review.approvals.length}</strong><small>Distinct approval records</small></article>
+      <article className={review.chain_valid ? "chain-valid" : "chain-invalid"}><span>AUDIT CHAIN</span><strong>{review.chain_valid ? "Verified" : "Invalid"}</strong><small>Append-only hash continuity</small></article>
+    </section>
+
+    <section className="review-request-brief">
+      <div><span>REVIEW REQUEST</span><h3>{review.request.reason}</h3></div>
+      <dl>
+        <div><dt>Requested by</dt><dd>{review.request.created_by}</dd></div>
+        <div><dt>Created</dt><dd>{new Date(review.request.created_at).toLocaleString()}</dd></div>
+        <div><dt>Request ID</dt><dd>{shortId(review.request.request_id)}</dd></div>
+        <div><dt>Graph thread</dt><dd>{review.request.graph_thread_id}</dd></div>
+      </dl>
+    </section>
+
+    <section className="review-event-section">
+      <div className="review-history-heading"><span>IMMUTABLE EVENT TIMELINE</span><b>{review.events.length} event{review.events.length === 1 ? "" : "s"}</b></div>
+      <div className="review-event-timeline">{review.events.map((event) => <article key={event.sequence}>
+        <i>{event.sequence}</i>
+        <div><header><b>{titleCase(event.action)}</b><time>{new Date(event.occurred_at).toLocaleString()}</time></header><p>{eventDetail(event)}</p><small>{event.actor_identity} · entity {shortId(event.entity_id)} · hash {event.event_hash.slice(0, 12)}…</small></div>
+      </article>)}</div>
+    </section>
+
+    {review.findings.length > 0 && <section className="review-record-section"><div className="review-history-heading"><span>REVIEW FINDINGS</span><b>{review.findings.length}</b></div>{review.findings.map((finding) => <article key={finding.finding_id}><div><b>{titleCase(finding.kind)}</b><p>{finding.summary}</p></div><small>{finding.recorded_by} · {new Date(finding.created_at).toLocaleString()} · {finding.evidence_ids.length} evidence link(s)</small></article>)}</section>}
+    {review.decisions.length > 0 && <section className="review-record-section"><div className="review-history-heading"><span>REVIEWER DECISIONS</span><b>{review.decisions.length}</b></div>{review.decisions.map((decision) => <article key={decision.record_id}><div><b>{titleCase(decision.kind)}{decision.proposed_verdict ? ` · ${titleCase(decision.proposed_verdict)}` : ""}</b><p>{decision.rationale}</p></div><small>{decision.reviewer_identity} · {new Date(decision.created_at).toLocaleString()} · decision {shortId(decision.decision_id)}</small></article>)}</section>}
+    {review.approvals.length > 0 && <section className="review-record-section"><div className="review-history-heading"><span>DISTINCT APPROVALS</span><b>{review.approvals.length}</b></div>{review.approvals.map((approval) => <article key={approval.approval_id}><div><b>{titleCase(approval.decision)}</b><p>{approval.rationale}</p></div><small>{approval.approver_identity} · {new Date(approval.created_at).toLocaleString()}</small></article>)}</section>}
+    {review.revisions.length > 0 && <section className="review-record-section"><div className="review-history-heading"><span>VERDICT REVISIONS</span><b>{review.revisions.length}</b></div>{review.revisions.map((revision) => <article key={revision.revision_id}><div><b>{titleCase(revision.original_verdict)} → {titleCase(revision.revised_verdict)}</b><p>{revision.rationale}</p></div><small>{titleCase(revision.change_kind)} · {new Date(revision.created_at).toLocaleString()}</small></article>)}</section>}
+  </div>;
+}
+
+function SystemArchitectureView({
+  apiStatus,
+  job,
+  graph,
+  report,
+  review,
+  observedCost,
+  observedTokens,
+  costScope,
+  externalSearchPricing,
+}: {
+  apiStatus: ApiStatus | null;
+  job: AuthoritativeJob | null;
+  graph: GraphSnapshot | null;
+  report: Report;
+  review: ReviewHistory | null;
+  observedCost: number;
+  observedTokens: number;
+  costScope: string;
+  externalSearchPricing: boolean;
+}) {
+  const runtime = job?.graph;
+  const completed = new Set(graph?.completed_nodes ?? runtime?.completed_operations ?? []);
+  const activePhase = runtime?.phase ?? null;
+  const activeIndex = activePhase ? graphOrder.indexOf(activePhase as typeof graphOrder[number]) : -1;
+  const roles = Array.from(new Set(runtime?.assignments.map((item) => titleCase(item.role)) ?? []));
+  const integrityBlockers = (report.evidence_integrity ?? []).filter((item) => item.publication_blocking).length;
+  const citationStatus = report.effective_full_report_assurance?.publication_status
+    ?? report.full_report_assurance?.publication_status
+    ?? "not recorded";
+  const phaseState = (phase: typeof graphOrder[number], index: number) => (
+    completed.has(phase) || activeIndex > index ? "done" : activePhase === phase ? "active" : "pending"
+  );
+  return <div className="architecture-dashboard">
+    <section className="architecture-hero">
+      <span>ACCEPTED ARCHITECTURE · ADR 0021</span>
+      <h2>One durable graph coordinates the lifecycle. Domain authority stays explicit.</h2>
+      <p>The durable workflow controls sequencing, interruption and recovery. InvestigationService owns evidence-changing domain operations. Specialist agents can propose research results, but cannot approve evidence, set policy, or publish a report.</p>
+    </section>
+
+    <section className="architecture-runtime" aria-label="Current runtime configuration">
+      <article><span>ORCHESTRATOR</span><strong>{providerLabel(apiStatus?.orchestrator)}</strong><small>{apiStatus?.orchestrator === "langgraph" ? "Promoted path active" : "Rollback or alternate path active"}</small></article>
+      <article><span>DOMAIN AUTHORITY</span><strong>{apiStatus?.authoritative_service ?? "Not reported"}</strong><small>Typed operations and persistence</small></article>
+      <article><span>RETRIEVAL</span><strong>{providerLabel(apiStatus?.retrieval_provider)}</strong><small>{apiStatus?.live_research ? "Live research enabled" : "Fixture or offline mode"}</small></article>
+      <article><span>MODEL</span><strong>{providerLabel(apiStatus?.model_provider)}</strong><small>Provider recorded by API</small></article>
+      <article><span>CHECKPOINT</span><strong>{runtime ? `#${runtime.checkpoint_sequence}` : "Not loaded"}</strong><small>{activePhase ? titleCase(activePhase) : "No live thread in browser"}</small></article>
+    </section>
+
+    <section className="architecture-lifecycle">
+      <div className="architecture-section-heading"><div><span>AUTHORITATIVE LIFECYCLE</span><h3>One checkpointed investigation thread</h3></div><p>Green nodes are persisted. The active node may interrupt for review without replaying completed or paid operations.</p></div>
+      <ol>{graphOrder.map((phase, index) => {
+        const state = phaseState(phase, index);
+        return <li className={state} key={phase}><i>{state === "done" ? "✓" : index + 1}</i><b>{graphLabels[phase]}</b><small>{state === "done" ? "Persisted" : state === "active" ? "Active" : "Pending"}</small></li>;
+      })}</ol>
+    </section>
+
+    <section className="architecture-flow" aria-label="Authority and data flow">
+      <div className="architecture-section-heading"><div><span>AUTHORITY AND DATA FLOW</span><h3>What can change authoritative state</h3></div><p>Every arrow crosses a typed contract; only the domain-operation boundary can persist evidence or judgment artifacts.</p></div>
+      <div className="architecture-flow-grid">
+        <article><i>1</i><span>CONTROL PLANE</span><h4>Workflow coordinator</h4><p>Routes work, checkpoints state, enforces budgets, interrupts and resumes.</p><b>Cannot invent or approve evidence</b></article>
+        <article><i>2</i><span>RESEARCH PLANE</span><h4>Bounded specialist agents</h4><p>{roles.length ? roles.join(" · ") : "Primary · general · academic · fact-check · challenger"}</p><b>{runtime?.assignments.length ?? 0} assignments · {runtime?.research_results.length ?? 0} results</b></article>
+        <article><i>3</i><span>DOMAIN PLANE</span><h4>InvestigationService operations</h4><p>Normalizes, validates, deduplicates and persists approved domain artifacts.</p><b>{runtime?.artifacts.length ?? 0} graph artifact references</b></article>
+        <article><i>4</i><span>ASSURANCE PLANE</span><h4>Verification, arguments and citation policy</h4><p>Deterministic gates reconcile evidence into a bounded judgment and publication decision.</p><b>{integrityBlockers} evidence blockers · citation {titleCase(citationStatus)}</b></article>
+        <article><i>5</i><span>HUMAN AUTHORITY</span><h4>Append-only review ledger</h4><p>Reviewers request evidence, revise or reject; distinct approval is recorded when required.</p><b>{review?.events.length ?? 0} events · chain {review?.chain_valid ? "verified" : review ? "invalid" : "not loaded"}</b></article>
+        <article><i>6</i><span>PUBLICATION PLANE</span><h4>Final report gate</h4><p>Publication is allowed only after evidence, verification, citation and review safeguards agree.</p><b>{titleCase(job?.publication_status ?? report.publication_decision?.status ?? "report state recorded")}</b></article>
+      </div>
+    </section>
+
+    <section className="architecture-observability">
+      <div><span>CURRENT INVESTIGATION ENVELOPE</span><dl>
+        <div><dt>Components / requirements</dt><dd>{runtime?.components.length ?? 0} / {runtime?.requirements.length ?? 0}</dd></div>
+        <div><dt>Evidence / families</dt><dd>{report.evidence.length} / {runtime?.evidence_families.length ?? new Set(report.evidence.map((item) => item.evidence_family_id).filter(Boolean)).size}</dd></div>
+        <div><dt>Unresolved questions</dt><dd>{runtime?.unresolved_questions.length ?? 0}</dd></div>
+        <div><dt>Publication blockers</dt><dd>{runtime?.publication_blocking_reasons.length ?? report.publication_decision?.blocking_reasons.length ?? 0}</dd></div>
+      </dl></div>
+      <div><span>GRAPH BUDGET COUNTERS</span><dl>
+        <div><dt>Rounds</dt><dd>{runtime ? `${runtime.consumption.completed_rounds} / ${runtime.budget.maximum_rounds}` : "Not loaded"}</dd></div>
+        <div><dt>Search calls</dt><dd>{runtime ? `${runtime.consumption.search_calls} / ${runtime.budget.maximum_search_calls}` : "Not loaded"}</dd></div>
+        <div><dt>Model calls</dt><dd>{runtime ? `${runtime.consumption.model_calls} / ${runtime.budget.maximum_model_calls}` : "Not loaded"}</dd></div>
+        <div><dt>Graph-attributed cost</dt><dd>{runtime ? `$${runtime.consumption.estimated_cost_usd.toFixed(6)}${runtime.budget.maximum_cost_usd > 0 ? ` / $${runtime.budget.maximum_cost_usd.toFixed(2)}` : " · no monetary cap recorded"}` : "Not loaded"}</dd></div>
+      </dl></div>
+      <div><span>OBSERVED COST ACCOUNTING</span><dl>
+        <div><dt>Scope</dt><dd>{titleCase(costScope)}</dd></div>
+        <div><dt>Observed model cost</dt><dd>${observedCost.toFixed(6)}</dd></div>
+        <div><dt>Observed model tokens</dt><dd>{Math.round(observedTokens).toLocaleString()}</dd></div>
+        <div><dt>Search pricing</dt><dd>{externalSearchPricing ? "External SerpAPI plan" : "$0 API fee recorded"}</dd></div>
+      </dl><p className="architecture-accounting-note">Graph counters describe the loaded durable thread. Observed cost uses the same scope as the dashboard header and may cover the API process when job-specific receipts are not loaded.</p></div>
+      <div><span>RECOVERY GUARANTEES</span><ul><li>SQLite-backed graph checkpoints</li><li>Receipt-protected paid operations</li><li>Idempotent resume after restart</li><li>Direct sequential rollback retained</li></ul></div>
+    </section>
+
+    <section className="architecture-authority-table">
+      <div className="architecture-section-heading"><div><span>CAPABILITY BOUNDARIES</span><h3>Who is allowed to do what</h3></div></div>
+      <div role="table" aria-label="Architecture capability boundaries">
+        <div role="row" className="heading"><b role="columnheader">Component</b><b role="columnheader">May do</b><b role="columnheader">May not do</b><b role="columnheader">Durable output</b></div>
+        <div role="row"><strong role="cell">Workflow coordinator</strong><span role="cell">Route, checkpoint, interrupt, resume</span><span role="cell">Change evidence or verdict semantics directly</span><span role="cell">Versioned workflow state</span></div>
+        <div role="row"><strong role="cell">Research agents</strong><span role="cell">Search assigned requirements and return typed candidates</span><span role="cell">Approve evidence, bypass retrieval, or publish</span><span role="cell">Assignments and research results</span></div>
+        <div role="row"><strong role="cell">InvestigationService</strong><span role="cell">Execute authoritative domain operations</span><span role="cell">Bypass validators, policy or persistence contracts</span><span role="cell">Evidence, ledgers, verdict and report artifacts</span></div>
+        <div role="row"><strong role="cell">Human review</strong><span role="cell">Approve when eligible, revise, request evidence or reject</span><span role="cell">Silently rewrite prior events or approve blocked evidence</span><span role="cell">Hash-chained decisions and approvals</span></div>
+      </div>
+    </section>
+
+    <section className="trust-boundary">
+      <div><span>WHAT THE PROMOTION PROVES</span><p>Workflow equivalence, durable recovery, citation enforcement, review continuity and challenger coverage within the measured local envelope.</p></div>
+      <div><span>WHAT IT DOES NOT CLAIM</span><p>Calibrated autonomous factual accuracy, unbounded distributed scale, or permission to publish unsupported critical assertions.</p></div>
+    </section>
   </div>;
 }
 
@@ -661,13 +973,15 @@ function VerificationEvidenceTrace({
   evidenceId,
   evidence,
   sources,
-  approved,
+  packetReferenced,
+  currentEligible,
   openEvidence,
 }: {
   evidenceId: string;
   evidence: Evidence[];
   sources: Map<string, Source>;
-  approved: string[];
+  packetReferenced: string[];
+  currentEligible: string[];
   openEvidence: (evidenceId: string) => void;
 }) {
   const record = evidence.find((item) => item.evidence_id === evidenceId);
@@ -676,7 +990,7 @@ function VerificationEvidenceTrace({
     <summary>
       <span>{shortId(evidenceId)}</span>
       <b>{source?.publisher ?? source?.title ?? "Evidence record unavailable"}</b>
-      <em>{approved.includes(evidenceId) ? "Approved" : "Outside packet"}</em>
+      <em>{currentEligible.includes(evidenceId) ? "Currently eligible" : packetReferenced.includes(evidenceId) ? "Historical packet reference" : "Outside packet"}</em>
     </summary>
     <div>
       <blockquote>“{record?.passage ?? "The cited passage is not available in this report."}”</blockquote>
@@ -737,6 +1051,11 @@ function VerificationDashboard({
   const verificationRequired = Boolean(
     numericalRequired || temporalRequired,
   );
+  const integrity = report.evidence_integrity ?? [];
+  const eligibilityAssessed = integrity.length > 0;
+  const currentEligibleEvidenceIds = integrity
+    .filter((item) => item.argument_eligible === true)
+    .map((item) => item.evidence_id);
   const verificationState = unresolved
     ? "human_review_required"
     : assertions.length
@@ -748,17 +1067,27 @@ function VerificationDashboard({
     if (filter === "verified") return assertion.state === "verified";
     return assertion.kind === filter;
   });
+  const scopeFindingCodes = new Set(["absolute_wording_requires_verification"]);
+  const legacyNumericalFindings = report.context_verification?.numerical.findings ?? [];
+  const scopeFindings = [
+    ...(report.context_verification?.scope_findings ?? []),
+    ...legacyNumericalFindings.filter((finding) => scopeFindingCodes.has(finding.code)),
+  ].filter((finding, index, values) => (
+    values.findIndex((item) => item.code === finding.code && item.message === finding.message) === index
+  ));
   const allFindings = [
     ...(packet?.findings ?? []),
     ...numerical.flatMap((item) => item.findings ?? []),
     ...temporal.flatMap((item) => item.findings ?? []),
-    ...(report.context_verification?.numerical.findings ?? []),
+    ...legacyNumericalFindings.filter((finding) => !scopeFindingCodes.has(finding.code)),
     ...(report.context_verification?.temporal.findings ?? []),
   ].filter((finding, index, values) => (
     values.findIndex((item) => item.code === finding.code && item.message === finding.message) === index
   ));
   const blockingFindings = allFindings.filter((finding) => finding.severity === "blocking");
-  const readinessImpact = blockingFindings.some((finding) => finding.readiness_impact === "publication_block")
+  const readinessImpact = !verificationRequired
+    ? "Not applicable"
+    : blockingFindings.some((finding) => finding.readiness_impact === "publication_block")
     ? "Publication blocked"
     : allFindings.some((finding) => finding.readiness_impact === "human_review")
       ? "Human review required"
@@ -798,10 +1127,19 @@ function VerificationDashboard({
       <dl>
         <div><dt>Readiness impact</dt><dd>{readinessImpact}</dd></div>
         <div><dt>Packet version</dt><dd>{packet?.verification_version ?? "Legacy only"}</dd></div>
-        <div><dt>Approved evidence available</dt><dd>{packet?.approved_evidence_ids.length ?? evidence.length}</dd></div>
+        <div><dt>Current evidence authority</dt><dd>{eligibilityAssessed ? `${currentEligibleEvidenceIds.length} eligible / ${evidence.length} retained` : `${evidence.length} retained · eligibility not assessed`}</dd></div>
         <div><dt>Completeness</dt><dd>{assertions.length ? `${Math.round(completed / assertions.length * 100)}%` : verificationRequired ? "0%" : "N/A"}</dd></div>
       </dl>
     </section>
+
+    {scopeFindings.length > 0 && <section className="verification-findings scope-review-findings">
+      <div><span>CLAIM-SCOPE REVIEW SIGNALS</span><b>{scopeFindings.length} semantic</b></div>
+      {scopeFindings.map((finding) => <article className={`severity-${finding.severity}`} key={`${finding.code}:${finding.message}`}>
+        <em>SCOPE</em>
+        <div><b>Universal wording review recommended</b><p>{finding.message.replace("Absolute wording requires explicit verification", "Universal wording requires claim-scope review")}</p><small><strong>How to resolve:</strong> {finding.recommended_action}</small></div>
+        <span>Not a numerical or temporal check</span>
+      </article>)}
+    </section>}
 
     <section className="verification-metrics" aria-label="Verification result summary">
       <article><span>REQUIREMENTS</span><strong>{requirementCount}</strong><small>{Number(numericalRequired)} numerical · {Number(temporalRequired)} temporal</small></article>
@@ -832,7 +1170,7 @@ function VerificationDashboard({
             <div><dt>Reference date</dt><dd>{context?.temporal.reference_date ?? report.claim.reference_date ?? "Not supplied"}</dd></div>
             <div><dt>Temporal relation</dt><dd>{temporalConstruction ? `${temporalConstruction.left_subject} ${titleCase(temporalConstruction.relation)} ${temporalConstruction.right_subject}` : "No typed relation constructed"}</dd></div>
             <div><dt>Evidence bound to assertion</dt><dd>{temporalConstruction?.evidence_ids.length ?? temporal.flatMap((item) => item.observations).length}</dd></div>
-            <div><dt>Expected structure</dt><dd>Relation, reference date, effective interval and approved evidence binding</dd></div>
+            <div><dt>Expected structure</dt><dd>Relation, reference date, effective interval and currently eligible evidence binding</dd></div>
             <div><dt>Outcome</dt><dd>{temporal.length ? `${temporal.length} assertion(s) available` : "Verification was not run"}</dd></div>
           </dl>
         </article>}
@@ -844,7 +1182,7 @@ function VerificationDashboard({
       <ol>
         <li className="complete"><i>1</i><div><b>Requirement recorded</b><small>{requirementCount} numerical or temporal requirement(s)</small></div></li>
         <li className={missingRequiredAssertions ? "failed" : "complete"}><i>2</i><div><b>Typed assertion construction</b><small>{missingRequiredAssertions ? `${missingRequiredAssertions} required structure(s) could not be built safely` : `${assertions.length} assertion(s) constructed`}</small></div></li>
-        <li className={assertions.length ? "complete" : "skipped"}><i>3</i><div><b>Evidence binding</b><small>{assertions.length ? "Approved evidence references recorded" : "Skipped because no typed assertion existed"}</small></div></li>
+        <li className={assertions.length ? "complete" : "skipped"}><i>3</i><div><b>Evidence binding</b><small>{assertions.length ? "Verification packet references recorded; current eligibility shown separately" : "Skipped because no typed assertion existed"}</small></div></li>
         <li className={assertions.length ? unresolvedAssertions ? "failed" : "complete" : "skipped"}><i>4</i><div><b>Deterministic verification</b><small>{assertions.length ? `${completed} of ${assertions.length} reached a terminal state` : "Not run; no calculation or temporal relation was guessed"}</small></div></li>
         <li className={unresolved ? "failed" : "complete"}><i>5</i><div><b>Readiness routing</b><small>{unresolved ? "Human review required" : "No verification escalation recorded"}</small></div></li>
       </ol>
@@ -894,7 +1232,7 @@ function VerificationDashboard({
             {item.rounding_rule && <div><dt>Rounding rule</dt><dd>{item.rounding_rule}</dd></div>}
           </dl>}
           {[...(item.findings ?? [])].map((finding) => <div className={`assertion-finding severity-${finding.severity}`} key={finding.code}><b>{finding.message}</b><p>{finding.recommended_action}</p></div>)}
-          {item.evidence_ids.length > 0 && <section className="verification-evidence-list"><span>APPROVED EVIDENCE USED</span>{item.evidence_ids.map((id) => <VerificationEvidenceTrace key={id} evidenceId={id} evidence={evidence} sources={sources} approved={packet?.approved_evidence_ids ?? []} openEvidence={openEvidence} />)}</section>}
+          {item.evidence_ids.length > 0 && <section className="verification-evidence-list"><span>VERIFICATION EVIDENCE REFERENCES</span>{item.evidence_ids.map((id) => <VerificationEvidenceTrace key={id} evidenceId={id} evidence={evidence} sources={sources} packetReferenced={packet?.approved_evidence_ids ?? []} currentEligible={currentEligibleEvidenceIds} openEvidence={openEvidence} />)}</section>}
           {item.limitations.length > 0 && <details className="assertion-limitations"><summary>Assertion limitations</summary>{item.limitations.map((limitation) => <p key={limitation}>{limitation}</p>)}</details>}
         </article>;
       })() : (() => {
@@ -922,7 +1260,7 @@ function VerificationDashboard({
                   <div><dt>Observed status</dt><dd>{observation.observed_status ?? "Not supplied"}</dd></div>
                   <div><dt>Retrospective</dt><dd>{observation.retrospective ? "Yes" : "No"}</dd></div>
                 </dl>
-                <VerificationEvidenceTrace evidenceId={observation.evidence_id} evidence={evidence} sources={sources} approved={packet?.approved_evidence_ids ?? []} openEvidence={openEvidence} />
+                <VerificationEvidenceTrace evidenceId={observation.evidence_id} evidence={evidence} sources={sources} packetReferenced={packet?.approved_evidence_ids ?? []} currentEligible={currentEligibleEvidenceIds} openEvidence={openEvidence} />
               </div>
             </article>)}
             {!item.observations.length && <p>No typed effective-date or status observation was available.</p>}
@@ -940,12 +1278,12 @@ function VerificationDashboard({
           <span>NUMERICAL EXTRACTION</span>
           <dl>
             <div><dt>Legacy status</dt><dd>{titleCase(context.numerical.status)}</dd></div>
-            <div><dt>Claim operands</dt><dd>{context.numerical.claim_observations.length}</dd></div>
+            <div><dt>Claim numerical operands</dt><dd>{context.numerical.claim_observations.length}</dd></div>
             <div><dt>Evidence tokens</dt><dd>{context.numerical.evidence_observations.length}</dd></div>
-            <div><dt>Exactness terms</dt><dd>{context.numerical.exactness_terms.join(", ") || "None"}</dd></div>
+            <div><dt>Scope qualifiers detected</dt><dd>{context.numerical.exactness_terms.join(", ") || "None"}</dd></div>
           </dl>
           <div className="value-observations">{context.numerical.claim_observations.map((observation, index) => <article key={`claim:${index}`}><b>{observation.raw_text}</b><span>Claim · {observation.unit_hint ?? "unit unknown"}</span><small>{observation.start_char == null ? "Offset unavailable" : `Characters ${observation.start_char}–${observation.end_char}`}</small></article>)}</div>
-          {!context.numerical.claim_observations.length && <p>No explicit claim operand was extracted. A required check cannot pass on evidence numbers alone.</p>}
+          {!context.numerical.claim_observations.length && <p>{numericalRequired ? "No explicit claim operand was extracted. A required numerical check cannot pass on evidence numbers alone." : "No numerical operand was expected because numerical verification was not required."}</p>}
         </section>
         <section>
           <span>EVIDENCE VALUE PROVENANCE</span>
@@ -963,7 +1301,7 @@ function VerificationDashboard({
     <details className="verification-method">
       <summary>How to interpret verification</summary>
       <div>
-        <section><b>Verified is narrow</b><p>It means the typed comparator, values or dates, approved evidence, and bounded calculation agree. It is not a general truth score.</p></section>
+        <section><b>Verified is narrow</b><p>It means the typed comparator, values or dates, currently eligible evidence, and bounded calculation agree. It is not a general truth score.</p></section>
         <section><b>Publication date is not effective date</b><p>A later article may describe an earlier event. Temporal verification keeps publication, effective interval, reference date, and retrospective use separate.</p></section>
         <section><b>Fail-closed compatibility</b><p>Raw strings can aid diagnosis but cannot become proof until values, units, dates, and evidence links are typed.</p></section>
       </div>
@@ -979,7 +1317,11 @@ const authoritativeGraphSnapshot = (value: AuthoritativeJob): GraphSnapshot | nu
     : graphOrder.slice(0, phaseIndex + (value.job.status === "interrupted" ? 0 : 1));
   return {
     thread_id: value.thread_id,
-    status: value.job.status === "interrupted" ? "review_required" : value.graph.phase,
+    status: value.job.status === "interrupted"
+      ? "review_required"
+      : value.job.status === "completed" && value.publication_status !== "published"
+        ? value.publication_status
+        : value.graph.phase,
     authoritative_verdict: value.verdict ?? value.interruption?.provisional_verdict ?? "unverifiable",
     final_verdict: value.graph.phase === "complete" ? value.verdict : null,
     completed_nodes: [...completed],
@@ -988,9 +1330,193 @@ const authoritativeGraphSnapshot = (value: AuthoritativeJob): GraphSnapshot | nu
   };
 };
 
+function EvidenceWorkspace({ report, sources, selectedIndex, onSelect, openSocial, openReview, prepareFreshInvestigation, recordDisposition: persistDisposition, dispositionBusy, reviewerIdentity, approverIdentity, onReviewerIdentityChange, onApproverIdentityChange }: {
+  report: Report; sources: Map<string, Source>; selectedIndex: number;
+  onSelect: (index: number) => void; openSocial: () => void; openReview: () => void;
+  prepareFreshInvestigation: () => void;
+  recordDisposition: (kind: EvidenceDisposition["kind"], approvedUse: string | null, reason: string) => Promise<boolean>;
+  dispositionBusy: boolean;
+  reviewerIdentity: string; approverIdentity: string;
+  onReviewerIdentityChange: (value: string) => void; onApproverIdentityChange: (value: string) => void;
+}) {
+  const [query, setQuery] = useState("");
+  const [stance, setStance] = useState("all");
+  const [hygiene, setHygiene] = useState("all");
+  const [decisiveOnly, setDecisiveOnly] = useState(false);
+  const [approvedUse, setApprovedUse] = useState("context");
+  const [dispositionReason, setDispositionReason] = useState("");
+  const [pendingDisposition, setPendingDisposition] = useState<{ kind: EvidenceDisposition["kind"]; approvedUse: string | null; reason: string } | null>(null);
+  const [dispositionValidation, setDispositionValidation] = useState<string | null>(null);
+  const [dispositionNotice, setDispositionNotice] = useState<string | null>(null);
+  const integrity = new Map((report.evidence_integrity ?? []).map((item) => [item.evidence_id, item]));
+  const verdictSelectedIds = new Set(report.verdict.decisive_evidence_ids);
+  const decisiveIds = new Set(report.verdict.decisive_evidence_ids.filter(
+    (evidenceId) => integrity.get(evidenceId)?.decisive_use_eligible !== false,
+  ));
+  const assessments = report.evidence.map((item) => integrity.get(item.evidence_id));
+  const blockingCount = assessments.filter((item) => item?.publication_blocking).length;
+  const contaminatedCount = assessments.filter((item) => item?.status === "contaminated").length;
+  const cautionCount = assessments.filter((item) => item?.status === "caution").length;
+  const warningCount = assessments.filter((item) => item && item.status !== "clean").length;
+  const unspecifiedCount = assessments.filter((item) => item?.approved_use === "unspecified").length;
+  const ineligibleVerdictCount = [...verdictSelectedIds].filter((item) => !decisiveIds.has(item)).length;
+  const eligibleCount = assessments.filter((item) => item?.argument_eligible !== false).length;
+  const sourceCount = new Set(report.evidence.map((item) => item.source_id)).size;
+  const visible = report.evidence.map((item, index) => ({ item, index })).filter(({ item }) => {
+    const source = sources.get(item.source_id);
+    const assessment = integrity.get(item.evidence_id);
+    const haystack = `${source?.title ?? ""} ${source?.publisher ?? ""} ${item.passage}`.toLocaleLowerCase();
+    return (!query || haystack.includes(query.toLocaleLowerCase()))
+      && (stance === "all" || canonicalStance(item.stance) === stance)
+      && (hygiene === "all" || assessment?.status === hygiene)
+      && (!decisiveOnly || decisiveIds.has(item.evidence_id));
+  });
+  const selected = report.evidence[selectedIndex] ?? visible[0]?.item ?? null;
+  const selectedAssessment = selected ? integrity.get(selected.evidence_id) : undefined;
+  const selectedSource = selected ? sources.get(selected.source_id) : undefined;
+  const effectiveUse = selectedAssessment?.approved_use ?? selected?.evidentiary_use ?? "unspecified";
+  const selectedDispositions = (report.evidence_dispositions ?? [])
+    .filter((item) => item.evidence_id === selected?.evidence_id)
+    .sort((left, right) => right.created_at.localeCompare(left.created_at));
+  const quality = report.provenance?.source_quality.find((item) => item.source_id === selected?.source_id);
+  const knownQuality = quality?.dimensions.filter((item) => item.finding !== "unknown") ?? [];
+  const unknownQuality = quality?.dimensions.filter((item) => item.finding === "unknown") ?? [];
+  const assertionSections = new Map(
+    (report.full_report_assurance?.final_assertions ?? []).map((item) => [item.assertion_id, item.section]),
+  );
+  const citationSuppressed = selectedAssessment?.citation_eligible === false;
+  const citationUsage = citationSuppressed ? [] : (report.full_report_assurance?.final_audit.findings ?? []).filter(
+    (finding) => assertionSections.get(finding.assertion_id) !== "evidence_finding"
+      && finding.links.some((link) => link.evidence_id === selected?.evidence_id),
+  );
+  const grouped = visible.reduce((groups, entry) => {
+    const items = groups.get(entry.item.source_id) ?? [];
+    items.push(entry); groups.set(entry.item.source_id, items); return groups;
+  }, new Map<string, Array<{ item: Evidence; index: number }>>());
+  const overlapLabel = (items: Array<{ item: Evidence; index: number }>) => {
+    if (items.length < 2) return null;
+    const termSets = items.map(({ item }) => new Set(
+      (integrity.get(item.evidence_id)?.exact_quote ?? item.passage)
+        .toLocaleLowerCase().match(/[a-z0-9]{3,}/g) ?? [],
+    ));
+    for (let left = 0; left < termSets.length; left += 1) {
+      for (let right = left + 1; right < termSets.length; right += 1) {
+        const intersection = [...termSets[left]].filter((term) => termSets[right].has(term)).length;
+        const union = new Set([...termSets[left], ...termSets[right]]).size || 1;
+        if (intersection / union >= 0.72) return "POSSIBLE DUPLICATE";
+      }
+    }
+    return "RELATED PASSAGES · SAME SOURCE";
+  };
+
+  const stageDisposition = (kind: EvidenceDisposition["kind"], boundedUse: string | null) => {
+    if (dispositionReason.trim().length < 3) {
+      setDispositionValidation("Enter a specific review rationale of at least three characters.");
+      return;
+    }
+    setDispositionValidation(null);
+    setDispositionNotice(null);
+    setPendingDisposition({ kind, approvedUse: boundedUse, reason: dispositionReason.trim() });
+  };
+  const recordDisposition = async (kind: EvidenceDisposition["kind"], boundedUse: string | null, reason: string) => {
+    if (reason.trim().length < 3) {
+      setDispositionValidation("Enter a specific review rationale of at least three characters.");
+      return;
+    }
+    stageDisposition(kind, boundedUse);
+  };
+  const confirmDisposition = async () => {
+    if (!pendingDisposition) return;
+    if (reviewerIdentity.trim().length < 3 || approverIdentity.trim().length < 3) {
+      setDispositionValidation("Record both the reviewer and distinct approver identities.");
+      return;
+    }
+    if (reviewerIdentity.trim().toLocaleLowerCase() === approverIdentity.trim().toLocaleLowerCase()) {
+      setDispositionValidation("The reviewer and distinct approver must be different people.");
+      return;
+    }
+    const recorded = await persistDisposition(pendingDisposition.kind, pendingDisposition.approvedUse, pendingDisposition.reason);
+    if (!recorded) return;
+    const requestOnly = ["request_replacement", "request_reextraction"].includes(pendingDisposition.kind);
+    setDispositionNotice(requestOnly
+      ? "The follow-up request was recorded. It did not start research or extraction."
+      : "The append-only evidence decision was recorded and the authoritative investigation state was refreshed.");
+    setPendingDisposition(null);
+    setDispositionReason("");
+  };
+
+  return <div className="evidence-workspace">
+    <section className={`evidence-safety ${blockingCount ? "blocked" : warningCount || unspecifiedCount ? "caution" : "clean"}`}>
+      <div><span>EVIDENCE INTEGRITY</span><h2>{report.evidence.length > 0 && eligibleCount === 0 ? "No eligible evidence remains" : blockingCount ? "Publication-blocking evidence issue" : warningCount || unspecifiedCount ? "Evidence needs inspection" : "Retained passages passed hygiene checks"}</h2><p>Passage relevance, source authority, independence, and publication eligibility are separate safeguards. A high relevance score never proves truth.</p></div>
+      <dl><div><dt>Sources</dt><dd>{sourceCount}</dd></div><div><dt>Passages</dt><dd>{report.evidence.length}</dd></div><div><dt>Eligible</dt><dd>{eligibleCount}</dd></div><div><dt>Contaminated</dt><dd>{contaminatedCount}</dd></div><div><dt>Caution</dt><dd>{cautionCount}</dd></div><div><dt>Use unresolved</dt><dd>{unspecifiedCount}</dd><small>{ineligibleVerdictCount} verdict-selected ineligible</small></div></dl>
+    </section>
+    {report.evidence.length > 0 && eligibleCount === 0 && <section className="zero-eligible-actions"><div><span>INVESTIGATION ACTION REQUIRED</span><h3>The current packet cannot support publication.</h3><p>Record a disposition for a selected passage, request clean replacement evidence, or prepare a fresh investigation. These actions do not silently reuse an ineligible passage.</p></div><button onClick={openReview}>Review blocked draft</button><button onClick={prepareFreshInvestigation}>Prepare fresh investigation</button></section>}
+    <section className="evidence-toolbar" aria-label="Evidence filters">
+      <label>SEARCH<input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Source, publisher, or passage" /></label>
+      <label>STANCE<select value={stance} onChange={(event) => setStance(event.target.value)}><option value="all">All stances</option><option value="supports">Supports</option><option value="contradicts">Contradicts</option><option value="qualifies">Qualifies</option><option value="context">Context</option></select></label>
+      <label>PASSAGE HYGIENE<select value={hygiene} onChange={(event) => setHygiene(event.target.value)}><option value="all">All states</option><option value="clean">Clean</option><option value="caution">Caution</option><option value="contaminated">Contaminated</option></select></label>
+      <label className="evidence-checkbox"><input type="checkbox" checked={decisiveOnly} onChange={(event) => setDecisiveOnly(event.target.checked)} />Eligible decisive only</label>
+      {(query || stance !== "all" || hygiene !== "all" || decisiveOnly) && <button className="clear-evidence-filters" onClick={() => { setQuery(""); setStance("all"); setHygiene("all"); setDecisiveOnly(false); }}>Clear filters · {visible.length} result{visible.length === 1 ? "" : "s"}</button>}
+    </section>
+    {dispositionValidation && !pendingDisposition && <p className="field-error disposition-feedback" role="alert">{dispositionValidation}</p>}
+    {dispositionNotice && <p className="disposition-notice disposition-feedback" role="status">{dispositionNotice}</p>}
+    <section className="evidence-layout">
+      <div className="evidence-list">
+        {[...grouped.entries()].map(([sourceId, items]) => {
+          const source = sources.get(sourceId);
+          const overlap = overlapLabel(items);
+          return <section className="evidence-source-group" key={sourceId}>
+            <header><span>{items.length} PASSAGE{items.length === 1 ? "" : "S"}{overlap ? ` · ${overlap}` : ""}</span><strong>{source?.publisher ?? source?.title ?? "Stored source"}</strong><small>{titleCase(source?.source_type ?? "unknown")} · {source?.canonical_url ? new URL(source.canonical_url).hostname : "domain unavailable"} · one origin family {items[0].item.evidence_family_id ? shortId(items[0].item.evidence_family_id!) : "unassigned"}</small></header>
+            {items.map(({ item, index }) => {
+              const assessment = integrity.get(item.evidence_id);
+              return <button aria-pressed={selectedIndex === index} className={selectedIndex === index ? "evidence-item active" : "evidence-item"} onClick={() => onSelect(index)} key={item.evidence_id}>
+                <div><span>{shortId(item.evidence_id)}{decisiveIds.has(item.evidence_id) ? " · DECISIVE" : verdictSelectedIds.has(item.evidence_id) ? " · VERDICT-SELECTED · INELIGIBLE" : ""}</span><b>{titleCase(canonicalStance(item.stance))}</b></div>
+                <p>{assessment?.exact_quote ?? item.passage.slice(0, 360)}</p>
+                <footer><em className={`hygiene-badge ${assessment?.status ?? "unknown"}`}>{titleCase(assessment?.status ?? "not assessed")}</em><small>{titleCase(item.evidentiary_use)}</small></footer>
+              </button>;
+            })}
+          </section>;
+        })}
+        {!visible.length && <p className="empty-copy">No evidence matches these filters.</p>}
+      </div>
+      <article className="passage">
+        {selected ? <>
+          <div className="passage-meta"><span>{selectedAssessment?.citation_eligible === false ? "DIAGNOSTIC EXCERPT · NOT EVIDENCE" : selectedAssessment?.excerpt_status === "source_span_verified" ? "SOURCE-SPAN VERIFIED QUOTE" : "BEST MATCHING EXCERPT · NOT SPAN VERIFIED"}</span><b>{shortId(selected.evidence_id)}</b></div>
+          {selectedAssessment && (selectedAssessment.status !== "clean" || effectiveUse === "unspecified" || selectedAssessment.disposition_kind) && <div className={`integrity-alert consolidated ${selectedAssessment.publication_blocking ? "blocked" : "caution"}`}><b>{selectedAssessment.publication_blocking ? "Publication blocked by this evidence item" : "Evidence item needs inspection"}</b><p>{selectedAssessment.reason_codes.map(titleCase).join(" · ") || "A deterministic evidence warning was recorded."}</p>{selectedAssessment.matched_fragments.length > 0 && <small>Detected page chrome: {selectedAssessment.matched_fragments.join(", ")}</small>}{selectedAssessment.disposition_kind && <p className="persisted-disposition"><b>Latest persisted decision:</b> {titleCase(selectedAssessment.disposition_kind)} · {selectedAssessment.disposition_reason}</p>}<div className="disposition-editor"><label>APPROVED USE<select value={approvedUse} onChange={(event) => setApprovedUse(event.target.value)}><option value="decisive">Decisive</option><option value="qualified_observation">Qualified observation</option><option value="attributed_statement">Attributed statement</option><option value="context">Context only</option></select></label><label>REVIEW RATIONALE<input value={dispositionReason} onChange={(event) => setDispositionReason(event.target.value)} /></label><div className="remediation-actions"><button className="primary" disabled={dispositionBusy} onClick={() => void recordDisposition("approve_use", approvedUse, dispositionReason)}>Approve bounded use</button><button disabled={dispositionBusy} onClick={() => void recordDisposition("exclude", null, dispositionReason)}>Exclude passage</button><button disabled={dispositionBusy} onClick={() => void recordDisposition("request_replacement", null, dispositionReason)}>Request replacement</button><button disabled={dispositionBusy} onClick={() => void recordDisposition("request_reextraction", null, dispositionReason)}>Request re-extraction</button></div></div><div className="remediation-actions secondary-row">{selectedSource?.url && <a href={selectedSource.url} target="_blank" rel="noreferrer">Open original source ↗</a>}<button onClick={() => { const raw = document.querySelector<HTMLDetailsElement>("#raw-evidence-capture"); if (raw) { raw.open = true; raw.scrollIntoView({ behavior: "smooth", block: "center" }); } }}>Inspect stored capture</button><button onClick={openReview}>Open review brief</button></div><small>Each decision is append-only and requires a distinct approver. It does not rewrite the retained passage or replay research.</small></div>}
+          <blockquote>“{selectedAssessment?.exact_quote ?? selected.passage}”</blockquote>
+          {(selectedAssessment?.context_before || selectedAssessment?.context_after) && <details className="quote-context"><summary>Show bounded surrounding context</summary>{selectedAssessment.context_before && <p><b>Before:</b> {selectedAssessment.context_before}</p>}{selectedAssessment.context_after && <p><b>After:</b> {selectedAssessment.context_after}</p>}</details>}
+          <dl><div><dt>Source</dt><dd>{selectedSource?.url ? <a href={selectedSource.url} target="_blank" rel="noreferrer">{selectedSource.title ?? "Open source"} ↗</a> : selectedSource?.title ?? "Stored source"}</dd></div><div><dt>Publisher / author</dt><dd>{selectedSource?.publisher ?? "Not recorded"}{selectedSource?.author ? ` · ${selectedSource.author}` : ""}</dd></div><div><dt>Source type</dt><dd>{titleCase(selectedSource?.source_type ?? "unknown")}{selectedSource?.source_type === "other" && selectedSource.canonical_url ? ` · ${new URL(selectedSource.canonical_url).hostname}` : ""}</dd></div><div><dt>Published / retrieved</dt><dd>{selectedSource?.publication_date ?? "Not recorded"} / {selectedSource?.retrieved_at ? new Date(selectedSource.retrieved_at).toLocaleDateString() : "Not recorded"}</dd></div><div><dt>Extraction</dt><dd>{titleCase(selectedSource?.extraction_status ?? selected.extraction_status ?? "unknown")}</dd></div><div><dt>Effective approved use</dt><dd>{titleCase(effectiveUse)}{selectedAssessment?.disposition_kind ? " · persisted reviewer decision" : ""}</dd></div><div><dt>Stance</dt><dd>{titleCase(canonicalStance(selected.stance))}</dd></div><div><dt>Relevance <small className="metric-boundary">Topical match only</small></dt><dd>{Math.round(selected.relevance_score * 100)}%</dd></div><div><dt>Evidence family</dt><dd>{selected.evidence_family_id ? shortId(selected.evidence_family_id) : "Unassigned"}</dd></div><div><dt>Excerpt authority</dt><dd>{titleCase(selectedAssessment?.excerpt_status ?? "not assessed")}</dd></div><div><dt>Stored span</dt><dd>{selectedAssessment?.excerpt_start_char != null && selectedAssessment?.excerpt_end_char != null ? `${selectedAssessment.excerpt_start_char}–${selectedAssessment.excerpt_end_char}` : "Legacy / unavailable"}</dd></div></dl>
+          {selectedDispositions.length > 0 && <details className="disposition-history"><summary>Evidence decision history · {selectedDispositions.length} record{selectedDispositions.length === 1 ? "" : "s"}</summary>{selectedDispositions.map((item) => <article key={item.disposition_id}><b>{titleCase(item.kind)}{item.approved_use ? ` · ${titleCase(item.approved_use)}` : ""}</b><p>{item.reason}</p><small>{item.reviewer_identity} · approved by {item.approver_identity} · {new Date(item.created_at).toLocaleString()}</small></article>)}</details>}
+          <section className={`citation-usage ${citationSuppressed ? "suppressed" : ""}`}><span>MATERIAL REPORT SENTENCES USING THIS PASSAGE</span>{citationSuppressed ? <p>This passage is not citation-eligible. Any historical mapping is displayed only in the audit record and cannot satisfy report support.</p> : citationUsage.length ? citationUsage.map((finding) => <article key={finding.assertion_id}><b>{titleCase(finding.status)}</b><p>{finding.sentence}</p><small>{finding.explanation}</small></article>) : <p>No material final-report assertion cites this passage.</p>}</section>
+          {quality && <details className="source-quality" open={selectedAssessment?.argument_eligible !== false}><summary>Additional source-quality diagnostics</summary><span>SOURCE-QUALITY ASSESSMENT</span>{knownQuality.map((dimension) => <div key={dimension.dimension}><b>{titleCase(dimension.dimension)}</b><em>{titleCase(dimension.finding)}</em><p>{dimension.reason}</p></div>)}{unknownQuality.length > 0 && <details><summary>{unknownQuality.length} dimension{unknownQuality.length === 1 ? "" : "s"} not assessed · insufficient source metadata</summary>{unknownQuality.map((dimension) => <div key={dimension.dimension}><b>{titleCase(dimension.dimension)}</b><p>{dimension.reason}</p></div>)}</details>}{quality.limitations.length > 0 && <small>Limitations: {quality.limitations.join(" · ")}</small>}</details>}
+          <div className="score-explanation"><b>Relevance: {Math.round(selected.relevance_score * 100)}% topical match</b><p>This is not a correctness, authority, independence, or confidence score.</p></div>
+          <details className="raw-capture" id="raw-evidence-capture"><summary>Compatibility diagnostic · stored raw capture (may contain page chrome)</summary><p>This historical capture is diagnostic only. Use the bounded excerpt and original source for review.</p><p>{selected.passage}</p></details>
+          {selectedSource?.distribution_medium === "social_platform" && <div className="social-evidence-callout"><b>Social-source constraints apply</b><p>This item can only be used as {titleCase(selected.evidentiary_use)}.</p><button onClick={openSocial}>Open full social trace →</button></div>}
+        </> : <p className="empty-copy">Select an evidence passage.</p>}
+      </article>
+    </section>
+    {pendingDisposition && selected && <div className="confirmation-backdrop" onMouseDown={() => !dispositionBusy && setPendingDisposition(null)}>
+      <section className="confirmation-dialog" role="dialog" aria-modal="true" aria-labelledby="evidence-disposition-title" onMouseDown={(event) => event.stopPropagation()}>
+        <span>APPEND-ONLY EVIDENCE DECISION</span>
+        <h2 id="evidence-disposition-title">Confirm {titleCase(pendingDisposition.kind)}</h2>
+        <p>This decision will be added to the immutable review history for evidence <b>{shortId(selected.evidence_id)}</b> from <b>{selectedSource?.publisher ?? selectedSource?.title ?? "the stored source"}</b>.</p>
+        {["request_replacement", "request_reextraction"].includes(pendingDisposition.kind) && <p className="request-boundary">This records a durable follow-up request. It does not start research or extraction, and the passage remains ineligible while the request is pending.</p>}
+        <dl><div><dt>Approved use</dt><dd>{pendingDisposition.approvedUse ? titleCase(pendingDisposition.approvedUse) : "Not applicable"}</dd></div><div><dt>Rationale</dt><dd>{pendingDisposition.reason}</dd></div></dl>
+        <div className="confirmation-identities"><label>Reviewer identity<input value={reviewerIdentity} onChange={(event) => onReviewerIdentityChange(event.target.value)} /></label><label>Distinct approver identity<input value={approverIdentity} onChange={(event) => onApproverIdentityChange(event.target.value)} /></label></div>
+        {dispositionValidation && <p className="field-error" role="alert">{dispositionValidation}</p>}
+        <div className="confirmation-actions"><button disabled={dispositionBusy} onClick={() => setPendingDisposition(null)}>Cancel</button><button className="primary" disabled={dispositionBusy} onClick={() => void confirmDisposition()}>{dispositionBusy ? "Recording…" : "Confirm durable decision"}</button></div>
+      </section>
+    </div>}
+  </div>;
+}
+
 export default function Home() {
-  const [apiBase, setApiBase] = useState(defaultApi);
-  const [apiDraft, setApiDraft] = useState(defaultApi);
+  const [apiBase, setApiBase] = useState(FALLBACK_API_ADDRESS);
+  const [apiDraft, setApiDraft] = useState(FALLBACK_API_ADDRESS);
+  const [apiInitialized, setApiInitialized] = useState(false);
+  const [connectionState, setConnectionState] = useState<ConnectionState>("initializing");
+  const [connectionMessage, setConnectionMessage] = useState("Resolving the local evidence API address.");
+  const [connectionRetry, setConnectionRetry] = useState(0);
   const [investigations, setInvestigations] = useState<Investigation[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [report, setReport] = useState<Report | null>(null);
@@ -1006,7 +1532,7 @@ export default function Home() {
   const [correctedValue, setCorrectedValue] = useState("");
   const [correctedUnit, setCorrectedUnit] = useState("");
   const [revisedVerdict, setRevisedVerdict] = useState("mixed");
-  const [rationale, setRationale] = useState("The cited evidence supports this review decision.");
+  const [rationale, setRationale] = useState("");
   const [reviewer, setReviewer] = useState("Md Moshiur Rahman");
   const [approver, setApprover] = useState("Md Rashedul Islam");
   const [busy, setBusy] = useState(false);
@@ -1015,9 +1541,15 @@ export default function Home() {
   const [job, setJob] = useState<AuthoritativeJob | null>(null);
   const [liveStage, setLiveStage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [connected, setConnected] = useState(false);
   const [apiStatus, setApiStatus] = useState<ApiStatus | null>(null);
   const [telemetry, setTelemetry] = useState<TelemetrySnapshot | null>(null);
+  const [workspaceView, setWorkspaceView] = useState<WorkspaceView>("investigations");
+  const [caseQuery, setCaseQuery] = useState("");
+  const [reviewQueue, setReviewQueue] = useState<ReviewHistory[]>([]);
+  const [reviewQueueQuery, setReviewQueueQuery] = useState("");
+  const [reviewQueueFilter, setReviewQueueFilter] = useState<"pending" | "review" | "approval" | "complete" | "all">("pending");
+  const [navigationLoading, setNavigationLoading] = useState(true);
+  const [reviewQueueError, setReviewQueueError] = useState<string | null>(null);
 
   const request = useCallback(async <T,>(path: string, init?: RequestInit): Promise<T> => {
     const response = await fetch(`${apiBase}${path}`, {
@@ -1031,6 +1563,8 @@ export default function Home() {
   }, [apiBase]);
 
   const loadInvestigations = useCallback(async () => {
+    setConnectionState("connecting");
+    setConnectionMessage(`Connecting to ${apiBase}…`);
     try {
       const [items, status] = await Promise.all([
         request<Investigation[]>("/api/investigations"),
@@ -1040,39 +1574,71 @@ export default function Home() {
       request<TelemetrySnapshot>("/api/operations/telemetry")
         .then(setTelemetry)
         .catch(() => setTelemetry(null));
-      setInvestigations(items); setConnected(true); setError(null);
-      if (!selectedId && items.length) setSelectedId(items.at(-1)!.investigation_id);
+      setInvestigations(items); setConnectionState("connected");
+      setConnectionMessage(`Connected to ${apiBase}.`); setError(null);
     } catch {
-      setConnected(false);
+      setConnectionState("unavailable");
+      setConnectionMessage(`The evidence API could not be reached at ${apiBase}.`);
       setError(`The evidence API could not be reached at ${apiBase}.`);
+    } finally { setNavigationLoading(false); }
+  }, [apiBase, request]);
+
+  const loadReviewQueue = useCallback(async () => {
+    setReviewQueueError(null);
+    try {
+      const requests = await request<ReviewRequest[]>("/api/reviews");
+      const histories = await Promise.all(requests.map((item) => request<ReviewHistory>(`/api/reviews/${item.request_id}`)));
+      setReviewQueue(histories.sort((left, right) => right.request.created_at.localeCompare(left.request.created_at)));
+    } catch (reason) {
+      setReviewQueueError((reason as Error).message);
     }
-  }, [apiBase, request, selectedId]);
+  }, [request]);
 
   useEffect(() => {
-    const inferred = `${window.location.protocol}//${window.location.hostname}:8000`;
-    window.localStorage.setItem("claim-polygraph-api", inferred);
-    setApiBase(inferred);
-    setApiDraft(inferred);
+    const configured = loadApiConfiguration(window.localStorage, window.location);
+    const navigation = parseNavigationState(window.location.search);
+    setApiBase(configured.address);
+    setApiDraft(configured.address);
+    setConnectionState(configured.warning ? "invalid" : "connecting");
+    setConnectionMessage(configured.warning ?? `Connecting to ${configured.address}…`);
+    setWorkspaceView(navigation.view);
+    setSelectedId(navigation.investigationId);
+    setApiInitialized(true);
   }, []);
-  useEffect(() => { void loadInvestigations(); }, [loadInvestigations]);
+  useEffect(() => {
+    if (apiInitialized) void loadInvestigations();
+  }, [apiInitialized, connectionRetry, loadInvestigations]);
+  useEffect(() => {
+    if (apiInitialized && connectionState === "connected") void loadReviewQueue();
+  }, [apiInitialized, connectionState, loadReviewQueue]);
+  useEffect(() => {
+    const restore = () => {
+      const navigation = parseNavigationState(window.location.search);
+      setWorkspaceView(navigation.view); setSelectedId(navigation.investigationId);
+    };
+    window.addEventListener("popstate", restore);
+    return () => window.removeEventListener("popstate", restore);
+  }, []);
   useEffect(() => {
     if (!selectedId) { setReport(null); return; }
     void request<Report>(`/api/investigations/${selectedId}/report`)
       .then((value) => { setReport(value); setSelectedEvidence(0); setError(null); })
       .catch((reason: Error) => setError(reason.message));
+    void request<AuthoritativeJob>(`/api/investigations/${selectedId}/authoritative-job`)
+      .then((value) => {
+        setJob(value);
+        setGraph(authoritativeGraphSnapshot(value));
+        setReview(value.review);
+        setLiveStage(value.graph?.phase ?? null);
+      })
+      .catch(() => {
+        setJob(null);
+        setGraph(null);
+        setReview(null);
+      });
   }, [request, selectedId]);
-  useEffect(() => {
-    if (!graph?.thread_id) return;
-    const stream = new EventSource(`${apiBase}/api/graph-runs/${graph.thread_id}/events?after=0&follow=true`);
-    stream.addEventListener("graph_state", (event) => {
-      const snapshot = JSON.parse((event as MessageEvent).data) as GraphSnapshot;
-      setGraph(snapshot);
-      if (snapshot.status !== "review_required") stream.close();
-    });
-    stream.onerror = () => stream.close();
-    return () => stream.close();
-  }, [apiBase, graph?.thread_id]);
   const jobActive = job != null && !["completed", "interrupted", "cancelled", "failed", "dead_letter"].includes(job.job.status);
+  const jobFailed = job != null && ["failed", "dead_letter"].includes(job.job.status);
   const working = busy || jobActive;
   useEffect(() => {
     if (!working) { setElapsedSeconds(0); return; }
@@ -1085,21 +1651,35 @@ export default function Home() {
     if (!storedJob) return;
     void request<AuthoritativeJob>(`/api/authoritative-jobs/${storedJob}`)
       .then((restored) => {
-        if (["cancelled", "failed", "dead_letter"].includes(restored.job.status)) {
+        const terminalOrPaused = ["completed", "interrupted", "cancelled", "failed", "dead_letter"].includes(restored.job.status);
+        if (terminalOrPaused) {
           window.localStorage.removeItem("claim-polygraph-active-job");
+          if (["failed", "dead_letter"].includes(restored.job.status)) {
+            setJob(restored);
+            setGraph(authoritativeGraphSnapshot(restored));
+            setError(null);
+          }
+          return;
         }
         setJob(restored);
         setGraph(authoritativeGraphSnapshot(restored));
         setReview(restored.review);
-        if (restored.report_available && restored.investigation_id) setSelectedId(restored.investigation_id);
       })
       .catch(() => window.localStorage.removeItem("claim-polygraph-active-job"));
   }, [request]);
-  useEffect(() => {
-    if (!job?.job.job_id || !jobActive) return;
-    const stream = new EventSource(`${apiBase}/api/authoritative-jobs/${job.job.job_id}/events?after=0&follow=true`);
-    stream.addEventListener("authoritative_state", (event) => {
-      const state = JSON.parse((event as MessageEvent).data) as AuthoritativeJob;
+  const jobStream = useDurableEventStream<AuthoritativeJob>({
+    active: Boolean(job?.job.job_id && jobActive),
+    url: job?.job.job_id
+      ? `${apiBase}/api/authoritative-jobs/${job.job.job_id}/events`
+      : null,
+    cursorKey: `authoritative-job:${job?.job.job_id ?? "none"}`,
+    eventNames: ["authoritative_state"],
+    sequenceOf: (_eventName, state) => state.graph
+      ? state.graph.checkpoint_sequence + 1
+      : null,
+    poll: () => request<AuthoritativeJob>(`/api/authoritative-jobs/${job!.job.job_id}`),
+    terminal: (state) => ["completed", "interrupted", "cancelled", "failed", "dead_letter"].includes(state.job.status),
+    onEvent: (_eventName, state) => {
       setJob(state);
       setGraph(authoritativeGraphSnapshot(state));
       setReview(state.review);
@@ -1121,25 +1701,22 @@ export default function Home() {
             .catch(() => null);
           setActivity(null);
         } else if (state.job.last_error) {
-          setError(state.job.last_error);
+          setError(["failed", "dead_letter"].includes(state.job.status) ? null : state.job.last_error);
           setActivity(null);
         }
       }
-    });
-    stream.onerror = () => stream.close();
-    return () => stream.close();
-  }, [apiBase, job?.job.job_id, jobActive, request]);
-  useEffect(() => {
-    if (!jobActive || !job?.investigation_id) return;
-    const stream = new EventSource(`${apiBase}/api/investigations/${job.investigation_id}/events?after=0&follow=true`);
-    const updateStage = (event: Event) => {
-      const trace = JSON.parse((event as MessageEvent).data) as { stage?: string };
-      if (trace.stage) setLiveStage(trace.stage);
-    };
-    ["investigation_created", "status_changed", "artifact_created", "provider_called", "provider_failed", "investigation_completed", "investigation_failed"].forEach((name) => stream.addEventListener(name, updateStage));
-    stream.onerror = () => stream.close();
-    return () => stream.close();
-  }, [apiBase, job?.investigation_id, jobActive]);
+    },
+  });
+  const graphStream = useDurableEventStream<GraphSnapshot>({
+    active: Boolean(graph?.thread_id && !jobActive && graph.status === "review_required"),
+    url: graph?.thread_id ? `${apiBase}/api/graph-runs/${graph.thread_id}/events` : null,
+    cursorKey: `graph:${graph?.thread_id ?? "none"}`,
+    eventNames: ["graph_state"],
+    sequenceOf: (_eventName, snapshot) => snapshot.completed_nodes.length,
+    poll: () => request<GraphSnapshot>(`/api/graph-runs/${graph!.thread_id}`),
+    terminal: (snapshot) => snapshot.status !== "review_required",
+    onEvent: (_eventName, snapshot) => setGraph(snapshot),
+  });
 
   const sources = useMemo(() => new Map(report?.sources.map((source) => [source.source_id, source]) ?? []), [report]);
   const evidence = report?.evidence ?? [];
@@ -1161,11 +1738,27 @@ export default function Home() {
   const graphProgress = graph ? Math.round(completedGraphNodes / graphOrder.length * 100) : 0;
   const reviewDecisionOptions = [
     ["approve", "Approve provisional verdict"],
-    ["revise", "Revise verdict"],
     ["request_evidence", "Request more evidence"],
+    ["revise", "Revise verdict"],
     ["reject", "Reject packet"],
   ] as const;
-  const allowedReviewDecisions = job?.interruption?.allowed_decisions ?? reviewDecisionOptions.map(([value]) => value);
+  const effectiveCitationStatus = report?.effective_full_report_assurance?.publication_status
+    ?? report?.full_report_assurance?.publication_status;
+  const approvalBlockedByEvidence = Boolean(
+    report
+    && (
+      effectiveCitationStatus === "blocked"
+      || (report.evidence_integrity ?? []).some((item) => item.publication_blocking)
+    ),
+  );
+  const serverAllowedReviewDecisions = job?.interruption?.allowed_decisions
+    ?? reviewDecisionOptions.map(([value]) => value);
+  const allowedReviewDecisions = reviewDecisionOptions
+    .map(([value]) => value)
+    .filter((value) => (
+      serverAllowedReviewDecisions.includes(value)
+      && (value !== "approve" || !approvalBlockedByEvidence)
+    ));
   const effectiveDecisionKind = allowedReviewDecisions.includes(decisionKind)
     ? decisionKind
     : allowedReviewDecisions[0] ?? "reject";
@@ -1195,25 +1788,91 @@ export default function Home() {
     return result && !result.failure_summary && result.evidence_ids.length > 0;
   }).length ?? 0;
   const failedResearchRoles = job?.graph?.research_results.filter((result) => result.failure_summary).length ?? 0;
-  const contaminatedEvidence = evidence.filter((item) => {
-    const normalized = item.passage.toLocaleLowerCase();
-    const signals = ["get shortened url", "switch to legacy parser", "print/export", "move to sidebar", "wikidata item"];
-    return signals.filter((signal) => normalized.includes(signal)).length >= 2 || normalized.includes("Ã");
-  });
-  const citationReady = report?.full_report_assurance?.publication_status === "ready";
+  const contaminatedEvidence = (report?.evidence_integrity ?? []).filter(
+    (item) => item.status !== "clean",
+  );
+  const citationReady = effectiveCitationStatus === "ready";
+  const evidenceIntegrityBlocked = (report?.evidence_integrity ?? []).some(
+    (item) => item.publication_blocking,
+  );
   const overallPublicationReady = Boolean(
     report
     && report.publication_decision
-    && report.publication_decision.publication_allowed,
+    && report.publication_decision.publication_allowed
+    && !evidenceIntegrityBlocked
   );
   const reviewerRecommendation = overallPublicationReady
     ? "Publish"
     : report?.social_evidence_policy?.publication_blocked
       ? "Do not publish"
       : "Request more evidence";
+  const persistedLedger = report?.argument_ledger ?? null;
+  const effectiveLedger = report?.effective_argument_ledger ?? persistedLedger;
+  const ledgerArguments = effectiveLedger?.arguments ?? [];
+  const ledgerPropositions = effectiveLedger?.propositions ?? [];
+  const persistedLedgerArguments = persistedLedger?.arguments ?? [];
+  const effectiveApprovedIds = new Set(effectiveLedger?.approved_evidence_ids ?? []);
+  const integrityByEvidence = new Map(
+    (report?.evidence_integrity ?? []).map((item) => [item.evidence_id, item]),
+  );
+  const argumentEligibleCount = evidence.filter(
+    (item) => effectiveApprovedIds.has(item.evidence_id),
+  ).length;
+  const decisiveEligibleIds = new Set(
+    report?.verdict.decisive_evidence_ids.filter(
+      (id) => effectiveApprovedIds.has(id) && integrityByEvidence.get(id)?.decisive_use_eligible !== false,
+    ) ?? [],
+  );
+  const historicalVerdictEvidenceIds = new Set(
+    report?.verdict.decisive_evidence_ids.filter((id) => !decisiveEligibleIds.has(id)) ?? [],
+  );
+  const effectiveLedgerChanged = Boolean(
+    persistedLedger && effectiveLedger
+    && JSON.stringify(persistedLedger.arguments) !== JSON.stringify(effectiveLedger.arguments),
+  );
+  const aggregateLedger = ledgerArguments.reduce((totals, argument) => ({
+    supporting: totals.supporting + argument.supporting_evidence_ids.length,
+    contradictory: totals.contradictory + argument.contradictory_evidence_ids.length,
+    qualifying: totals.qualifying + argument.qualifying_evidence_ids.length,
+  }), { supporting: 0, contradictory: 0, qualifying: 0 });
+  const groupDecisionEvidence = (identifiers: string[], argumentsForRoles: ArgumentLedgerPacket["arguments"]) => Array.from(identifiers.reduce((groups, evidenceId) => {
+    const item = evidence.find((candidate) => candidate.evidence_id === evidenceId);
+    if (!item) return groups;
+    const source = sources.get(item.source_id);
+    const groupKey = `${item.source_id}:${item.evidence_family_id ?? "unassigned"}`;
+    const roles = argumentsForRoles.flatMap((argument) => [
+      ...(argument.supporting_evidence_ids.includes(evidenceId) ? ["Supports proposition"] : []),
+      ...(argument.contradictory_evidence_ids.includes(evidenceId) ? ["Contradicts proposition"] : []),
+      ...(argument.qualifying_evidence_ids.includes(evidenceId) ? ["Qualifies proposition"] : []),
+    ]);
+    const existing = groups.get(groupKey) ?? { source, familyId: item.evidence_family_id, items: [] as Array<{ item: Evidence; roles: string[] }> };
+    existing.items.push({ item, roles: [...new Set(roles.length ? roles : [titleCase(item.stance)])] });
+    groups.set(groupKey, existing);
+    return groups;
+  }, new Map<string, { source: Source | undefined; familyId: string | null; items: Array<{ item: Evidence; roles: string[] }> }>()).values());
+  const decisiveEvidenceGroups = groupDecisionEvidence([...decisiveEligibleIds], ledgerArguments);
+  const historicalEvidenceGroups = groupDecisionEvidence(
+    [...historicalVerdictEvidenceIds],
+    persistedLedgerArguments,
+  );
+  const materialQuantifiers = [...new Set(report?.claim.text.match(/\b(?:almost all|all|always|never|every|exactly|only)\b/gi)?.map((term) => term.toLocaleLowerCase()) ?? [])];
+  const candidateClaimClauses = report?.claim.text
+    .split(/\b(?:although|while|whereas|but)\b/i)
+    .map((clause) => clause.trim().replace(/^[,;]|[,;.]$/g, "").trim())
+    .filter((clause) => clause.length >= 10) ?? [];
+  const compoundCoverageWarning = candidateClaimClauses.length > 1
+    && ledgerPropositions.length < candidateClaimClauses.length;
+  const explanationText = `${report?.verdict.concise_explanation ?? ""} ${report?.verdict.detailed_reasoning ?? ""}`.toLocaleLowerCase();
+  const unreflectedQuantifiers = materialQuantifiers.filter((term) => !explanationText.includes(term));
 
   async function submitClaim(event: FormEvent) {
-    event.preventDefault(); if (!claim.trim()) return; setBusy(true);
+    event.preventDefault();
+    const submittedClaim = claim.trim();
+    if (submittedClaim.length < 3) {
+      setError("Enter a factual claim of at least three characters before starting an investigation.");
+      return;
+    }
+    setError(null); setBusy(true);
     setActivity(inputMode === "manual_claim" ? "investigation" : "extraction");
     try {
       if (inputMode !== "manual_claim") {
@@ -1227,14 +1886,14 @@ export default function Home() {
         setError(null);
         return;
       }
-      await investigateCandidate(claim);
+      await investigateCandidate(submittedClaim);
     } catch (reason) { setError((reason as Error).message); } finally { setBusy(false); setActivity(null); }
   }
 
   async function investigateCandidate(selectedClaim: string) {
       const created = await request<AuthoritativeJob>("/api/authoritative-jobs", {
         method: "POST",
-        body: JSON.stringify({ claim: selectedClaim, idempotency_key: `dashboard:${crypto.randomUUID()}` }),
+        body: JSON.stringify({ claim: selectedClaim, idempotency_key: `dashboard:${clientRequestId()}` }),
       });
       window.localStorage.setItem("claim-polygraph-active-job", created.job.job_id);
       setJob(created); setLiveStage("created"); setReport(null); setGraph(null); setReview(null);
@@ -1249,9 +1908,20 @@ export default function Home() {
     setJob(cancelled);
   }
 
+  function prepareFailedJobRetry() {
+    if (!jobFailed || !job) return;
+    const failedClaim = typeof job.job.spec.payload.claim === "string" ? job.job.spec.payload.claim : "";
+    setClaim(failedClaim); setJob(null); setGraph(null); setReview(null); setLiveStage(null); setError(null);
+    window.localStorage.removeItem("claim-polygraph-active-job");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
   async function saveDecision() {
     if (!review || !job) return; setBusy(true); setActivity("review");
     try {
+      if (effectiveDecisionKind === "approve" && approvalBlockedByEvidence) {
+        throw new Error("Approval is unavailable until the current evidence and citation blockers are resolved.");
+      }
       const decision: Record<string, unknown> = { kind: effectiveDecisionKind, reviewer_identity: reviewer, rationale };
       if (effectiveDecisionKind === "revise") decision.revised_verdict = revisedVerdict;
       if (reviewConstruction && effectiveVerificationDisposition !== "none") {
@@ -1282,100 +1952,259 @@ export default function Home() {
 
   function saveApiAddress(event: FormEvent) {
     event.preventDefault();
-    const normalized = apiDraft.trim().replace(/\/$/, "");
-    window.localStorage.setItem("claim-polygraph-api", normalized);
-    setApiBase(normalized); setError(null);
+    try {
+      const normalized = saveApiConfiguration(window.localStorage, apiDraft);
+      setApiBase(normalized); setApiDraft(normalized); setError(null);
+      setConnectionState("connecting");
+      setConnectionMessage(`Connecting to ${normalized}…`);
+      setConnectionRetry((value) => value + 1);
+    } catch (reason) {
+      const message = reason instanceof ApiConfigurationError
+        ? reason.message
+        : "The API address is invalid.";
+      setConnectionState("invalid"); setConnectionMessage(message); setError(message);
+    }
   }
 
-  const modelCost = telemetry?.metrics.find((metric) => metric.name === "model.cost_usd")?.total ?? 0;
-  const modelTokens = telemetry?.metrics.find((metric) => metric.name === "model.tokens")?.total ?? 0;
+  async function recordEvidenceDisposition(
+    kind: EvidenceDisposition["kind"],
+    approvedUse: string | null,
+    reason: string,
+  ): Promise<boolean> {
+    if (!report || !selected) return false;
+    if (reason.trim().length < 3) {
+      setError("Record a review rationale of at least three characters.");
+      return false;
+    }
+    setBusy(true); setActivity("review");
+    try {
+      const investigationId = report.investigation.investigation_id;
+      await request(`/api/investigations/${report.investigation.investigation_id}/evidence-dispositions`, {
+        method: "POST",
+        headers: { "X-Reviewer-Identity": reviewer },
+        body: JSON.stringify({
+          reviewer_identity: reviewer,
+          approver_identity: approver,
+          disposition: {
+            evidence_id: selected.evidence_id,
+            kind,
+            approved_use: approvedUse,
+            reason: reason.trim(),
+          },
+        }),
+      });
+      const [freshReport, freshJob, freshInvestigations] = await Promise.all([
+        request<Report>(`/api/investigations/${investigationId}/report`),
+        request<AuthoritativeJob>(`/api/investigations/${investigationId}/authoritative-job`),
+        request<Investigation[]>("/api/investigations"),
+      ]);
+      setReport(freshReport);
+      setJob(freshJob);
+      setGraph(authoritativeGraphSnapshot(freshJob));
+      setReview(freshJob.review);
+      setLiveStage(freshJob.graph?.phase ?? null);
+      setInvestigations(freshInvestigations);
+      await loadReviewQueue();
+      setError(null);
+      return true;
+    } catch (reasonValue) {
+      setError((reasonValue as Error).message);
+      return false;
+    } finally {
+      setBusy(false); setActivity(null);
+    }
+  }
+
+  function resetApiAddress() {
+    const inferred = resetApiConfiguration(window.localStorage, window.location);
+    setApiBase(inferred); setApiDraft(inferred); setError(null);
+    setConnectionState("connecting");
+    setConnectionMessage(`Reset to the inferred local API at ${inferred}.`);
+    setConnectionRetry((value) => value + 1);
+  }
+
+  const telemetryModelCost = telemetry?.metrics.find((metric) => metric.name === "model.cost_usd")?.total ?? 0;
+  const telemetryModelTokens = telemetry?.metrics.find((metric) => metric.name === "model.tokens")?.total ?? 0;
+  const selectedJobMatches = Boolean(job?.investigation_id && job.investigation_id === selectedId);
+  const activeJobOwnsUsage = Boolean(job && jobActive);
+  const scopedJobOwnsUsage = activeJobOwnsUsage || selectedJobMatches;
+  const scopedJobConsumption = scopedJobOwnsUsage ? job?.graph?.consumption : null;
+  const scopedJobUsage = scopedJobOwnsUsage ? job?.usage : null;
+  const displayedCost = scopedJobUsage?.estimated_cost_usd ?? scopedJobConsumption?.estimated_cost_usd ?? (scopedJobOwnsUsage ? 0 : telemetryModelCost);
+  const displayedTokens = scopedJobUsage?.total_tokens ?? scopedJobConsumption?.total_tokens ?? (scopedJobOwnsUsage ? 0 : telemetryModelTokens);
+  const displayedModelCalls = scopedJobUsage?.model_calls ?? scopedJobConsumption?.model_calls ?? (scopedJobOwnsUsage ? 0 : null);
+  const costScope = activeJobOwnsUsage ? "CURRENT JOB USAGE" : selectedJobMatches ? "CURRENT INVESTIGATION COST" : "API PROCESS TELEMETRY";
   const externalSearchPricing = apiStatus?.retrieval_provider?.startsWith("serpapi") ?? false;
+  const connected = connectionState === "connected";
+  const progressStream = jobActive ? jobStream : graphStream;
+  const progressStatusLabel = titleCase(progressStream.status);
+  const filteredInvestigations = investigations.filter((item) => `${item.input_claim} ${item.investigation_id}`.toLocaleLowerCase().includes(caseQuery.trim().toLocaleLowerCase()));
+  const pendingReviews = reviewQueue.filter((item) => reviewStateOf(item) !== "complete");
+  const visibleReviewQueue = reviewQueue.filter((history) => {
+    const state = reviewStateOf(history);
+    const investigation = investigations.find((item) => item.investigation_id === history.request.investigation_id);
+    const searchable = `${investigation?.input_claim ?? ""} ${history.request.investigation_id} ${history.request.request_id} ${history.request.reason} ${reviewReasonLabel(history.request.reason)}`.toLocaleLowerCase();
+    const matchesQuery = searchable.includes(reviewQueueQuery.trim().toLocaleLowerCase());
+    const matchesFilter = reviewQueueFilter === "all" || reviewQueueFilter === "pending" && state !== "complete" || reviewQueueFilter === state;
+    return matchesQuery && matchesFilter;
+  });
+  const navigateWorkspace = (view: WorkspaceView, investigationId: string | null = null) => {
+    setWorkspaceView(view);
+    if (investigationId !== null) setSelectedId(investigationId);
+    window.history.pushState({}, "", serializeNavigationState({ view, investigationId: investigationId ?? (view === "investigations" ? selectedId : null) }));
+  };
+  const selectInvestigation = (investigationId: string, targetSection: typeof reportSections[number] = "Review brief") => {
+    setSelectedId(investigationId); setGraph(null); setReview(null); setSection(targetSection);
+    navigateWorkspace("investigations", investigationId);
+  };
 
   return (
     <main className="app-shell">
-      <aside className="sidebar">
+      <a className="skip-link" href="#workspace-content">Skip to investigation workspace</a>
+      <aside className="sidebar" aria-label="Claim Polygraph workspace">
         <div className="brand"><div className="brand-mark">CP</div><div><strong>Claim Polygraph</strong><span>Evidence console</span></div></div>
-        <nav aria-label="Investigations">
-          <button className="nav-item selected"><span>◎</span>Investigations</button>
-          <button className="nav-item"><span>◇</span>Review queue<b>{reviewPending ? 1 : 0}</b></button>
-          <a className="nav-item" href="/annotation"><span>✓</span>V3 annotation</a>
-          <button className="nav-item"><span>◌</span>System health</button>
+        <nav aria-label="Workspace navigation">
+          <button aria-label="Investigations" title="Investigations" aria-current={workspaceView === "investigations" ? "page" : undefined} className={`nav-item ${workspaceView === "investigations" ? "selected" : ""}`} onClick={() => navigateWorkspace("investigations")}><span aria-hidden="true">◎</span>Investigations</button>
+          <button aria-label={`Review queue${pendingReviews.length ? `, ${pendingReviews.length} pending` : ""}`} title="Review queue" aria-current={workspaceView === "review_queue" ? "page" : undefined} className={`nav-item ${workspaceView === "review_queue" ? "selected" : ""}`} onClick={() => navigateWorkspace("review_queue")}><span aria-hidden="true">◇</span>Review queue{pendingReviews.length > 0 && <b>{pendingReviews.length}</b>}</button>
+          <a className="nav-item" aria-label="Verification annotation studio" title="Verification annotation studio" href="/annotation"><span aria-hidden="true">✓</span>V3 annotation</a>
+          <button aria-label="System health" title="System health" aria-current={workspaceView === "system_health" ? "page" : undefined} className={`nav-item ${workspaceView === "system_health" ? "selected" : ""}`} onClick={() => navigateWorkspace("system_health")}><span aria-hidden="true">◌</span>System health</button>
         </nav>
         <div className="investigation-list">
           <span>RECENT CASES</span>
-          {investigations.slice(-5).reverse().map((item) => (
-            <button key={item.investigation_id} className={selectedId === item.investigation_id ? "case active" : "case"} onClick={() => { setSelectedId(item.investigation_id); setGraph(null); setReview(null); setSection("Review brief"); }}>
+          <input className="case-search" aria-label="Search investigations" value={caseQuery} onChange={(event) => setCaseQuery(event.target.value)} placeholder="Search claims or IDs" />
+          {navigationLoading ? <small className="sidebar-state">Loading cases…</small> : filteredInvestigations.length === 0 ? <small className="sidebar-state">{caseQuery ? "No matching cases" : "No investigations yet"}</small> : filteredInvestigations.slice().reverse().slice(0, 20).map((item) => (
+            <button key={item.investigation_id} className={selectedId === item.investigation_id ? "case active" : "case"} onClick={() => selectInvestigation(item.investigation_id)}>
               <b>{shortId(item.investigation_id)}</b><small>{item.input_claim}</small>
             </button>
           ))}
         </div>
-        <div className="phase-card"><span>{apiStatus?.orchestrator === "langgraph" ? "PROMOTED LOCAL DEFAULT" : "ROLLBACK / DIAGNOSTIC MODE"}</span><strong>{titleCase(apiStatus?.orchestrator ?? "connecting")} orchestrator</strong><div className="meter"><i /></div><small>{apiStatus?.live_research ? "Live web research enabled" : "Recorded fixture research"}</small><small>Authority · InvestigationService</small><small>Rollback · Direct composition retained</small></div>
-        <div className="profile"><div className="avatar">MR</div><div><strong>Md Moshiur Rahman</strong><span>Reviewer</span></div><span className={connected ? "connection online" : "connection"}>{connected ? "LIVE" : "OFFLINE"}</span></div>
+        <div className="phase-card"><span>{apiStatus?.orchestrator === "langgraph" ? "PROMOTED LOCAL DEFAULT" : "ROLLBACK / DIAGNOSTIC MODE"}</span><strong>{apiStatus?.orchestrator === "langgraph" ? "Authoritative workflow" : `${providerLabel(apiStatus?.orchestrator)} orchestrator`}</strong><div className="meter"><i /></div><small>{apiStatus?.live_research ? "Live web research enabled" : "Recorded fixture research"}</small><small>Authority · InvestigationService</small><small>Rollback · Direct composition retained</small></div>
+        <div className="profile"><div className="avatar">MR</div><div><strong>Md Moshiur Rahman</strong><span>Reviewer</span></div><span className={connected ? "connection online" : "connection"}>{connected ? "LIVE" : titleCase(connectionState)}</span></div>
       </aside>
 
-      <section className="workspace">
+      <section className="workspace" id="workspace-content" tabIndex={-1} aria-busy={working}>
         <header className="topbar">
-          <div><p>{report ? `INVESTIGATION · ${shortId(report.investigation.investigation_id)}` : "NEW INVESTIGATION"}</p><h1>{report?.claim.text ?? "Investigate a factual claim"}</h1></div>
-          <div className="top-actions">
-            <div className="cost-chip" aria-label="Temporary usage and cost estimate">
-              <span>LOCAL COST TOTAL</span>
-              <strong>${modelCost.toFixed(6)}</strong>
-              <small>{Math.round(modelTokens).toLocaleString()} model tokens · {externalSearchPricing ? "search billed by SerpAPI plan" : "search $0 API fee"}</small>
-            </div>
-            <span className={graph?.status === "complete" ? "status complete" : "status"}><i /> {graph ? titleCase(graph.status) : report ? titleCase(report.investigation.status) : "Ready"}</span>
-            {report && <a className="ghost" href={`${apiBase}/api/investigations/${report.investigation.investigation_id}/report?format=${overallPublicationReady ? "markdown" : "provisional_markdown"}`} target="_blank">{overallPublicationReady ? "Export report" : "Download draft"}</a>}
-          </div>
+          <div><p>{workspaceView === "review_queue" ? "HUMAN-IN-THE-LOOP" : workspaceView === "system_health" ? "OPERATIONS" : report ? `INVESTIGATION · ${shortId(report.investigation.investigation_id)}` : "NEW INVESTIGATION"}</p><h1>{workspaceView === "review_queue" ? "Review queue" : workspaceView === "system_health" ? "System health" : report?.claim.text ?? "Investigate a factual claim"}</h1></div>
+          {workspaceView === "review_queue" ? <div className="top-actions queue-top-actions"><div className="queue-count-chip"><span>AWAITING ACTION</span><strong>{pendingReviews.length}</strong><small>{reviewQueue.length} total review records</small></div><span className="status"><i /> Review workspace</span></div>
+            : workspaceView === "system_health" ? <div className="top-actions"><span className={connected ? "status complete" : "status"}><i /> {titleCase(connectionState)}</span></div>
+            : !report && !jobActive && !jobFailed ? <div className="top-actions"><span className={connected ? "status complete" : "status"}><i /> {connected ? "Ready to investigate" : titleCase(connectionState)}</span></div>
+            : jobFailed ? <div className="top-actions"><span className="status failed"><i /> Earlier attempt stopped</span></div>
+            : <div className="top-actions">
+              <div className="cost-chip" aria-label="Temporary usage and cost estimate">
+                <span>{costScope}</span>
+                <strong>${displayedCost.toFixed(6)}</strong>
+                <small>{Math.round(displayedTokens).toLocaleString()} model tokens{displayedModelCalls == null ? "" : ` across ${displayedModelCalls} structured call${displayedModelCalls === 1 ? "" : "s"}`} · {activeJobOwnsUsage ? "this submitted job only" : selectedJobMatches ? "this investigation only" : "all activity observed by this API process"} · {externalSearchPricing ? "search billed separately by SerpAPI plan" : "search $0 API fee"}{scopedJobUsage?.unpriced_model_calls ? ` · ${scopedJobUsage.unpriced_model_calls} unpriced call(s)` : ""}</small>
+              </div>
+              <span className={graph?.status === "complete" ? "status complete" : "status"}><i /> {graph ? titleCase(graph.status) : report ? titleCase(report.investigation.status) : "Ready"}</span>
+              {report && <a className="ghost" href={`${apiBase}/api/investigations/${report.investigation.investigation_id}/report?format=${overallPublicationReady ? "markdown" : "provisional_markdown"}`} target="_blank" rel="noreferrer" aria-label={overallPublicationReady ? "Open publication-ready report" : "Open provisional report draft; publication is blocked"}>{overallPublicationReady ? "Export report" : "Download provisional draft"}</a>}
+            </div>}
         </header>
-        {!report && <section className="desk-intro">
+        {workspaceView === "investigations" && !report && <section className="desk-intro">
           <div><span>CLAIM DESK</span><h2>Build a source-grounded fact check</h2><p>Enter one checkable claim or extract candidates from reporting material. The desk will search multiple evidence paths, challenge the initial interpretation, verify context, and prepare a provisional report for your review.</p></div>
           <ol><li><b>1</b><span>Investigate<small>Search and retrieve</small></span></li><li><b>2</b><span>Verify<small>Context and independence</small></span></li><li><b>3</b><span>Review<small>You make the decision</small></span></li></ol>
         </section>}
 
-        <form className="claim-bar" onSubmit={submitClaim}>
-          <label htmlFor="input-mode">INPUT TYPE</label>
-          <select id="input-mode" value={inputMode} onChange={(event) => { setInputMode(event.target.value as typeof inputMode); setClaimCandidates([]); }}>
-            <option value="manual_claim">Manual claim</option>
-            <option value="article_text">Article text</option>
-            <option value="public_url">Public URL</option>
-          </select>
-          <label htmlFor="claim-input">{inputMode === "manual_claim" ? "CLAIM TO INVESTIGATE" : inputMode === "article_text" ? "ARTICLE TEXT" : "PUBLIC ARTICLE URL"}</label>
-          <div>{inputMode === "article_text"
-            ? <textarea id="claim-input" value={claim} onChange={(event) => setClaim(event.target.value)} placeholder="Paste article text. Extraction will not start an investigation." />
-            : <input id="claim-input" value={claim} onChange={(event) => setClaim(event.target.value)} placeholder={inputMode === "public_url" ? "https://example.org/article" : "Enter a checkable factual claim…"} />}
-            <button className="primary" disabled={busy || !connected || claim.trim().length < 3}>{inputMode === "manual_claim" ? "Investigate" : "Extract claims"}</button></div>
-        </form>
-        <details className="system-context">
-          <summary>Research system and safeguards</summary>
-          <div><p><b>{apiStatus?.orchestrator === "langgraph" ? "Unified LangGraph active." : `${titleCase(apiStatus?.orchestrator ?? "Connecting")} path active.`}</b> Research, verification, defender/challenger arguments, judgment, review, and publication are checkpointed in one durable thread.</p><span>InvestigationService authority</span><span>Direct rollback retained</span><span>{apiStatus?.live_research ? "Live research" : "Fixture research"}</span></div>
-        </details>
-        {working && <section className="activity-card" role="status" aria-live="polite">
+        {workspaceView === "investigations" && <details className={`new-investigation-panel ${report ? "compact" : "initial"}`} open={report ? undefined : true}>
+          <summary>{report ? "Start another investigation" : "New investigation"}</summary>
+          <form className="claim-bar" onSubmit={submitClaim} noValidate>
+            <label htmlFor="input-mode">INPUT TYPE</label>
+            <select id="input-mode" value={inputMode} onChange={(event) => { setInputMode(event.target.value as typeof inputMode); setClaimCandidates([]); }}>
+              <option value="manual_claim">Manual claim</option>
+              <option value="article_text">Article text</option>
+              <option value="public_url">Public URL</option>
+            </select>
+            <label htmlFor="claim-input">{inputMode === "manual_claim" ? "CLAIM TO INVESTIGATE" : inputMode === "article_text" ? "ARTICLE TEXT" : "PUBLIC ARTICLE URL"}</label>
+            <div>{inputMode === "article_text"
+              ? <textarea id="claim-input" value={claim} onChange={(event) => setClaim(event.target.value)} placeholder="Paste article text. Extraction will not start an investigation." />
+              : <input id="claim-input" value={claim} onChange={(event) => setClaim(event.target.value)} placeholder={inputMode === "public_url" ? "https://example.org/article" : "Enter a checkable factual claim…"} />}
+              <button type="submit" className="primary" disabled={busy || !connected || claim.trim().length < 3}>{busy && activity === "investigation" ? "Starting…" : busy && activity === "extraction" ? "Extracting…" : inputMode === "manual_claim" ? "Investigate" : "Extract claims"}</button></div>
+            {error && <p className="claim-submit-error" role="alert">{error}</p>}
+          </form>
+        </details>}
+        {workspaceView === "investigations" && <div className="workspace-tools">
+          <details className="system-context">
+            <summary>Research safeguards</summary>
+            <div><p><b>{apiStatus?.orchestrator === "langgraph" ? "Unified authoritative workflow active." : `${titleCase(apiStatus?.orchestrator ?? "Connecting")} path active.`}</b> Research, verification, defender/challenger arguments, judgment, review, and publication are checkpointed in one durable thread.</p><span>InvestigationService authority</span><span>Direct rollback retained</span><span>{apiStatus?.live_research ? "Live research" : "Fixture research"}</span></div>
+          </details>
+          <details className="api-configuration" open={!connected}>
+            <summary>Evidence service · {titleCase(connectionState)}</summary>
+            <form onSubmit={saveApiAddress}>
+              <label htmlFor="api-address">API origin</label>
+              <div><input id="api-address" aria-label="API address" value={apiDraft} onChange={(event) => setApiDraft(event.target.value)} aria-describedby="api-connection-message" /><button className="ghost">Save & retry</button><button type="button" className="ghost" onClick={resetApiAddress}>Reset to local default</button></div>
+              <small id="api-connection-message" role="status" aria-live="polite">{connectionMessage}</small>
+              <small>Only the API origin is stored locally. Credentials, paths, queries and fragments are rejected.</small>
+            </form>
+          </details>
+        </div>}
+        {workspaceView === "investigations" && working && <section className="activity-card" role="status" aria-live="polite">
           <div className="activity-pulse"><i /><i /><i /></div>
           <div className="activity-copy">
             <span>{jobActive || activity === "investigation" ? "INVESTIGATION IN PROGRESS" : activity === "extraction" ? "EXTRACTING CLAIMS" : "UPDATING REVIEW"}</span>
             <strong>{jobActive || activity === "investigation" ? `${titleCase(liveStage ?? job?.job.status ?? "queued")} · Researchers are gathering, challenging and verifying evidence` : activity === "extraction" ? "Finding checkable statements in the submitted material" : "Saving the decision and resuming the durable graph"}</strong>
-            <small>{elapsedSeconds}s elapsed · This is live activity, not an estimated completion percentage.</small>
+            <small>{elapsedSeconds}s elapsed · Progress channel: {progressStatusLabel} · This is live activity, not an estimated completion percentage.</small>
           </div>
           {jobActive && <button className="cancel-job" onClick={cancelJob}>Cancel safely</button>}
           <div className="activity-track"><i /></div>
         </section>}
-        {jobActive && <section className="working-graph" aria-label="Investigation graph is running">
-          <div className="working-graph-head"><div><span>AUTHORITATIVE INVESTIGATION PROGRESS</span><strong>{titleCase(liveStage ?? job.job.status)}</strong></div><small>{job.investigation_id ? "Persisted evidence-production trace connected" : "Durable job queued · waiting for investigation ID"}</small></div>
+        {workspaceView === "investigations" && jobFailed && job && !report && <section className="job-failure-card" role="alert">
+          <div><span>EARLIER ATTEMPT STOPPED</span><h2>No report was produced for that attempt</h2><p>{job.job.last_error ?? "The durable job ended before the investigation report could be created."}</p><small>Historical job {shortId(job.job.job_id)} · {job.job.attempts} attempt{job.job.attempts === 1 ? "" : "s"} recorded · The evidence service is currently {connected ? "connected" : "unavailable"}.</small></div>
+          <button className="ghost" type="button" onClick={prepareFailedJobRetry}>Use claim in a new attempt</button>
+        </section>}
+        {workspaceView === "investigations" && jobActive && <section className="working-graph" aria-label="Investigation graph is running">
+          <div className="working-graph-head"><div><span>AUTHORITATIVE INVESTIGATION PROGRESS</span><strong>{titleCase(liveStage ?? job.job.status)}</strong></div><div className={`stream-health ${progressStream.status}`} role="status" aria-live="polite"><b>{progressStatusLabel}</b><small>{progressStream.message}</small><small>Persisted sequence {progressStream.lastSequence}</small></div></div>
           <div className="graph-progress" role="progressbar" aria-valuenow={Math.round((liveNodeIndex + 1) / graphOrder.length * 100)} aria-valuemin={0} aria-valuemax={100}><i style={{width: `${Math.round((liveNodeIndex + 1) / graphOrder.length * 100)}%`}} /></div>
           <div className="graph investigation-graph graph-running">
             {graphOrder.map((node, index) => <div className={`node ${index < liveNodeIndex ? "done" : index === liveNodeIndex ? "active" : "waiting"}`} key={node}><div>{index < liveNodeIndex ? "✓" : index === liveNodeIndex ? "↻" : index + 1}</div><span>{graphLabels[node]}</span>{index < graphOrder.length - 1 && <i />}</div>)}
           </div>
-          <p>One durable LangGraph thread is coordinating authoritative research, verification, arguments, judgment, review routing and publication. InvestigationService remains the domain and persistence authority inside each node.</p>
+          <p>One durable workflow thread is coordinating authoritative research, verification, arguments, judgment, review routing and publication. InvestigationService remains the domain and persistence authority inside each node.</p>
         </section>}
-        {claimCandidates.length > 0 && <section className="record-list" aria-label="Extracted claim candidates">
+        {workspaceView === "investigations" && claimCandidates.length > 0 && <section className="record-list" aria-label="Extracted claim candidates">
           {claimCandidates.map((candidate) => <article key={candidate.candidate_id}>
             <b>{candidate.rank}. {candidate.text}</b>
             <span>Check-worthiness {Math.round(candidate.checkworthiness * 100)}%</span>
             <button className="ghost" disabled={busy} onClick={() => { setBusy(true); setActivity("investigation"); void investigateCandidate(candidate.text).catch((reason: Error) => setError(reason.message)).finally(() => { setBusy(false); setActivity(null); }); }}>Investigate this claim</button>
           </article>)}
         </section>}
-        {error && <div className="error-banner" role="alert">{error}</div>}
+        {error && workspaceView !== "investigations" && <div className="error-banner" role="alert">{error}</div>}
 
-        {!report && reviewPending && job?.interruption ? (
+        {workspaceView === "review_queue" ? (
+          <section className="navigation-view" aria-labelledby="review-queue-title">
+            <div className="navigation-view-heading"><div><span>REVIEW OPERATIONS</span><h2 id="review-queue-title">Decisions requiring human judgment</h2><p>Prioritize unresolved cases, inspect the evidence packet, and record a decision without altering earlier audit history.</p></div><button className="ghost" onClick={() => void loadReviewQueue()}>Refresh queue</button></div>
+            <div className="queue-toolbar" aria-label="Review queue controls"><label><span>SEARCH</span><input value={reviewQueueQuery} onChange={(event) => setReviewQueueQuery(event.target.value)} placeholder="Claim, case ID, or review reason" /></label><label><span>STATUS</span><select value={reviewQueueFilter} onChange={(event) => setReviewQueueFilter(event.target.value as typeof reviewQueueFilter)}><option value="pending">All awaiting action</option><option value="review">Awaiting reviewer</option><option value="approval">Awaiting distinct approval</option><option value="complete">Completed</option><option value="all">All records</option></select></label><div><span>VISIBLE</span><strong>{visibleReviewQueue.length}</strong><small>of {reviewQueue.length} records</small></div></div>
+            {reviewQueueError ? <div className="view-state error-state" role="alert"><b>Review queue unavailable</b><p>{reviewQueueError}</p><button className="ghost" onClick={() => void loadReviewQueue()}>Try again</button></div>
+              : connectionState === "connecting" || navigationLoading ? <div className="view-state" role="status">Loading durable review records…</div>
+              : !connected ? <div className="view-state"><b>Connect the evidence API</b><p>The review queue cannot be read while the configured API is unavailable.</p></div>
+              : reviewQueue.length === 0 ? <div className="view-state"><b>No review requests</b><p>Investigations routed to human judgment will appear here with their persisted reason and audit state.</p><button className="ghost" onClick={() => navigateWorkspace("investigations")}>Start an investigation</button></div>
+              : visibleReviewQueue.length === 0 ? <div className="view-state"><b>No reviews match these filters</b><p>Change the search text or status filter to see other persisted review records.</p><button className="ghost" onClick={() => { setReviewQueueQuery(""); setReviewQueueFilter("pending"); }}>Clear filters</button></div>
+              : <div className="queue-list">{visibleReviewQueue.map((history) => {
+                const reviewState = reviewStateOf(history);
+                const state = reviewState === "review" ? "Awaiting reviewer" : reviewState === "approval" ? "Awaiting distinct approval" : "Decision recorded";
+                const pending = reviewState !== "complete";
+                const investigation = investigations.find((item) => item.investigation_id === history.request.investigation_id);
+                const reasonCode = reviewReasonCode(history.request.reason);
+                return <article key={history.request.request_id} className={pending ? "queue-item pending" : "queue-item complete"}>
+                  <div className="queue-case"><span>{pending ? "ACTION REQUIRED" : "AUDIT COMPLETE"}</span><h3>{investigation?.input_claim ?? `Investigation ${shortId(history.request.investigation_id)}`}</h3><p className="queue-reason">{reviewReasonLabel(history.request.reason)}</p><small>Case {shortId(history.request.investigation_id)} · Request {shortId(history.request.request_id)}</small></div>
+                  <dl><div><dt>Next owner</dt><dd>{reviewState === "review" ? "Reviewer" : reviewState === "approval" ? "Distinct approver" : "None"}</dd></div><div><dt>Status</dt><dd>{state}</dd></div><div><dt>Reason code</dt><dd><code>{reasonCode}</code></dd></div><div><dt>Requested</dt><dd>{new Date(history.request.created_at).toLocaleString()}</dd></div><div><dt>Audit chain</dt><dd className={history.chain_valid ? "audit-valid" : "audit-warning"}>{history.chain_valid ? "Verified" : "Needs attention"}</dd></div></dl>
+                  <button className="primary" onClick={() => selectInvestigation(history.request.investigation_id, pending ? "Review brief" : "Review history")}>{pending ? "Open review" : "Open history"}</button>
+                </article>;
+              })}</div>}
+          </section>
+        ) : workspaceView === "system_health" ? (
+          <section className="navigation-view" aria-labelledby="system-health-title">
+            <div className="navigation-view-heading"><div><span>LOCAL OPERATIONS</span><h2 id="system-health-title">Service and provider status</h2><p>Operational state, configured providers, cumulative usage, and recovery diagnostics from the evidence service.</p></div><button className="ghost" onClick={() => setConnectionRetry((value) => value + 1)}>Refresh status</button></div>
+            {navigationLoading || connectionState === "connecting" ? <div className="view-state" role="status">Checking API and telemetry…</div> : <>
+              <section className={`health-summary ${connected ? "healthy" : "unhealthy"}`} role="status" aria-live="polite"><div><span>{connected ? "CORE SERVICE AVAILABLE" : "CORE SERVICE UNAVAILABLE"}</span><h3>{connected ? "The evidence service is reachable" : "The dashboard cannot reach the evidence service"}</h3><p>{connected ? "Investigation records, review operations, and operational telemetry can be read from the configured service." : connectionMessage}</p></div><strong>{connected ? "Operational" : "Action required"}</strong></section>
+              <div className="health-grid">
+                <article><span>EVIDENCE SERVICE</span><strong className={connected ? "health-good" : "health-bad"}>{titleCase(connectionState)}</strong><p>{connected ? `API ${apiStatus?.api_version ?? "version not reported"} at the configured local origin.` : connectionMessage}</p></article>
+                <article><span>RESEARCH PROVIDER</span><strong>{providerLabel(apiStatus?.retrieval_provider)}</strong><p>{apiStatus?.live_research ? "Live web research is enabled." : apiStatus ? "Recorded research fixtures are active." : "Provider state unavailable."}</p></article>
+                <article><span>MODEL PROVIDER</span><strong>{providerLabel(apiStatus?.model_provider)}</strong><p>{Math.round(telemetryModelTokens).toLocaleString()} cumulative observed tokens · ${telemetryModelCost.toFixed(6)} estimated cumulative cost.</p></article>
+                <article><span>DURABLE WORKFLOW</span><strong>{apiStatus ? "Active" : "Unavailable"}</strong><p>Domain operations: {apiStatus?.authoritative_service ?? "not reported"}. Sequential rollback remains available.</p></article>
+              </div>
+              <section className="telemetry-panel"><div className="telemetry-heading"><div><span>CUMULATIVE SERVICE ACTIVITY</span><h3>{telemetry ? "Operational telemetry" : "Telemetry unavailable"}</h3><p>Process/store-wide observations—not the selected investigation. Latency cards show averages, not accumulated duration.</p></div>{telemetry && <dl><div><dt>Traces</dt><dd>{telemetry.traces.toLocaleString()}</dd></div><div><dt>Spans</dt><dd>{telemetry.spans.toLocaleString()}</dd></div></dl>}</div>{telemetry ? telemetry.metrics.length === 0 ? <p className="empty-copy">No metrics have been recorded in this process.</p> : <div className="metric-list">{telemetry.metrics.map((metric) => { const view = telemetryMetricView(metric); return <article key={metric.name}><b>{view.label}</b><strong>{view.value}</strong><small>{view.detail}</small></article>; })}</div> : <div className="view-state"><p>The core API may be available while the optional telemetry endpoint is unavailable.</p></div>}</section>
+              <details className="health-diagnostics"><summary>Configuration and diagnostics</summary><div className="health-diagnostic-grid"><form onSubmit={saveApiAddress}><label htmlFor="health-api-address">API origin</label><div><input id="health-api-address" value={apiDraft} onChange={(event) => setApiDraft(event.target.value)} /><button className="ghost">Save & retry</button><button type="button" className="ghost" onClick={resetApiAddress}>Reset</button></div><small>{connectionMessage}</small><small>Only the origin is stored locally; credentials, paths, queries, and fragments are rejected.</small></form><dl><div><dt>Configured origin</dt><dd>{apiBase}</dd></div><div><dt>API version</dt><dd>{apiStatus?.api_version ?? "Unavailable"}</dd></div><div><dt>Investigation records</dt><dd>{investigations.length}</dd></div><div><dt>Reviews awaiting action</dt><dd>{pendingReviews.length}</dd></div></dl></div></details>
+            </>}
+          </section>
+        ) : !report && reviewPending && job?.interruption ? (
           <div className="pre-report-workspace" aria-label="Investigation result requiring review">
             <section className="pre-report-hero">
               <div><span>PROVISIONAL INVESTIGATION RESULT</span><h2>{job.interruption.claim_text}</h2><p>{job.interruption.route_reason}</p></div>
@@ -1383,7 +2212,7 @@ export default function Home() {
             </section>
 
             <section className="interrupted-summary">
-              <div><span>WORKFLOW</span><strong>{titleCase(job.graph?.phase ?? "review")}</strong><small>Checkpoint {job.graph?.checkpoint_sequence ?? "—"}</small></div>
+              <div><span>WORKFLOW</span><strong>{titleCase(job.graph?.phase ?? "review")}</strong><small>Checkpoint {job.graph?.checkpoint_sequence ?? ""}</small></div>
               <div><span>RESEARCH ROLES</span><strong>{job.graph?.assignments.length ?? 0}</strong><small>{successfulResearchRoles} returned evidence · {failedResearchRoles} failed</small></div>
               <div><span>APPROVED EVIDENCE</span><strong>{job.graph?.approved_evidence_ids.length ?? 0}</strong><small>{job.graph?.evidence_families.length ?? 0} independent families</small></div>
               <div><span>UNRESOLVED</span><strong>{job.graph?.unresolved_questions.length ?? 0}</strong><small>Research questions</small></div>
@@ -1392,13 +2221,14 @@ export default function Home() {
             </section>
 
             <section className="graph-card interrupted-graph">
-              <div className="card-heading"><div><span>AUTHORITATIVE LANGGRAPH TRACE</span><h2>Paused safely at human review</h2><small className="authority-note">All completed operations are checkpointed. Requesting more evidence resumes this thread without replaying paid work.</small></div><div className="graph-progress-label"><strong>{graphProgress}%</strong><small>{completedGraphNodes} of {graphOrder.length} phases checkpointed</small></div></div>
+              <div className="card-heading"><div><span>AUTHORITATIVE WORKFLOW TRACE</span><h2>Paused safely at human review</h2><small className="authority-note">All completed operations are checkpointed. Requesting more evidence resumes this thread without replaying paid work.</small></div><div className="graph-progress-label"><strong>{graphProgress}%</strong><small>{completedGraphNodes} of {graphOrder.length} phases checkpointed</small></div></div>
               <div className="graph-progress" role="progressbar" aria-valuenow={graphProgress} aria-valuemin={0} aria-valuemax={100}><i style={{width: `${graphProgress}%`}} /></div>
+              <div className="stream-health inline-stream-health paused" role="status" aria-live="polite"><b>Review state · Awaiting decision</b><small>Safely paused at a persisted checkpoint · {completedGraphNodes} phases checkpointed · Live updates {graphStream.status === "live" ? "connected" : "recovering in background"}</small></div>
               <div className="graph">{graphOrder.map((node, index) => { const done = graph?.completed_nodes.includes(node); const active = node === "review"; return <div className={`node ${done ? "done" : active ? "active" : "waiting"}`} key={node}><div>{done ? "✓" : active ? "!" : index + 1}</div><span>{graphLabels[node]}</span>{index < graphOrder.length - 1 && <i />}</div>; })}</div>
             </section>
 
             <div className="pre-report-columns">
-              <main>
+              <div className="pre-report-main">
                 <section className="detail-card">
                   <div className="detail-heading"><div><span>MULTI-AGENT RESEARCH</span><h2>What each specialist returned</h2></div><small>{job.graph?.consumption.role_activations ?? 0} role activations</small></div>
                   <div className="agent-results">{job.graph?.assignments.map((assignment) => { const result = researchResultsByAssignment.get(assignment.assignment_id); const failed = Boolean(result?.failure_summary); return <article className={failed ? "agent-failed" : "agent-success"} key={assignment.assignment_id}><div><b>{titleCase(assignment.role)}</b><em>{failed ? "Retrieval failed" : result?.evidence_ids.length ? "Evidence returned" : "No retained evidence"}</em></div><p>{failed ? result?.failure_summary : `${result?.source_ids.length ?? 0} sources · ${result?.evidence_ids.length ?? 0} evidence passages`}</p><small>Round {assignment.round_number} · Assignment {shortId(assignment.assignment_id)}</small></article>; })}</div>
@@ -1423,7 +2253,7 @@ export default function Home() {
                   <div className="detail-heading"><div><span>JOB EVENT TIMELINE</span><h2>What happened</h2></div><small>{job.events.length} durable events</small></div>
                   <div className="event-timeline">{job.events.map((event) => <article key={event.sequence}><i>{event.sequence}</i><div><b>{titleCase(event.action)}</b><p>{event.detail}</p><small>{new Date(event.occurred_at).toLocaleString()}</small></div></article>)}</div>
                 </section>
-              </main>
+              </div>
 
               <aside className="review-panel sticky-review">
                 <div className="review-kicker">REQUIRED NEXT ACTION</div>
@@ -1436,33 +2266,40 @@ export default function Home() {
                 <label>Review rationale<textarea value={rationale} onChange={(event) => setRationale(event.target.value)} /></label>
                 <label>Reviewer identity<input value={reviewer} onChange={(event) => setReviewer(event.target.value)} /></label>
                 {["approve", "revise"].includes(effectiveDecisionKind) && <label>Distinct approver identity<input value={approver} onChange={(event) => setApprover(event.target.value)} /></label>}
-                <button className="primary" onClick={saveDecision} disabled={busy || rationale.trim().length < 3 || reviewer.trim().length < 3 || (["approve", "revise"].includes(effectiveDecisionKind) && (approver.trim().length < 3 || approver.trim().toLocaleLowerCase() === reviewer.trim().toLocaleLowerCase()))}>{busy ? "Saving…" : "Save decision & resume graph"}</button>
+                <button className="primary" onClick={saveDecision} disabled={busy || rationale.trim().length < 3 || reviewer.trim().length < 3 || (["approve", "revise"].includes(effectiveDecisionKind) && (approver.trim().length < 3 || approver.trim().toLocaleLowerCase() === reviewer.trim().toLocaleLowerCase()))}>{busy ? "Saving…" : "Save decision & resume workflow"}</button>
                 <small className="immutable">Only permitted decisions are offered. The result is appended to the immutable review history.</small>
               </aside>
             </div>
           </div>
         ) : !report ? (
           <section className="empty-state">
-            <span>CONNECTED EVIDENCE WORKSPACE</span><h2>{connected ? "Submit your first claim" : "Connect the evidence API"}</h2>
-            <p>{connected ? "The investigation service will produce a typed evidence packet and citation-grounded verdict." : "Start the local API, then retry. You can also change its address below."}</p>
-            <form onSubmit={saveApiAddress}><input aria-label="API address" value={apiDraft} onChange={(event) => setApiDraft(event.target.value)} /><button className="ghost">Save & retry</button></form>
+            <span>{connected ? "EVIDENCE WORKSPACE READY" : "CONNECTION REQUIRED"}</span><h2>{connected ? investigations.length > 0 ? "Start a new investigation" : "Submit your first claim" : "Connect the evidence service"}</h2>
+            <p>{connected ? investigations.length > 0 ? "Enter a claim above, or open an existing investigation from Recent Cases." : "Enter a claim above to produce a typed evidence packet and citation-grounded provisional verdict." : "Start the local service, then retry. You can also change its address in the connection settings."}</p>
+            {!connected && <button className="ghost" onClick={() => setConnectionRetry((value) => value + 1)}>Retry connection</button>}
           </section>
         ) : (
           <>
             <section className={`report-lifecycle ${overallPublicationReady ? "ready" : "provisional"}`}>
-              <div><span>{overallPublicationReady ? "PUBLICATION-READY REPORT" : "PROVISIONAL REPORT · HUMAN DECISION PENDING"}</span><h2>The automated investigation is complete</h2><p>{overallPublicationReady ? "The recorded safeguards permit publication. A journalist should still inspect decisive evidence before use." : "The complete evidence-assisted report is available below. Publication remains blocked until a human reviews the evidence, limitations, and automated recommendation."}</p></div>
-              <div><small>WORKFLOW POSITION</small><strong>{reviewPending ? "Human review" : overallPublicationReady ? "Ready to publish" : titleCase(graph?.status ?? report.investigation.status)}</strong><em>{evidence.length} evidence passage{evidence.length === 1 ? "" : "s"} · {citationSummary?.total ?? 0} canonical citation finding{citationSummary?.total === 1 ? "" : "s"}</em></div>
+              <div><span>{overallPublicationReady ? "PUBLICATION-READY REPORT" : "CURRENT REPORT STATUS"}</span><h2>{overallPublicationReady ? "Ready for final source inspection" : approvalBlockedByEvidence ? "Evidence remediation required before a final decision" : "Report ready for human decision"}</h2><p>{overallPublicationReady ? "The recorded safeguards permit publication. Anyone relying on the result should still inspect decisive evidence before use." : approvalBlockedByEvidence ? "The provisional report is preserved for review, but its current evidence cannot support publication. Inspect the blockers and choose a permitted remediation action." : "The evidence-assisted report is ready for review. Publication remains blocked until a person evaluates the evidence, limitations, and recommendation."}</p></div>
+              <div><small>NEXT REQUIRED STEP</small><strong>{overallPublicationReady ? "Final source check" : approvalBlockedByEvidence ? "Resolve evidence blockers" : "Record human decision"}</strong><em>{argumentEligibleCount}/{evidence.length} passages eligible · {report.effective_full_report_assurance?.critical_failure_count ?? 0} critical citation failures</em><button className="ghost" onClick={() => setSection(overallPublicationReady ? "Evidence" : "Review brief")}>{overallPublicationReady ? "Inspect decisive evidence" : "Open review brief"}</button></div>
             </section>
-            <div className="summary-row">
-              <div><span>{graph?.final_verdict ? "FINAL VERDICT" : "PROVISIONAL VERDICT"}</span><strong>{titleCase(resolvedVerdict ?? report.verdict.label)}</strong><small>{graph?.final_verdict ? "Review-resumed graph decision" : report.judgment_policy ? "Judgment-policy enforced label" : "Persisted verdict fallback"}</small></div>
-              <div><span>CONFIDENCE <button className="info-dot" aria-label="Explain confidence" title="A calibrated probability of verdict correctness. A dash means the system has not been empirically calibrated and will not invent a probability.">?</button></span><strong>{report.verdict.confidence == null ? "—" : `${Math.round(report.verdict.confidence * 100)}%`}</strong><small>{report.verdict.confidence == null ? "Not calibrated" : "Calibrated probability"}</small></div>
-              <div><span>CITATION SUPPORT <button className="info-dot" aria-label="Explain citation support" title="Material report assertions marked fully supported in the final full-report citation-assurance audit.">?</button></span><strong>{citationSummary?.rate ?? 0}%</strong><small>{citationSummary?.supported ?? 0}/{citationSummary?.total ?? 0} · {citationSummary?.authority}</small></div>
-              <div><span>INDEPENDENT FAMILIES <button className="info-dot" aria-label="Explain evidence families" title="Groups of sources that appear to originate independently. Multiple pages repeating one original report count as one family.">?</button></span><strong>{report.independence_analysis?.independent_family_count ?? "—"}</strong><small>Target {report.plan.minimum_independent_families}</small></div>
-              <div><span>EVIDENCE ITEMS</span><strong>{evidence.length}</strong></div>
+            <div className={`summary-row ${overallPublicationReady ? "ready" : "blocked"}`}>
+              <div><span>{overallPublicationReady ? "CURRENT VERDICT" : "CURRENT EFFECTIVE DECISION"}</span><strong>{overallPublicationReady ? titleCase(resolvedVerdict ?? report.verdict.label) : "Unresolved"}</strong><small>{overallPublicationReady ? "Publication safeguards passed" : `Historical recommendation: ${titleCase(resolvedVerdict ?? report.verdict.label)}`}</small></div>
+              <div><span>CONFIDENCE <MetricHelp id="confidence-help" label="Explain confidence">A calibrated probability of verdict correctness. A dash means the system has not been empirically calibrated and will not invent a probability.</MetricHelp></span><strong>{report.verdict.confidence == null ? "—" : `${Math.round(report.verdict.confidence * 100)}%`}</strong><small>{report.verdict.confidence == null ? "Not calibrated" : "Calibrated probability"}</small></div>
+              <div><span>REPORT CITATION SUPPORT <MetricHelp id="citation-support-help" label="Explain report citation support">The share of material report assertions with accepted mappings to currently eligible evidence. It does not measure whether useful evidence was merely retained.</MetricHelp></span><strong>{citationSummary?.rate ?? 0}%</strong><small>{citationSummary?.supported ?? 0} of {citationSummary?.total ?? 0} material report assertions supported · {citationSummary?.authority}</small></div>
+              <div><span>EFFECTIVE INDEPENDENCE <MetricHelp id="independence-help" label="Explain evidence families">Groups of currently eligible sources that appear to originate independently. Multiple pages repeating one original report count as one family.</MetricHelp></span><strong>{argumentEligibleCount ? report.provenance?.confirmed_independent_lower_bound ?? "—" : "—"}</strong><small>{argumentEligibleCount ? `Target ${report.plan.minimum_independent_families}` : `Retained packet recorded ${report.provenance?.confirmed_independent_lower_bound ?? 0}`}</small></div>
+              <div><span>ELIGIBLE EVIDENCE <MetricHelp id="eligible-evidence-help" label="Explain eligible evidence">Retained passages that pass current integrity and approved-use checks. Eligibility does not mean the report has cited them correctly.</MetricHelp></span><strong>{argumentEligibleCount}/{evidence.length}</strong><small>Passages eligible for argument use · not a citation-support score</small></div>
             </div>
-            <div className="graph-card">
-              <div className="card-heading"><div><span>UNIFIED AUTHORITATIVE LANGGRAPH</span><h2>{graph ? titleCase(graph.status) : "Awaiting investigation"}</h2><small className="authority-note">Each node calls a typed InvestigationService operation; the graph coordinates but does not bypass domain authority.</small></div>{graph ? <div className="graph-progress-label"><strong>{graphProgress}%</strong><small>{completedGraphNodes} of {graphOrder.length} phases checkpointed</small></div> : null}</div>
-              {graph && <div className="graph-progress" role="progressbar" aria-valuenow={graphProgress} aria-valuemin={0} aria-valuemax={100} aria-label="Checkpointed graph progress"><i style={{width: `${graphProgress}%`}} /></div>}
+            <section className="workflow-compass" aria-label="Recommended review path">
+              <article><span>1 · OUTCOME</span><strong>Understand the result</strong><p>{overallPublicationReady ? "Review the publishable conclusion and its recorded limitations." : `Start with the current blockers and the historical recommendation.`}</p><button onClick={() => setSection("Review brief")}>Review the outcome</button></article>
+              <article><span>2 · EVIDENCE</span><strong>Inspect the sources</strong><p>{evidence.length} retained · {argumentEligibleCount} eligible · {report.provenance?.confirmed_independent_lower_bound ?? 0} retained source-origin families.</p><button onClick={() => setSection("Evidence")}>Inspect evidence</button></article>
+              <article><span>3 · SAFEGUARDS</span><strong>Check the safeguards</strong><p>{verificationSummary && !verificationSummary.requiredNumerical && !verificationSummary.requiredTemporal ? "No typed numerical or temporal check was required." : `${verificationSummary?.unresolved ?? 0} typed verification checks unresolved.`} {report.effective_full_report_assurance?.critical_failure_count ?? 0} critical citation failures.</p><div><button onClick={() => setSection("Verification")}>Verification</button><button onClick={() => setSection("Citation audit")}>Citations</button></div></article>
+              <article className={overallPublicationReady ? "ready" : "blocked"}><span>4 · DECISION</span><strong>{overallPublicationReady ? "Perform final check" : approvalBlockedByEvidence ? "Choose remediation" : "Record your decision"}</strong><p>{overallPublicationReady ? "The report can be exported after final source inspection." : approvalBlockedByEvidence ? "Request evidence, revise, or reject. Approval is unavailable while safeguards are blocked." : "Approve, revise, request evidence, or reject based on the reviewed packet."}</p><button onClick={() => setSection(reviewPending ? "Review brief" : overallPublicationReady ? "Evidence" : "Decision rationale")}>{overallPublicationReady ? "Final source check" : "Open decision"}</button></article>
+            </section>
+            <div className="graph-card report-workflow-trace">
+              <div className="card-heading"><div><span>INVESTIGATION WORKFLOW</span><h2>{graph ? titleCase(graph.status) : "Awaiting investigation"}</h2><small className="authority-note">Completed stages are persisted. Resuming continues from the current checkpoint without repeating completed paid operations.</small></div>{graph ? <div className="graph-progress-label"><strong>{graphProgress}%</strong><small>{completedGraphNodes} of {graphOrder.length} phases checkpointed</small></div> : null}</div>
+              {graph && <div className="graph-progress" role="progressbar" aria-valuenow={graphProgress} aria-valuemin={0} aria-valuemax={100} aria-label="Checkpointed workflow progress"><i style={{width: `${graphProgress}%`}} /></div>}
+              {graph?.status === "review_required" && <div className="stream-health inline-stream-health paused" role="status" aria-live="polite"><b>Review state · Awaiting decision</b><small>Checkpoint {completedGraphNodes} of {graphOrder.length} is safely persisted. No processing is expected until a review decision is recorded.</small></div>}
               <div className="graph">
                 {graphOrder.map((node, index) => {
                   const done = graph?.completed_nodes.includes(node);
@@ -1471,19 +2308,26 @@ export default function Home() {
                 })}
               </div>
             </div>
-            <div className="tabs" role="tablist">
-              {["Review brief", "Overview", "Evidence", "Social evidence", "Decision rationale", "Verification", "Citation audit", "Review history", "System architecture"].map((item) => <button key={item} role="tab" aria-selected={section === item} className={section === item ? "active" : ""} onClick={() => setSection(item)}>{item}</button>)}
+            <div className="tabs" role="tablist" aria-label="Investigation report sections">
+              {reportSections.map((item, index) => <button id={`report-tab-${index}`} aria-controls="report-section-panel" tabIndex={section === item ? 0 : -1} key={item} role="tab" aria-selected={section === item} className={section === item ? "active" : ""} onClick={() => setSection(item)} onKeyDown={(event) => {
+                if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+                event.preventDefault();
+                const next = event.key === "Home" ? 0 : event.key === "End" ? reportSections.length - 1 : (index + (event.key === "ArrowRight" ? 1 : -1) + reportSections.length) % reportSections.length;
+                setSection(reportSections[next]);
+                document.getElementById(`report-tab-${next}`)?.focus();
+              }}>{item}</button>)}
             </div>
+            <div id="report-section-panel" role="tabpanel" aria-labelledby={`report-tab-${Math.max(0, reportSections.indexOf(section as typeof reportSections[number]))}`} tabIndex={0}>
             {section === "Review brief" && <div className="review-brief-dashboard">
               <section className={`review-recommendation ${overallPublicationReady ? "publishable" : "hold"}`}>
-                <div><span>REVIEW RECOMMENDATION</span><h2>{reviewerRecommendation}</h2><p>{overallPublicationReady ? "The persisted authoritative publication decision permits publication. A journalist should still inspect decisive evidence." : report.publication_decision ? "The authoritative publication decision records one or more blocking safeguards." : "No authoritative publication decision is available, so the dashboard fails closed and treats this report as provisional."}</p></div>
-                <div className="review-verdict"><small>PROVISIONAL FACTUAL VERDICT</small><strong>{titleCase(resolvedVerdict ?? report.verdict.label)}</strong><em>{report.verdict.confidence == null ? "Confidence not calibrated" : `${Math.round(report.verdict.confidence * 100)}% calibrated confidence`}</em></div>
+                <div><span>REVIEW RECOMMENDATION</span><h2>{reviewerRecommendation}</h2><p>{overallPublicationReady ? "The persisted authoritative publication decision permits publication. Anyone relying on this result should still inspect decisive evidence." : report.publication_decision ? "The authoritative publication decision records one or more blocking safeguards." : "No authoritative publication decision is available, so the dashboard fails closed and treats this report as provisional."}</p></div>
+                <div className="review-verdict"><small>{overallPublicationReady ? "CURRENT FACTUAL VERDICT" : "CURRENT EFFECTIVE DECISION"}</small><strong>{overallPublicationReady ? titleCase(resolvedVerdict ?? report.verdict.label) : "Unresolved"}</strong><em>{overallPublicationReady ? (report.verdict.confidence == null ? "Confidence not calibrated" : `${Math.round(report.verdict.confidence * 100)}% calibrated confidence`) : `Historical recommendation: ${titleCase(resolvedVerdict ?? report.verdict.label)}`}</em></div>
               </section>
               <section className="review-gates">
                 <article><span>JUDGMENT READINESS</span><strong>{titleCase(report.readiness?.state ?? "not reported")}</strong><p>{report.readiness?.state === "human_review_required" ? "Blocking safeguards remain; the verdict is provisional." : "The deterministic readiness gate does not require escalation."}</p></article>
-                <article><span>CITATION ASSURANCE</span><strong>{titleCase(report.full_report_assurance?.publication_status ?? "not reported")}</strong><p>{citationReady ? "The report sentences passed citation matching. This does not establish source authority or independence." : "The report has citation-assurance failures."}</p></article>
-                <article><span>INDEPENDENCE</span><strong>{titleCase(report.provenance?.requirement_state ?? "not reported")}</strong><p>{report.provenance ? `${report.provenance.confirmed_independent_lower_bound} confirmed; up to ${report.provenance.possible_independent_upper_bound} possible; ${report.provenance.unresolved_dependency_count} unresolved relationship(s).` : "No provenance assessment was recorded."}</p></article>
-                <article><span>VERIFICATION</span><strong>{verificationSummary?.completeness ?? 0}% complete</strong><p>{verificationSummary?.unresolved ? `${verificationSummary.unresolved} required assertion-level check(s) remain unresolved.` : "No unresolved assertion-level verification check was recorded."}</p><small>{verificationSummary?.authority}</small></article>
+                <article className={citationReady ? "" : "gate-blocked"}><span>EFFECTIVE CITATION ASSURANCE</span><strong>{titleCase(effectiveCitationStatus ?? "not reported")}</strong><p>{citationReady ? "The effective report sentences passed citation matching. This does not establish source authority or independence." : `${report.effective_full_report_assurance?.critical_failure_count ?? 0} critical effective citation failure(s) block publication.`}</p><small>{citationSummary?.authority}</small></article>
+                <article className={argumentEligibleCount ? "" : "gate-blocked"}><span>EFFECTIVE INDEPENDENCE</span><strong>{argumentEligibleCount ? titleCase(report.provenance?.requirement_state ?? "not reported") : "Not established"}</strong><p>{argumentEligibleCount ? (report.provenance ? `${report.provenance.confirmed_independent_lower_bound} confirmed; up to ${report.provenance.possible_independent_upper_bound} possible; ${report.provenance.unresolved_dependency_count} unresolved relationship(s).` : "No provenance assessment was recorded.") : `The retained packet recorded ${titleCase(report.provenance?.requirement_state ?? "no state")}, but none of its ${evidence.length} passage(s) is currently argument-eligible.`}</p></article>
+                <article><span>VERIFICATION</span><strong>{verificationSummary && !verificationSummary.requiredNumerical && !verificationSummary.requiredTemporal ? "No typed check required" : `${verificationSummary?.completeness ?? 0}% complete`}</strong><p>{verificationSummary?.unresolved ? `${verificationSummary.unresolved} required assertion-level check(s) remain unresolved.` : verificationSummary && !verificationSummary.requiredNumerical && !verificationSummary.requiredTemporal ? "The investigation plan did not require a numerical or temporal assertion-level check." : "No unresolved assertion-level verification check was recorded."}</p><small>{verificationSummary?.authority}</small></article>
                 <article><span>SOURCE QUALITY</span><strong>{report.readiness?.source_quality_unknown_count ?? 0} unknown signal(s)</strong><p>Unknown quality is not evidence that a source is poor, but it prevents the system from claiming verified authority.</p></article>
                 <article><span>PASSAGE HYGIENE</span><strong>{contaminatedEvidence.length ? `${contaminatedEvidence.length} warning(s)` : "Clean"}</strong><p>{contaminatedEvidence.length ? "Retained passages appear to include navigation text, export controls, encoding damage, or other page boilerplate." : "No common navigation or encoding contamination was detected."}</p></article>
                 <article className={blockingSocialCount ? "gate-blocked" : ""}><span>SOCIAL EVIDENCE</span><strong>{socialEvidence.length ? `${socialEvidence.length} item(s)` : "None retained"}</strong><p>{blockingSocialCount ? `${blockingSocialCount} blocking social-evidence finding(s) prevent publication.` : socialRiskCount ? `${socialRiskCount} social-source risk signal(s) require inspection.` : "No unresolved social-evidence risk was recorded."}</p></article>
@@ -1492,20 +2336,21 @@ export default function Home() {
                 <section className="detail-card">
                   <span>CLAIM FRAMING</span><h2>{report.claim.text}</h2>
                   <dl className="compact-dl"><div><dt>Type</dt><dd>{titleCase(report.claim.claim_type)}</dd></div><div><dt>Checkworthiness</dt><dd>{Math.round(report.claim.checkworthiness * 100)}%</dd></div><div><dt>Geography/context</dt><dd>{report.claim.geography ?? "Not specified"}</dd></div><div><dt>Recorded ambiguities</dt><dd>{report.claim.ambiguities.length}</dd></div></dl>
-                  {!report.claim.ambiguities.length && <p className="review-warning">A zero ambiguity count means the automated normalizer recorded none; it is not proof that broad terms such as “people” or a historical period are sufficiently scoped.</p>}
+                  {!report.claim.ambiguities.length && <p className="review-warning">A zero ambiguity count means the automated normalizer recorded none; it is not proof that compound, quantified, comparative, or absolute wording is sufficiently scoped.</p>}
                 </section>
                 <section className="detail-card">
-                  <span>WHY REVIEW WAS ROUTED</span><h2>{report.readiness?.reason_codes.length ?? 0} safeguard signals</h2>
+                  <span>WHY REVIEW WAS ROUTED</span><h2>{report.readiness?.reason_codes.length ?? 0} recorded routing signals</h2>
                   <div className="reason-chips">{report.readiness?.reason_codes.map((reason) => <b key={reason}>{titleCase(reason)}</b>)}</div>
-                  <dl className="compact-dl"><div><dt>Blocking challenges</dt><dd>{report.readiness?.blocking_challenge_count ?? 0}</dd></div><div><dt>Nonblocking challenges</dt><dd>{report.readiness?.nonblocking_challenge_count ?? 0}</dd></div><div><dt>Unresolved questions</dt><dd>{report.readiness?.unresolved_question_count ?? report.verdict.unresolved_questions.length}</dd></div><div><dt>Material coverage</dt><dd>{Math.round((report.readiness?.material_coverage ?? 0) * 100)}%</dd></div></dl>
+                  <p className="routing-scope-note">The chips preserve the original readiness-routing record. The metrics below describe the current effective packet.</p>
+                  <dl className="compact-dl"><div><dt>Argument-ledger blocking challenges</dt><dd>{report.readiness?.blocking_challenge_count ?? 0}</dd></div><div><dt>Effective citation failures</dt><dd>{report.effective_full_report_assurance?.critical_failure_count ?? 0}</dd></div><div><dt>Ineligible retained passages</dt><dd>{Math.max(0, evidence.length - argumentEligibleCount)}</dd></div><div><dt>Effective clause coverage</dt><dd>{citationSummary?.rate ?? 0}%</dd></div></dl>
                 </section>
               </div>
               <section className="review-actions-card">
-                <div><span>RECOMMENDED REVIEW ACTION</span><h2>{reviewerRecommendation}</h2><p>{overallPublicationReady ? "Confirm the cited sources and approve through the authoritative review thread." : "Obtain at least one directly relevant academic or primary historical source, replace contaminated passages, resolve provenance, and rerun verification and citation assurance."}</p></div>
+                <div><span>RECOMMENDED REVIEW ACTION</span><h2>{reviewerRecommendation}</h2><p>{overallPublicationReady ? "Confirm the cited sources and approve through the authoritative review thread." : `Inspect and replace or safely re-extract the ${historicalVerdictEvidenceIds.size || contaminatedEvidence.length || "blocked"} ineligible verdict-linked passage(s), record an approved evidentiary use, then rerun the effective argument and citation gates.`}</p></div>
                 <div><button onClick={() => setSection("Evidence")}>Inspect exact evidence</button>{(socialEvidence.length > 0 || socialRiskCount > 0) && <button onClick={() => setSection("Social evidence")}>Trace social evidence</button>}<button onClick={() => setSection("Verification")}>Inspect unresolved checks</button><button onClick={() => setSection("Citation audit")}>Inspect citation mapping</button></div>
               </section>
-              {reviewPending && job?.interruption && <section className="journalist-decision">
-                <div className="decision-intro"><span>YOUR JUDGMENT</span><h2>Record the editorial decision</h2><p>The automated verdict is advisory. Review the report first, then approve, revise, request stronger evidence, or reject the packet. Only actions permitted by the authoritative workflow are shown.</p><dl><div><dt>Automated recommendation</dt><dd>{reviewerRecommendation}</dd></div><div><dt>Provisional verdict</dt><dd>{titleCase(job.interruption.provisional_verdict)}</dd></div><div><dt>Audit history</dt><dd>{review?.chain_valid ? "Verified" : "Pending"}</dd></div></dl></div>
+              {reviewPending && job?.interruption && <section className="investigator-decision">
+                  <div className="decision-intro"><span>YOUR JUDGMENT</span><h2>Record your evidence-based decision</h2><p>The automated recommendation is advisory. Review the report first, then request stronger evidence, revise, or reject the packet. Approval is unavailable while effective evidence or citation safeguards are blocked.</p><dl><div><dt>Automated recommendation</dt><dd>{reviewerRecommendation}</dd></div><div><dt>Current effective decision</dt><dd>{overallPublicationReady ? titleCase(job.interruption.provisional_verdict) : "Unresolved"}</dd></div><div><dt>Historical recommendation</dt><dd>{titleCase(job.interruption.provisional_verdict)}</dd></div><div><dt>Audit history</dt><dd>{review?.chain_valid ? "Verified" : "Pending"}</dd></div></dl></div>
                 <div className="decision-form">
                   <label>Editorial decision<select value={effectiveDecisionKind} onChange={(event) => setDecisionKind(event.target.value)}>{reviewDecisionOptions.filter(([value]) => allowedReviewDecisions.includes(value)).map(([value, label]) => <option value={value} key={value}>{label}</option>)}</select></label>
                   {reviewConstruction && <label>Verification construction decision<select value={effectiveVerificationDisposition} onChange={(event) => setVerificationDisposition(event.target.value)}>{verificationDispositionOptions.map(([value, label]) => <option value={value} key={value}>{label}</option>)}</select><small>Applies to construction {shortId(reviewConstruction.construction_id)} and is written to the durable review history.</small></label>}
@@ -1520,23 +2365,47 @@ export default function Home() {
               <p className="transparency-note"><b>Review boundary:</b> this brief organizes persisted safeguards and deterministic hygiene warnings. It supports a human decision; it does not impersonate or replace the named reviewer.</p>
             </div>}
             {section === "Overview" && <div className="report-dashboard">
-              <section className="report-card verdict-card">
-                <span>DECISION</span><h2>{titleCase(resolvedVerdict ?? report.verdict.label)}</h2>
-                <p>{report.readiness?.state === "human_review_required" ? "The evidence points to this verdict, but one or more safeguards require human review." : "The evidence packet has passed the current deterministic readiness checks."}</p>
-                <dl><div><dt>Readiness</dt><dd>{titleCase(report.readiness?.state ?? "not reported")}</dd></div><div><dt>Publication</dt><dd>{titleCase(report.full_report_assurance?.publication_status ?? "not reported")}</dd></div><div><dt>Critical citation failures</dt><dd>{report.full_report_assurance?.critical_failure_count ?? "—"}</dd></div></dl>
+              <section className={`overview-status-hero ${overallPublicationReady ? "ready" : "blocked"}`}>
+                <div><span>{overallPublicationReady ? "CURRENT PUBLICATION STATUS" : "CURRENT EFFECTIVE STATUS"}</span><h2>{overallPublicationReady ? `${titleCase(resolvedVerdict ?? report.verdict.label)} · publication ready` : "Publication blocked"}</h2><p>{overallPublicationReady ? "The effective evidence packet, verification, citation assurance and recorded publication decision currently permit publication." : "The retained report remains available for review, but the effective evidence and citation safeguards do not currently support publication."}</p></div>
+                <dl><div><dt>Effective evidence</dt><dd>{argumentEligibleCount}/{evidence.length}</dd></div><div><dt>Decisive-use eligible</dt><dd>{decisiveEligibleIds.size}</dd></div><div><dt>Citation gate</dt><dd>{titleCase(effectiveCitationStatus ?? "not reported")}</dd></div><div><dt>Review state</dt><dd>{reviewPending || report.verdict.human_review_required ? "Required" : overallPublicationReady ? "Complete" : "Remediation"}</dd></div></dl>
+              </section>
+              {!overallPublicationReady && <section className="overview-authority-warning" role="alert">
+                <div><span>HISTORICAL VERDICT RETAINED FOR AUDIT</span><h2>Provisional · {titleCase(resolvedVerdict ?? report.verdict.label)}</h2><p>This label was produced against the earlier packet. It is not a current publishable conclusion because {historicalVerdictEvidenceIds.size || "one or more"} historical evidence link(s) no longer satisfy the effective eligibility rules.</p></div>
+                <button onClick={() => setSection("Decision rationale")}>Inspect current reasoning</button>
+              </section>}
+              <section className="overview-next-action">
+                <div><span>NEXT BEST ACTION</span><h2>{overallPublicationReady ? "Perform a final source inspection" : reviewPending ? "Request replacement evidence, revise, or reject" : "Remediate the effective evidence packet"}</h2><p>{overallPublicationReady ? "Open the decisive passages and verify the original sources before relying on or sharing the report." : "Inspect why the retained passages became ineligible, then record an allowed review decision. Human review cannot convert blocked evidence into valid support without a persisted remediation."}</p></div>
+                <div><button onClick={() => setSection("Evidence")}>{overallPublicationReady ? "Inspect decisive evidence" : "Inspect evidence blockers"}</button><button onClick={() => setSection("Review brief")}>{overallPublicationReady ? "Open review brief" : "Record review decision"}</button></div>
+              </section>
+              <section className={`report-card overview-blockers-card ${overallPublicationReady ? "ready" : "blocked"}`}>
+                <span>{overallPublicationReady ? "PUBLICATION DIAGNOSIS" : "WHY PUBLICATION IS BLOCKED"}</span><h2>{overallPublicationReady ? "No active blocker recorded" : `${Math.max(effectiveCitationStatus === "blocked" ? 1 : 0, report.effective_full_report_assurance?.blocking_reasons.length ?? 0) + (evidenceIntegrityBlocked ? 1 : 0)} safeguard category(s) require action`}</h2>
+                {overallPublicationReady ? <p>The effective packet and recorded publication decision currently permit publication.</p> : <ol className="overview-blocker-list">
+                  {(report.effective_full_report_assurance?.blocking_reasons.length ? report.effective_full_report_assurance.blocking_reasons : ["Effective citation assurance is not ready."]).slice(0, 3).map((reason, index) => <li key={`${index}-${reason}`}><b>{index + 1}</b><span>{reason}</span></li>)}
+                  {evidenceIntegrityBlocked && <li><b>{(report.effective_full_report_assurance?.blocking_reasons.length ?? 0) + 1}</b><span>One or more retained passages fail the current evidence-integrity or approved-use gate.</span></li>}
+                </ol>}
+                <dl><div><dt>Effective decision</dt><dd>{overallPublicationReady ? titleCase(resolvedVerdict ?? report.verdict.label) : "Unresolved"}</dd></div><div><dt>Historical recommendation</dt><dd>{titleCase(resolvedVerdict ?? report.verdict.label)}</dd></div><div><dt>Critical citation failures</dt><dd>{report.effective_full_report_assurance?.critical_failure_count ?? report.full_report_assurance?.critical_failure_count ?? "—"}</dd></div></dl>
               </section>
               <section className="report-card">
-                <span>RESEARCH COVERAGE</span><h2>{evidence.length} retained passages</h2>
-                <div className="stance-bars">{["supporting", "contradictory", "qualifying", "context"].map((stance) => { const count = evidence.filter((item) => canonicalStance(item.stance) === stance).length; return <div key={stance}><label>{titleCase(stance)} <b>{count}</b></label><i><b style={{width: `${evidence.length && count ? Math.max(4, count / evidence.length * 100) : 0}%`}} /></i></div>; })}</div>
-                <small>Paths: {report.plan.required_research_paths.map(titleCase).join(" · ")}</small>
+                <span>RESEARCH AND EFFECTIVE COVERAGE</span><h2>{argumentEligibleCount} of {evidence.length} passages eligible</h2>
+                <small className="coverage-scope-label">Retained-packet stance · not an effective support count</small>
+                <div className={`stance-bars ${argumentEligibleCount === 0 ? "historical" : ""}`}>{["supporting", "contradictory", "qualifying", "context"].map((stance) => { const count = evidence.filter((item) => canonicalStance(item.stance) === stance).length; return <div key={stance}><label>{titleCase(stance)} <b>{count}</b></label><i><b style={{width: `${evidence.length && count ? Math.max(4, count / evidence.length * 100) : 0}%`}} /></i></div>; })}</div>
+                <dl><div><dt>Retained passages</dt><dd>{evidence.length}</dd></div><div><dt>Argument-eligible</dt><dd>{argumentEligibleCount}</dd></div><div><dt>Decisive-use eligible</dt><dd>{decisiveEligibleIds.size}</dd></div></dl>
+                <small>Research paths: {report.plan.required_research_paths.map(titleCase).join(" · ")}</small>
               </section>
               <section className="report-card">
-                <span>INDEPENDENCE & PROVENANCE</span><h2>{titleCase(report.provenance?.requirement_state ?? "not reported")}</h2>
-                <dl><div><dt>Confirmed independent lower bound</dt><dd>{report.provenance?.confirmed_independent_lower_bound ?? "—"}</dd></div><div><dt>Possible upper bound</dt><dd>{report.provenance?.possible_independent_upper_bound ?? "—"}</dd></div><div><dt>Unresolved relationships</dt><dd>{report.provenance?.unresolved_dependency_count ?? "—"}</dd></div></dl>
+                <span>INDEPENDENCE & PROVENANCE</span><h2>{argumentEligibleCount ? titleCase(report.provenance?.requirement_state ?? "not reported") : "Not established for effective packet"}</h2>
+                <dl><div><dt>Recorded retained-packet state</dt><dd>{titleCase(report.provenance?.requirement_state ?? "not reported")}</dd></div><div><dt>Confirmed independent lower bound</dt><dd>{report.provenance?.confirmed_independent_lower_bound ?? "—"}</dd></div><div><dt>Effective eligible passages</dt><dd>{argumentEligibleCount}</dd></div><div><dt>Unresolved relationships</dt><dd>{report.provenance?.unresolved_dependency_count ?? "—"}</dd></div></dl>
+                <small>Independence describes source origin. It does not override passage hygiene, approved-use, citation, or source-quality safeguards.</small>
               </section>
               <section className="report-card">
-                <span>VERIFICATION</span><h2>{verificationSummary?.completeness ?? 0}% complete</h2>
+                <span>VERIFICATION</span><h2>{verificationSummary && !verificationSummary.requiredNumerical && !verificationSummary.requiredTemporal ? "No typed check required" : `${verificationSummary?.completeness ?? 0}% complete`}</h2>
                 <dl><div><dt>Unresolved typed checks</dt><dd>{verificationSummary?.unresolved ?? "—"}</dd></div><div><dt>Numerical check required</dt><dd>{verificationSummary?.requiredNumerical ? "Yes" : "No"}</dd></div><div><dt>Temporal check required</dt><dd>{verificationSummary?.requiredTemporal ? "Yes" : "No"}</dd></div><div><dt>Authority</dt><dd>{verificationSummary?.authority ?? "Not reported"}</dd></div></dl>
+                <small>A complete verification packet only covers checks that were required. It is not a general truth or confidence score.</small>
+              </section>
+              <section className={`report-card overview-integrity-card ${evidenceIntegrityBlocked ? "blocked" : ""}`}>
+                <span>EVIDENCE INTEGRITY</span><h2>{evidenceIntegrityBlocked ? "Publication blocker recorded" : contaminatedEvidence.length ? "Warnings require inspection" : "No blocker recorded"}</h2>
+                <dl><div><dt>Passage hygiene warnings</dt><dd>{contaminatedEvidence.length}</dd></div><div><dt>Historical verdict links removed</dt><dd>{historicalVerdictEvidenceIds.size}</dd></div><div><dt>Argument-eligible passages</dt><dd>{argumentEligibleCount}</dd></div><div><dt>Unknown source-quality signals</dt><dd>{report.readiness?.source_quality_unknown_count ?? "—"}</dd></div></dl>
+                <button className="inline-link" onClick={() => setSection("Evidence")}>Inspect evidence integrity →</button>
               </section>
               <section className={`report-card social-overview-card ${blockingSocialCount ? "blocked" : ""}`}>
                 <span>SOCIAL-EVIDENCE GOVERNANCE</span><h2>{blockingSocialCount ? "Publication blocked" : socialEvidence.length ? "Review trace available" : "No social evidence retained"}</h2>
@@ -1549,6 +2418,9 @@ export default function Home() {
                 <div><b>Citation support</b><p>The share of audited material sentences fully supported by their cited passages.</p></div>
                 <div><b>Readiness</b><p>A deterministic completeness gate. It is deliberately separate from probability or confidence.</p></div>
                 <div><b>Independent families</b><p>Source-origin groups. Repetition across dependent sources does not increase the confirmed independent count.</p></div>
+                <div><b>Effective evidence</b><p>Retained evidence that still passes the current integrity, approved-use, and argument-eligibility rules.</p></div>
+                <div><b>Decisive use</b><p>Evidence permitted to materially influence a verdict. Relevance or retention alone does not grant this role.</p></div>
+                <div><b>Historical verdict</b><p>A preserved earlier recommendation retained for audit. It is not a current conclusion when effective safeguards block publication.</p></div>
               </details>
             </div>}
             {section === "Social evidence" && <div className="social-transparency-dashboard">
@@ -1556,13 +2428,13 @@ export default function Home() {
                 <div>
                   <span>SOCIAL-EVIDENCE POLICY</span>
                   <h2>{report.social_evidence_policy?.publication_blocked ? "Critical social dependency blocks publication" : socialEvidence.length ? "Every social item has a traceable, limited role" : "No social-media passage was retained as evidence"}</h2>
-                  <p>Social reach, engagement, and platform badges are not truth signals. Each item is evaluated by identity, authenticity, attribution, original-source linkage, approved use, corroboration, and shared origin.</p>
+                  <p>Social reach, engagement, and platform badges are not truth signals. When social content is retained, its identity, authenticity, attribution, original-source linkage, approved use, corroboration, and shared origin are evaluated.</p>
                 </div>
                 <dl>
                   <div><dt>Social passages</dt><dd>{socialEvidence.length}</dd></div>
                   <div><dt>Policy findings</dt><dd>{report.social_evidence_policy?.findings.length ?? 0}</dd></div>
                   <div><dt>Blocking findings</dt><dd>{blockingSocialCount}</dd></div>
-                  <div><dt>Publication</dt><dd>{titleCase(report.publication_decision?.status ?? (report.social_evidence_policy?.publication_blocked ? "blocked" : "not blocked"))}</dd></div>
+                  <div><dt>Social-policy impact</dt><dd>{report.social_evidence_policy?.publication_blocked ? "Blocks publication" : report.social_evidence_policy ? "No blocker recorded" : "Not evaluated"}</dd></div>
                 </dl>
               </section>
 
@@ -1661,42 +2533,69 @@ export default function Home() {
                     </footer>
                   </article>;
                 })}
-              </div> : <section className="social-empty-state">
-                <span>NO RETAINED SOCIAL EVIDENCE</span>
-                <h2>This investigation did not rely on a social-media passage.</h2>
-                <p>Social links may still have served as discovery leads, but no social item appears in the approved argument packet. The ordinary evidence and provenance views remain authoritative.</p>
-                <button onClick={() => setSection("Evidence")}>Return to evidence packet</button>
+              </div> : <section className="social-empty-state compact">
+                <div><span>NO RETAINED SOCIAL EVIDENCE</span><h2>No social-media passage was retained in the evidence packet.</h2><p>No retained evidence item is classified as social-platform content. The ordinary Evidence view and the current integrity and disposition records remain authoritative. Whether social links served as discovery leads was not recorded.</p></div>
+                <dl aria-label="Social evidence empty-state summary">
+                  <div><dt>Retained social passages</dt><dd>0</dd></div>
+                  <div><dt>Decisive social evidence</dt><dd>0</dd></div>
+                  <div><dt>Social-policy blockers</dt><dd>{blockingSocialCount}</dd></div>
+                  <div><dt>Social discovery leads</dt><dd>Not recorded</dd></div>
+                  <div className="overall-review-state"><dt>Overall investigation status</dt><dd>{report.publication_decision?.human_review_required || report.verdict.human_review_required ? "Human review required" : overallPublicationReady ? "Publication permitted" : "Publication not permitted"}</dd><small>{report.publication_decision?.human_review_required || report.verdict.human_review_required ? "This status originates from the complete investigation; no social-policy blocker was recorded." : "This is the overall publication state, separate from social-evidence policy."}</small></div>
+                </dl>
+                <div className="social-empty-actions"><button onClick={() => setSection("Evidence")}>View all retained evidence</button><button onClick={() => setSection("Review brief")}>{report.publication_decision?.human_review_required || report.verdict.human_review_required ? "See why human review is required" : "Open review brief"}</button></div>
               </section>}
 
-              <p className="transparency-note"><b>Interpretation boundary:</b> authenticity means the account or capture was attributed with recorded evidence. It does not make every statement true. Relevance means topical match. It does not measure correctness, authority, independence, or probability.</p>
+              {socialEvidence.length ? <p className="transparency-note"><b>Interpretation boundary:</b> authenticity means the account or capture was attributed with recorded evidence. It does not make every statement true. Relevance means topical match. It does not measure correctness, authority, independence, or probability.</p> : <details className="social-interpretation"><summary>How social evidence would be evaluated</summary><p>Authenticity would mean that an account or capture was attributed with recorded evidence; it would not make every statement true. Relevance would mean topical match, not correctness, authority, independence, or probability.</p></details>}
             </div>}
             {section === "Decision rationale" && <div className="decision-dashboard">
-              <section className="decision-hero">
-                <span>VERDICT EXPLANATION</span><h2>{report.verdict.concise_explanation}</h2>
+              <section className={`decision-hero ${overallPublicationReady ? "current" : "historical"}`}>
+                <span>{overallPublicationReady ? "CURRENT VERDICT EXPLANATION" : "HISTORICAL PROVISIONAL VERDICT"}</span><h2>{report.verdict.concise_explanation}</h2>
+                {!overallPublicationReady && <strong className="archived-explanation-label">Archived explanation — not a current conclusion</strong>}
                 <p>{report.verdict.detailed_reasoning}</p>
-                <div className="decision-badge">{titleCase(report.verdict.label)}</div>
+                <div className="decision-badge">{overallPublicationReady ? titleCase(report.verdict.label) : `Provisional · ${titleCase(report.verdict.label)}`}</div>
+              </section>
+              {!overallPublicationReady && <section className="decision-authority-warning" role="alert"><div><span>EVIDENCE AUTHORITY CHANGED</span><h2>This persisted verdict is not currently publication-ready.</h2><p>The explanation above is retained for audit, but the current integrity and disposition rules remove one or more historical verdict links. The effective ledger below is authoritative for what the packet can support now.</p></div><dl><div><dt>Retained passages</dt><dd>{evidence.length}</dd></div><div><dt>Argument-eligible</dt><dd>{argumentEligibleCount}</dd></div><div><dt>Eligible for decisive use</dt><dd>{decisiveEligibleIds.size}</dd></div><div><dt>Historical links removed</dt><dd>{historicalVerdictEvidenceIds.size}</dd></div></dl><button onClick={() => setSection("Evidence")}>Resolve evidence blockers</button></section>}
+              {unreflectedQuantifiers.length > 0 && <section className="claim-fidelity-warning" role="note"><b>Exact-wording check</b><p>The recorded claim contains the material qualifier{unreflectedQuantifiers.length === 1 ? "" : "s"} <strong>{unreflectedQuantifiers.map((term) => `“${term}”`).join(", ")}</strong>, but the persisted explanation does not repeat {unreflectedQuantifiers.length === 1 ? "it" : "them"} verbatim. Compare the explanation with the original claim before relying on the verdict.</p></section>}
+              <section className="decision-path" aria-label="Decision derivation">
+                <div><span>1</span><b>Effective evidence</b><small>{argumentEligibleCount} argument-eligible · {evidence.length} retained</small></div>
+                <i aria-hidden="true">→</i><div><span>2</span><b>Effective argument ledger</b><small>{ledgerArguments.length} current proposition resolution{ledgerArguments.length === 1 ? "" : "s"}</small></div>
+                <i aria-hidden="true">→</i><div><span>3</span><b>{overallPublicationReady ? "Judgment constraint" : "Historical judgment constraint"}</b><small>{report.judgment_policy?.allowed_labels.map(titleCase).join(" or ") ?? "Not reported"}</small></div>
+                <i aria-hidden="true">→</i><div><span>4</span><b>{overallPublicationReady ? "Current verdict" : "Historical verdict"}</b><small>{titleCase(report.judgment_policy?.enforced_label ?? report.verdict.label)}{overallPublicationReady ? "" : " · publication blocked"}</small></div>
               </section>
               <div className="decision-columns">
                 <section className="report-card">
-                  <span>ARGUMENT LEDGER</span><h2>{titleCase(report.argument_ledger?.arguments[0]?.resolution ?? "not reported")}</h2>
-                  <p>The ledger resolves each material proposition using only evidence retained in the approved packet.</p>
-                  <dl><div><dt>Supporting items</dt><dd>{report.argument_ledger?.arguments[0]?.supporting_evidence_ids.length ?? 0}</dd></div><div><dt>Contradictory items</dt><dd>{report.argument_ledger?.arguments[0]?.contradictory_evidence_ids.length ?? 0}</dd></div><div><dt>Qualifying items</dt><dd>{report.argument_ledger?.arguments[0]?.qualifying_evidence_ids.length ?? 0}</dd></div></dl>
+                  <span>EFFECTIVE ARGUMENT LEDGER</span><h2>{ledgerArguments.filter((item) => item.resolution !== "unresolved").length} of {ledgerArguments.length} proposition{ledgerArguments.length === 1 ? "" : "s"} resolved</h2>
+                  <p>This reconstruction uses only evidence that remains argument-eligible under current integrity and disposition rules. The persisted original remains available as audit history.</p>
+                  <dl><div><dt>Supporting links</dt><dd>{aggregateLedger.supporting}</dd></div><div><dt>Contradictory links</dt><dd>{aggregateLedger.contradictory}</dd></div><div><dt>Qualifying links</dt><dd>{aggregateLedger.qualifying}</dd></div></dl>
+                  {effectiveLedgerChanged && <small className="historical-note">The effective ledger differs from the persisted historical ledger.</small>}
                 </section>
                 <section className="report-card">
-                  <span>POLICY CONSTRAINT</span><h2>{titleCase(report.judgment_policy?.enforced_label ?? report.verdict.label)}</h2>
-                  <p>{report.judgment_policy?.rationale ?? "No separate judgment-policy explanation was recorded."}</p>
-                  <dl><div><dt>Proposed label</dt><dd>{titleCase(report.judgment_policy?.proposed_label ?? report.verdict.label)}</dd></div><div><dt>Policy changed it</dt><dd>{report.judgment_policy?.changed ? "Yes" : "No"}</dd></div><div><dt>Allowed labels</dt><dd>{report.judgment_policy?.allowed_labels.map(titleCase).join(", ") ?? "—"}</dd></div></dl>
+                  <span>{overallPublicationReady ? "CURRENT JUDGMENT CONSTRAINT" : "HISTORICAL POLICY DECISION"}</span><h2>{titleCase(report.judgment_policy?.enforced_label ?? report.verdict.label)}</h2>
+                  <p>{overallPublicationReady ? (report.judgment_policy?.rationale ?? "No separate judgment-policy explanation was recorded.") : "This policy result was recorded against the historical ledger. It does not describe the current unresolved effective ledger."}</p>
+                  {!overallPublicationReady && report.judgment_policy?.rationale && <small className="recorded-policy-rationale"><b>Recorded rationale:</b> {report.judgment_policy.rationale}</small>}
+                  <dl><div><dt>Proposed verdict</dt><dd>{titleCase(report.judgment_policy?.proposed_label ?? report.verdict.label)}</dd></div><div><dt>Enforced verdict</dt><dd>{titleCase(report.judgment_policy?.enforced_label ?? report.verdict.label)}</dd></div><div><dt>Policy changed verdict</dt><dd>{report.judgment_policy?.changed ? "Yes" : "No"}</dd></div><div><dt>Allowed labels</dt><dd>{report.judgment_policy?.allowed_labels.map(titleCase).join(", ") ?? "—"}</dd></div><div><dt>Reason codes</dt><dd>{report.judgment_policy?.reason_codes.map(titleCase).join(", ") || "None recorded"}</dd></div></dl>
                 </section>
               </div>
+              <section className="proposition-ledger">
+                <div><span>CURRENT PROPOSITION-LEVEL REASONING</span><h2>What the eligible packet resolves now</h2><p>An unresolved proposition cannot inherit support from historical or ineligible evidence links.</p></div>
+                {compoundCoverageWarning && <div className="compound-coverage-warning"><b>Compound-claim coverage warning</b><p>Only {ledgerPropositions.length} combined proposition was persisted, but the claim appears to contain {candidateClaimClauses.length} material clauses. Independent resolution is unavailable for:</p><ol>{candidateClaimClauses.map((clause) => <li key={clause}>{clause}</li>)}</ol><button onClick={() => { setClaim(report.claim.text); window.scrollTo({ top: 0, behavior: "smooth" }); }}>Prepare follow-up claim</button><small>This only loads the original wording into the claim form for you to split or edit. It makes no search or model call. Costs can occur only if you submit a new investigation.</small></div>}
+                {ledgerArguments.length ? <div className="proposition-table" role="table" aria-label="Argument ledger propositions">
+                  <div className="proposition-row header" role="row"><b role="columnheader">Proposition</b><b role="columnheader">Resolution</b><b role="columnheader">Evidence links</b><b role="columnheader">Effect</b></div>
+                  {ledgerArguments.map((argument) => { const proposition = ledgerPropositions.find((item) => item.proposition_id === argument.proposition_id); const historical = persistedLedgerArguments.find((item) => item.proposition_id === argument.proposition_id); const historicalCount = historical ? historical.supporting_evidence_ids.length + historical.contradictory_evidence_ids.length + historical.qualifying_evidence_ids.length : 0; const currentCount = argument.supporting_evidence_ids.length + argument.contradictory_evidence_ids.length + argument.qualifying_evidence_ids.length; return <div className={`proposition-row ${argument.resolution === "unresolved" ? "unresolved" : ""}`} role="row" key={argument.proposition_id}><div role="cell"><strong>{proposition?.text ?? "Proposition text not recorded"}</strong><small>{proposition?.material ? "Material to verdict" : "Non-material"}</small></div><div role="cell"><em>{titleCase(argument.resolution)}</em></div><div role="cell"><span>{argument.supporting_evidence_ids.length} support</span><span>{argument.contradictory_evidence_ids.length} contradict</span><span>{argument.qualifying_evidence_ids.length} qualify</span>{historicalCount > currentCount && <small>{historicalCount - currentCount} historical link{historicalCount - currentCount === 1 ? "" : "s"} removed</small>}</div><div role="cell"><p>{argument.unresolved_reasons.length ? argument.unresolved_reasons.join(" ") : argument.resolution === "qualified" ? "Material qualification limits an unqualified verdict." : "Resolution contributes to the permitted verdict labels."}</p></div></div>; })}
+                </div> : <p className="empty-copy">No proposition-level argument records were persisted.</p>}
+              </section>
               <section className="challenge-card">
-                <div><span>CHALLENGER FINDINGS</span><h2>What could weaken this decision</h2></div>
-                {report.argument_ledger?.challenge_findings.map((finding) => <article key={finding.finding_id}><b>{titleCase(finding.kind)}</b><em>{titleCase(finding.severity)}</em><p>{finding.rationale}</p></article>)}
-                {!report.argument_ledger?.challenge_findings.length && <p>No deterministic challenger findings were recorded.</p>}
+                <div><span>CHALLENGER AND SUFFICIENCY FINDINGS</span><h2>{overallPublicationReady ? "What could weaken this decision" : "Current evidence gaps and challenges"}</h2></div>
+                {effectiveLedger?.challenge_findings.map((finding) => <article key={finding.finding_id}><div><b>{titleCase(finding.kind)}</b><em>{titleCase(finding.severity)}</em></div><div><p>{finding.rationale.replace("The approved packet", "The current eligible packet")}</p>{finding.kind.includes("absolute") && materialQuantifiers.length > 0 && <small><b>Relevant claim wording:</b> {materialQuantifiers.map((term) => `“${term}”`).join(", ")}</small>}<small><b>Verdict effect:</b> {finding.kind === "insufficient_eligible_evidence" ? "No current verdict can be supported." : finding.severity === "blocking" ? "Blocks publication until resolved." : "Limits how strongly the conclusion can be stated."}</small></div><div>{finding.evidence_ids.map((id) => <button key={id} onClick={() => { const index = evidence.findIndex((item) => item.evidence_id === id); if (index >= 0) { setSelectedEvidence(index); setSection("Evidence"); } }}>Open evidence {shortId(id)} →</button>)}{!finding.evidence_ids.length && <small>No currently eligible evidence link was recorded for this finding.</small>}</div></article>)}
+                {!effectiveLedger?.challenge_findings.length && <p>No deterministic challenger findings were recorded for the effective ledger.</p>}
               </section>
-              <section className="decisive-list">
-                <span>DECISIVE EVIDENCE</span>
-                {report.verdict.decisive_evidence_ids.map((id) => { const item = evidence.find((candidate) => candidate.evidence_id === id); const source = item ? sources.get(item.source_id) : null; return <button key={id} onClick={() => { const index = evidence.findIndex((candidate) => candidate.evidence_id === id); setSelectedEvidence(Math.max(0, index)); setSection("Evidence"); }}><b>{shortId(id)}</b><strong>{source?.title ?? "Retained evidence"}</strong><small>Open exact passage →</small></button>; })}
+              <section className="verdict-alternatives"><div><span>WHY NOT ANOTHER VERDICT?</span><h2>{overallPublicationReady ? "Bounded label comparison" : "Current label comparison is blocked"}</h2></div>{overallPublicationReady ? <div><article><b>Supported</b><p>{aggregateLedger.qualifying || aggregateLedger.contradictory ? "Not selected because the effective ledger contains material qualifying or contradictory links." : "The persisted policy did not select this label."}</p></article><article><b>Contradicted</b><p>{aggregateLedger.contradictory === 0 ? "Not selected because the effective ledger records no contradictory evidence links." : "Contradictory links exist, but the complete ledger did not resolve the claim as contradicted."}</p></article>{report.judgment_policy?.allowed_labels.filter((label) => label !== (report.judgment_policy?.enforced_label ?? report.verdict.label)).map((label) => <article key={label}><b>{titleCase(label)}</b><p>Permitted by policy but not selected. No separate comparative rationale was persisted, so no stronger distinction is claimed.</p></article>)}</div> : <p className="blocked-comparison">The effective evidence packet does not currently support a defensible comparison among Supported, Contradicted, Mixed, or Misleading. The persisted {titleCase(report.verdict.label)} label is historical until the evidence blockers are resolved and judgment is rerun.</p>}</section>
+              <section className={`decisive-list ${decisiveEvidenceGroups.length ? "" : "compact-empty"}`}>
+                <span>CURRENTLY ELIGIBLE DECISIVE EVIDENCE</span>
+                {decisiveEvidenceGroups.map((group) => <article key={`${group.source?.source_id}:${group.familyId}`}><header><div><strong>{group.source?.title ?? "Retained source"}</strong><small>{group.source?.publisher ?? "Publisher not recorded"}</small></div><em>Family {group.familyId ? shortId(group.familyId) : "unassigned"}</em></header>{group.items.map(({ item, roles }) => <button key={item.evidence_id} onClick={() => { const index = evidence.findIndex((candidate) => candidate.evidence_id === item.evidence_id); setSelectedEvidence(Math.max(0, index)); setSection("Evidence"); }}><b>{shortId(item.evidence_id)}</b><span>{roles.join(" · ")}</span><span>{titleCase(item.evidentiary_use)}</span><small>Open exact passage →</small></button>)}</article>)}
+                {!decisiveEvidenceGroups.length && <p className="empty-copy">No passage is currently eligible for decisive use.</p>}
               </section>
+              {historicalEvidenceGroups.length > 0 && <details className="decisive-list historical-evidence"><summary><span>HISTORICAL VERDICT EVIDENCE · CURRENTLY INELIGIBLE</span><b>{historicalVerdictEvidenceIds.size} link{historicalVerdictEvidenceIds.size === 1 ? "" : "s"} retained for audit</b></summary><p>These links explain the stored verdict but cannot currently satisfy argument or publication safeguards.</p>{historicalEvidenceGroups.map((group) => <article key={`historical-${group.source?.source_id}:${group.familyId}`}><header><div><strong>{group.source?.title ?? "Retained source"}</strong><small>{group.source?.publisher ?? "Publisher not recorded"}</small></div><em>Family {group.familyId ? shortId(group.familyId) : "unassigned"}</em></header>{group.items.map(({ item, roles }) => <button key={item.evidence_id} onClick={() => { const index = evidence.findIndex((candidate) => candidate.evidence_id === item.evidence_id); setSelectedEvidence(Math.max(0, index)); setSection("Evidence"); }}><b>{shortId(item.evidence_id)}</b><span>{roles.join(" · ")}</span><span>Ineligible · {titleCase(integrityByEvidence.get(item.evidence_id)?.approved_use ?? item.evidentiary_use)}</span><small>Inspect blocker →</small></button>)}</article>)}</details>}
               <p className="transparency-note"><b>Transparency boundary:</b> this view exposes the persisted explanation, evidence links, deterministic challenges, and policy decisions. It does not expose or reconstruct private model chain-of-thought.</p>
             </div>}
             {section === "Verification" && <VerificationDashboard
@@ -1716,26 +2615,29 @@ export default function Home() {
               }}
               openReviewBrief={() => setSection("Review brief")}
             />}
-            {section === "System architecture" && <div className="architecture-dashboard">
-              <section className="architecture-hero">
-                <span>ACCEPTED ARCHITECTURE · ADR 0021</span>
-                <h2>One graph coordinates the lifecycle. Domain authority stays explicit.</h2>
-                <p>The unified LangGraph is the approved bounded local and observational default. It checkpoints every material transition and resumes the same investigation after review or restart.</p>
-              </section>
-              <div className="architecture-grid">
-                <article><span>DEFAULT PATH</span><h3>Unified LangGraph</h3><p>Coordinates claim analysis, genuine multi-agent research, verification, arguments, judgment, citation assurance, review and publication.</p><b>{apiStatus?.orchestrator === "langgraph" ? "Active now" : "Not currently active"}</b></article>
-                <article><span>DOMAIN AUTHORITY</span><h3>InvestigationService</h3><p>Owns typed domain operations, persisted evidence, verification artifacts, policy enforcement and final report construction.</p><b>Cannot be bypassed by agents</b></article>
-                <article><span>ROLLBACK</span><h3>Direct composition</h3><p>Runs the same authoritative operations sequentially when the graph must be disabled or rolled back.</p><b>Retained and tested</b></article>
-                <article><span>RESEARCH ROLES</span><h3>Bounded specialists</h3><p>Primary-source, general, academic, fact-check and challenger roles receive typed assignments and return evidence through the shared approval boundary.</p><b>Budgeted · deduplicated · checkpointed</b></article>
-              </div>
-              <section className="trust-boundary">
-                <div><span>WHAT THE PROMOTION PROVES</span><p>Workflow equivalence, durable recovery, citation enforcement, review continuity and challenger coverage within the measured local envelope.</p></div>
-                <div><span>WHAT IT DOES NOT CLAIM</span><p>Calibrated autonomous factual accuracy, unbounded distributed scale, or permission to publish unsupported critical assertions.</p></div>
-              </section>
-            </div>}
-            {["Evidence", "Citation audit", "Review history"].includes(section) && <div className="content-grid">
+            {section === "System architecture" && <SystemArchitectureView apiStatus={apiStatus} job={job} graph={graph} report={report} review={review} observedCost={displayedCost} observedTokens={displayedTokens} costScope={costScope} externalSearchPricing={externalSearchPricing} />}
+            {section === "Evidence" && <EvidenceWorkspace
+              report={report}
+              sources={sources}
+              selectedIndex={selectedEvidence}
+              onSelect={setSelectedEvidence}
+              openSocial={() => setSection("Social evidence")}
+              openReview={() => setSection("Review brief")}
+              prepareFreshInvestigation={() => {
+                setInputMode("manual_claim");
+                setClaim(report.claim.text);
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }}
+              recordDisposition={recordEvidenceDisposition}
+              dispositionBusy={busy}
+              reviewerIdentity={reviewer}
+              approverIdentity={approver}
+              onReviewerIdentityChange={setReviewer}
+              onApproverIdentityChange={setApprover}
+            />}
+            {["Citation audit", "Review history"].includes(section) && <div className="content-grid">
               <section className="evidence-panel">
-                <div className="panel-title"><div><span>{section.toUpperCase()}</span><h2>{section === "Evidence" ? "Evidence packet" : section}</h2></div><span className="filter">{section === "Evidence" ? `${evidence.length} passages` : `${section === "Citation audit" ? report.full_report_assurance?.final_audit.findings.length ?? report.audits.length : review?.events.length ?? 0} records`}</span></div>
+                <div className="panel-title"><div><span>{section.toUpperCase()}</span><h2>{section === "Evidence" ? "Evidence packet" : section}</h2></div><span className="filter">{section === "Evidence" ? `${evidence.length} passages` : `${section === "Citation audit" ? report.effective_full_report_assurance?.final_audit.findings.length ?? report.full_report_assurance?.final_audit.findings.length ?? report.audits.length : review?.events.length ?? 0} records`}</span></div>
                 {section === "Evidence" && <div className="evidence-layout">
                   <div className="evidence-list">
                     {evidence.map((item, index) => {
@@ -1760,16 +2662,28 @@ export default function Home() {
                     }
                   }}
                 />}
-                {section === "Review history" && <div className="record-list">{review?.events.map((event) => <article key={event.sequence}><b>{event.sequence}. {titleCase(event.action)}</b><span>{event.actor_identity}</span></article>)}{review?.decisions.filter((decision) => decision.verification_disposition).map((decision) => <article key={`construction-${decision.decision_id}`}><b>Verification construction: {titleCase(decision.verification_disposition!)}</b><span>{decision.verification_construction_id ? shortId(decision.verification_construction_id) : "Unknown construction"} · persisted with decision {shortId(decision.decision_id)}{decision.corrected_value ? ` · ${decision.corrected_value} ${decision.corrected_unit ?? ""}` : ""}{decision.corrected_evidence_ids?.length ? ` · ${decision.corrected_evidence_ids.length} approved evidence binding(s)` : ""}</span></article>)}{!review && <p className="empty-copy">Start a review workflow to create an immutable history.</p>}</div>}
+                {section === "Review history" && <ReviewHistoryView review={review} />}
               </section>
               <aside className="review-panel">
                 <div className="review-kicker">HUMAN REVIEW</div>
-                {!graph ? <div className="approved-state"><div className="approval-mark">{report.verdict.human_review_required ? "!" : "✓"}</div><h2>{report.verdict.human_review_required ? "Human review required" : "No human review required"}</h2><p>{report.verdict.human_review_required ? report.verdict.review_reason ?? "The persisted report requires review, but its live graph thread is not loaded in this browser." : "This completed report was publication-ready under the recorded deterministic safeguards."}</p><dl><div><dt>Verdict</dt><dd>{titleCase(report.verdict.label)}</dd></div><div><dt>Publication</dt><dd>{titleCase(report.full_report_assurance?.publication_status ?? "recorded")}</dd></div><div><dt>Review record</dt><dd>{review ? `${review.events.length} event(s)` : "None required"}</dd></div></dl></div>
-                  : reviewPending ? <><h2>{job?.interruption?.allowed_decisions.includes("approve") ? "Confirm final verdict" : "Evidence retrieval needs attention"}</h2><p className="reason">{review?.request.reason}</p><label>Decision<select value={effectiveDecisionKind} onChange={(event) => setDecisionKind(event.target.value)}>{reviewDecisionOptions.filter(([value]) => allowedReviewDecisions.includes(value)).map(([value, label]) => <option value={value} key={value}>{label}</option>)}</select></label>{reviewConstruction && <label>Verification construction decision<select value={effectiveVerificationDisposition} onChange={(event) => setVerificationDisposition(event.target.value)}>{verificationDispositionOptions.map(([value, label]) => <option value={value} key={value}>{label}</option>)}</select></label>}{effectiveDecisionKind === "revise" && <label>Revised verdict<select value={revisedVerdict} onChange={(event) => setRevisedVerdict(event.target.value)}>{["supported", "contradicted", "mixed", "misleading", "unsupported", "unverifiable"].map((label) => <option value={label} key={label}>{titleCase(label)}</option>)}</select></label>}<label>Review rationale<textarea value={rationale} onChange={(event) => setRationale(event.target.value)} /></label><label>Reviewer identity<input value={reviewer} onChange={(event) => setReviewer(event.target.value)} /></label>{["approve", "revise"].includes(effectiveDecisionKind) && <label>Distinct approver identity<input value={approver} onChange={(event) => setApprover(event.target.value)} /></label>}<button className="primary" onClick={saveDecision} disabled={busy || rationale.trim().length < 3 || reviewer.trim().length < 3 || (["approve", "revise"].includes(effectiveDecisionKind) && (approver.trim().length < 3 || approver.trim().toLocaleLowerCase() === reviewer.trim().toLocaleLowerCase()))}>{busy ? "Saving…" : "Save decision & resume graph"}</button><small className="immutable">The decision is appended to the immutable audit history.</small></>
+                {!graph ? <div className="approved-state"><div className="approval-mark">{report.verdict.human_review_required || effectiveCitationStatus === "blocked" ? "!" : "✓"}</div><h2>{report.verdict.human_review_required || effectiveCitationStatus === "blocked" ? "Human review required" : "No human review required"}</h2><p>{effectiveCitationStatus === "blocked" ? "The current citation-eligibility gate is blocked. Historical approval does not make this report publication-ready." : report.verdict.human_review_required ? report.verdict.review_reason ?? "The persisted report requires review, but its live graph thread is not loaded in this browser." : "This completed report was publication-ready under the recorded deterministic safeguards."}</p><dl><div><dt>Verdict</dt><dd>{titleCase(report.verdict.label)}</dd></div><div><dt>Effective citation gate</dt><dd>{titleCase(effectiveCitationStatus ?? "recorded")}</dd></div><div><dt>Review record</dt><dd>{review ? `${review.events.length} event(s)` : "None required"}</dd></div></dl></div>
+                  : reviewPending ? <>
+                    <h2>{approvalBlockedByEvidence ? "Resolve evidence blockers" : job?.interruption?.allowed_decisions.includes("approve") ? "Confirm final verdict" : "Evidence retrieval needs attention"}</h2>
+                    <p className="reason">{approvalBlockedByEvidence ? "Final approval is unavailable because the effective citation or evidence-integrity gate is blocked. Request evidence, revise, or reject the packet." : review?.request.reason}</p>
+                    <label>Decision<select value={effectiveDecisionKind} onChange={(event) => setDecisionKind(event.target.value)}>{reviewDecisionOptions.filter(([value]) => allowedReviewDecisions.includes(value)).map(([value, label]) => <option value={value} key={value}>{label}</option>)}</select></label>
+                    {reviewConstruction && <label>Verification construction decision<select value={effectiveVerificationDisposition} onChange={(event) => setVerificationDisposition(event.target.value)}>{verificationDispositionOptions.map(([value, label]) => <option value={value} key={value}>{label}</option>)}</select></label>}
+                    {effectiveDecisionKind === "revise" && <label>Revised verdict<select value={revisedVerdict} onChange={(event) => setRevisedVerdict(event.target.value)}>{["supported", "contradicted", "mixed", "misleading", "unsupported", "unverifiable"].map((label) => <option value={label} key={label}>{titleCase(label)}</option>)}</select></label>}
+                    <label>Review rationale<textarea value={rationale} onChange={(event) => setRationale(event.target.value)} /></label>
+                    <label>Reviewer identity<input value={reviewer} onChange={(event) => setReviewer(event.target.value)} /></label>
+                    {["approve", "revise"].includes(effectiveDecisionKind) && <label>Distinct approver identity<input value={approver} onChange={(event) => setApprover(event.target.value)} /></label>}
+                    <button className="primary" onClick={saveDecision} disabled={busy || approvalBlockedByEvidence && effectiveDecisionKind === "approve" || rationale.trim().length < 3 || reviewer.trim().length < 3 || (["approve", "revise"].includes(effectiveDecisionKind) && (approver.trim().length < 3 || approver.trim().toLocaleLowerCase() === reviewer.trim().toLocaleLowerCase()))}>{busy ? "Saving…" : "Save decision & resume workflow"}</button>
+                    <small className="immutable">The decision is appended to the immutable audit history.</small>
+                  </>
                   : <div className="approved-state"><div className="approval-mark">{graph.status === "complete" ? "✓" : "!"}</div><h2>{titleCase(graph.status)}</h2><p>The graph resumed from its SQLite checkpoint without repeating completed research nodes.</p><dl><div><dt>Final verdict</dt><dd>{graph.final_verdict ? titleCase(graph.final_verdict) : "Not issued"}</dd></div><div><dt>Reviewer</dt><dd>{graph.reviewer_identity ?? "—"}</dd></div><div><dt>Audit chain</dt><dd>{review?.chain_valid ? "Verified" : "Pending"}</dd></div></dl></div>}
               </aside>
             </div>
             }
+            </div>
           </>
         )}
       </section>

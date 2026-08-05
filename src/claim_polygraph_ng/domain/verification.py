@@ -118,7 +118,47 @@ class ContextVerification(DomainModel):
     claim_id: UUID
     numerical: NumericalContextCheck
     temporal: TemporalContextCheck
+    scope_findings: tuple[VerificationIssueFinding, ...] = ()
     limitations: tuple[str, ...] = ()
+
+    @model_validator(mode="before")
+    @classmethod
+    def migrate_scope_findings(cls, value):
+        """Move legacy universal-wording cautions out of numerical verification."""
+        if not isinstance(value, dict):
+            return value
+        payload = dict(value)
+        numerical_value = payload.get("numerical")
+        if isinstance(numerical_value, NumericalContextCheck):
+            numerical = numerical_value.model_dump()
+        elif isinstance(numerical_value, dict):
+            numerical = dict(numerical_value)
+        else:
+            return value
+        findings = list(numerical.get("findings") or ())
+        moved = [
+            item
+            for item in findings
+            if (
+                item.code
+                if isinstance(item, VerificationIssueFinding)
+                else item.get("code")
+            )
+            == "absolute_wording_requires_verification"
+        ]
+        if not moved:
+            return value
+        numerical["findings"] = [item for item in findings if item not in moved]
+        numerical["issues"] = [
+            issue
+            for issue in numerical.get("issues") or ()
+            if not str(issue).startswith("Absolute wording requires explicit verification:")
+        ]
+        if not numerical.get("required") and not numerical["issues"]:
+            numerical["status"] = VerificationStatus.NOT_REQUIRED
+        payload["numerical"] = numerical
+        payload["scope_findings"] = [*(payload.get("scope_findings") or ()), *moved]
+        return payload
 
 
 class AssertionVerificationState(StrEnum):

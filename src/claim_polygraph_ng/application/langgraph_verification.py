@@ -63,17 +63,16 @@ class AuthoritativeVerificationFanOutWorkflow:
             }
         )
         by_branch = {item["branch"]: item["payload"] for item in output["results"]}
-        numerical = ContextVerification.model_validate(
-            by_branch["numerical"]
-        ).numerical
-        temporal = ContextVerification.model_validate(by_branch["temporal"]).temporal
+        numerical_context = ContextVerification.model_validate(by_branch["numerical"])
+        temporal_context = ContextVerification.model_validate(by_branch["temporal"])
+        numerical = numerical_context.numerical
+        temporal = temporal_context.temporal
         context = ContextVerification(
             claim_id=claim.claim_id,
             numerical=numerical,
             temporal=temporal,
-            limitations=ContextVerification.model_validate(
-                by_branch["numerical"]
-            ).limitations,
+            scope_findings=numerical_context.scope_findings,
+            limitations=numerical_context.limitations,
         )
         verification = bridge_legacy_verification(
             claim=claim,

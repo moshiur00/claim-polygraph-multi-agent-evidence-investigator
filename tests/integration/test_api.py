@@ -122,6 +122,133 @@ def test_investigation_evidence_report_and_sse_are_exposed(tmp_path) -> None:
     assert "data: {" in events.text
 
 
+def test_evidence_dispositions_are_distinctly_approved_append_only_and_reconstructed(
+    tmp_path,
+) -> None:
+    app, report = _client(tmp_path)
+    investigation_id = report.investigation.investigation_id
+    evidence_id = report.evidence[0].evidence_id
+    endpoint = f"/api/investigations/{investigation_id}/evidence-dispositions"
+    base = {
+        "reviewer_identity": "Reviewer One",
+        "approver_identity": "Approver Two",
+    }
+    approved = asyncio.run(
+        _request(
+            app,
+            "POST",
+            endpoint,
+            headers={"X-Reviewer-Identity": "Reviewer One"},
+            json={
+                **base,
+                "disposition": {
+                    "evidence_id": str(evidence_id),
+                    "kind": "approve_use",
+                    "approved_use": "context",
+                    "reason": "Reviewed against the original source.",
+                },
+            },
+        )
+    )
+    excluded = asyncio.run(
+        _request(
+            app,
+            "POST",
+            endpoint,
+            headers={"X-Reviewer-Identity": "Reviewer One"},
+            json={
+                **base,
+                "disposition": {
+                    "evidence_id": str(evidence_id),
+                    "kind": "exclude",
+                    "approved_use": None,
+                    "reason": "A later review found the capture unsuitable.",
+                },
+            },
+        )
+    )
+    history = asyncio.run(_request(app, "GET", endpoint))
+    reconstructed = asyncio.run(
+        _request(app, "GET", f"/api/investigations/{investigation_id}/report")
+    )
+    publishable = asyncio.run(
+        _request(
+            app,
+            "GET",
+            f"/api/investigations/{investigation_id}/report?format=markdown",
+        )
+    )
+
+    assert approved.status_code == excluded.status_code == 201
+    assert len(history.json()) == 2
+    reconstructed_payload = reconstructed.json()
+    assessment = next(
+        item
+        for item in reconstructed_payload["evidence_integrity"]
+        if item["evidence_id"] == str(evidence_id)
+    )
+    assert assessment["disposition_kind"] == "exclude"
+    assert assessment["approved_use"] == "excluded"
+    assert not assessment["argument_eligible"]
+    assert str(evidence_id) in reconstructed_payload["argument_ledger"][
+        "approved_evidence_ids"
+    ]
+    assert str(evidence_id) not in reconstructed_payload["effective_argument_ledger"][
+        "approved_evidence_ids"
+    ]
+    assert reconstructed_payload["full_report_assurance"] is not None
+    assert reconstructed_payload["effective_full_report_assurance"] is not None
+    assert str(evidence_id) in reconstructed_payload["full_report_assurance"][
+        "final_audit"
+    ]["approved_evidence_ids"]
+    assert str(evidence_id) not in reconstructed_payload[
+        "effective_full_report_assurance"
+    ]["final_audit"]["approved_evidence_ids"]
+    assert publishable.status_code == 409
+
+
+def test_evidence_disposition_rejects_same_actor_and_unknown_target(tmp_path) -> None:
+    app, report = _client(tmp_path)
+    endpoint = (
+        f"/api/investigations/{report.investigation.investigation_id}"
+        "/evidence-dispositions"
+    )
+    disposition = {
+        "evidence_id": str(uuid4()),
+        "kind": "exclude",
+        "reason": "This target is not retained here.",
+    }
+    same_actor = asyncio.run(
+        _request(
+            app,
+            "POST",
+            endpoint,
+            headers={"X-Reviewer-Identity": "Reviewer One"},
+            json={
+                "reviewer_identity": "Reviewer One",
+                "approver_identity": "Reviewer One",
+                "disposition": disposition,
+            },
+        )
+    )
+    unknown = asyncio.run(
+        _request(
+            app,
+            "POST",
+            endpoint,
+            headers={"X-Reviewer-Identity": "Reviewer One"},
+            json={
+                "reviewer_identity": "Reviewer One",
+                "approver_identity": "Approver Two",
+                "disposition": disposition,
+            },
+        )
+    )
+
+    assert same_actor.status_code == 422
+    assert unknown.status_code == 422
+
+
 def test_async_investigation_job_is_idempotent_and_completes_once(tmp_path) -> None:
     repository = SQLiteInvestigationRepository(tmp_path / "investigations.db")
     service = InvestigationService(

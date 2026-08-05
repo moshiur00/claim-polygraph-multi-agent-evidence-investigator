@@ -8,8 +8,9 @@ from pydantic import Field, model_validator
 from claim_polygraph_ng.domain.base import DomainModel
 from claim_polygraph_ng.domain.citation import FullReportCitationAssurance, PublicationGateStatus
 from claim_polygraph_ng.domain.enums import VerdictLabel
+from claim_polygraph_ng.domain.evidence_integrity import assess_evidence_packet
 from claim_polygraph_ng.domain.judgment import JudgmentPolicyTrace
-from claim_polygraph_ng.domain.models import Verdict
+from claim_polygraph_ng.domain.models import Evidence, Verdict
 from claim_polygraph_ng.domain.readiness import (
     JudgmentReadiness,
     JudgmentReadinessState,
@@ -66,6 +67,8 @@ def decide_publication(
     assurance: FullReportCitationAssurance,
     readiness: JudgmentReadiness,
     social_policy: SocialEvidencePolicyResult | None = None,
+    evidence: tuple[Evidence, ...] = (),
+    claim_text: str = "",
 ) -> AuthoritativePublicationDecision:
     """Fail closed on citation failures, then route remaining review conditions."""
     if len(
@@ -81,7 +84,22 @@ def decide_publication(
         raise ValueError("publication inputs must reference one claim")
     reasons = list(assurance.blocking_reasons)
     reason_codes = []
-    if social_policy is not None and social_policy.publication_blocked:
+    integrity = assess_evidence_packet(
+        evidence,
+        claim_text=claim_text,
+        decisive_evidence_ids=enforced_verdict.decisive_evidence_ids,
+    )
+    integrity_blockers = tuple(item for item in integrity if item.publication_blocking)
+    integrity_review = tuple(item for item in integrity if item.requires_human_review)
+    if integrity_blockers:
+        status = AuthoritativePublicationStatus.BLOCKED
+        reason_codes.append("decisive_evidence_integrity_blocked")
+        for item in integrity_blockers:
+            reasons.append(
+                f"Evidence {item.evidence_id} is not publication-safe: "
+                + ", ".join(item.reason_codes)
+            )
+    elif social_policy is not None and social_policy.publication_blocked:
         status = AuthoritativePublicationStatus.BLOCKED
         reason_codes.append("social_evidence_policy_blocked")
         reasons.extend(social_policy.blocking_reasons)
@@ -93,9 +111,14 @@ def decide_publication(
         or policy.human_review_required
         or readiness.state is JudgmentReadinessState.HUMAN_REVIEW_REQUIRED
         or bool(social_policy and social_policy.requires_human_review)
+        or bool(integrity_review)
     ):
         status = AuthoritativePublicationStatus.REVIEW_REQUIRED
-        reason_codes.append("authoritative_review_required")
+        reason_codes.append(
+            "evidence_integrity_review_required"
+            if integrity_review
+            else "authoritative_review_required"
+        )
     else:
         status = AuthoritativePublicationStatus.READY
         reason_codes.append("all_publication_gates_passed")

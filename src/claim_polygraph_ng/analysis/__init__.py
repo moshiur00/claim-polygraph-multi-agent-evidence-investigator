@@ -28,6 +28,7 @@ from claim_polygraph_ng.analysis.canonicalization import (
 from claim_polygraph_ng.analysis.citation_assurance import (
     assure_full_report,
     audit_structured_assertions,
+    reassess_full_report_assurance,
 )
 from claim_polygraph_ng.analysis.compound_construction import (
     LINKED_ASSERTION_CONSTRUCTION_VERSION,
@@ -199,6 +200,7 @@ __all__ = [
     "fingerprint_content",
     "infer_evidence_families",
     "normalize_exact_content",
+    "reassess_full_report_assurance",
     "resolve_assisted_eligibility",
     "route_construction_eligibility",
     "route_human_review",

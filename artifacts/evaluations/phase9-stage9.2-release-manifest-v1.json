@@ -4,7 +4,7 @@
     {
       "artifact_id": "investigation_service",
       "path": "src/claim_polygraph_ng/application/investigation_service.py",
-      "sha256": "e4e6243295f7924a52c5080b7b5319fb06250c4175a345d0b80f4c5a837f143a"
+      "sha256": "6171c26f7d13414769f71cf44896ed799a38e0ec0f896fb795867f6bac9af0fb"
     },
     {
       "artifact_id": "direct_evaluator",
@@ -29,7 +29,7 @@
     {
       "artifact_id": "stage9_1_contracts",
       "path": "artifacts/evaluations/phase9-stage9.1-operation-contracts-v1.json",
-      "sha256": "fce1124df439e5ce14aa648715d3c4b7739ab4a1f3de8ea1cc824b09f9efa1bc"
+      "sha256": "341d9eafe3edd5ed4b35a466a4cc9e15b549ae05f5ebd873477adb0eda7e2829"
     },
     {
       "artifact_id": "stage9_2_report",

@@ -1,0 +1,119 @@
+{
+  "audit_id": "ui-stabilization-stage0-baseline-v1",
+  "status": "frozen_visual_capture_deferred",
+  "stage": "UI.0",
+  "objective": "Freeze dashboard behavior and acceptance boundaries before UI stabilization",
+  "captured_on": "2026-08-01",
+  "supported_viewports_px": [
+    1440,
+    1280,
+    1024,
+    768,
+    390
+  ],
+  "authority_map": {
+    "investigation": "persisted_investigation_and_authoritative_job",
+    "progress": "authoritative_langgraph_checkpoint_state",
+    "verdict": "graph_final_verdict_then_judgment_policy",
+    "publication": "publication_decision_and_full_report_assurance",
+    "evidence": "approved_persisted_evidence_packet",
+    "social_evidence": "social_context_eligibility_quality_and_policy",
+    "verification": "verification_packet",
+    "citation": "full_report_assurance_final_audit",
+    "independence": "independence_analysis_and_evidence_families",
+    "review": "append_only_review_history_and_interruption",
+    "cost": "receipt_derived_job_or_investigation_ledger",
+    "health": "api_health_provider_configuration_and_telemetry"
+  },
+  "known_defects": [
+    "saved_api_address_overwritten_on_startup",
+    "inferred_ipv6_api_url_not_bracketed",
+    "sse_closes_without_reconnect_or_stale_state",
+    "global_cost_can_be_mistaken_for_investigation_cost",
+    "v4_assisted_construction_trace_incomplete",
+    "review_queue_navigation_inert",
+    "system_health_navigation_inert",
+    "tab_keyboard_pattern_incomplete",
+    "reviewer_identities_hardcoded",
+    "malformed_sse_json_not_guarded",
+    "annotation_hook_dependency_warnings",
+    "dashboard_page_has_mixed_transport_and_rendering_responsibilities"
+  ],
+  "visual_baseline": {
+    "captured": false,
+    "reason": "Configured browser runtime could not initialize",
+    "fabricated_or_stale_screenshot_used": false,
+    "required_before_stage": "UI.9"
+  },
+  "validation": {
+    "production_build": "passed",
+    "dashboard_tests": {
+      "passed": 15,
+      "failed": 0
+    },
+    "eslint": {
+      "errors": 0,
+      "warnings": 2
+    }
+  },
+  "external_effects": {
+    "provider_calls": 0,
+    "model_calls": 0,
+    "search_calls": 0,
+    "benchmark_cases_loaded": 0
+  },
+  "gates": {
+    "baseline_inputs_present": true,
+    "production_build_passed": true,
+    "dashboard_tests_passed": 15,
+    "dashboard_tests_failed": 0,
+    "eslint_errors": 0,
+    "eslint_warnings_recorded": 2,
+    "canonical_authority_map_complete": true,
+    "known_defects_frozen": true,
+    "provider_calls": 0,
+    "model_calls": 0,
+    "search_calls": 0,
+    "benchmark_cases_loaded": 0
+  },
+  "missing_inputs": [],
+  "inputs": [
+    {
+      "path": "dashboard/app/page.tsx",
+      "sha256": "d5191c0e66b8c52aa9311d8dc8952c92399437498980c1cc7fa4a42b42c88d3f",
+      "bytes": 139394
+    },
+    {
+      "path": "dashboard/app/globals.css",
+      "sha256": "e190433d3b5f6c55eef9728a92d85ebabbc4126a33a1c45693bb4fa6932c6cc0",
+      "bytes": 90130
+    },
+    {
+      "path": "dashboard/app/annotation/page.tsx",
+      "sha256": "c4c24cc851c9012153d4139aff6aba52b03bbc4faea09ef694fb89c74278d3de",
+      "bytes": 40423
+    },
+    {
+      "path": "dashboard/package.json",
+      "sha256": "65897fed4a3bcc787cb377119a2a06092c2ec21218a81382784f33fa14d18a6b",
+      "bytes": 1100
+    },
+    {
+      "path": "dashboard/package-lock.json",
+      "sha256": "0e6ba9ee935c65d8550ae6d0226d66ca1f6101c9305de60cd5a5f9ac27f0feeb",
+      "bytes": 389353
+    },
+    {
+      "path": "docs/private/ui-stabilization-stage0-plan.md",
+      "sha256": "7ebe0cf60f0d87cb8da3be1f26e493b3e1cab12dd56098b99de6128cd1b3246a",
+      "bytes": 7835
+    },
+    {
+      "path": "artifacts/evaluations/verification-construction-v4-stage12-final-audit-v1.json",
+      "sha256": "de347d438b377770c38a6a1dd789102786aae78d66d1f5fb230ee83a18fd6bbf",
+      "bytes": 15327
+    }
+  ],
+  "next_stage_authorized": true,
+  "next_stage": "UI.1 API configuration and connection reliability"
+}

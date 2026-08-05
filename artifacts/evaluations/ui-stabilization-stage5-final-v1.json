@@ -1,0 +1,136 @@
+{
+  "audit_id": "ui-stabilization-stage5-final-v1",
+  "status": "passed_with_manual_visual_followup",
+  "stage": "UI.5",
+  "scope": "Inclusive evidence-investigation workflow usability and UI.0-UI.5 stabilization closure",
+  "gates": {
+    "general_user_decision_path_is_explicit": true,
+    "evidence_investigation_handoff_is_explicit": true,
+    "canonical_evidence_integrity_is_visible": true,
+    "verification_and_citation_actions_are_direct": true,
+    "publication_blocking_remains_fail_closed": true,
+    "provisional_and_publishable_exports_are_distinct": true,
+    "investigation_cost_and_process_telemetry_are_not_conflated": true,
+    "review_queue_and_health_destinations_are_functional": true,
+    "selection_and_progress_survive_navigation_or_reconnect": true,
+    "keyboard_and_responsive_hardening_retained": true,
+    "canonical_artifact_precedence_retained": true,
+    "historical_stage_hashes_are_treated_as_snapshots": true,
+    "dashboard_production_build_passed": true,
+    "dashboard_tests_passed": 51,
+    "dashboard_tests_failed": 0,
+    "eslint_errors": 0,
+    "eslint_warnings": 0,
+    "provider_calls": 0,
+    "model_calls": 0,
+    "search_calls": 0
+  },
+  "resolved_baseline_defects": [
+    "saved_api_address_overwritten_on_startup",
+    "inferred_ipv6_api_url_not_bracketed",
+    "sse_closes_without_reconnect_or_stale_state",
+    "global_cost_can_be_mistaken_for_investigation_cost",
+    "review_queue_navigation_inert",
+    "system_health_navigation_inert",
+    "tab_keyboard_pattern_incomplete",
+    "malformed_sse_json_not_guarded",
+    "annotation_hook_dependency_warnings"
+  ],
+  "remaining_followups": [
+    "Run fresh 1440, 1280, 1024, 768 and 390 pixel browser captures.",
+    "Perform screen-reader and 200% zoom smoke tests.",
+    "Move editable reviewer identity defaults behind typed local identity context.",
+    "Decompose the large dashboard component without changing canonical selectors."
+  ],
+  "manual_visual_and_assistive_technology_review": {
+    "status": "pending",
+    "reason": "The configured in-app browser runtime could not initialize during this stabilization sequence.",
+    "promotion_impact": "Local portfolio use is authorized; production accessibility certification is not claimed."
+  },
+  "missing_files": [],
+  "external_effects": {
+    "provider_calls": 0,
+    "model_calls": 0,
+    "search_calls": 0
+  },
+  "current_release_artifacts": [
+    {
+      "path": "dashboard/app/page.tsx",
+      "sha256": "6eb537866246f1b53613145af19594eeba5b291309eb55497ceb510092d59984",
+      "bytes": 196895
+    },
+    {
+      "path": "dashboard/app/globals.css",
+      "sha256": "16e53b8b180b193649e7f5b6730fe50cef4748717efa49eeadf5f4ed99cd99f7",
+      "bytes": 116641
+    },
+    {
+      "path": "dashboard/app/annotation/page.tsx",
+      "sha256": "99b0a99615dfcd38cca70cb51d46924a5c14ca59e6686646e885ecfd06f9ef30",
+      "bytes": 40482
+    },
+    {
+      "path": "dashboard/app/api-configuration.mjs",
+      "sha256": "9170b3545cb7b3d4d12f61668c88784a21a911808c2b50c02f6d519b2a9799eb",
+      "bytes": 2907
+    },
+    {
+      "path": "dashboard/app/navigation-state.mjs",
+      "sha256": "ad9505418330f255e3544314bc62f8bb717fef3606028aedb8112ae696e72852",
+      "bytes": 734
+    },
+    {
+      "path": "dashboard/app/use-durable-event-stream.ts",
+      "sha256": "bad46485b8a0e81c6ced62a510760800b688501547f30fe0302857ebe409d9c8",
+      "bytes": 6432
+    },
+    {
+      "path": "dashboard/tests/ui-stage5-workflow-source.test.mjs",
+      "sha256": "bd2332b1be1ce1b1706c3e2781a9488de6195871c40298d3a9925f97c1c0df6c",
+      "bytes": 1256
+    },
+    {
+      "path": "dashboard/tests/social-evidence-empty-state.test.mjs",
+      "sha256": "020c65a6de9d30a8a74cdbb9cbc78ddbee4cd6b29b338f8abfe96552e4dcd824",
+      "bytes": 1390
+    },
+    {
+      "path": "dashboard/tests/decision-rationale-transparency.test.mjs",
+      "sha256": "55f4c60af6338d69a9c065fff8ae22b0bdd7136f9d035c596081f8f9fc174859",
+      "bytes": 2794
+    },
+    {
+      "path": "dashboard/tests/evidence-integrity-workspace.test.mjs",
+      "sha256": "c9e7a0b873af9743878956b204be6210ca69fb8b3417dd9ff6f0c04aef35b7bd",
+      "bytes": 1509
+    },
+    {
+      "path": "artifacts/evaluations/ui-stabilization-stage0-baseline-v1.json",
+      "sha256": "26bc4afbbf86b14b76160d81840ba31cf847cc6a31e1d6cdedbb96e10767da33",
+      "bytes": 4051
+    },
+    {
+      "path": "artifacts/evaluations/ui-stabilization-stage1-connection-v1.json",
+      "sha256": "c30fcf96c8e041574eb513fe9a25fd0609b5dcec0838a06822d4abb81e2805b6",
+      "bytes": 2348
+    },
+    {
+      "path": "artifacts/evaluations/ui-stabilization-stage2-live-progress-v1.json",
+      "sha256": "ac3324e8e7bf75f95206c0ed77b12bb7491e4c7271e386cf7f41528a256db485",
+      "bytes": 3192
+    },
+    {
+      "path": "artifacts/evaluations/ui-stabilization-stage3-navigation-v1.json",
+      "sha256": "4682a006d5e9e9c38d88302e7f89d7143fb5aec9d8c30dbd42fa4d2a7e7153df",
+      "bytes": 2563
+    },
+    {
+      "path": "artifacts/evaluations/ui-stabilization-stage4-accessibility-v1.json",
+      "sha256": "018b6abc93b1fd3ee6cf52a2aa4c2592970ae9f90ec3808b186a859a823bb65a",
+      "bytes": 2382
+    }
+  ],
+  "ui_stabilization_closed": true,
+  "next_stage_authorized": true,
+  "next_stage": "V5 planning and metric-baseline definition"
+}

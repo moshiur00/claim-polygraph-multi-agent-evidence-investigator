@@ -16,10 +16,15 @@ from claim_polygraph_ng.domain.citation import (
     StructuredReportAssertion,
 )
 from claim_polygraph_ng.domain.enums import EvidenceStance, VerdictLabel
+from claim_polygraph_ng.domain.evidence_integrity import assess_evidence_packet
 from claim_polygraph_ng.domain.models import Evidence, Verdict
 
 _NON_WORD = re.compile(r"[^\w]+", re.UNICODE)
 _SENTENCE_BOUNDARY = re.compile(r"(?<=[.!?])\s+")
+_MATERIAL_CLAUSE_BOUNDARY = re.compile(
+    r"(?:;|,\s+|\s+)\b(?:but|although|however|while|whereas)\b\s*",
+    re.IGNORECASE,
+)
 
 
 def audit_structured_assertions(
@@ -61,22 +66,41 @@ def assure_full_report(
     evidence: tuple[Evidence, ...],
     approved_evidence_ids: tuple[UUID, ...],
     maximum_revision_attempts: int = 2,
+    claim_text: str = "",
 ) -> FullReportCitationAssurance:
     """Inventory, audit, revise and gate every material narrative sentence."""
     if verdict.claim_id != claim_id:
         raise ValueError("verdict must match the assured report claim")
     if maximum_revision_attempts < 0 or maximum_revision_attempts > 2:
         raise ValueError("full-report revision attempts must be between zero and two")
-    approved = set(approved_evidence_ids)
-    records = tuple(item for item in evidence if item.evidence_id in approved)
-    if len(records) != len(approved):
+    requested_approved = set(approved_evidence_ids)
+    supplied = {item.evidence_id: item for item in evidence}
+    if not requested_approved <= set(supplied):
         raise ValueError("every approved evidence ID requires a supplied record")
+    integrity = assess_evidence_packet(
+        evidence,
+        claim_text=claim_text,
+        decisive_evidence_ids=tuple(
+            dict.fromkeys(
+                (*verdict.decisive_evidence_ids, *verdict.contradictory_evidence_ids)
+            )
+        ),
+    )
+    eligible_ids = {
+        item.evidence_id
+        for item in integrity
+        if item.citation_eligible and item.evidence_id in requested_approved
+    }
+    eligible_approved = tuple(
+        evidence_id for evidence_id in approved_evidence_ids if evidence_id in eligible_ids
+    )
+    records = tuple(item for item in evidence if item.evidence_id in eligible_ids)
     original = _material_assertions(claim_id, verdict, records)
     initial = audit_structured_assertions(
         claim_id=claim_id,
         assertions=original,
         evidence=records,
-        approved_evidence_ids=approved_evidence_ids,
+        approved_evidence_ids=eligible_approved,
     )
     current = original
     audit = initial
@@ -102,7 +126,7 @@ def assure_full_report(
             claim_id=claim_id,
             assertions=current,
             evidence=records,
-            approved_evidence_ids=approved_evidence_ids,
+            approved_evidence_ids=eligible_approved,
         )
     critical_failures = sum(
         item.critical and item.status is not CitationAssuranceStatus.SUPPORTED
@@ -134,16 +158,103 @@ def assure_full_report(
     )
 
 
+def reassess_full_report_assurance(
+    *,
+    historical: FullReportCitationAssurance,
+    evidence: tuple[Evidence, ...],
+    approved_evidence_ids: tuple[UUID, ...],
+) -> FullReportCitationAssurance:
+    """Re-audit persisted final report clauses without rewriting audit history."""
+    records = {item.evidence_id: item for item in evidence}
+    assertions = []
+    for historical_assertion in historical.final_assertions:
+        if historical_assertion.section is ReportAssertionSection.EVIDENCE_FINDING:
+            continue
+        candidate_records = tuple(
+            records[evidence_id]
+            for evidence_id in historical_assertion.cited_evidence_ids
+            if evidence_id in records
+        )
+        for clause_ordinal, clause in enumerate(
+            _material_clauses(historical_assertion.sentence)
+        ):
+            assertions.append(
+                StructuredReportAssertion(
+                    assertion_id=uuid5(
+                        NAMESPACE_URL,
+                        (
+                            f"{historical.claim_id}/effective/"
+                            f"{historical_assertion.section.value}/"
+                            f"{historical_assertion.ordinal}/{clause_ordinal}/{clause}"
+                        ),
+                    ),
+                    claim_id=historical.claim_id,
+                    sentence=clause,
+                    cited_evidence_ids=historical_assertion.cited_evidence_ids,
+                    asserted_stance=_assertion_stance(
+                        clause,
+                        candidate_records,
+                        fallback=historical_assertion.asserted_stance,
+                    ),
+                    required_phrases=_required_phrases(clause, candidate_records),
+                    material=historical_assertion.material,
+                    critical=historical_assertion.critical,
+                    section=historical_assertion.section,
+                    ordinal=historical_assertion.ordinal * 100 + clause_ordinal,
+                )
+            )
+    assertions = tuple(assertions)
+    if not assertions:
+        raise ValueError("effective citation assurance requires report assertions")
+    audit = audit_structured_assertions(
+        claim_id=historical.claim_id,
+        assertions=assertions,
+        evidence=evidence,
+        approved_evidence_ids=approved_evidence_ids,
+    )
+    critical_failures = sum(
+        item.critical and item.status is not CitationAssuranceStatus.SUPPORTED
+        for item in audit.findings
+    )
+    reasons = []
+    if critical_failures:
+        reasons.append(f"{critical_failures} critical material assertion(s) remain unsupported.")
+    if audit.full_support_rate < 0.95:
+        reasons.append(
+            "Full-report material clause support remains below the 95% publication threshold."
+        )
+    return FullReportCitationAssurance(
+        claim_id=historical.claim_id,
+        original_assertions=assertions,
+        final_assertions=assertions,
+        initial_audit=audit,
+        final_audit=audit,
+        revisions=(),
+        material_sentence_count=len(assertions),
+        audited_material_sentence_count=len(assertions),
+        critical_failure_count=critical_failures,
+        publication_status=(
+            PublicationGateStatus.BLOCKED if reasons else PublicationGateStatus.READY
+        ),
+        blocking_reasons=tuple(reasons),
+        maximum_revision_attempts=0,
+    )
+
+
 def _material_assertions(
     claim_id: UUID,
     verdict: Verdict,
     evidence: tuple[Evidence, ...],
 ) -> tuple[StructuredReportAssertion, ...]:
     stance = _verdict_stance(verdict.label)
-    verdict_citations = tuple(
-        dict.fromkeys((*verdict.decisive_evidence_ids, *verdict.contradictory_evidence_ids))
-    )
     records = {item.evidence_id: item for item in evidence}
+    verdict_citations = tuple(
+        evidence_id
+        for evidence_id in dict.fromkeys(
+            (*verdict.decisive_evidence_ids, *verdict.contradictory_evidence_ids)
+        )
+        if evidence_id in records
+    )
     assertions = []
     for section, text, critical in (
         (
@@ -156,8 +267,23 @@ def _material_assertions(
             verdict.detailed_reasoning,
             False,
         ),
-    ):
-        for ordinal, sentence in enumerate(_sentences(text)):
+        ):
+        clauses = tuple(
+            clause
+            for sentence in _sentences(text)
+            for clause in _material_clauses(sentence)
+        )
+        for ordinal, sentence in enumerate(clauses):
+            candidate_records = tuple(records[item] for item in verdict_citations)
+            required_phrases = _required_phrases(sentence, candidate_records)
+            cited_evidence_ids = tuple(
+                item.evidence_id
+                for item in candidate_records
+                if any(
+                    _normalize(phrase) in _normalize(item.passage)
+                    for phrase in required_phrases
+                )
+            )
             assertions.append(
                 StructuredReportAssertion(
                     assertion_id=uuid5(
@@ -166,43 +292,65 @@ def _material_assertions(
                     ),
                     claim_id=claim_id,
                     sentence=sentence,
-                    cited_evidence_ids=verdict_citations,
-                    asserted_stance=stance,
-                    required_phrases=(
-                        _required_phrase(
-                            sentence,
-                            tuple(records[item] for item in verdict_citations if item in records),
-                        ),
+                    cited_evidence_ids=cited_evidence_ids,
+                    asserted_stance=_assertion_stance(
+                        sentence,
+                        candidate_records,
+                        fallback=stance,
                     ),
+                    required_phrases=required_phrases,
                     critical=critical,
                     section=section,
                     ordinal=ordinal,
                 )
             )
-    for ordinal, item in enumerate(
-        evidence_item
-        for evidence_item in evidence
-        if evidence_item.stance is not EvidenceStance.IRRELEVANT
-    ):
-        # Evidence passages may be long source extracts. The report assertion is
-        # a bounded finding, not a second copy of the retained source content.
-        sentence = _passage_excerpt(item.passage)
-        assertions.append(
-            StructuredReportAssertion(
-                assertion_id=uuid5(
-                    NAMESPACE_URL,
-                    f"{claim_id}/evidence/{item.evidence_id}",
-                ),
-                claim_id=claim_id,
-                sentence=sentence,
-                cited_evidence_ids=(item.evidence_id,),
-                asserted_stance=item.stance,
-                required_phrases=(_passage_excerpt(sentence),),
-                section=ReportAssertionSection.EVIDENCE_FINDING,
-                ordinal=ordinal,
-            )
-        )
     return tuple(assertions)
+
+
+def _material_clauses(sentence: str) -> tuple[str, ...]:
+    """Split contrastive report sentences so one match cannot certify another clause."""
+    clauses = tuple(
+        item.strip(" ,;:")
+        for item in _MATERIAL_CLAUSE_BOUNDARY.split(sentence)
+        if len(_normalize(item).split()) >= 3
+    )
+    if any(_normalize(item).endswith(("because", "although", "while")) for item in clauses):
+        return (sentence,)
+    return clauses or (sentence,)
+
+
+def _assertion_stance(
+    sentence: str,
+    evidence: tuple[Evidence, ...],
+    *,
+    fallback: EvidenceStance,
+) -> EvidenceStance:
+    """Infer a bounded clause stance instead of copying the verdict-wide stance."""
+    lowered = _normalize(sentence)
+    qualification_markers = (
+        "although",
+        "however",
+        "may not",
+        "not universally",
+        "exception",
+        "misleading",
+        "condition",
+        "qualif",
+    )
+    if any(marker in lowered for marker in qualification_markers):
+        return EvidenceStance.QUALIFIES
+    if not evidence:
+        return fallback
+    sentence_tokens = set(lowered.split())
+    ranked = sorted(
+        evidence,
+        key=lambda item: (
+            len(sentence_tokens & set(_normalize(item.passage).split())),
+            item.relevance_score,
+        ),
+        reverse=True,
+    )
+    return ranked[0].stance if ranked else fallback
 
 
 def _revise_assertion(assertion, evidence, attempt, revisions):
@@ -239,15 +387,25 @@ def _revise_assertion(assertion, evidence, attempt, revisions):
     return revised
 
 
+def _required_phrases(sentence: str, evidence: tuple[Evidence, ...]) -> tuple[str, ...]:
+    clauses = tuple(
+        item.strip()
+        for item in _MATERIAL_CLAUSE_BOUNDARY.split(sentence)
+        if len(_normalize(item).split()) >= 3
+    ) or (sentence,)
+    phrases = tuple(_required_phrase(clause, evidence) for clause in clauses)
+    return tuple(dict.fromkeys(phrases))
+
+
 def _required_phrase(sentence: str, evidence: tuple[Evidence, ...]) -> str:
     words = _normalize(sentence).split()
     passages = tuple(_normalize(item.passage) for item in evidence)
-    for width in range(min(8, len(words)), 1, -1):
+    for width in range(min(10, len(words)), 3, -1):
         for start in range(len(words) - width + 1):
             phrase = " ".join(words[start : start + width])
             if any(phrase in passage for passage in passages):
                 return phrase
-    return " ".join(words[: min(5, len(words))])
+    return " ".join(words[: min(8, len(words))])
 
 
 def _passage_excerpt(passage: str) -> str:
@@ -259,7 +417,9 @@ def _passage_excerpt(passage: str) -> str:
 
 def _sentences(text: str) -> tuple[str, ...]:
     return tuple(
-        item.strip() for item in _SENTENCE_BOUNDARY.split(" ".join(text.split())) if item.strip()
+        item.strip()
+        for item in _SENTENCE_BOUNDARY.split(" ".join(text.split()))
+        if item.strip()
     )
 
 

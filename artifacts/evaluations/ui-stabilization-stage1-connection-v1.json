@@ -1,0 +1,73 @@
+{
+  "audit_id": "ui-stabilization-stage1-connection-v1",
+  "status": "passed",
+  "stage": "UI.1",
+  "scope": "API configuration and connection reliability",
+  "gates": {
+    "saved_address_loaded_before_inferred_default": true,
+    "same_address_save_triggers_real_retry": true,
+    "reset_removes_saved_override": true,
+    "ipv4_normalization_tested": true,
+    "hostname_normalization_tested": true,
+    "ipv6_bracketing_tested": true,
+    "malformed_url_rejected": true,
+    "credentials_rejected": true,
+    "paths_queries_and_fragments_rejected": true,
+    "connection_states_explicit": true,
+    "connection_status_announced": true,
+    "production_build_passed": true,
+    "dashboard_tests_passed": 23,
+    "dashboard_tests_failed": 0,
+    "eslint_errors": 0,
+    "preexisting_annotation_warnings": 2,
+    "provider_calls": 0,
+    "model_calls": 0,
+    "search_calls": 0
+  },
+  "missing_files": [],
+  "external_effects": {
+    "provider_calls": 0,
+    "model_calls": 0,
+    "search_calls": 0
+  },
+  "deferred_to_ui_2": [
+    "SSE reconnection",
+    "last-event sequence recovery",
+    "fallback polling",
+    "stale-progress indication"
+  ],
+  "artifacts": [
+    {
+      "path": "dashboard/app/api-configuration.mjs",
+      "sha256": "9170b3545cb7b3d4d12f61668c88784a21a911808c2b50c02f6d519b2a9799eb",
+      "bytes": 2907
+    },
+    {
+      "path": "dashboard/app/api-configuration.d.ts",
+      "sha256": "c62966d48393fcc1b42abecff998debf0365304d2e88f77f04e3873fd3a89466",
+      "bytes": 757
+    },
+    {
+      "path": "dashboard/app/page.tsx",
+      "sha256": "9215d1dadad44f0e1b970a4c67b88daff6086448fb25a52870858279e4901f45",
+      "bytes": 141900
+    },
+    {
+      "path": "dashboard/app/globals.css",
+      "sha256": "45b76dd122ba2741ed48660845fe8e93f0314295788bf11403b8741ba58c5002",
+      "bytes": 91017
+    },
+    {
+      "path": "dashboard/tests/api-configuration.test.mjs",
+      "sha256": "13395f919a28618e013fb97bc49c10ca1b1c42d7dffdc3e059eb54907156ae53",
+      "bytes": 2964
+    },
+    {
+      "path": "dashboard/tests/ui-stage1-connection-source.test.mjs",
+      "sha256": "56e6e204dbf500cdadd9ea14b038db7c903b47944ed38eea4305d9fcdbfae251",
+      "bytes": 1122
+    }
+  ],
+  "next_stage_authorized": true,
+  "next_stage": "UI.2 Durable live progress"
+}

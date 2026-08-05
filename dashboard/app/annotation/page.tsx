@@ -194,7 +194,7 @@ export default function AnnotationStudio() {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [workbook]);
 
-  const cases = workbook?.cases ?? [];
+  const cases = useMemo(() => workbook?.cases ?? [], [workbook]);
   const isReplacementCalibration = Boolean(
     workbook?.workbook_id.startsWith("verification-construction-v3-stage6")
     || workbook?.workbook_id === "verification-construction-v4-stage8-fresh-calibration-workbook-v1"
@@ -617,7 +617,7 @@ export default function AnnotationStudio() {
       <div className="annotation-progress-bar"><i style={{ width: `${Math.round(counts.valid / cases.length * 100)}%` }} /></div>
     </section>
 
-    {message && <div className="annotation-message" role="status">{message}<button onClick={() => setMessage("")}>×</button></div>}
+    {message && <div className="annotation-message" role="status">{message}<button aria-label="Dismiss notification" onClick={() => setMessage("")}>×</button></div>}
 
     <div className="annotation-layout">
       <aside className="annotation-case-list">

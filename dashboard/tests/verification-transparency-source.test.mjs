@@ -12,7 +12,7 @@ test("verification presents canonical assertions, findings, provenance, and limi
     "EVIDENCE-GROUNDED RESULT",
     "TEMPORAL EVIDENCE TIMELINE",
     "Compatibility diagnostic · raw context extraction",
-    "A required check cannot pass on evidence numbers alone",
+    "No numerical operand was expected because numerical verification was not required",
     "How to interpret verification",
     "claim_observations",
     "evidence_observations",
@@ -29,9 +29,24 @@ test("verification presents canonical assertions, findings, provenance, and limi
     "Marking a requirement “not applicable”",
     "observationCategory",
     "observationExcerpt",
+    "CLAIM-SCOPE REVIEW SIGNALS",
+    "Not a numerical or temporal check",
+    "Current evidence authority",
+    "Scope qualifiers detected",
+    "Historical packet reference",
   ]) {
     assert.match(source, new RegExp(required.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
   }
+});
+
+test("semantic scope signals cannot masquerade as typed verification failures", async () => {
+  const source = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
+
+  assert.match(source, /scopeFindingCodes/);
+  assert.match(source, /legacyNumericalFindings\.filter\(\(finding\) => !scopeFindingCodes\.has\(finding\.code\)\)/);
+  assert.match(source, /!verificationRequired\s*\? "Not applicable"/);
+  assert.doesNotMatch(source, /<dt>Approved evidence available<\/dt>/);
+  assert.doesNotMatch(source, /<dt>Exactness terms<\/dt>/);
 });
 
 test("verification workspace has responsive gates, findings, traces, and timelines", async () => {
@@ -42,6 +57,7 @@ test("verification workspace has responsive gates, findings, traces, and timelin
     ".verification-gate",
     ".verification-metrics",
     ".verification-findings",
+    ".scope-review-findings",
     ".verification-assertion",
     ".verification-evidence",
     ".temporal-observations",

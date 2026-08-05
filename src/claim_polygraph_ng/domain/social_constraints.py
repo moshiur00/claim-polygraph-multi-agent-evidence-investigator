@@ -13,6 +13,7 @@ from claim_polygraph_ng.domain.base import DomainModel
 from claim_polygraph_ng.domain.enums import (
     DistributionMedium,
     EvidenceEligibilityDecision,
+    EvidenceStance,
     EvidentiaryUse,
 )
 from claim_polygraph_ng.domain.models import Evidence, Source
@@ -30,6 +31,9 @@ class SocialConstraintCode(StrEnum):
     DECISIVE_USE_NOT_ALLOWED = "decisive_use_not_allowed"
     NON_SOCIAL_CORROBORATION_MISSING = "non_social_corroboration_missing"
     UNRESOLVED_SOCIAL_RISK = "unresolved_social_risk"
+    INELIGIBLE_MATERIAL_SOCIAL_EVIDENCE_RETAINED = (
+        "ineligible_material_social_evidence_retained"
+    )
 
 
 class SocialConstraintFinding(DomainModel):
@@ -169,6 +173,41 @@ def evaluate_social_evidence_constraints(
                 "The assigned use of this social item is outside its deterministic eligibility.",
                 source_id=source.source_id,
                 evidence_ids=(evidence_id,),
+            )
+
+    # Ineligible social material is deliberately absent from the argument
+    # ledger. If it is the only retained material offered for a factual
+    # proposition, fail closed instead of mistaking omission for corroboration.
+    referenced_non_social = any(
+        evidence_id in referenced
+        and source_by_id.get(item.source_id) is not None
+        and source_by_id[item.source_id].distribution_medium
+        is not DistributionMedium.SOCIAL_PLATFORM
+        for evidence_id, item in evidence_by_id.items()
+    )
+    for item in evidence:
+        source = source_by_id.get(item.source_id)
+        if (
+            item.evidence_id in referenced
+            or source is None
+            or source.distribution_medium is not DistributionMedium.SOCIAL_PLATFORM
+            or item.stance not in {
+                EvidenceStance.SUPPORTS,
+                EvidenceStance.CONTRADICTS,
+                EvidenceStance.QUALIFIES,
+            }
+            or referenced_non_social
+        ):
+            continue
+        eligibility = source.social_eligibility
+        if eligibility is None or eligibility.decision is EvidenceEligibilityDecision.INELIGIBLE:
+            add(
+                SocialConstraintCode.INELIGIBLE_MATERIAL_SOCIAL_EVIDENCE_RETAINED,
+                SocialRiskSeverity.BLOCKING,
+                "The only retained material evidence is an ineligible social item; "
+                "it cannot resolve or corroborate the factual proposition.",
+                source_id=source.source_id,
+                evidence_ids=(item.evidence_id,),
             )
 
     material_ids = {item.proposition_id for item in ledger.propositions if item.material}

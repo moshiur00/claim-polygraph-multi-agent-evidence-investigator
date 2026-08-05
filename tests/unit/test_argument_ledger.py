@@ -97,3 +97,32 @@ def test_irrelevant_evidence_does_not_resolve_proposition() -> None:
 
     assert ledger.arguments[0].resolution is PropositionResolution.UNRESOLVED
     assert ledger.arguments[0].unresolved_reasons
+
+
+def test_contaminated_evidence_remains_outside_argument_resolution() -> None:
+    claim = AtomicClaim(text="Water expands when it freezes.", checkworthiness=1)
+    contaminated = Evidence(
+        claim_id=claim.claim_id,
+        source_id=uuid4(),
+        passage=(
+            "Skip to main content User account menu Log in Subscribe Product directory. "
+            "Water expands when it freezes. Privacy policy All rights reserved."
+        ),
+        stance=EvidenceStance.SUPPORTS,
+        relevance_score=1,
+    )
+
+    ledger = build_argument_ledger(claim=claim, evidence=(contaminated,))
+
+    assert contaminated.evidence_id not in ledger.approved_evidence_ids
+    assert ledger.arguments[0].resolution is PropositionResolution.UNRESOLVED
+    assert ledger.arguments[0].supporting_evidence_ids == ()
+    insufficient = next(
+        item
+        for item in ledger.challenge_findings
+        if item.kind is ChallengeKind.INSUFFICIENT_ELIGIBLE_EVIDENCE
+    )
+    assert insufficient.severity.value == "blocking"
+    assert ChallengeKind.MISSING_COUNTEREVIDENCE not in {
+        item.kind for item in ledger.challenge_findings
+    }

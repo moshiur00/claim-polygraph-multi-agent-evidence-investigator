@@ -10,7 +10,12 @@ from claim_polygraph_ng.retrieval.pdf import extract_pdf_text
 class _ReadableTextParser(HTMLParser):
     """Collect visible text while excluding active and non-content elements."""
 
-    _IGNORED_TAGS = frozenset({"script", "style", "noscript", "svg", "template"})
+    _IGNORED_TAGS = frozenset(
+        {
+            "script", "style", "noscript", "svg", "template",
+            "nav", "footer", "aside", "header", "form", "button", "select", "option",
+        }
+    )
     _BLOCK_TAGS = frozenset(
         {
             "article",
@@ -57,9 +62,10 @@ class _ReadableTextParser(HTMLParser):
         attrs: list[tuple[str, str | None]],
     ) -> None:
         del attrs
-        if tag.lower() in self._IGNORED_TAGS:
+        lowered = tag.lower()
+        if lowered in self._IGNORED_TAGS:
             self._ignored_depth += 1
-        elif tag.lower() in self._BLOCK_TAGS and not self._ignored_depth:
+        elif lowered in self._BLOCK_TAGS and not self._ignored_depth:
             self.parts.append("\n\n")
 
     def handle_endtag(self, tag: str) -> None:
@@ -87,7 +93,22 @@ def extract_readable_text(text: str, content_type: str) -> str:
         re.sub(r"\s+", " ", paragraph).strip()
         for paragraph in re.split(r"(?:\r?\n\s*){2,}", extracted)
     ]
-    return "\n\n".join(paragraph for paragraph in paragraphs if paragraph)
+    return "\n\n".join(
+        paragraph for paragraph in paragraphs if paragraph and not _boilerplate_line(paragraph)
+    )
+
+
+def _boilerplate_line(value: str) -> bool:
+    """Drop only short, unmistakable page controls; preserve substantive prose."""
+    lowered = value.casefold().strip()
+    if len(lowered) > 180:
+        return False
+    controls = {
+        "skip to main content", "log in", "sign in", "subscribe", "menu",
+        "privacy policy", "cookie policy", "contact us", "follow us", "share this",
+        "previous", "next", "print", "printer-friendly",
+    }
+    return lowered in controls
 
 
 def extract_document_text(

@@ -450,6 +450,18 @@ class SQLiteJobQueue:
         with self._connect() as connection:
             return self._load(connection, job_id)
 
+    def find_by_thread_id(self, thread_id: str) -> DurableJob | None:
+        """Return the newest durable job owning an authoritative graph thread."""
+        with self._connect() as connection:
+            rows = connection.execute(
+                "SELECT payload FROM durable_jobs ORDER BY created_at DESC"
+            ).fetchall()
+        for row in rows:
+            job = DurableJob.model_validate_json(row["payload"])
+            if str(job.spec.payload.get("thread_id", "")) == thread_id:
+                return job
+        return None
+
     def audit_events(self, job_id: UUID) -> tuple[JobAuditEvent, ...]:
         with self._connect() as connection:
             rows = connection.execute(

@@ -9,7 +9,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const metadataBase = new URL(`${protocol}://${host}`);
   const title = "Claim Polygraph · Evidence Review Console";
   const description =
-    "A citation-grounded LangGraph investigation and human-review console.";
+    "A citation-grounded evidence investigation and human-review console.";
   return {
     metadataBase,
     title,

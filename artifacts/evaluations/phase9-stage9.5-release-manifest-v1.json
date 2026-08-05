@@ -24,7 +24,7 @@
     {
       "artifact_id": "stage9_4_manifest",
       "path": "artifacts/evaluations/phase9-stage9.4-release-manifest-v1.json",
-      "sha256": "c011c04d14b4103eb95583107526219fb3d12dc1dc0b687517a74a55175f93ef"
+      "sha256": "9a11a4a8a82db8814831f11f2761986c2b6d96d57b031bcf8f76c9acdb745edd"
     },
     {
       "artifact_id": "stage9_5_gate",

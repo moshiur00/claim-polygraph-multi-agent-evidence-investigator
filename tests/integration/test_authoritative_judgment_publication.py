@@ -12,6 +12,7 @@ from claim_polygraph_ng.application.langgraph_authoritative import (
 from claim_polygraph_ng.domain import (
     AuthoritativePublicationDecision,
     PublicationGateStatus,
+    ReviewDecisionKind,
     Verdict,
     VerdictLabel,
 )
@@ -23,6 +24,7 @@ from claim_polygraph_ng.providers import (
 )
 from claim_polygraph_ng.reporting import (
     PublicationBlockedError,
+    load_report,
     render_publishable_markdown,
 )
 
@@ -41,9 +43,7 @@ def test_authoritative_graph_persists_auditable_judgment_publication_chain(
         langgraph_checkpoint_path=tmp_path / "langgraph.db",
         state_checkpoint_path=tmp_path / "state.db",
     ) as workflow:
-        result = asyncio.run(
-            workflow.run_to_completion("The fixture programme reduced waste.")
-        )
+        result = asyncio.run(workflow.start("The fixture programme reduced waste."))
 
     state = result.state
     assert state.proposed_verdict_ref is not None
@@ -121,21 +121,27 @@ def test_unsupported_critical_assertion_blocks_graph_publication(tmp_path) -> No
         langgraph_checkpoint_path=tmp_path / "blocked-langgraph.db",
         state_checkpoint_path=tmp_path / "blocked-state.db",
     ) as workflow:
-        result = asyncio.run(
-            workflow.run_to_completion("The fixture programme reduced waste.")
-        )
+        result = asyncio.run(workflow.start("The fixture programme reduced waste."))
 
-    decision = result.report.publication_decision
+    report = load_report(
+        repository,
+        result.state.investigation_id,
+        require_completed=False,
+    )
+    decision = report.publication_decision
     assert decision is not None
     assert not decision.publication_allowed
     assert decision.unsupported_critical_assertion_count > 0
-    assert result.report.full_report_assurance.publication_status is (
+    assert report.full_report_assurance.publication_status is (
         PublicationGateStatus.BLOCKED
     )
+    assert result.interrupt is not None
+    assert ReviewDecisionKind.APPROVE not in result.interrupt.allowed_decisions
+    assert result.interrupt.allowed_decisions[0] is ReviewDecisionKind.REQUEST_EVIDENCE
     assert result.state.publication_blocked
     assert result.state.publication_blocking_reasons
     with pytest.raises(PublicationBlockedError):
-        render_publishable_markdown(result.report, ())
+        render_publishable_markdown(report, ())
 
 
 def test_direct_rollback_also_emits_and_enforces_publication_decision(

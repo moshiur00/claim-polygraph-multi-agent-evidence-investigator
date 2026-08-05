@@ -14,7 +14,11 @@ from langgraph.checkpoint.sqlite.aio import AsyncSqliteSaver
 from langgraph.graph import END, START, StateGraph
 from langgraph.types import Command, interrupt
 
-from claim_polygraph_ng.analysis import assure_full_report, route_human_review
+from claim_polygraph_ng.analysis import (
+    assure_full_report,
+    reassess_full_report_assurance,
+    route_human_review,
+)
 from claim_polygraph_ng.application.authoritative_research import (
     AuthoritativeMultiAgentResearchAdapter,
     evidence_family_id,
@@ -36,6 +40,7 @@ from claim_polygraph_ng.domain import (
     AtomicClaim,
     ContextVerification,
     Evidence,
+    EvidenceDispositionRecord,
     FullReportCitationAssurance,
     IndependenceAnalysis,
     Investigation,
@@ -54,6 +59,8 @@ from claim_polygraph_ng.domain import (
     Source,
     Verdict,
     VerificationPacketV2,
+    apply_evidence_dispositions,
+    assess_evidence_packet,
 )
 from claim_polygraph_ng.domain.authoritative_graph import (
     AuthoritativeGraphPhase,
@@ -201,6 +208,12 @@ class AuthoritativeFixtureLangGraphWorkflow:
     def latest_state(self, thread_id: str) -> AuthoritativeInvestigationGraphState | None:
         """Return the latest compact durable state without executing the graph."""
         return self._state_repository.latest(thread_id)
+
+    def latest_state_for_investigation(
+        self, investigation_id: UUID
+    ) -> AuthoritativeInvestigationGraphState | None:
+        """Recover a durable thread from its public investigation identifier."""
+        return self._state_repository.latest_for_investigation(investigation_id)
 
     def state_history(self, thread_id: str) -> tuple[AuthoritativeInvestigationGraphState, ...]:
         """Return append-only checkpoints for SSE and audit reconstruction."""
@@ -534,6 +547,7 @@ def _build_graph(workflow: AuthoritativeFixtureLangGraphWorkflow, checkpointer):
 
     async def consolidate(graph: _GraphState):
         state = _state(graph)
+        claim = _claim(workflow, state)
         sources = _many(workflow, state, ArtifactType.SOURCE, Source)
         evidence = _many(workflow, state, ArtifactType.EVIDENCE, Evidence)
         independence = _one(
@@ -543,11 +557,19 @@ def _build_graph(workflow: AuthoritativeFixtureLangGraphWorkflow, checkpointer):
             IndependenceAnalysis,
         )
         workflow._service.consolidate_evidence((sources, evidence, independence))
+        integrity = assess_evidence_packet(evidence, claim_text=claim.text)
+        argument_eligible_ids = {
+            item.evidence_id for item in integrity if item.argument_eligible
+        }
         return workflow.checkpoint(
             graph,
             phase=AuthoritativeGraphPhase.RESEARCH,
             operation=AuthoritativeOperation.CONSOLIDATE_EVIDENCE,
-            approved_evidence_ids=tuple(item.evidence_id for item in evidence),
+            approved_evidence_ids=tuple(
+                item.evidence_id
+                for item in evidence
+                if item.evidence_id in argument_eligible_ids
+            ),
         )
 
     async def provenance(graph: _GraphState):
@@ -754,7 +776,7 @@ def _build_graph(workflow: AuthoritativeFixtureLangGraphWorkflow, checkpointer):
             _investigation(workflow, state),
             _claim(workflow, state),
             _many(workflow, state, ArtifactType.SOURCE, Source),
-            _many(workflow, state, ArtifactType.EVIDENCE, Evidence),
+            _approved_evidence(workflow, state),
             _one(
                 workflow._investigations,
                 state.investigation_id,
@@ -790,7 +812,7 @@ def _build_graph(workflow: AuthoritativeFixtureLangGraphWorkflow, checkpointer):
         verdict, _policy = workflow._service.apply_judgment_policy(
             _investigation(workflow, state),
             Verdict.model_validate(graph["provisional_verdict"]),
-            _many(workflow, state, ArtifactType.EVIDENCE, Evidence),
+            _approved_evidence(workflow, state),
             _one(
                 workflow._investigations,
                 state.investigation_id,
@@ -942,6 +964,13 @@ def _build_graph(workflow: AuthoritativeFixtureLangGraphWorkflow, checkpointer):
                 ArtifactType.SOCIAL_EVIDENCE_POLICY,
                 SocialEvidencePolicyResult,
             ),
+            _many(workflow, state, ArtifactType.EVIDENCE, Evidence),
+            _one(
+                workflow._investigations,
+                state.investigation_id,
+                ArtifactType.CLAIM,
+                AtomicClaim,
+            ).text,
         )
         routing = route_human_review(
             ReviewRoutingContext(
@@ -1015,12 +1044,28 @@ def _build_graph(workflow: AuthoritativeFixtureLangGraphWorkflow, checkpointer):
 
     async def review(graph: _GraphState):
         state = _state(graph)
+        provisional_verdict = Verdict.model_validate(graph["provisional_verdict"])
+        effective_assurance, integrity = _current_citation_assurance(
+            workflow,
+            state,
+            provisional_verdict,
+        )
+        approval_blocked = (
+            effective_assurance.publication_status.value == "blocked"
+            or any(item.publication_blocking for item in integrity)
+        )
         allowed_decisions = (
             (
                 ReviewDecisionKind.REQUEST_EVIDENCE,
                 ReviewDecisionKind.REJECT,
             )
             if not state.approved_evidence_ids
+            else (
+                ReviewDecisionKind.REQUEST_EVIDENCE,
+                ReviewDecisionKind.REVISE,
+                ReviewDecisionKind.REJECT,
+            )
+            if approval_blocked
             else (
                 ReviewDecisionKind.APPROVE,
                 ReviewDecisionKind.REVISE,
@@ -1032,7 +1077,7 @@ def _build_graph(workflow: AuthoritativeFixtureLangGraphWorkflow, checkpointer):
             thread_id=state.thread_id,
             question="Approve, revise, request more evidence, or reject this investigation.",
             claim_text=_claim(workflow, state).text,
-            provisional_verdict=Verdict.model_validate(graph["provisional_verdict"]).label,
+            provisional_verdict=provisional_verdict.label,
             approved_evidence_ids=state.approved_evidence_ids,
             route_reason=(
                 " ".join(state.publication_blocking_reasons)
@@ -1058,6 +1103,23 @@ def _build_graph(workflow: AuthoritativeFixtureLangGraphWorkflow, checkpointer):
                 "verification corrections may reference only approved evidence"
             )
         approver_identity = envelope.get("approver_identity")
+        if decision.kind is ReviewDecisionKind.APPROVE:
+            effective_assurance, integrity = _current_citation_assurance(
+                workflow,
+                state,
+                Verdict.model_validate(graph["provisional_verdict"]),
+            )
+            integrity_blockers = tuple(
+                item for item in integrity if item.publication_blocking
+            )
+            if (
+                effective_assurance.publication_status.value == "blocked"
+                or integrity_blockers
+            ):
+                raise ValueError(
+                    "approval is unavailable until current evidence-integrity "
+                    "and citation blockers are resolved"
+                )
         trail = workflow._review_ledger.find_by_thread(state.thread_id)
         if trail is None:
             raise ValueError("review interruption has no durable review request")
@@ -1121,6 +1183,7 @@ def _build_graph(workflow: AuthoritativeFixtureLangGraphWorkflow, checkpointer):
                 verdict=revised,
                 evidence=_approved_evidence(workflow, state),
                 approved_evidence_ids=state.approved_evidence_ids,
+                claim_text=_claim(workflow, state).text,
             )
             workflow._service._save_artifact(
                 _investigation(workflow, state),
@@ -1187,22 +1250,33 @@ def _build_graph(workflow: AuthoritativeFixtureLangGraphWorkflow, checkpointer):
             decision.status is AuthoritativePublicationStatus.REVIEW_REQUIRED
             or graph["decision_kind"] == ReviewDecisionKind.REVISE.value
         ):
-            assurance = _one(
-                workflow._investigations,
-                state.investigation_id,
-                ArtifactType.FULL_REPORT_ASSURANCE,
-                FullReportCitationAssurance,
+            assurance, integrity = _current_citation_assurance(
+                workflow,
+                state,
+                Verdict.model_validate(graph["provisional_verdict"]),
             )
             citation_blocked = assurance.publication_status.value == "blocked"
+            integrity_blockers = tuple(
+                item for item in integrity if item.publication_blocking
+            )
             social_policy = _one(
                 workflow._investigations,
                 state.investigation_id,
                 ArtifactType.SOCIAL_EVIDENCE_POLICY,
                 SocialEvidencePolicyResult,
             )
-            publication_blocked = citation_blocked or social_policy.publication_blocked
+            publication_blocked = (
+                citation_blocked
+                or bool(integrity_blockers)
+                or social_policy.publication_blocked
+            )
             blocking_reasons = (
                 *assurance.blocking_reasons,
+                *(
+                    f"Evidence {item.evidence_id} is not publication-safe: "
+                    + ", ".join(item.reason_codes)
+                    for item in integrity_blockers
+                ),
                 *social_policy.blocking_reasons,
             )
             updated = decision.model_copy(
@@ -1227,6 +1301,8 @@ def _build_graph(workflow: AuthoritativeFixtureLangGraphWorkflow, checkpointer):
                             (
                                 "social_evidence_policy_blocked"
                                 if social_policy.publication_blocked
+                                else "decisive_evidence_integrity_blocked"
+                                if integrity_blockers
                                 else "citation_assurance_blocked"
                             ),
                         )
@@ -1456,6 +1532,37 @@ def _approved_evidence(workflow, state):
     if not set(state.approved_evidence_ids) <= set(by_id):
         raise ValueError("approved graph evidence is missing from persistence")
     return tuple(by_id[item] for item in state.approved_evidence_ids)
+
+
+def _current_citation_assurance(workflow, state, verdict):
+    evidence = _many(workflow, state, ArtifactType.EVIDENCE, Evidence)
+    dispositions = _many(
+        workflow,
+        state,
+        ArtifactType.EVIDENCE_DISPOSITION,
+        EvidenceDispositionRecord,
+    )
+    effective_evidence = apply_evidence_dispositions(evidence, dispositions)
+    integrity = assess_evidence_packet(
+        evidence,
+        claim_text=_claim(workflow, state).text,
+        decisive_evidence_ids=verdict.decisive_evidence_ids,
+        dispositions=dispositions,
+    )
+    historical = _one(
+        workflow._investigations,
+        state.investigation_id,
+        ArtifactType.FULL_REPORT_ASSURANCE,
+        FullReportCitationAssurance,
+    )
+    assurance = reassess_full_report_assurance(
+        historical=historical,
+        evidence=effective_evidence,
+        approved_evidence_ids=tuple(
+            item.evidence_id for item in integrity if item.citation_eligible
+        ),
+    )
+    return assurance, integrity
 
 
 def _ref(state, artifact_type, artifact_id):

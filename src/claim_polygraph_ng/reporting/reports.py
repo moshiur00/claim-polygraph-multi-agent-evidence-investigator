@@ -5,6 +5,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from uuid import UUID
 
+from claim_polygraph_ng.analysis import build_argument_ledger, reassess_full_report_assurance
 from claim_polygraph_ng.domain import (
     ArgumentLedger,
     ArtifactType,
@@ -17,6 +18,7 @@ from claim_polygraph_ng.domain import (
     ContextVerification,
     DistributionMedium,
     Evidence,
+    EvidenceDispositionRecord,
     EvidenceStance,
     FullReportCitationAssurance,
     IndependenceAnalysis,
@@ -35,7 +37,9 @@ from claim_polygraph_ng.domain import (
     TraceEventType,
     Verdict,
     VerificationPacketV2,
+    assess_evidence_packet,
 )
+from claim_polygraph_ng.domain.evidence_disposition import apply_evidence_dispositions
 from claim_polygraph_ng.domain.models import InvestigationPlan
 from claim_polygraph_ng.persistence import InvestigationRepository
 
@@ -125,6 +129,11 @@ def load_report(
         ArtifactType.SOCIAL_EVIDENCE_POLICY,
         SocialEvidencePolicyResult,
     )
+    evidence_dispositions = repository.list_artifacts(
+        investigation_id,
+        ArtifactType.EVIDENCE_DISPOSITION,
+        EvidenceDispositionRecord,
+    )
 
     missing = [
         name
@@ -141,22 +150,58 @@ def load_report(
             f"investigation is missing artifacts: {', '.join(missing)}"
         )
 
+    original_ledger = argument_ledgers[-1] if argument_ledgers else None
+    effective_evidence = apply_evidence_dispositions(evidence, evidence_dispositions)
+    evidence_integrity = assess_evidence_packet(
+        evidence,
+        claim_text=claims[0].text,
+        decisive_evidence_ids=verdicts[-1].decisive_evidence_ids,
+        dispositions=evidence_dispositions,
+    )
+    current_citation_ids = tuple(
+        item.evidence_id for item in evidence_integrity if item.citation_eligible
+    )
+    effective_assurance = (
+        reassess_full_report_assurance(
+            historical=full_report_assurance[-1],
+            evidence=effective_evidence,
+            approved_evidence_ids=current_citation_ids,
+        )
+        if full_report_assurance
+        else None
+    )
+    effective_ledger = (
+        build_argument_ledger(
+            claim=claims[0],
+            evidence=effective_evidence,
+            verification=verification_packets[-1] if verification_packets else None,
+            provenance=provenance[-1] if provenance else None,
+            propositions=original_ledger.propositions if original_ledger else None,
+        )
+        if evidence or original_ledger
+        else None
+    )
+
     return InvestigationReport(
         investigation=investigation,
         claim=claims[0],
         plan=plans[-1],
         sources=sources,
         evidence=evidence,
+        evidence_dispositions=evidence_dispositions,
+        evidence_integrity=evidence_integrity,
         independence_analysis=independence[-1] if independence else None,
         provenance=provenance[-1] if provenance else None,
         verification_packet=verification_packets[-1] if verification_packets else None,
-        argument_ledger=argument_ledgers[-1] if argument_ledgers else None,
+        argument_ledger=original_ledger,
+        effective_argument_ledger=effective_ledger,
         judgment_policy=judgment_policies[-1] if judgment_policies else None,
         readiness=readiness_artifacts[-1] if readiness_artifacts else None,
         context_verification=(context_verification[-1] if context_verification else None),
         verdict=verdicts[-1],
         audits=audits,
         full_report_assurance=(full_report_assurance[-1] if full_report_assurance else None),
+        effective_full_report_assurance=effective_assurance,
         publication_decision=(
             publication_decisions[-1] if publication_decisions else None
         ),
@@ -304,7 +349,10 @@ def render_publishable_complex_markdown(report: ComplexInvestigationReport) -> s
         )
         raise PublicationBlockedError("complex publication blocked: " + " ".join(reasons))
     for component in report.component_reports:
-        component_assurance = component.full_report_assurance
+        component_assurance = (
+            component.effective_full_report_assurance
+            or component.full_report_assurance
+        )
         if (
             component_assurance is None
             or component_assurance.publication_status is PublicationGateStatus.BLOCKED
@@ -411,8 +459,17 @@ def render_publishable_markdown(
     events: tuple[TraceEvent, ...],
 ) -> str:
     """Render only after the complete material-sentence publication gate passes."""
-    assurance = report.full_report_assurance
+    assurance = report.effective_full_report_assurance or report.full_report_assurance
     decision = report.publication_decision
+    integrity_blockers = tuple(
+        assessment
+        for assessment in report.evidence_integrity
+        if assessment.publication_blocking
+    )
+    if integrity_blockers:
+        raise PublicationBlockedError(
+            "publication blocked: one or more decisive evidence passages are ineligible"
+        )
     if decision is not None and not decision.publication_allowed:
         reasons = decision.blocking_reasons or (
             "Authoritative human approval is required before publication.",
@@ -473,6 +530,29 @@ def render_markdown(
         f"- **Maximum pages:** {report.plan.maximum_pages_fetched}",
         "",
     ]
+    if report.evidence_dispositions:
+        lines.extend(
+            [
+                "## Evidence decision history",
+                "",
+                "These append-only decisions change effective use without rewriting "
+                "the retained evidence.",
+                "",
+            ]
+        )
+        for disposition in report.evidence_dispositions:
+            approved_use = (
+                f" / {disposition.approved_use.value}"
+                if disposition.approved_use is not None
+                else ""
+            )
+            lines.append(
+                f"- **{disposition.kind.value}{approved_use}** for "
+                f"`{disposition.evidence_id}`: {_inline(disposition.reason)} "
+                f"_(reviewed by {_inline(disposition.reviewer_identity)}; approved by "
+                f"{_inline(disposition.approver_identity)})_"
+            )
+        lines.append("")
 
     for heading, stance in (
         ("Supporting evidence", EvidenceStance.SUPPORTS),
@@ -713,11 +793,11 @@ def render_markdown(
                 ]
             )
 
-    if report.argument_ledger is not None:
-        ledger = report.argument_ledger
+    ledger = report.effective_argument_ledger or report.argument_ledger
+    if ledger is not None:
         lines.extend(
             [
-                "## Argument ledger",
+                "## Effective argument ledger",
                 "",
                 f"- **Material propositions:** "
                 f"{sum(item.material for item in ledger.propositions)}",
@@ -725,6 +805,19 @@ def render_markdown(
                 "",
             ]
         )
+        if (
+            report.effective_argument_ledger is not None
+            and report.argument_ledger is not None
+            and report.effective_argument_ledger != report.argument_ledger
+        ):
+            lines.extend(
+                [
+                    "The effective ledger was reconstructed from the current evidence "
+                    "packet and recorded evidence dispositions. The original persisted "
+                    "ledger remains available in the immutable audit record.",
+                    "",
+                ]
+            )
         for argument in ledger.arguments:
             lines.append(
                 f"- **Proposition `{argument.proposition_id}`:** {argument.resolution.value}"
@@ -830,12 +923,15 @@ def render_markdown(
             )
             + " |"
         )
-    if report.full_report_assurance is not None:
-        assurance = report.full_report_assurance
+    effective_assurance = (
+        report.effective_full_report_assurance or report.full_report_assurance
+    )
+    if effective_assurance is not None:
+        assurance = effective_assurance
         lines.extend(
             [
                 "",
-                "## Full-report citation assurance",
+                "## Effective full-report citation assurance",
                 "",
                 f"- **Publication status:** {assurance.publication_status.value}",
                 f"- **Material sentences audited:** "
@@ -844,6 +940,24 @@ def render_markdown(
                 f"- **Final full-support rate:** {assurance.final_audit.full_support_rate:.2%}",
                 f"- **Critical failures:** {assurance.critical_failure_count}",
                 f"- **Bounded revisions:** {len(assurance.revisions)}",
+                "",
+            ]
+        )
+    if (
+        report.effective_full_report_assurance is not None
+        and report.full_report_assurance is not None
+        and report.effective_full_report_assurance != report.full_report_assurance
+    ):
+        historical = report.full_report_assurance
+        lines.extend(
+            [
+                "## Historical citation assurance",
+                "",
+                "> Retained for audit history; this is not the current publication authority.",
+                "",
+                f"- **Historical status:** {historical.publication_status.value}",
+                f"- **Historical full-support rate:** "
+                f"{historical.final_audit.full_support_rate:.2%}",
                 "",
             ]
         )
