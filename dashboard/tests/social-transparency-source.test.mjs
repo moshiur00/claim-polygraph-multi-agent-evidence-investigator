@@ -22,5 +22,6 @@ test("dashboard preserves the complete social-evidence transparency trace", asyn
 
   assert.match(source, /social_evidence_policy\?\.publication_blocked/);
   assert.match(source, /publication_decision\.publication_allowed/);
-  assert.match(source, /PROVISIONAL REPORT · HUMAN DECISION PENDING/);
+  assert.match(source, /CURRENT REPORT STATUS/);
+  assert.match(source, /evidence cannot support publication/);
 });

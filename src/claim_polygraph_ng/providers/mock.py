@@ -14,6 +14,7 @@ from claim_polygraph_ng.domain import (
     ClaimType,
     Evidence,
     EvidenceStance,
+    EvidentiaryUse,
     ExtractionStatus,
     InvestigationPlan,
     ModelTask,
@@ -137,6 +138,7 @@ class DeterministicModelProvider:
             entailment_score=0.84,
             extraction_status=ExtractionStatus.EXTRACTED,
             temporal_compatibility=0.9,
+            evidentiary_use=EvidentiaryUse.QUALIFIED_OBSERVATION,
         )
 
     @staticmethod

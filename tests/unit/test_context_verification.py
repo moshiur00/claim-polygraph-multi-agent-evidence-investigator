@@ -65,6 +65,12 @@ def test_flags_exact_numerical_wording_and_missing_units() -> None:
     assert verification.numerical.claim_values == ("100",)
     assert verification.numerical.exactness_terms == ("every", "exactly")
     assert any("claim units" in issue for issue in verification.numerical.issues)
+    assert "absolute_wording_requires_verification" not in {
+        finding.code for finding in verification.numerical.findings
+    }
+    assert "absolute_wording_requires_verification" in {
+        finding.code for finding in verification.scope_findings
+    }
 
 
 def test_temporal_check_detects_postdated_sources() -> None:
@@ -98,6 +104,24 @@ def test_unneeded_checks_are_explicit() -> None:
 
     assert verification.numerical.status is VerificationStatus.NOT_REQUIRED
     assert verification.temporal.status is VerificationStatus.NOT_REQUIRED
+
+
+def test_universal_wording_is_scope_review_not_numerical_requirement() -> None:
+    claim = AtomicClaim(
+        text="Water expands while all other liquids shrink.",
+        checkworthiness=1,
+    )
+
+    verification = verify_claim_context(
+        claim=claim,
+        plan=_plan(claim.claim_id),
+        sources=(),
+        evidence=(),
+    )
+
+    assert verification.numerical.status is VerificationStatus.NOT_REQUIRED
+    assert verification.numerical.findings == ()
+    assert verification.scope_findings[0].code == "absolute_wording_requires_verification"
 
 
 def test_hyphenated_entity_number_is_not_treated_as_a_quantity() -> None:

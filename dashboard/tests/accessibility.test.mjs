@@ -19,11 +19,15 @@ test("server-rendered console exposes its essential accessibility structure", as
   assert.equal(response.status, 200);
   assert.match(html, /<html[^>]+lang="en"/);
   assert.match(html, /<main[^>]+class="app-shell"/);
-  assert.match(html, /<nav[^>]+aria-label="Investigations"/);
+  assert.match(html, /class="skip-link"[^>]+href="#workspace-content"/);
+  assert.match(html, /id="workspace-content"[^>]+tabindex="-1"/i);
+  assert.match(html, /<nav[^>]+aria-label="Workspace navigation"/);
+  assert.match(html, /aria-current="page"/);
+  assert.match(html, /aria-label="Search investigations"/);
   assert.match(html, /<h1[^>]*>Investigate a factual claim<\/h1>/);
   assert.match(html, /<label[^>]+for="claim-input"/);
   assert.match(html, /<input[^>]+id="claim-input"/);
   assert.match(html, /<input[^>]+aria-label="API address"/);
   assert.doesNotMatch(html, /<button[^>]*>\s*<\/button>/);
-  assert.doesNotMatch(html, /tabindex="-1"/i);
+  assert.equal([...html.matchAll(/tabindex="-1"/gi)].length, 1, "only the skip-link destination may be programmatically focusable");
 });

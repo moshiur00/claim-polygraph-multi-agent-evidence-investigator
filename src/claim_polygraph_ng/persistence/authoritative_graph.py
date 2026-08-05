@@ -5,6 +5,7 @@ import json
 from collections.abc import Iterator
 from contextlib import contextmanager
 from pathlib import Path
+from uuid import UUID
 
 from claim_polygraph_ng.domain.authoritative_graph import (
     AuthoritativeInvestigationGraphState,
@@ -125,6 +126,32 @@ class SQLiteAuthoritativeGraphCheckpointRepository:
             if row is not None
             else None
         )
+
+    def latest_for_investigation(
+        self, investigation_id: UUID
+    ) -> AuthoritativeInvestigationGraphState | None:
+        """Recover the newest validated thread state for a persisted investigation."""
+        self.initialize()
+        with self._connect() as connection:
+            rows = connection.execute(
+                """
+                SELECT payload, payload_sha256
+                FROM authoritative_graph_checkpoints
+                WHERE sequence = (
+                    SELECT MAX(candidate.sequence)
+                    FROM authoritative_graph_checkpoints AS candidate
+                    WHERE candidate.thread_id = authoritative_graph_checkpoints.thread_id
+                )
+                ORDER BY sequence DESC
+                """
+            ).fetchall()
+        matches = [
+            state
+            for row in rows
+            if (state := _decode_checkpoint(row[0], row[1])).investigation_id
+            == investigation_id
+        ]
+        return max(matches, key=lambda state: state.updated_at) if matches else None
 
     def history(self, thread_id: str) -> tuple[AuthoritativeInvestigationGraphState, ...]:
         self.initialize()

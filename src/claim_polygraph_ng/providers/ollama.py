@@ -16,6 +16,7 @@ from claim_polygraph_ng.domain import (
     ClaimType,
     Evidence,
     EvidenceStance,
+    EvidentiaryUse,
     ExtractionStatus,
     InvestigationPlan,
     ModelTask,
@@ -415,6 +416,7 @@ def _assemble_evidence(
             entailment_score=semantics.entailment_score,
             extraction_status=ExtractionStatus.EXTRACTED,
             temporal_compatibility=semantics.temporal_compatibility,
+            evidentiary_use=EvidentiaryUse.QUALIFIED_OBSERVATION,
         )
     except (KeyError, TypeError, ValueError) as error:
         raise ModelOutputError(

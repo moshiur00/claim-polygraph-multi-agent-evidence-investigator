@@ -188,27 +188,27 @@
     {
       "artifact_id": "serpapi_adapter",
       "path": "src/claim_polygraph_ng/providers/serpapi.py",
-      "sha256": "80c026b4e1faffc06f11c165c55da87f3f5047ab3b27632cc6dedf9e8a67cb82"
+      "sha256": "ac90448f314383f15504a09c1fa8425d78273f4f70d4c9068cc06fb99d279c74"
     },
     {
       "artifact_id": "multi_agent_research",
       "path": "src/claim_polygraph_ng/application/multi_agent_service.py",
-      "sha256": "d780914735934ed98eae7fc096ef3e22a22b162e0cf8352baef252f83f32a6d6"
+      "sha256": "8ccc62ad21c1f91e9d1267c2e41c792bf6d344ba9af63cceb2e157553274c6aa"
     },
     {
       "artifact_id": "independence_analysis",
       "path": "src/claim_polygraph_ng/analysis/independence.py",
-      "sha256": "376176aa056aaef0380fc09d3c071d4303906d169d3cb3e092873e83e131dbc5"
+      "sha256": "7ddaf2ec512928ee17523ac2f7364b62f46d59f819b89751beb1c82f68e8effa"
     },
     {
       "artifact_id": "investigation_provenance",
       "path": "src/claim_polygraph_ng/analysis/investigation_provenance.py",
-      "sha256": "7a4ae1ddb9586649a67fd24966e3294893b0cc5bfae97100bc765081eff30777"
+      "sha256": "6b9a3bb8219fe9fd4fa328c2ea0d343989d66b1fc5564e672959c2bafc3d9d7c"
     },
     {
       "artifact_id": "readiness",
       "path": "src/claim_polygraph_ng/analysis/readiness.py",
-      "sha256": "7f7712b77c20ce985b8f0c75fb7fa48d3d987d13f5cd59c127ba85127ad1ead2"
+      "sha256": "b6c0b43d6c568b669d368a0fb1fe26f81a8852ee5c888efa9b2af3cdf81de207"
     },
     {
       "artifact_id": "retrieval_evaluation",
@@ -218,12 +218,12 @@
     {
       "artifact_id": "source_enums",
       "path": "src/claim_polygraph_ng/domain/enums.py",
-      "sha256": "ae362c05f03cea8080c6db965277fb51c7e9428d303da82a17dbb614c342075f"
+      "sha256": "03636738b0d12e34031dea15b28772f170c08efa2ad2197dc37bc15d495c3bc0"
     },
     {
       "artifact_id": "source_models",
       "path": "src/claim_polygraph_ng/domain/models.py",
-      "sha256": "9d71b80a5f1928c18edeb0fa2201d1ee0f24002d7b52cf5984f46300f2efee00"
+      "sha256": "aeb92ead114a18937436311368d527ca6912cd1d35102d09a90cc63117fc5e67"
     },
     {
       "artifact_id": "phase10_plan",

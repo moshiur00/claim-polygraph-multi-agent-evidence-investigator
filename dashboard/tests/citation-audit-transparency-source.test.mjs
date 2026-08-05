@@ -7,14 +7,21 @@ test("citation audit exposes the canonical publication and passage trace", async
 
   for (const required of [
     "full_report_assurance",
+    "effective_full_report_assurance",
     "final_audit.findings",
-    "FULL-REPORT CITATION ASSURANCE",
+    "EFFECTIVE FULL-REPORT CITATION ASSURANCE",
+    "HISTORICAL AUDIT PRESERVED",
     "WHY PUBLICATION IS BLOCKED",
     "CITATION-TO-PASSAGE MAPPING",
     "MATCHED PHRASES",
     "REVISED AND RE-AUDITED",
     "How to interpret citation assurance",
     "What it does not prove",
+    "Clause phrase coverage",
+    "Current citation eligibility",
+    "Attached references",
+    "Eligible references",
+    "Not evaluated — citation eligibility failed first.",
   ]) {
     assert.match(source, new RegExp(required.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
   }
@@ -22,6 +29,10 @@ test("citation audit exposes the canonical publication and passage trace", async
   assert.match(source, /initial\.status !== finding\.status/);
   assert.match(source, /assurance\?\.final_audit\.approved_evidence_ids\.includes/);
   assert.match(source, /Verdict label changed:/);
+  assert.match(source, /value !== "approve" \|\| !approvalBlockedByEvidence/);
+  assert.match(source, /Approval is unavailable until the current evidence and citation blockers are resolved/);
+  assert.match(source, /integrity\?\.citation_eligible === true \? "Eligible" : "Ineligible"/);
+  assert.ok(source.indexOf('["request_evidence", "Request more evidence"]') < source.indexOf('["revise", "Revise verdict"]'));
 });
 
 test("citation audit has responsive summary, filters, findings, and revisions", async () => {
@@ -36,6 +47,8 @@ test("citation audit has responsive summary, filters, findings, and revisions", 
     ".citation-mappings",
     ".revision-comparison",
     ".citation-method",
+    ".citation-history-notice",
+    ".citation-integrity-warning",
   ]) {
     assert.match(css, new RegExp(selector.replace(".", "\\.")));
   }

@@ -17,9 +17,10 @@ test("renders the Claim Polygraph review console", async () => {
   assert.match(html, /Claim Polygraph/);
   assert.match(html, /Investigate a factual claim/);
   assert.match(html, /CLAIM TO INVESTIGATE/);
-  assert.match(html, /CONNECTED EVIDENCE WORKSPACE/);
+  assert.match(html, /CONNECTION REQUIRED/);
   assert.match(html, /CLAIM DESK/);
-  assert.match(html, /Research system and safeguards/);
+  assert.match(html, /Research safeguards/);
+  assert.match(html, /Evidence service/);
   assert.match(html, /InvestigationService authority/);
   assert.doesNotMatch(html, /codex-preview|react-loading-skeleton/);
 });

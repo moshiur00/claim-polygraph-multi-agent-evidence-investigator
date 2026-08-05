@@ -1,0 +1,65 @@
+{
+  "audit_id": "ui-stabilization-stage4-accessibility-v1",
+  "status": "passed",
+  "stage": "UI.4",
+  "scope": "Responsive layout, keyboard access, landmarks, focus and user-preference hardening",
+  "conformance_claim": "bounded automated hardening; not a WCAG certification",
+  "manual_visual_and_assistive_technology_review": {
+    "status": "pending",
+    "reason": "The in-app browser runtime was unavailable in this execution environment."
+  },
+  "gates": {
+    "single_main_landmark": true,
+    "skip_link_and_focusable_destination": true,
+    "compact_navigation_has_accessible_names": true,
+    "current_destination_is_exposed": true,
+    "report_tabs_have_aria_relationships": true,
+    "report_tabs_support_arrow_home_end_keys": true,
+    "focus_visible_treatment": true,
+    "reduced_motion_treatment": true,
+    "forced_colors_treatment": true,
+    "mobile_navigation_and_tabs_remain_scrollable": true,
+    "narrow_summary_and_operational_layouts_reflow": true,
+    "annotation_notification_is_named": true,
+    "dashboard_production_build_passed": true,
+    "dashboard_tests_passed": 39,
+    "dashboard_tests_failed": 0,
+    "eslint_errors": 0,
+    "preexisting_annotation_warnings": 2
+  },
+  "missing_files": [],
+  "external_effects": {
+    "provider_calls": 0,
+    "model_calls": 0,
+    "search_calls": 0
+  },
+  "artifacts": [
+    {
+      "path": "dashboard/app/page.tsx",
+      "sha256": "7164a2a5a916065464df55db2d1465060243e76c8d715b866a673ee4968d7c81",
+      "bytes": 153215
+    },
+    {
+      "path": "dashboard/app/globals.css",
+      "sha256": "8fa4f0022e1ccd0429902ba07d575e1d6fe1924228493ed006ae0a7291caff54",
+      "bytes": 97344
+    },
+    {
+      "path": "dashboard/app/annotation/page.tsx",
+      "sha256": "dd84246ff6179524670f46568ce29887f1462306e88f655bd285bda34faeb8a1",
+      "bytes": 40456
+    },
+    {
+      "path": "dashboard/tests/accessibility.test.mjs",
+      "sha256": "14133e2018ab589a9d3d0f1f76d0f3c3cfc7a524bd8ce61b82e340f62509bbb7",
+      "bytes": 1578
+    },
+    {
+      "path": "dashboard/tests/ui-stage4-accessibility-source.test.mjs",
+      "sha256": "cb63f590610c1e4b87cb1128e31f73e52700ad8e4b31595ad705b3333b065c93",
+      "bytes": 1697
+    }
+  ],
+  "next_stage_authorized": true,
+  "next_stage": "UI.5 journalist workflow usability and final stabilization audit"
+}

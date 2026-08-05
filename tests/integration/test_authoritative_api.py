@@ -72,6 +72,15 @@ def test_authoritative_job_exposes_checkpoint_sse_and_same_thread_review(tmp_pat
             "published",
             "blocked",
         }
+        reconstructed = client.get(
+            f"/api/investigations/{current['investigation_id']}/authoritative-job"
+        )
+        assert reconstructed.status_code == 200
+        assert reconstructed.json()["job"]["job_id"] == job_id
+        assert reconstructed.json()["thread_id"] == thread_id
+        assert reconstructed.json()["graph"]["checkpoint_sequence"] == current["graph"][
+            "checkpoint_sequence"
+        ]
         if current["job"]["status"] == "interrupted":
             assert current["report_available"] is True
             investigation_id = current["investigation_id"]
@@ -124,6 +133,11 @@ def test_authoritative_job_exposes_checkpoint_sse_and_same_thread_review(tmp_pat
             assert payload["thread_id"] == thread_id
             assert payload["graph"]["phase"] == "complete"
             assert payload["review"]["chain_valid"] is True
+            investigation = client.get(
+                f"/api/investigations/{payload['investigation_id']}"
+            ).json()
+            assert investigation["status"] == "completed"
+            assert investigation["stage"] == "complete"
 
 
 def test_legacy_read_routes_remain_available_with_authoritative_api(tmp_path):

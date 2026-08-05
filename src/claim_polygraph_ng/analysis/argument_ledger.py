@@ -19,6 +19,7 @@ from claim_polygraph_ng.domain import (
     PropositionResolution,
     VerificationPacketV2,
 )
+from claim_polygraph_ng.domain.evidence_integrity import assess_evidence_integrity
 
 _ABSOLUTE = re.compile(r"\b(all|always|every|exactly|never|only|no longer)\b", re.I)
 _CAUSAL = re.compile(r"\b(cause[sd]?|caused by|leads? to|results? in|because)\b", re.I)
@@ -47,8 +48,16 @@ def build_argument_ledger(
             text=claim.text,
         ),
     )
-    approved = tuple(dict.fromkeys(item.evidence_id for item in evidence))
-    usable = tuple(item for item in evidence if item.relevance_score >= 0.5)
+    integrity = {
+        item.evidence_id: assess_evidence_integrity(
+            item,
+            claim_text=claim.text,
+        )
+        for item in evidence
+    }
+    eligible = tuple(item for item in evidence if integrity[item.evidence_id].argument_eligible)
+    approved = tuple(dict.fromkeys(item.evidence_id for item in eligible))
+    usable = tuple(item for item in eligible if item.relevance_score >= 0.5)
     stance_ids = {
         stance: tuple(item.evidence_id for item in usable if item.stance is stance)
         for stance in EvidenceStance
@@ -103,6 +112,8 @@ def build_argument_ledger(
         ),
         limitations=(
             "The ledger reorganizes approved artifacts and does not create evidence or facts.",
+            "Contaminated, excluded, and discovery-only passages remain diagnostic records but "
+            "cannot resolve a material proposition.",
             "Challenger rules identify review conditions, not verdict labels.",
         ),
     )
@@ -174,7 +185,23 @@ def _challenge(proposition, argument, verification, provenance):
                 (*argument.supporting_evidence_ids, *argument.qualifying_evidence_ids),
             )
         )
-    if not argument.contradictory_evidence_ids and not argument.qualifying_evidence_ids:
+    resolving_evidence_ids = (
+        *argument.supporting_evidence_ids,
+        *argument.contradictory_evidence_ids,
+        *argument.qualifying_evidence_ids,
+    )
+    if not resolving_evidence_ids:
+        findings.append(
+            _finding(
+                proposition,
+                ChallengeKind.INSUFFICIENT_ELIGIBLE_EVIDENCE,
+                ChallengeSeverity.BLOCKING,
+                "The current eligible packet contains no evidence that can resolve the "
+                "proposition.",
+                (),
+            )
+        )
+    elif not argument.contradictory_evidence_ids and not argument.qualifying_evidence_ids:
         findings.append(
             _finding(
                 proposition,

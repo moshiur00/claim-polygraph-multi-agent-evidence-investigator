@@ -1,0 +1,91 @@
+{
+  "audit_id": "ui-stabilization-stage2-live-progress-v1",
+  "status": "passed",
+  "stage": "UI.2",
+  "scope": "Durable SSE progress, reconnect recovery and fallback polling",
+  "cursor_storage": "sessionStorage scoped by durable stream identity",
+  "reconnect_policy": {
+    "initial_delay_ms": 500,
+    "maximum_delay_ms": 8000,
+    "polling_after_failures": 3,
+    "polling_interval_ms": 2000,
+    "stale_after_ms": 15000
+  },
+  "stream_authority": {
+    "active_job": "authoritative job SSE and GET snapshot",
+    "interrupted_review": "durable graph SSE and GET snapshot",
+    "redundant_investigation_stream": "removed"
+  },
+  "gates": {
+    "authoritative_cursor_uses_persisted_sequence": true,
+    "cursor_survives_browser_refresh": true,
+    "reconnect_uses_after_cursor": true,
+    "bounded_exponential_backoff": true,
+    "polling_after_repeated_stream_failure": true,
+    "polling_reads_only_persisted_snapshots": true,
+    "stale_progress_is_visible": true,
+    "malformed_event_is_ignored_safely": true,
+    "single_event_source_per_stream_identity": true,
+    "redundant_investigation_stream_removed": true,
+    "terminal_state_closes_stream": true,
+    "cleanup_cancels_stream_timers": true,
+    "progress_status_has_live_region": true,
+    "dashboard_production_build_passed": true,
+    "dashboard_tests_passed": 27,
+    "dashboard_tests_failed": 0,
+    "backend_sse_integration_tests_passed": 9,
+    "backend_sse_integration_tests_failed": 0,
+    "eslint_errors": 0,
+    "preexisting_annotation_warnings": 2,
+    "provider_calls": 0,
+    "model_calls": 0,
+    "search_calls": 0,
+    "duplicate_paid_operations": 0
+  },
+  "missing_files": [],
+  "external_effects": {
+    "provider_calls": 0,
+    "model_calls": 0,
+    "search_calls": 0,
+    "duplicate_paid_operations": 0
+  },
+  "artifacts": [
+    {
+      "path": "dashboard/app/use-durable-event-stream.ts",
+      "sha256": "bad46485b8a0e81c6ced62a510760800b688501547f30fe0302857ebe409d9c8",
+      "bytes": 6432
+    },
+    {
+      "path": "dashboard/app/page.tsx",
+      "sha256": "3c18b118f2359f751f58fbc7e47426dcb11d89a6a3c4dabc5b4122481ecfd606",
+      "bytes": 142374
+    },
+    {
+      "path": "dashboard/app/globals.css",
+      "sha256": "0c83f20605a4592b2d25df609b7787db808b9a482167a5e0d9429148f2d2519a",
+      "bytes": 91577
+    },
+    {
+      "path": "dashboard/tests/durable-progress-source.test.mjs",
+      "sha256": "8adbd0fe85f1b4cf1f391647c2c740bef35be912b61cac05a85c041790bf32a8",
+      "bytes": 2075
+    },
+    {
+      "path": "src/claim_polygraph_ng/api.py",
+      "sha256": "d6f39fd682f6cc49e37062d6c085d203636461fa35761620a8de07294220b2fc",
+      "bytes": 46650
+    },
+    {
+      "path": "tests/integration/test_authoritative_api.py",
+      "sha256": "0351430c417b5bb29cf7e48294b4a8ee5da6b62f02a2333c6c7a0418aa5d8d8f",
+      "bytes": 5811
+    },
+    {
+      "path": "tests/integration/test_api.py",
+      "sha256": "8065a246703b2c91a78d233dfa44cffdc4b8ea5ec10a069aa6a0541c817ad375",
+      "bytes": 13493
+    }
+  ],
+  "next_stage_authorized": true,
+  "next_stage": "UI.3 Navigation and information architecture"
+}

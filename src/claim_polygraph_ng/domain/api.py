@@ -8,6 +8,10 @@ from claim_polygraph_ng.domain.authoritative_graph import (
     AuthoritativeInvestigationGraphState,
 )
 from claim_polygraph_ng.domain.base import DomainModel
+from claim_polygraph_ng.domain.evidence_disposition import (
+    EvidenceDispositionInput,
+    EvidenceDispositionRecord,
+)
 from claim_polygraph_ng.domain.graph import (
     DurableGraphSnapshot,
     FixtureGraphRequest,
@@ -78,6 +82,18 @@ class InvestigationJobResponse(DomainModel):
     events: tuple[JobAuditEvent, ...] = ()
 
 
+class InvestigationUsageSummary(DomainModel):
+    """Measured structured-model usage attributed to one investigation."""
+
+    model_calls: int = Field(default=0, ge=0)
+    input_tokens: int = Field(default=0, ge=0)
+    cached_input_tokens: int = Field(default=0, ge=0)
+    output_tokens: int = Field(default=0, ge=0)
+    total_tokens: int = Field(default=0, ge=0)
+    estimated_cost_usd: float = Field(default=0.0, ge=0.0)
+    unpriced_model_calls: int = Field(default=0, ge=0)
+
+
 class AuthoritativeJobResponse(DomainModel):
     """One truthful view of job, graph, review and publication state."""
 
@@ -90,6 +106,7 @@ class AuthoritativeJobResponse(DomainModel):
     publication_status: str
     verdict: str | None = None
     report_available: bool = False
+    usage: InvestigationUsageSummary | None = None
     events: tuple[JobAuditEvent, ...] = ()
 
 
@@ -98,3 +115,15 @@ class AuthoritativeReviewRequest(DomainModel):
 
     decision: ReviewDecision
     approver_identity: str | None = Field(default=None, min_length=3, max_length=300)
+
+
+class SubmitEvidenceDispositionRequest(DomainModel):
+    """Distinctly approved, append-only evidence-use decision."""
+
+    disposition: EvidenceDispositionInput
+    reviewer_identity: str = Field(min_length=3, max_length=300)
+    approver_identity: str = Field(min_length=3, max_length=300)
+
+
+class EvidenceDispositionResponse(DomainModel):
+    record: EvidenceDispositionRecord

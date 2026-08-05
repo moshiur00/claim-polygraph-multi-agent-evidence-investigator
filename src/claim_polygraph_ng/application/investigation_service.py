@@ -51,6 +51,7 @@ from claim_polygraph_ng.domain import (
     TraceEventType,
     Verdict,
     VerdictLabel,
+    assess_evidence_packet,
     evaluate_social_evidence_constraints,
 )
 from claim_polygraph_ng.domain.adversarial import AdversarialArgumentReport
@@ -323,6 +324,11 @@ class InvestigationService:
             defender = self.construct_defender_argument(argument_ledger)
             challenger = self.construct_challenger_argument(argument_ledger)
             argument_ledger = self.reconcile_arguments(defender, challenger)
+            argument_evidence = tuple(
+                item
+                for item in evidence_items
+                if item.evidence_id in set(argument_ledger.approved_evidence_ids)
+            )
             social_evidence_policy = self.evaluate_social_evidence_policy(
                 investigation,
                 argument_ledger,
@@ -334,7 +340,7 @@ class InvestigationService:
                 investigation,
                 claim,
                 sources,
-                evidence_items,
+                argument_evidence,
                 independence,
                 context_verification,
                 verification_packet,
@@ -344,7 +350,7 @@ class InvestigationService:
             verdict, judgment_policy = self.apply_judgment_policy(
                 investigation,
                 verdict,
-                evidence_items,
+                argument_evidence,
                 independence,
                 context_verification,
                 argument_ledger,
@@ -379,6 +385,8 @@ class InvestigationService:
                 full_report_assurance,
                 readiness,
                 social_evidence_policy,
+                evidence_items,
+                claim.text,
             )
             self.route_review(verdict, readiness, full_report_assurance)
             return self.finalize_report(
@@ -801,12 +809,27 @@ class InvestigationService:
             investigation,
             stage=InvestigationStage.CITATION_AUDIT,
         )
+        integrity = {
+            item.evidence_id: item
+            for item in assess_evidence_packet(
+                evidence,
+                claim_text=claim.text,
+                decisive_evidence_ids=tuple(
+                    dict.fromkeys(
+                        (*verdict.decisive_evidence_ids, *verdict.contradictory_evidence_ids)
+                    )
+                ),
+            )
+        }
+        citation_evidence = tuple(
+            item for item in evidence if integrity[item.evidence_id].citation_eligible
+        )
         audit_inputs: dict[str, JsonValue] = {
             "original_claim": claim.model_dump(mode="json"),
             "verdict_label": verdict.label.value,
             "sentence": verdict.concise_explanation,
-            "evidence_ids": [str(item.evidence_id) for item in evidence],
-            "evidence": [item.model_dump(mode="json") for item in evidence],
+            "evidence_ids": [str(item.evidence_id) for item in citation_evidence],
+            "evidence": [item.model_dump(mode="json") for item in citation_evidence],
         }
         audit = await self._generate(
             investigation,
@@ -853,6 +876,7 @@ class InvestigationService:
             verdict=verdict,
             evidence=evidence,
             approved_evidence_ids=tuple(item.evidence_id for item in evidence),
+            claim_text=claim.text,
         )
         self._save_artifact(
             investigation,
@@ -899,6 +923,8 @@ class InvestigationService:
         assurance: FullReportCitationAssurance,
         readiness: JudgmentReadiness,
         social_policy: SocialEvidencePolicyResult | None = None,
+        evidence: tuple[Evidence, ...] = (),
+        claim_text: str = "",
     ) -> AuthoritativePublicationDecision:
         """Persist the fail-closed decision controlling public rendering."""
         decision = decide_publication(
@@ -909,6 +935,8 @@ class InvestigationService:
             assurance=assurance,
             readiness=readiness,
             social_policy=social_policy,
+            evidence=evidence,
+            claim_text=claim_text,
         )
         self._save_artifact(
             investigation,
@@ -989,10 +1017,16 @@ class InvestigationService:
             plan=plan,
             sources=sources,
             evidence=evidence_items,
+            evidence_integrity=assess_evidence_packet(
+                evidence_items,
+                claim_text=claim.text,
+                decisive_evidence_ids=verdict.decisive_evidence_ids,
+            ),
             independence_analysis=independence,
             provenance=provenance,
             verification_packet=verification_packet,
             argument_ledger=argument_ledger,
+            effective_argument_ledger=argument_ledger,
             judgment_policy=judgment_policy,
             readiness=readiness,
             context_verification=context_verification,

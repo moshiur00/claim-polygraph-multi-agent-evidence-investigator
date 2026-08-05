@@ -1,0 +1,74 @@
+{
+  "audit_id": "ui-stabilization-stage3-navigation-v1",
+  "status": "passed",
+  "stage": "UI.3",
+  "scope": "Navigation, review queue, system health, case search and URL restoration",
+  "gates": {
+    "review_queue_destination_is_functional": true,
+    "review_state_comes_from_canonical_history": true,
+    "system_health_destination_is_functional": true,
+    "health_and_telemetry_are_distinguished": true,
+    "investigations_are_searchable": true,
+    "selection_is_url_preserved": true,
+    "browser_back_forward_is_supported": true,
+    "loading_empty_error_and_unavailable_states_exist": true,
+    "dashboard_production_build_passed": true,
+    "dashboard_tests_passed": 35,
+    "dashboard_tests_failed": 0,
+    "eslint_errors": 0,
+    "preexisting_annotation_warnings": 2,
+    "provider_calls": 0,
+    "model_calls": 0,
+    "search_calls": 0
+  },
+  "visual_verification": {
+    "status": "unavailable",
+    "reason": "The in-app browser runtime could not initialize in this execution environment.",
+    "substitute_browser_used": false
+  },
+  "missing_files": [],
+  "external_effects": {
+    "provider_calls": 0,
+    "model_calls": 0,
+    "search_calls": 0
+  },
+  "artifacts": [
+    {
+      "path": "dashboard/app/navigation-state.mjs",
+      "sha256": "ad9505418330f255e3544314bc62f8bb717fef3606028aedb8112ae696e72852",
+      "bytes": 734
+    },
+    {
+      "path": "dashboard/app/navigation-state.d.ts",
+      "sha256": "dbc2f3df4b63dff10f0cd0e1d61737d488f0d80f86538693f5daa83f51781c2b",
+      "bytes": 306
+    },
+    {
+      "path": "dashboard/app/page.tsx",
+      "sha256": "54d09a63d2c21d00fdb1610be57ca76122aa275f3db1d4d78fb71fe88ca71857",
+      "bytes": 151523
+    },
+    {
+      "path": "dashboard/app/globals.css",
+      "sha256": "793cb81626cb585f62a2ce30fda540082cc9cf3e5ada575b79570171b881ac2b",
+      "bytes": 95412
+    },
+    {
+      "path": "dashboard/tests/navigation-state.test.mjs",
+      "sha256": "97069e93c807be7c8cb21f34571d5687f70ef47d3ec0b2489f4c4273250ef867",
+      "bytes": 1224
+    },
+    {
+      "path": "dashboard/tests/ui-stage3-navigation-source.test.mjs",
+      "sha256": "08a7aa6cea6450607dba1fb3d9fd054e8fcd67b8af28fe317cc8dafe93cc4b40",
+      "bytes": 1218
+    },
+    {
+      "path": "dashboard/tests/accessibility.test.mjs",
+      "sha256": "bf94371d791db00e7cce04837123d6e82d8138901acedeef5805a5377bd56bf2",
+      "bytes": 1310
+    }
+  ],
+  "next_stage_authorized": true,
+  "next_stage": "UI.4 responsive layout and accessibility hardening"
+}

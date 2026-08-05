@@ -19,6 +19,7 @@ class ChallengeKind(StrEnum):
     ABSOLUTE_WORDING = "absolute_wording"
     CAUSAL_OVERREACH = "causal_overreach"
     POPULATION_TO_INDIVIDUAL = "population_to_individual"
+    INSUFFICIENT_ELIGIBLE_EVIDENCE = "insufficient_eligible_evidence"
     MISSING_COUNTEREVIDENCE = "missing_counterevidence"
     INCOMPLETE_NUMERICAL_CONTEXT = "incomplete_numerical_context"
     TEMPORAL_MISMATCH = "temporal_mismatch"

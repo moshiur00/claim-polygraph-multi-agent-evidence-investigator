@@ -87,6 +87,7 @@ def verify_claim_context(
     numerical_required = plan.requires_numerical_check or bool(claim_values)
     numerical_issues: list[str] = []
     numerical_findings: list[VerificationIssueFinding] = []
+    scope_findings: list[VerificationIssueFinding] = []
     if numerical_required and not claim_values and not is_qualitative_comparison(claim.text):
         issue = "No explicit numerical value was extracted from the claim."
         numerical_issues.append(issue)
@@ -145,13 +146,12 @@ def verify_claim_context(
             )
         )
     if exactness:
-        issue = "Absolute wording requires explicit verification: " + ", ".join(exactness) + "."
-        numerical_issues.append(issue)
-        numerical_findings.append(
+        issue = "Universal wording requires a claim-scope review: " + ", ".join(exactness) + "."
+        scope_findings.append(
             _finding(
                 "absolute_wording_requires_verification",
                 issue,
-                "Verify the universal or exact wording directly, or narrow the claim.",
+                "Review the universal wording against eligible evidence, or narrow the claim.",
                 severity=VerificationIssueSeverity.CAUTION,
                 impact=VerificationReadinessImpact.READINESS_SIGNAL,
             )
@@ -253,6 +253,7 @@ def verify_claim_context(
             issues=tuple(temporal_issues),
             findings=tuple(temporal_findings),
         ),
+        scope_findings=tuple(scope_findings),
         limitations=(
             "Checks compare explicit strings and source metadata; they do not perform unit "
             "conversion, statistical validation, or historical database lookup.",

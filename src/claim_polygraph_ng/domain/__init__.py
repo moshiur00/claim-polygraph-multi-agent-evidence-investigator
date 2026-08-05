@@ -89,6 +89,28 @@ from claim_polygraph_ng.domain.enums import (
     SupportLevel,
     VerdictLabel,
 )
+from claim_polygraph_ng.domain.evidence_disposition import (
+    EvidenceDispositionInput as EvidenceDispositionInput,
+)
+from claim_polygraph_ng.domain.evidence_disposition import (
+    EvidenceDispositionKind as EvidenceDispositionKind,
+)
+from claim_polygraph_ng.domain.evidence_disposition import (
+    EvidenceDispositionRecord as EvidenceDispositionRecord,
+)
+from claim_polygraph_ng.domain.evidence_disposition import (
+    apply_evidence_dispositions as apply_evidence_dispositions,
+)
+from claim_polygraph_ng.domain.evidence_disposition import (
+    latest_evidence_dispositions as latest_evidence_dispositions,
+)
+from claim_polygraph_ng.domain.evidence_integrity import (
+    EvidenceExcerptStatus,
+    EvidenceIntegrityAssessment,
+    PassageHygieneStatus,
+    assess_evidence_integrity,
+    assess_evidence_packet,
+)
 from claim_polygraph_ng.domain.graph import (
     DurableAssignmentReference,
     DurableComponentReference,
@@ -373,8 +395,10 @@ __all__ = [
     "Evidence",
     "EvidenceConsolidation",
     "EvidenceEligibilityDecision",
+    "EvidenceExcerptStatus",
     "EvidenceFamily",
     "EvidenceGain",
+    "EvidenceIntegrityAssessment",
     "EvidenceProgressSnapshot",
     "EvidenceStance",
     "EvidentiaryUse",
@@ -441,6 +465,7 @@ __all__ = [
     "OriginalSourceResolutionRequest",
     "OriginalSourceResolutionResult",
     "OriginalSourceResolutionStatus",
+    "PassageHygieneStatus",
     "PropositionArgument",
     "PropositionResolution",
     "ProvenanceDependency",
@@ -538,6 +563,8 @@ __all__ = [
     "VerificationPacketV2",
     "VerificationReadinessImpact",
     "VerificationStatus",
+    "assess_evidence_integrity",
+    "assess_evidence_packet",
     "decide_publication",
     "evaluate_social_evidence_constraints",
     "evaluate_social_evidence_eligibility",

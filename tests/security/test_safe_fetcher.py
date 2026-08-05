@@ -46,6 +46,25 @@ def test_fetches_public_html_and_extracts_visible_text() -> None:
     assert extract_readable_text(document.text, document.content_type) == ("Useful evidence")
 
 
+def test_extraction_excludes_semantic_page_chrome() -> None:
+    html = """
+    <html><body>
+      <header>Account menu <a>Log in</a></header>
+      <nav>Products Subscribe Contact us</nav>
+      <main><article><h1>Water density</h1><p>Water expands when it freezes.</p></article></main>
+      <aside>Related links</aside><footer>Privacy Accessibility Copyright</footer>
+    </body></html>
+    """
+
+    extracted = extract_readable_text(html, "text/html")
+
+    assert "Water density" in extracted
+    assert "Water expands when it freezes" in extracted
+    assert "Account menu" not in extracted
+    assert "Subscribe" not in extracted
+    assert "Privacy" not in extracted
+
+
 @pytest.mark.parametrize(
     "url",
     (

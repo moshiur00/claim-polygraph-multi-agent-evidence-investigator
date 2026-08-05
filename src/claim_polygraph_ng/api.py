@@ -29,21 +29,28 @@ from claim_polygraph_ng.domain.api import (
     AuthoritativeJobResponse,
     AuthoritativeReviewRequest,
     CreateInvestigationRequest,
+    EvidenceDispositionResponse,
     InvestigationJobResponse,
+    InvestigationUsageSummary,
     StartGraphRunRequest,
     StartGraphRunResponse,
     SubmitApprovalRequest,
     SubmitDecisionRequest,
     SubmitDecisionResponse,
+    SubmitEvidenceDispositionRequest,
     SubmitRevisionRequest,
 )
+from claim_polygraph_ng.domain.evidence_disposition import EvidenceDispositionRecord
 from claim_polygraph_ng.domain.graph import DurableGraphSnapshot
 from claim_polygraph_ng.domain.input import ClaimExtractionPacket, InvestigationInput
 from claim_polygraph_ng.domain.investigation import (
     ArtifactType,
     Investigation,
     InvestigationReport,
+    InvestigationStage,
     InvestigationStatus,
+    TraceEventType,
+    utc_now,
 )
 from claim_polygraph_ng.domain.jobs import (
     TERMINAL_JOB_STATUSES,
@@ -416,6 +423,25 @@ def create_app(dependencies: ApiDependencies) -> FastAPI:
                 else None
             )
             if claim is not None and verdict is not None:
+                current_assurance = (
+                    stored_report.effective_full_report_assurance
+                    or stored_report.full_report_assurance
+                    if stored_report is not None
+                    else None
+                )
+                approval_blocked = bool(
+                    (
+                        current_assurance is not None
+                        and current_assurance.publication_status.value == "blocked"
+                    )
+                    or (
+                        stored_report is not None
+                        and any(
+                            item.publication_blocking
+                            for item in stored_report.evidence_integrity
+                        )
+                    )
+                )
                 allowed_decisions = (
                     (
                         ReviewDecisionKind.REQUEST_EVIDENCE,
@@ -423,9 +449,15 @@ def create_app(dependencies: ApiDependencies) -> FastAPI:
                     )
                     if state is not None and not state.approved_evidence_ids
                     else (
-                        ReviewDecisionKind.APPROVE,
-                        ReviewDecisionKind.REVISE,
                         ReviewDecisionKind.REQUEST_EVIDENCE,
+                        ReviewDecisionKind.REVISE,
+                        ReviewDecisionKind.REJECT,
+                    )
+                    if approval_blocked
+                    else (
+                        ReviewDecisionKind.APPROVE,
+                        ReviewDecisionKind.REQUEST_EVIDENCE,
+                        ReviewDecisionKind.REVISE,
                         ReviewDecisionKind.REJECT,
                     )
                 )
@@ -461,6 +493,43 @@ def create_app(dependencies: ApiDependencies) -> FastAPI:
             if job.status in {JobStatus.QUEUED, JobStatus.RUNNING}
             else job.status.value
         )
+        usage = None
+        if state is not None:
+            usage_events = tuple(
+                event
+                for event in dependencies.investigations.list_events(
+                    state.investigation_id
+                )
+                if event.event_type is TraceEventType.MODEL_USAGE_RECORDED
+            )
+            if usage_events:
+                input_tokens = sum(
+                    int(event.details.get("input_tokens") or 0)
+                    for event in usage_events
+                )
+                cached_input_tokens = sum(
+                    int(event.details.get("cached_input_tokens") or 0)
+                    for event in usage_events
+                )
+                output_tokens = sum(
+                    int(event.details.get("output_tokens") or 0)
+                    for event in usage_events
+                )
+                usage = InvestigationUsageSummary(
+                    model_calls=len(usage_events),
+                    input_tokens=input_tokens,
+                    cached_input_tokens=cached_input_tokens,
+                    output_tokens=output_tokens,
+                    total_tokens=input_tokens + output_tokens,
+                    estimated_cost_usd=sum(
+                        float(event.details.get("estimated_cost_usd") or 0)
+                        for event in usage_events
+                    ),
+                    unpriced_model_calls=sum(
+                        event.details.get("estimated_cost_usd") is None
+                        for event in usage_events
+                    ),
+                )
         return AuthoritativeJobResponse(
             job=job,
             thread_id=thread_id,
@@ -471,6 +540,7 @@ def create_app(dependencies: ApiDependencies) -> FastAPI:
             publication_status=publication_status,
             verdict=stored_report.verdict.label.value if stored_report is not None else None,
             report_available=stored_report is not None,
+            usage=usage,
             events=dependencies.job_queue.audit_events(job.job_id)
             if dependencies.job_queue is not None
             else (),
@@ -550,6 +620,20 @@ def create_app(dependencies: ApiDependencies) -> FastAPI:
                     actor=payload.decision.reviewer_identity,
                     result_reference=thread_id,
                 )
+                if result.state.investigation_id is not None:
+                    investigation = dependencies.investigations.get_investigation(
+                        result.state.investigation_id
+                    )
+                    if investigation is not None:
+                        dependencies.investigations.save_investigation(
+                            investigation.model_copy(
+                                update={
+                                    "status": InvestigationStatus.COMPLETED,
+                                    "stage": InvestigationStage.COMPLETE,
+                                    "updated_at": utc_now(),
+                                }
+                            )
+                        )
             return authoritative_response(job)
         except HTTPException:
             raise
@@ -842,6 +926,27 @@ def create_app(dependencies: ApiDependencies) -> FastAPI:
         return investigation
 
     @app.get(
+        "/api/investigations/{investigation_id}/authoritative-job",
+        response_model=AuthoritativeJobResponse,
+    )
+    def get_investigation_authoritative_job(
+        investigation_id: UUID,
+    ) -> AuthoritativeJobResponse:
+        """Reconstruct current workflow authority after refresh or on another client."""
+        _require_investigation(dependencies.investigations, investigation_id)
+        if dependencies.job_queue is None or dependencies.authoritative_workflow is None:
+            raise HTTPException(status_code=503, detail="authoritative workflow is unavailable")
+        state = dependencies.authoritative_workflow.latest_state_for_investigation(
+            investigation_id
+        )
+        if state is None:
+            raise HTTPException(status_code=404, detail="authoritative workflow not found")
+        job = dependencies.job_queue.find_by_thread_id(state.thread_id)
+        if job is None:
+            raise HTTPException(status_code=404, detail="authoritative job not found")
+        return authoritative_response(job)
+
+    @app.get(
         "/api/investigations/{investigation_id}/evidence",
         response_model=list[Evidence],
     )
@@ -852,6 +957,63 @@ def create_app(dependencies: ApiDependencies) -> FastAPI:
                 investigation_id, ArtifactType.EVIDENCE, Evidence
             )
         )
+
+    @app.get(
+        "/api/investigations/{investigation_id}/evidence-dispositions",
+        response_model=list[EvidenceDispositionRecord],
+    )
+    def get_evidence_dispositions(
+        investigation_id: UUID,
+    ) -> list[EvidenceDispositionRecord]:
+        _require_investigation(dependencies.investigations, investigation_id)
+        return list(
+            dependencies.investigations.list_artifacts(
+                investigation_id,
+                ArtifactType.EVIDENCE_DISPOSITION,
+                EvidenceDispositionRecord,
+            )
+        )
+
+    @app.post(
+        "/api/investigations/{investigation_id}/evidence-dispositions",
+        response_model=EvidenceDispositionResponse,
+        status_code=201,
+    )
+    def record_evidence_disposition(
+        investigation_id: UUID,
+        payload: SubmitEvidenceDispositionRequest,
+        x_reviewer_identity: str | None = Header(default=None),
+    ) -> EvidenceDispositionResponse:
+        """Append a distinctly approved decision without changing retained evidence."""
+        _require_investigation(dependencies.investigations, investigation_id)
+        _require_identity(x_reviewer_identity, payload.reviewer_identity)
+        evidence_ids = {
+            item.evidence_id
+            for item in dependencies.investigations.list_artifacts(
+                investigation_id, ArtifactType.EVIDENCE, Evidence
+            )
+        }
+        if payload.disposition.evidence_id not in evidence_ids:
+            raise HTTPException(
+                status_code=422,
+                detail="evidence disposition target does not belong to this investigation",
+            )
+        try:
+            record = EvidenceDispositionRecord(
+                investigation_id=investigation_id,
+                reviewer_identity=payload.reviewer_identity,
+                approver_identity=payload.approver_identity,
+                **payload.disposition.model_dump(),
+            )
+        except ValueError as error:
+            raise HTTPException(status_code=422, detail=str(error)) from error
+        dependencies.investigations.save_artifact(
+            investigation_id,
+            ArtifactType.EVIDENCE_DISPOSITION,
+            record.disposition_id,
+            record,
+        )
+        return EvidenceDispositionResponse(record=record)
 
     @app.get("/api/investigations/{investigation_id}/report")
     def get_report(investigation_id: UUID, format: str = Query(default="json")):

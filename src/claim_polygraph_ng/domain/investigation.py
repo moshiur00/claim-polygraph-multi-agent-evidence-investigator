@@ -107,6 +107,7 @@ class ArtifactType(StrEnum):
     PUBLICATION_DECISION = "publication_decision"
     REVIEW_ROUTING = "review_routing"
     SOCIAL_EVIDENCE_POLICY = "social_evidence_policy"
+    EVIDENCE_DISPOSITION = "evidence_disposition"
 
 
 class ModelTask(StrEnum):
@@ -283,16 +284,20 @@ class InvestigationReport(DomainModel):
     plan: InvestigationPlan
     sources: tuple[Source, ...]
     evidence: tuple[Evidence, ...]
+    evidence_dispositions: tuple["EvidenceDispositionRecord", ...] = ()
+    evidence_integrity: tuple["EvidenceIntegrityAssessment", ...] = ()
     independence_analysis: IndependenceAnalysis | None = None
     provenance: InvestigationProvenance | None = None
     verification_packet: VerificationPacketV2 | None = None
     argument_ledger: ArgumentLedger | None = None
+    effective_argument_ledger: ArgumentLedger | None = None
     judgment_policy: JudgmentPolicyTrace | None = None
     readiness: JudgmentReadiness | None = None
     context_verification: ContextVerification | None = None
     verdict: Verdict
     audits: tuple[SentenceAudit, ...]
     full_report_assurance: FullReportCitationAssurance | None = None
+    effective_full_report_assurance: FullReportCitationAssurance | None = None
     publication_decision: AuthoritativePublicationDecision | None = None
     social_evidence_policy: "SocialEvidencePolicyResult | None" = None
 
@@ -309,7 +314,10 @@ class ComplexInvestigationReport(DomainModel):
     full_report_assurance: FullReportCitationAssurance | None = None
 
 
+from claim_polygraph_ng.domain.evidence_disposition import EvidenceDispositionRecord  # noqa: E402
+from claim_polygraph_ng.domain.evidence_integrity import EvidenceIntegrityAssessment  # noqa: E402
 from claim_polygraph_ng.domain.models import ClaimCoverage, ClaimDecomposition  # noqa: E402
 from claim_polygraph_ng.domain.social_constraints import SocialEvidencePolicyResult  # noqa: E402
 
 ComplexInvestigationReport.model_rebuild()
+InvestigationReport.model_rebuild()

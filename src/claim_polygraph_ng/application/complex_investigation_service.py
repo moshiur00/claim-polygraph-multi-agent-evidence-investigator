@@ -471,6 +471,7 @@ class ComplexInvestigationService:
                 verdict=parent_verdict,
                 evidence=component_evidence,
                 approved_evidence_ids=evidence_ids,
+                claim_text=decomposition.root_claim.text,
             )
             self._repository.save_artifact(
                 root.investigation_id,
